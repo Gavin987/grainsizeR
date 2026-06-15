@@ -16,6 +16,40 @@ scale_values_to_um <- function(value, scale) {
   )
 }
 
+linear_interpolate <- function(x, y, xout, extrapolate) {
+  ord <- order(x)
+  x <- x[ord]
+  y <- y[ord]
+
+  if (length(unique(x)) < 2) {
+    stop("At least two distinct boundary values are required for interpolation.", call. = FALSE)
+  }
+
+  interpolated <- stats::approx(
+    x = x,
+    y = y,
+    xout = xout,
+    rule = 1,
+    ties = "ordered"
+  )$y
+
+  outside_lower <- xout < min(x)
+  outside_upper <- xout > max(x)
+
+  if (extrapolate == "warn_linear" && any(outside_lower)) {
+    slope <- (y[2] - y[1]) / (x[2] - x[1])
+    interpolated[outside_lower] <- y[1] + slope * (xout[outside_lower] - x[1])
+  }
+
+  if (extrapolate == "warn_linear" && any(outside_upper)) {
+    n <- length(x)
+    slope <- (y[n] - y[n - 1]) / (x[n] - x[n - 1])
+    interpolated[outside_upper] <- y[n] + slope * (xout[outside_upper] - x[n])
+  }
+
+  interpolated
+}
+
 percentile_one_sample <- function(curve, probs, scale, extrapolate) {
   sample_id <- curve$sample_id[1]
   scale_value <- percentile_scale_values(curve, scale)
@@ -45,14 +79,12 @@ percentile_one_sample <- function(curve, probs, scale, extrapolate) {
     )
   }
 
-  ord <- order(curve$percent_finer)
-  interpolated_scale <- stats::approx(
-    x = curve$percent_finer[ord],
-    y = scale_value[ord],
+  interpolated_scale <- linear_interpolate(
+    x = curve$percent_finer,
+    y = scale_value,
     xout = probs,
-    rule = if (extrapolate == "warn_linear") 2 else 1,
-    ties = "ordered"
-  )$y
+    extrapolate = extrapolate
+  )
 
   grain_size_um <- scale_values_to_um(interpolated_scale, scale)
 
