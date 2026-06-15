@@ -2,6 +2,9 @@
 
 export(as_gsd_tbl)
 export(gs_cumulative)
+export(gs_engineering)
+export(gs_parameters)
+export(gs_percent_finer)
 export(gs_percentile)
 export(is_gsd_tbl)
 export(mm_to_phi)
