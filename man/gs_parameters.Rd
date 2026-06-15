@@ -17,8 +17,8 @@ gs_parameters(
 \item{x}{A valid \code{gsd_tbl} object.}
 
 \item{parameters}{Character vector of parameters. Supported values are
-D-value tokens such as \code{"D10"}, \code{"D30"}, and \code{"D90"}, plus the alias
-\code{"engineering"}.}
+D-value tokens such as \code{"D10"}, \code{"D30"}, and \code{"D90"}, plus the aliases
+\code{"engineering"} and \code{"folk_ward"}.}
 
 \item{output}{Output shape. \code{"wide"} returns one row per sample, while
 \code{"long"} returns parameter-value rows.}
@@ -37,6 +37,6 @@ A tibble containing requested grain-size parameters.
 }
 \description{
 \code{gs_parameters()} is a minimal user-facing summary interface for selected
-D-value percentiles and the engineering indices returned by
-\code{gs_engineering()}.
+D-value percentiles, the engineering indices returned by \code{gs_engineering()},
+and Folk and Ward graphical statistics returned by \code{gs_folkward()}.
 }

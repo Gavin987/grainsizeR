@@ -6,6 +6,13 @@ parse_d_parameters <- function(parameters) {
 parameter_method <- function(parameter) {
   if (grepl("^D[0-9]+(\\.[0-9]+)?_um$", parameter)) {
     "percentile"
+  } else if (
+    grepl("_fw", parameter) ||
+      grepl("^D(5|16|25|50|75|84|95)_(um|phi)$", parameter) ||
+      parameter == "mean_fw_um" ||
+      parameter == "any_extrapolated"
+  ) {
+    "folk_ward"
   } else if (parameter == "interpolation_scale") {
     "metadata"
   } else {
@@ -14,11 +21,17 @@ parameter_method <- function(parameter) {
 }
 
 parameter_unit <- function(parameter) {
-  if (grepl("^D[0-9]+(\\.[0-9]+)?_um$", parameter) || parameter == "fine_threshold_um") {
+  if (
+    grepl("^D[0-9]+(\\.[0-9]+)?_um$", parameter) ||
+      parameter == "mean_fw_um" ||
+      parameter == "fine_threshold_um"
+  ) {
     "um"
+  } else if (grepl("^D[0-9]+(\\.[0-9]+)?_phi$", parameter) || grepl("_fw_phi$", parameter)) {
+    "phi"
   } else if (parameter == "fine_content_percent" || parameter == "fine_equivalent") {
     "percent"
-  } else if (parameter == "interpolation_scale") {
+  } else if (parameter == "interpolation_scale" || parameter == "any_extrapolated") {
     NA_character_
   } else {
     "unitless"
@@ -27,11 +40,12 @@ parameter_unit <- function(parameter) {
 
 parameters_to_long <- function(wide) {
   value_cols <- setdiff(names(wide), "sample_id")
+  value_cols <- value_cols[vapply(wide[value_cols], function(x) is.numeric(x) || is.logical(x), logical(1))]
   rows <- lapply(value_cols, function(col) {
     tibble::tibble(
       sample_id = wide$sample_id,
       parameter = col,
-      value = as.character(wide[[col]]),
+      value = as.numeric(wide[[col]]),
       unit = parameter_unit(col),
       method = parameter_method(col)
     )
@@ -45,13 +59,13 @@ parameters_to_long <- function(wide) {
 #' Summarize grain-size parameters
 #'
 #' `gs_parameters()` is a minimal user-facing summary interface for selected
-#' D-value percentiles and the engineering indices returned by
-#' `gs_engineering()`.
+#' D-value percentiles, the engineering indices returned by `gs_engineering()`,
+#' and Folk and Ward graphical statistics returned by `gs_folkward()`.
 #'
 #' @param x A valid `gsd_tbl` object.
 #' @param parameters Character vector of parameters. Supported values are
-#'   D-value tokens such as `"D10"`, `"D30"`, and `"D90"`, plus the alias
-#'   `"engineering"`.
+#'   D-value tokens such as `"D10"`, `"D30"`, and `"D90"`, plus the aliases
+#'   `"engineering"` and `"folk_ward"`.
 #' @param output Output shape. `"wide"` returns one row per sample, while
 #'   `"long"` returns parameter-value rows.
 #' @param interpolation_scale Interpolation scale passed to lower-level
@@ -78,12 +92,13 @@ gs_parameters <- function(x,
     stop("`parameters` must be a character vector without missing values.", call. = FALSE)
   }
 
-  supported <- grepl("^D[0-9]+(\\.[0-9]+)?$", parameters) | parameters == "engineering"
+  supported <- grepl("^D[0-9]+(\\.[0-9]+)?$", parameters) |
+    parameters %in% c("engineering", "folk_ward")
   if (any(!supported)) {
     stop(
       "Unsupported parameters: ",
       paste(parameters[!supported], collapse = ", "),
-      ". Supported values are D-value tokens and `engineering`.",
+      ". Supported values are D-value tokens, `engineering`, and `folk_ward`.",
       call. = FALSE
     )
   }
@@ -120,6 +135,23 @@ gs_parameters <- function(x,
     wide <- merge(
       wide,
       engineering[c("sample_id", new_cols)],
+      by = "sample_id",
+      all.x = TRUE,
+      sort = FALSE
+    )
+  }
+
+  if ("folk_ward" %in% parameters) {
+    folkward <- gs_folkward(
+      x,
+      interpolation_scale = interpolation_scale,
+      extrapolate = extrapolate,
+      include_descriptions = TRUE
+    )
+    new_cols <- setdiff(names(folkward), names(wide))
+    wide <- merge(
+      wide,
+      folkward[c("sample_id", new_cols)],
       by = "sample_id",
       all.x = TRUE,
       sort = FALSE
