@@ -10,7 +10,9 @@ gs_parameters(
   output = c("wide", "long"),
   interpolation_scale = "phi",
   extrapolate = "error",
-  fine_threshold_um = 62.5
+  fine_threshold_um = 62.5,
+  moments_method = "logarithmic_phi",
+  moments_open_end = "error"
 )
 }
 \arguments{
@@ -18,7 +20,7 @@ gs_parameters(
 
 \item{parameters}{Character vector of parameters. Supported values are
 D-value tokens such as \code{"D10"}, \code{"D30"}, and \code{"D90"}, plus the aliases
-\code{"engineering"} and \code{"folk_ward"}.}
+\code{"engineering"}, \code{"folk_ward"}, and \code{"moments"}.}
 
 \item{output}{Output shape. \code{"wide"} returns one row per sample, while
 \code{"long"} returns parameter-value rows.}
@@ -31,6 +33,10 @@ calculations.}
 
 \item{fine_threshold_um}{Fine-content threshold in micrometers for
 engineering summaries.}
+
+\item{moments_method}{Moment scale passed to \code{gs_moments()}.}
+
+\item{moments_open_end}{Open-ended class handling passed to \code{gs_moments()}.}
 }
 \value{
 A tibble containing requested grain-size parameters.
@@ -38,5 +44,6 @@ A tibble containing requested grain-size parameters.
 \description{
 \code{gs_parameters()} is a minimal user-facing summary interface for selected
 D-value percentiles, the engineering indices returned by \code{gs_engineering()},
-and Folk and Ward graphical statistics returned by \code{gs_folkward()}.
+Folk and Ward graphical statistics returned by \code{gs_folkward()}, and midpoint
+moment statistics returned by \code{gs_moments()}.
 }
