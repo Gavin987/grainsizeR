@@ -1,0 +1,83 @@
+# R session files
+.Rhistory
+.RData
+.Ruserdata
+.Rapp.history
+
+# RStudio / Posit
+.Rproj.user/
+
+# R build and check artifacts
+*.tar.gz
+*.Rcheck/
+.Rcheck/
+check/
+.Rd2pdf*/
+*.Rproj.user
+
+# R package temporary files
+src/*.o
+src/*.so
+src/*.dll
+src/*.dSYM/
+src/*~w
+src/*.rds
+
+# Test and coverage artifacts
+.Rcovignore
+coverage/
+covr-*.R
+*.gcda
+*.gcno
+*.gcov
+
+# pkgdown artifacts
+pkgdown/
+_site/
+
+# revdepcheck artifacts
+revdep/
+revdepcheck/
+cran-comments.md.bak
+
+# renv / pak / local dependency caches
+renv/library/
+renv/staging/
+renv/python/
+renv/sandbox/
+.pak/
+
+# Quarto / R Markdown cache and outputs
+*_cache/
+*_files/
+.Rproj.user/
+.quarto/
+/.quarto/
+*.utf8.md
+*.knit.md
+
+# Local data, scratch files, and temporary outputs
+tmp/
+temp/
+scratch/
+local/
+output/
+outputs/
+*.tmp
+*.bak
+*.log
+
+# OS files
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
