@@ -1,0 +1,144 @@
+percentile_scale_values <- function(curve, scale) {
+  switch(
+    scale,
+    phi = curve$boundary_phi,
+    log_um = log10(curve$boundary_um),
+    linear_um = curve$boundary_um
+  )
+}
+
+scale_values_to_um <- function(value, scale) {
+  switch(
+    scale,
+    phi = phi_to_um(value),
+    log_um = 10^value,
+    linear_um = value
+  )
+}
+
+percentile_one_sample <- function(curve, probs, scale, extrapolate) {
+  sample_id <- curve$sample_id[1]
+  scale_value <- percentile_scale_values(curve, scale)
+  observed_min <- min(curve$percent_finer)
+  observed_max <- max(curve$percent_finer)
+  extrapolated <- probs < observed_min | probs > observed_max
+
+  if (any(extrapolated) && extrapolate == "error") {
+    stop(
+      "Requested percentiles for sample `",
+      sample_id,
+      "` fall outside the finite boundary curve range [",
+      format(observed_min, digits = 8),
+      ", ",
+      format(observed_max, digits = 8),
+      "]. Use `extrapolate = \"warn_linear\"` to extrapolate.",
+      call. = FALSE
+    )
+  }
+
+  if (any(extrapolated) && extrapolate == "warn_linear") {
+    warning(
+      "Requested percentiles for sample `",
+      sample_id,
+      "` fall outside the finite boundary curve range; linearly extrapolating.",
+      call. = FALSE
+    )
+  }
+
+  ord <- order(curve$percent_finer)
+  interpolated_scale <- stats::approx(
+    x = curve$percent_finer[ord],
+    y = scale_value[ord],
+    xout = probs,
+    rule = if (extrapolate == "warn_linear") 2 else 1,
+    ties = "ordered"
+  )$y
+
+  grain_size_um <- scale_values_to_um(interpolated_scale, scale)
+
+  tibble::tibble(
+    sample_id = sample_id,
+    percentile = probs,
+    grain_size_um = grain_size_um,
+    grain_size_mm = um_to_mm(grain_size_um),
+    grain_size_phi = um_to_phi(grain_size_um),
+    interpolation_scale = scale,
+    extrapolated = extrapolated
+  )
+}
+
+#' Calculate grain-size percentiles
+#'
+#' `gs_percentile()` estimates `D_p`, the grain size at which `p` percent of a
+#' sample is finer. Interpolation is based on finite class boundaries from
+#' `gs_cumulative()`, not class midpoints.
+#'
+#' @param x A valid `gsd_tbl` object.
+#' @param probs Numeric vector of percentiles on the 0-100 scale.
+#' @param scale Interpolation scale. `"phi"` interpolates in phi units,
+#'   `"log_um"` interpolates in log10 micrometers, and `"linear_um"`
+#'   interpolates directly in micrometers.
+#' @param output_unit Preferred reporting unit. The returned table always
+#'   includes micrometer, millimeter, and phi columns.
+#' @param extrapolate Behavior when a requested percentile falls outside the
+#'   observed finite boundary curve. `"error"` throws an error, and
+#'   `"warn_linear"` warns and linearly extrapolates on the selected scale.
+#'
+#' @return A tibble with one row per sample and requested percentile.
+#' @export
+gs_percentile <- function(x,
+                          probs = c(5, 10, 16, 25, 30, 50, 60, 75, 84, 90, 95),
+                          scale = c("phi", "log_um", "linear_um"),
+                          output_unit = c("um", "mm", "phi"),
+                          extrapolate = c("error", "warn_linear")) {
+  validate_gsd_tbl(x)
+  scale <- match.arg(scale)
+  output_unit <- match.arg(output_unit)
+  extrapolate <- match.arg(extrapolate)
+
+  if (!is.numeric(probs) || anyNA(probs)) {
+    stop("`probs` must be a numeric vector without missing values.", call. = FALSE)
+  }
+
+  if (any(probs < 0 | probs > 100)) {
+    stop("`probs` must contain values on the 0-100 scale.", call. = FALSE)
+  }
+
+  curve <- gs_cumulative(x)
+  split_curve <- split(curve, curve$sample_id, drop = TRUE)
+  percentiles <- lapply(
+    split_curve,
+    percentile_one_sample,
+    probs = probs,
+    scale = scale,
+    extrapolate = extrapolate
+  )
+
+  out <- do.call(rbind, unname(percentiles))
+  rownames(out) <- NULL
+  out <- tibble::as_tibble(out)
+
+  if (output_unit == "mm") {
+    out <- out[c(
+      "sample_id",
+      "percentile",
+      "grain_size_mm",
+      "grain_size_um",
+      "grain_size_phi",
+      "interpolation_scale",
+      "extrapolated"
+    )]
+  } else if (output_unit == "phi") {
+    out <- out[c(
+      "sample_id",
+      "percentile",
+      "grain_size_phi",
+      "grain_size_um",
+      "grain_size_mm",
+      "interpolation_scale",
+      "extrapolated"
+    )]
+  }
+
+  out
+}
