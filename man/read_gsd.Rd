@@ -18,12 +18,16 @@ read_gsd(
 \arguments{
 \item{file}{Path to a CSV file.}
 
-\item{sample_col}{Column containing sample identifiers.}
+\item{sample_col}{Column containing sample identifiers. If omitted for
+long-format input, \code{read_gsd()} uses \code{"sample"} when that column exists.}
 
-\item{size_col}{Column containing grain-size class labels or thresholds.}
+\item{size_col}{Column containing grain-size class labels or thresholds. If
+omitted for long-format input, \code{read_gsd()} uses \code{"size"} when that column
+exists.}
 
 \item{value_col}{Column containing retained proportions, retained
-percentages, or weights.}
+percentages, or weights. If omitted for long-format input, \code{read_gsd()}
+uses \code{"proportion"} when that column exists.}
 
 \item{size_unit}{Unit for \code{size_col}. Supported values are \code{"mm"}, \code{"um"},
 and \code{"phi"}.}

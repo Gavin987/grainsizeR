@@ -124,10 +124,14 @@ build_sample_bins <- function(sample_data) {
 #' wide-format table into a `gsd_tbl`.
 #'
 #' @param file Path to a CSV file.
-#' @param sample_col Column containing sample identifiers.
-#' @param size_col Column containing grain-size class labels or thresholds.
+#' @param sample_col Column containing sample identifiers. If omitted for
+#'   long-format input, `read_gsd()` uses `"sample"` when that column exists.
+#' @param size_col Column containing grain-size class labels or thresholds. If
+#'   omitted for long-format input, `read_gsd()` uses `"size"` when that column
+#'   exists.
 #' @param value_col Column containing retained proportions, retained
-#'   percentages, or weights.
+#'   percentages, or weights. If omitted for long-format input, `read_gsd()`
+#'   uses `"proportion"` when that column exists.
 #' @param size_unit Unit for `size_col`. Supported values are `"mm"`, `"um"`,
 #'   and `"phi"`.
 #' @param value_type Scale for `value_col`. Supported values are
@@ -169,6 +173,18 @@ read_gsd <- function(file,
     ))
   }
 
+  x <- readr::read_csv(file, show_col_types = FALSE)
+
+  if (missing(sample_col) && "sample" %in% names(x)) {
+    sample_col <- "sample"
+  }
+  if (missing(size_col) && "size" %in% names(x)) {
+    size_col <- "size"
+  }
+  if (missing(value_col) && "proportion" %in% names(x)) {
+    value_col <- "proportion"
+  }
+
   if (missing(sample_col) || missing(size_col) || missing(value_col)) {
     stop(
       "`sample_col`, `size_col`, and `value_col` are required for long-format input.",
@@ -176,7 +192,6 @@ read_gsd <- function(file,
     )
   }
 
-  x <- readr::read_csv(file, show_col_types = FALSE)
   sample_col <- rlang::as_name(rlang::ensym(sample_col))
   size_col <- rlang::as_name(rlang::ensym(size_col))
   value_col <- rlang::as_name(rlang::ensym(value_col))

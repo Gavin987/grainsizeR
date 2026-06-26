@@ -87,3 +87,13 @@ test_that("read_gsd reads CSV input and returns a gsd_tbl", {
   expect_s3_class(gsd, "gsd_tbl")
   expect_equal(nrow(gsd), nrow(ragged_input))
 })
+
+test_that("read_gsd infers bundled long example columns", {
+  path <- system.file("extdata", "grain.long.csv", package = "grainsizeR")
+
+  gsd <- read_gsd(path)
+
+  expect_s3_class(gsd, "gsd_tbl")
+  expect_true(all(c("sample_id", "bin_id", "raw_size_um") %in% names(gsd)))
+  expect_true(all(c("WN1_upper", "WN2_upper") %in% gsd$sample_id))
+})
