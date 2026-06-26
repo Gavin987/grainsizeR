@@ -1,21 +1,32 @@
-Package: grainsizer
-Title: Grain-Size Analysis Tools for Sediment Data
+Package: grainsizeR
+Type: Package
+Title: Sediment Grain-Size Analysis Tools
 Version: 0.0.0.9000
 Authors@R:
-    person("Grainsizer", "Developers", email = "dev@example.com", role = c("aut", "cre"))
-Author: Grainsizer Developers
-Maintainer: Grainsizer Developers <dev@example.com>
-Description: Tools for working with ragged long-format sediment grain-size
-    data, including a tibble-based S3 data structure for grain-size
-    distributions.
+    person(given = "Ching-Sung G.",
+           family = "Chang",
+           email = "cschang.bt10@nycu.edu.tw",
+           role = c("aut", "cre"))
+Description: Read, validate, summarize, and plot sediment grain-size
+    distributions. The package supports long and wide retained-size inputs,
+    cumulative curves, D-values, percent-finer interpolation, grain-size
+    statistics, particle-size fractions, GRADISTAT/G2Sd-style analysis
+    workflows, major texture classification, texture ternary plots, and
+    user-supplied texture polygon classification workflows.
 License: MIT + file LICENSE
+URL: https://github.com/Gavin987/grainsizeR
+BugReports: https://github.com/Gavin987/grainsizeR/issues
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Imports:
+    ggplot2,
     readr,
     rlang,
     tibble
 Suggests:
+    knitr,
+    rmarkdown,
     testthat (>= 3.0.0)
+VignetteBuilder: knitr
 Config/testthat/edition: 3

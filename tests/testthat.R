@@ -1,4 +1,4 @@
 library(testthat)
-library(grainsizer)
+library(grainsizeR)
 
-test_check("grainsizer")
+test_check("grainsizeR")

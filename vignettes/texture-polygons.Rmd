@@ -1,0 +1,116 @@
+---
+title: "User-Supplied Texture Polygons"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{User-Supplied Texture Polygons}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```
+
+## Overview
+
+Particle-size fraction schemes define boundaries such as clay, silt, sand, and
+gravel limits. Texture class polygons define regions in a ternary diagram. The
+two are related, but they are not the same data object.
+
+grainsizeR includes particle-size fraction schemes and a framework for
+user-supplied texture polygons. Official built-in polygon datasets are not
+included yet because they need to be compiled from original official or
+academic sources with citations.
+
+```{r}
+library(grainsizeR)
+
+texture_polygon_sources()
+```
+
+USDA 12-class major texture ternary classification is available without a
+bundled polygon dataset by using the validated internal rule path through
+`classify_texture()`.
+
+```{r}
+samples <- data.frame(
+  sample_id = c("A", "B", "C"),
+  sand = c(90, 40, 20),
+  silt = c(5, 40, 20),
+  clay = c(5, 20, 60)
+)
+
+classify_texture(samples, scheme = "usda_tt", method = "rules")
+```
+
+This USDA rule path covers only the 12 major classes and does not include
+sand-size modifier subclasses. User-supplied polygon classification remains
+the generic workflow for other texture systems.
+
+## Creating a Polygon Data Frame
+
+`texture_polygon_template()` shows the required columns. The synthetic example
+below defines a single class covering the full ternary triangle. It is not an
+official texture classification system.
+
+```{r}
+texture_polygon_template()
+
+polygons <- data.frame(
+  scheme = "synthetic_ternary",
+  class_id = "all",
+  class_name = "Synthetic full ternary area",
+  vertex_id = 1:3,
+  left = c(100, 0, 0),
+  right = c(0, 100, 0),
+  top = c(0, 0, 100),
+  left_component = "sand",
+  right_component = "silt",
+  top_component = "clay",
+  reference_id = NA_character_,
+  reference = NA_character_
+)
+
+polygons <- validate_texture_polygons(polygons)
+polygons
+```
+
+## Classifying Samples
+
+This synthetic grain-size table has finite boundaries at the USDA-style sand,
+silt, and clay thresholds used by the example polygon axes.
+
+```{r}
+synthetic <- data.frame(
+  sample_id = rep(c("A", "B"), each = 4),
+  size_mm = rep(c(2, 0.05, 0.002, 0.001), 2),
+  retained = c(10, 40, 30, 20, 5, 20, 35, 40)
+)
+
+synthetic_gs <- as_gsd_tbl(
+  synthetic,
+  sample_id,
+  size_mm,
+  retained,
+  value_type = "percent"
+)
+
+classify_texture(
+  synthetic_gs,
+  polygons = polygons,
+  scheme = "synthetic_ternary"
+)
+```
+
+## Plotting User Polygons
+
+`plot_texture_ternary()` can draw sample points and user-supplied polygons.
+`plot_texture_triangle()` remains available as a compatibility function name.
+
+```{r, fig.width=6, fig.height=4}
+plot_texture_ternary(
+  synthetic_gs,
+  polygons = polygons,
+  scheme = "synthetic_ternary"
+)
+```

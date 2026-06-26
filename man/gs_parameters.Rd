@@ -6,24 +6,39 @@
 \usage{
 gs_parameters(
   x,
-  parameters = c("D10", "D30", "D50", "D60", "D75", "engineering"),
+  parameters = c("D10", "D30", "D50", "D60", "D75", "indices"),
   output = c("wide", "long"),
+  d_values = c(5, 10, 16, 25, 50, 75, 84, 90, 95),
   interpolation_scale = "phi",
   extrapolate = "error",
+  d_spread_scale = "um",
   fine_threshold_um = 62.5,
   moments_method = "logarithmic_phi",
-  moments_open_end = "error"
+  moments_open_end = "error",
+  n_modes = 3,
+  sediment_loss_percent = NULL,
+  sediment_loss_warning_percent = 2,
+  fine_pan_info_percent = 1,
+  fine_pan_warning_percent = 5,
+  fraction_scheme = "wentworth_major",
+  fraction_normalize = "none",
+  fraction_unresolved = "warn_na"
 )
 }
 \arguments{
 \item{x}{A valid \code{gsd_tbl} object.}
 
 \item{parameters}{Character vector of parameters. Supported values are
-D-value tokens such as \code{"D10"}, \code{"D30"}, and \code{"D90"}, plus the aliases
-\code{"engineering"}, \code{"folk_ward"}, and \code{"moments"}.}
+\code{"d_values"}, D-value tokens such as \code{"D10"}, \code{"D30"}, and \code{"D90"},
+plus the aliases \code{"d_spread"}, \code{"indices"}, \code{"folk_ward"}, \code{"moments"},
+\code{"modes"}, \code{"descriptors"}, \code{"quality"}, and \code{"fractions"}.
+\code{"engineering"} is accepted as a compatibility alias for \code{"indices"}.}
 
 \item{output}{Output shape. \code{"wide"} returns one row per sample, while
 \code{"long"} returns parameter-value rows.}
+
+\item{d_values}{Numeric vector of D-value percentiles used when
+\code{parameters} includes \code{"d_values"}.}
 
 \item{interpolation_scale}{Interpolation scale passed to lower-level
 calculations.}
@@ -31,19 +46,52 @@ calculations.}
 \item{extrapolate}{Extrapolation behavior passed to lower-level
 calculations.}
 
+\item{d_spread_scale}{Metric reporting scale passed to \code{gs_d_spread()}.}
+
 \item{fine_threshold_um}{Fine-content threshold in micrometers for
-engineering summaries.}
+grain-size index summaries.}
 
 \item{moments_method}{Moment scale passed to \code{gs_moments()}.}
 
 \item{moments_open_end}{Open-ended class handling passed to \code{gs_moments()}.}
+
+\item{n_modes}{Number of modal classes passed to \code{gs_modes()} when
+\code{parameters} includes \code{"modes"}.}
+
+\item{sediment_loss_percent}{Optional sediment-loss percentages passed to
+\code{gs_quality_flags()} when \code{parameters} includes \code{"quality"}.}
+
+\item{sediment_loss_warning_percent}{Advisory sediment-loss threshold passed
+to \code{gs_quality_flags()}.}
+
+\item{fine_pan_info_percent}{Advisory fine-pan information threshold passed
+to \code{gs_quality_flags()}.}
+
+\item{fine_pan_warning_percent}{Advisory fine-pan warning threshold passed
+to \code{gs_quality_flags()}.}
+
+\item{fraction_scheme}{Fraction scheme passed to \code{gs_fractions_wide()}.}
+
+\item{fraction_normalize}{Normalization mode passed to \code{gs_fractions_wide()}.}
+
+\item{fraction_unresolved}{Unresolved-threshold behavior passed to
+\code{gs_fractions_wide()}.}
 }
 \value{
 A tibble containing requested grain-size parameters.
 }
 \description{
 \code{gs_parameters()} is a minimal user-facing summary interface for selected
-D-value percentiles, the engineering indices returned by \code{gs_engineering()},
-Folk and Ward graphical statistics returned by \code{gs_folkward()}, and midpoint
-moment statistics returned by \code{gs_moments()}.
+D-values returned by \code{gs_d_values()}, additional grain-size indices returned
+by \code{gs_grain_size_indices()}, GRADISTAT-style D-spread descriptors returned
+by \code{gs_d_spread()}, Folk and Ward graphical statistics returned by
+\code{gs_folk_ward()}, midpoint moment statistics returned by \code{gs_moments()},
+modal class descriptors returned by \code{gs_modes()}, and particle-size fractions
+returned by \code{gs_fractions_wide()}. Optional descriptor and quality groups
+add GRADISTAT-style printout terms and advisory quality flags.
+}
+\details{
+The function is useful for generating compact summary tables for reports.
+It returns ordinary tabular output, so file export is intentionally left to
+standard R workflows such as \code{write.csv()} or \code{saveRDS()}.
 }

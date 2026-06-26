@@ -11,7 +11,8 @@ read_gsd(
   value_col,
   size_unit = "mm",
   value_type = "proportion",
-  measurement_method = NA_character_
+  measurement_method = NA_character_,
+  format = c("long", "wide")
 )
 }
 \arguments{
@@ -31,11 +32,15 @@ and \code{"phi"}.}
 \code{"proportion"}, \code{"percent"}, and \code{"weight"}.}
 
 \item{measurement_method}{Measurement method to store in the output.}
+
+\item{format}{Input table format. \code{"long"} reads one row per sample and
+grain-size class. \code{"wide"} reads grain-size classes from rows and sample
+identifiers from columns.}
 }
 \value{
 A \code{gsd_tbl}.
 }
 \description{
-\code{read_gsd()} reads a comma-separated file and converts a long-format table
-into a \code{gsd_tbl}.
+\code{read_gsd()} reads a comma-separated file and converts a long- or
+wide-format table into a \code{gsd_tbl}.
 }

@@ -1,0 +1,274 @@
+---
+title: "Texture Classification"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Texture Classification}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```
+
+## Overview
+
+`classify_texture()` provides two texture-classification paths:
+
+- USDA 12-class major texture classification from sand, silt, and clay
+  percentages.
+- GRADISTAT-style rule classification for gravel-sand-mud textural groups and
+  no-gravel sand-silt-clay mini texture classes.
+- Generic classification against user-supplied ternary texture polygons.
+
+The USDA path is rule-based. It does not require bundled USDA polygon data,
+and no USDA polygon dataset is included as package data.
+
+The GRADISTAT path is also rule-based. It uses source-grounded decision tables
+from the user-provided GRADISTAT v8 workbook and the textural-output context
+described by Blott and Pye (2001). Sediment-name composition is available as a
+separate step or optional output. GRADISTAT ternary plotting is available
+through `plot_texture_ternary()`.
+
+```{r}
+library(grainsizeR)
+```
+
+## USDA Major Texture Classification
+
+Use `scheme = "usda_tt"` and `method = "rules"` for the validated USDA
+major-class workflow.
+
+```{r}
+samples <- data.frame(
+  sample_id = c("A", "B", "C"),
+  sand = c(85, 40, 20),
+  silt = c(10, 40, 20),
+  clay = c(5, 20, 60)
+)
+
+classify_texture(samples, scheme = "usda_tt", method = "rules")
+```
+
+USDA texture ternary plotting is available through `plot_texture_ternary()`.
+The stable `plot_texture_triangle()` function name remains available for
+compatibility. This point-only example uses a compact
+grain-size distribution with enough fine-resolution boundaries to resolve sand,
+silt, and clay fractions. No USDA polygon dataset is bundled as runtime package
+data.
+
+```{r}
+usda_plot_input <- data.frame(
+  sample_id = "A",
+  size_mm = c(2, 1, 0.5, 0.25, 0.125, 0.063, 0.031, 0.016, 0.008, 0.004, 0.002, 0.001),
+  retained = c(2, 3, 5, 10, 15, 18, 12, 10, 8, 7, 6, 4)
+)
+
+usda_plot_gs <- as_gsd_tbl(
+  usda_plot_input,
+  sample_id,
+  size_mm,
+  retained,
+  value_type = "percent"
+)
+
+suppressWarnings(plot_texture_ternary(usda_plot_gs, scheme = "usda_tt"))
+```
+
+Input percentages must be numeric, finite, between 0 and 100, and sum to
+approximately 100. `classify_texture()` does not silently normalize invalid
+sand, silt, and clay sums.
+
+Data frames with ternary `left`, `right`, and `top` columns are also accepted
+for USDA rules. They are interpreted as `left = sand`, `right = silt`, and
+`top = clay`.
+
+## Method Selection
+
+`method = "auto"` chooses the USDA rule path when `scheme = "usda_tt"` and no
+texture polygons are supplied. It also chooses GRADISTAT rules when
+`scheme = "gradistat"` and no texture polygons are supplied.
+
+```{r}
+classify_texture(samples, scheme = "usda_tt", method = "auto")
+```
+
+`method = "rules"` supports `scheme = "usda_tt"` and `scheme = "gradistat"`.
+Other schemes require user-supplied polygons because grainsizeR does not bundle
+built-in texture polygon datasets yet.
+
+`method = "polygon"` uses the generic user-supplied polygon workflow.
+
+## GRADISTAT Texture Classification
+
+Use `scheme = "gradistat"` and `method = "rules"` for GRADISTAT-style texture
+classification. The `gravel_sand_mud` basis requires `gravel`, `sand`, and
+`mud` percentage columns.
+
+```{r}
+gsm <- data.frame(
+  sample_id = c("A", "B", "C"),
+  gravel = c(0, 10, 40),
+  sand = c(95, 80, 40),
+  mud = c(5, 10, 20)
+)
+
+classify_texture(
+  gsm,
+  scheme = "gradistat",
+  method = "rules",
+  basis = "gravel_sand_mud",
+  include_sediment_name = TRUE
+)
+```
+
+The `sand_silt_clay_no_gravel` basis requires `sand`, `silt`, and `clay`
+percentage columns.
+
+```{r}
+ssc <- data.frame(
+  sample_id = c("A", "B", "C"),
+  sand = c(95, 60, 20),
+  silt = c(3, 30, 60),
+  clay = c(2, 10, 20)
+)
+
+classify_texture(
+  ssc,
+  scheme = "gradistat",
+  method = "rules",
+  basis = "sand_silt_clay_no_gravel"
+)
+```
+
+GRADISTAT rule classification returns `texture_class_id`, `texture_class`,
+`classification_method`, `classification_status`, `ternary_basis`, `notes`,
+and a ratio audit column. Input percentages must sum to approximately 100 for
+the selected basis; grainsizeR does not silently normalize invalid sums.
+
+`TEXTURAL GROUP` and `SEDIMENT NAME` are distinct GRADISTAT-style outputs.
+Sediment-name composition can be requested during GRADISTAT classification with
+`include_sediment_name = TRUE`, or added afterward with
+`gs_gradistat_sediment_name()`. If dominant size-subclass columns are missing,
+the textural group is returned as a partial sediment name.
+
+The same supported bases can be drawn as texture ternary plots.
+
+```{r}
+plot_texture_ternary(
+  gsm,
+  scheme = "gradistat",
+  basis = "gravel_sand_mud",
+  point_id = "sample_id"
+)
+
+plot_texture_ternary(
+  ssc,
+  scheme = "gradistat",
+  basis = "sand_silt_clay_no_gravel",
+  point_id = "sample_id"
+)
+```
+
+Distribution, cumulative, fraction, USDA texture ternary, and GRADISTAT
+texture ternary plots are R-native functional replacements, not Excel visual
+clones.
+
+`plot_texture_ternary()` is the preferred plotting name in new examples.
+`plot_texture_triangle()` remains available for compatibility with existing
+code.
+
+## Output Columns
+
+USDA rule classification returns the input rows with these classification
+columns appended:
+
+- `texture_class_id`
+- `texture_class`
+- `classification_method`
+- `rule_status`
+- `all_rule_matches`
+- `rule_conflict`
+- `rule_gap`
+
+For valid, clean USDA inputs, `classification_method` is
+`"usda_major_rules"` and `rule_status` is `"classified"`.
+
+## User-Supplied Polygon Classification
+
+Generic polygon classification remains available for user-provided texture
+systems. The example below defines a synthetic full ternary region for
+demonstration only; it is not an official texture system.
+
+```{r}
+polygons <- data.frame(
+  scheme = "synthetic_ternary",
+  class_id = "all",
+  class_name = "Synthetic full ternary area",
+  vertex_id = 1:3,
+  left = c(100, 0, 0),
+  right = c(0, 100, 0),
+  top = c(0, 0, 100),
+  left_component = "sand",
+  right_component = "silt",
+  top_component = "clay",
+  reference_id = NA_character_,
+  reference = NA_character_
+)
+
+polygons <- validate_texture_polygons(polygons)
+```
+
+```{r}
+synthetic <- data.frame(
+  sample_id = rep("A", 4),
+  size_mm = c(2, 0.05, 0.002, 0.001),
+  retained = c(10, 40, 30, 20)
+)
+
+synthetic_gs <- as_gsd_tbl(
+  synthetic,
+  sample_id,
+  size_mm,
+  retained,
+  value_type = "percent"
+)
+
+classify_texture(
+  synthetic_gs,
+  texture_polygons = polygons,
+  scheme = "synthetic_ternary",
+  method = "polygon"
+)
+```
+
+## Limitations
+
+The USDA workflow covers only the 12 major USDA textural classes.
+Sand-size modifier subclasses such as coarse sand, fine sand, very fine sand,
+coarse sandy loam, fine sandy loam, and very fine sandy loam are not
+implemented. They may be considered later as qualitative descriptor columns
+for D50 or particle-size summaries.
+
+No USDA polygon dataset or USDA rule-data object is bundled as runtime package
+data.
+
+GRADISTAT gravel-sand-mud and sand-silt-clay no-gravel ternary plotting is
+implemented through `plot_texture_ternary()`. Full Excel visual parity is not
+claimed.
+
+CRAN readiness is not claimed in this vignette.
+
+## Provenance and Validation
+
+The public USDA classification path uses an internal rule helper validated
+against USDA/NRCS validation examples and boundary cases. Public API tests
+cover representative official, targeted, and boundary points.
+
+Performance notes are informational. The USDA rule classifier is vectorized
+and expected to be lighter than repeated polygon point-in-polygon checks for
+this built-in USDA path, but formal benchmarking is not included.
+
+The public GRADISTAT classification path uses independently written R decision
+rules based on the documented GRADISTAT behavior. The workbook was used only as
+a reference implementation, and VBA source code was not copied.

@@ -7,9 +7,10 @@
 gs_percentile(
   x,
   probs = c(5, 10, 16, 25, 30, 50, 60, 75, 84, 90, 95),
-  scale = c("phi", "log_um", "linear_um"),
+  interpolation_scale = c("phi", "log_um", "linear_um"),
   output_unit = c("um", "mm", "phi"),
-  extrapolate = c("error", "warn_linear")
+  extrapolate = c("error", "warn_linear"),
+  scale = NULL
 )
 }
 \arguments{
@@ -17,7 +18,7 @@ gs_percentile(
 
 \item{probs}{Numeric vector of percentiles on the 0-100 scale.}
 
-\item{scale}{Interpolation scale. \code{"phi"} interpolates in phi units,
+\item{interpolation_scale}{Interpolation scale. \code{"phi"} interpolates in phi units,
 \code{"log_um"} interpolates in log10 micrometers, and \code{"linear_um"}
 interpolates directly in micrometers.}
 
@@ -27,12 +28,12 @@ includes micrometer, millimeter, and phi columns.}
 \item{extrapolate}{Behavior when a requested percentile falls outside the
 observed finite boundary curve. \code{"error"} throws an error, and
 \code{"warn_linear"} warns and linearly extrapolates on the selected scale.}
+
+\item{scale}{Compatibility alias for \code{interpolation_scale}.}
 }
 \value{
 A tibble with one row per sample and requested percentile.
 }
 \description{
-\code{gs_percentile()} estimates \code{D_p}, the grain size at which \code{p} percent of a
-sample is finer. Interpolation is based on finite class boundaries from
-\code{gs_cumulative()}, not class midpoints.
+\code{gs_percentile()} is a compatibility alias for \code{gs_d_values()}.
 }

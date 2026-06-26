@@ -120,8 +120,8 @@ build_sample_bins <- function(sample_data) {
 
 #' Read grain-size data from a delimited text file
 #'
-#' `read_gsd()` reads a comma-separated file and converts a long-format table
-#' into a `gsd_tbl`.
+#' `read_gsd()` reads a comma-separated file and converts a long- or
+#' wide-format table into a `gsd_tbl`.
 #'
 #' @param file Path to a CSV file.
 #' @param sample_col Column containing sample identifiers.
@@ -133,6 +133,9 @@ build_sample_bins <- function(sample_data) {
 #' @param value_type Scale for `value_col`. Supported values are
 #'   `"proportion"`, `"percent"`, and `"weight"`.
 #' @param measurement_method Measurement method to store in the output.
+#' @param format Input table format. `"long"` reads one row per sample and
+#'   grain-size class. `"wide"` reads grain-size classes from rows and sample
+#'   identifiers from columns.
 #'
 #' @return A `gsd_tbl`.
 #' @export
@@ -142,7 +145,37 @@ read_gsd <- function(file,
                      value_col,
                      size_unit = "mm",
                      value_type = "proportion",
-                     measurement_method = NA_character_) {
+                     measurement_method = NA_character_,
+                     format = c("long", "wide")) {
+  format <- match.arg(format)
+
+  if (format == "wide") {
+    if (missing(size_col)) {
+      size_col <- 1
+    } else {
+      size_col_expr <- substitute(size_col)
+      size_col <- if (is.symbol(size_col_expr)) {
+        as.character(size_col_expr)
+      } else {
+        eval(size_col_expr, parent.frame())
+      }
+    }
+    return(read_gsd_wide(
+      file = file,
+      size_col = size_col,
+      size_unit = size_unit,
+      value_type = value_type,
+      measurement_method = measurement_method
+    ))
+  }
+
+  if (missing(sample_col) || missing(size_col) || missing(value_col)) {
+    stop(
+      "`sample_col`, `size_col`, and `value_col` are required for long-format input.",
+      call. = FALSE
+    )
+  }
+
   x <- readr::read_csv(file, show_col_types = FALSE)
   sample_col <- rlang::as_name(rlang::ensym(sample_col))
   size_col <- rlang::as_name(rlang::ensym(size_col))

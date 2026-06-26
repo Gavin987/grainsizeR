@@ -13,7 +13,7 @@ test_that("gs_parameters returns requested D-values in wide output", {
   expect_true(all(c("WN1", "WN2") %in% result$sample_id))
 })
 
-test_that("gs_parameters combines D-values and engineering indices", {
+test_that("gs_parameters combines D-values and grain-size indices", {
   gsd <- as_gsd_tbl(
     ragged_input_phase2,
     sample_id,
@@ -21,10 +21,24 @@ test_that("gs_parameters combines D-values and engineering indices", {
     retained_proportion
   )
 
-  result <- gs_parameters(gsd, parameters = c("D10", "D30", "engineering"))
+  result <- gs_parameters(gsd, parameters = c("D10", "D30", "indices"))
 
   expect_true(all(c("D10_um", "D30_um", "Cu", "Cc", "fine_content_percent") %in% names(result)))
   expect_equal(nrow(result), 2)
+})
+
+test_that("gs_parameters keeps engineering as a compatibility alias", {
+  gsd <- as_gsd_tbl(
+    ragged_input_phase2,
+    sample_id,
+    size_mm,
+    retained_proportion
+  )
+
+  preferred <- gs_parameters(gsd, parameters = c("D10", "indices"))
+  compatible <- gs_parameters(gsd, parameters = c("D10", "engineering"))
+
+  expect_equal(preferred, compatible)
 })
 
 test_that("gs_parameters supports long output", {
@@ -37,7 +51,7 @@ test_that("gs_parameters supports long output", {
 
   result <- gs_parameters(
     gsd,
-    parameters = c("D10", "D30", "engineering"),
+    parameters = c("D10", "D30", "indices"),
     output = "long"
   )
 
@@ -74,7 +88,7 @@ test_that("gs_parameters includes Folk and Ward columns in wide output", {
   expect_true(all(c("mean_size_class", "sorting_class", "skewness_class", "kurtosis_class") %in% names(result)))
 })
 
-test_that("gs_parameters combines D-values, engineering, and Folk and Ward statistics", {
+test_that("gs_parameters combines D-values, indices, and Folk and Ward statistics", {
   gsd <- as_gsd_tbl(
     ragged_input_phase2,
     sample_id,
@@ -85,7 +99,7 @@ test_that("gs_parameters combines D-values, engineering, and Folk and Ward stati
   expect_warning(
     result <- gs_parameters(
       gsd,
-      parameters = c("D10", "D50", "engineering", "folk_ward"),
+      parameters = c("D10", "D50", "indices", "folk_ward"),
       extrapolate = "warn_linear"
     ),
     "linearly extrapolating"
@@ -166,7 +180,7 @@ test_that("gs_parameters combines moments with other parameter families", {
     expect_warning(
       result <- gs_parameters(
         gsd,
-        parameters = c("D10", "D50", "engineering", "folk_ward", "moments"),
+        parameters = c("D10", "D50", "indices", "folk_ward", "moments"),
         extrapolate = "warn_linear",
         moments_open_end = "extend_phi"
       ),
@@ -207,4 +221,71 @@ test_that("gs_parameters long output includes numeric moment rows", {
   expect_true(all(c("mean_moment_phi", "sd_moment_phi", "skewness_moment") %in% result$parameter))
   expect_true(all(result$method[result$parameter == "mean_moment_phi"] == "moments"))
   expect_true(all(result$unit[result$parameter == "sd_moment_phi"] == "phi"))
+})
+
+test_that("gs_parameters includes fractions in wide output", {
+  gsd <- as_gsd_tbl(
+    ragged_input_phase2,
+    sample_id,
+    size_mm,
+    retained_proportion
+  )
+
+  result <- gs_parameters(
+    gsd,
+    parameters = "fractions",
+    fraction_scheme = "wentworth_major"
+  )
+
+  expect_true(all(c("gravel_percent", "sand_percent", "mud_percent") %in% names(result)))
+  expect_equal(nrow(result), 2)
+})
+
+test_that("gs_parameters combines fractions with other parameter families", {
+  gsd <- as_gsd_tbl(
+    ragged_input_phase2,
+    sample_id,
+    size_mm,
+    retained_proportion
+  )
+
+  expect_warning(
+    result <- gs_parameters(
+      gsd,
+      parameters = c("D50", "indices", "folk_ward", "fractions"),
+      extrapolate = "warn_linear",
+      fraction_scheme = "wentworth_major"
+    ),
+    "linearly extrapolating"
+  )
+
+  expect_true(all(c(
+    "D50_um",
+    "Cu",
+    "mean_fw_phi",
+    "gravel_percent",
+    "sand_percent",
+    "mud_percent"
+  ) %in% names(result)))
+  expect_equal(nrow(result), 2)
+})
+
+test_that("gs_parameters long output includes numeric fraction rows", {
+  gsd <- as_gsd_tbl(
+    ragged_input_phase2,
+    sample_id,
+    size_mm,
+    retained_proportion
+  )
+
+  result <- gs_parameters(
+    gsd,
+    parameters = "fractions",
+    output = "long",
+    fraction_scheme = "wentworth_major"
+  )
+
+  expect_true(all(c("gravel_percent", "sand_percent", "mud_percent") %in% result$parameter))
+  expect_true(all(result$method[result$parameter == "sand_percent"] == "fractions"))
+  expect_true(all(result$unit[result$parameter == "sand_percent"] == "percent"))
 })

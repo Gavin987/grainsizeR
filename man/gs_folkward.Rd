@@ -14,9 +14,9 @@ gs_folkward(
 \arguments{
 \item{x}{A valid \code{gsd_tbl} object.}
 
-\item{interpolation_scale}{Interpolation scale passed to \code{gs_percentile()}.}
+\item{interpolation_scale}{Interpolation scale passed to \code{gs_d_values()}.}
 
-\item{extrapolate}{Extrapolation behavior passed to \code{gs_percentile()}.}
+\item{extrapolate}{Extrapolation behavior passed to \code{gs_d_values()}.}
 
 \item{include_descriptions}{Should descriptive Folk and Ward class labels be
 included?}
@@ -26,8 +26,5 @@ A tibble with one row per sample and Folk and Ward graphical
 statistics.
 }
 \description{
-\code{gs_folkward()} calculates Folk and Ward graphical statistics from
-boundary-interpolated grain-size percentiles. Percentiles follow the package
-convention where \code{D_p} is the grain size at which \code{p} percent of the sample
-is finer.
+\code{gs_folkward()} is a compatibility alias for \code{gs_folk_ward()}.
 }

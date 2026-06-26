@@ -1,0 +1,218 @@
+---
+title: "Grain-Size Analysis Workflow"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Grain-Size Analysis Workflow}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 6,
+  fig.height = 4
+)
+```
+
+## Overview
+
+This vignette shows a compact end-to-end grain-size workflow with grainsizeR.
+It uses the example files installed with the package and keeps each step as an
+ordinary R object so results can be checked, joined, plotted, and exported with
+standard R tools.
+
+This vignette uses preferred public functions in the main workflow. Short
+aliases are available for interactive use, but the full function names are
+easier to read in scripts and reports. CRAN readiness is not claimed here.
+
+```{r}
+library(grainsizeR)
+```
+
+## Reading Long and Wide Grain-Size Data
+
+Long input has one row per sample and size class. Wide input has one size
+column and one column per sample.
+
+```{r}
+long_file <- system.file("extdata", "grain.long.csv", package = "grainsizeR")
+wide_file <- system.file("extdata", "grain.wide.csv", package = "grainsizeR")
+
+gs <- read_gsd(
+  long_file,
+  format = "long",
+  sample_col = "sample",
+  size_col = "size",
+  value_col = "proportion",
+  size_unit = "mm",
+  value_type = "proportion"
+)
+
+gs_wide <- read_gsd_wide(
+  wide_file,
+  size_col = 1,
+  size_unit = "mm",
+  value_type = "percent"
+)
+
+head(gs)
+```
+
+## Inspecting and Validating `gsd_tbl` Objects
+
+`read_gsd()` and `read_gsd_wide()` return `gsd_tbl` objects. Diagnostics help
+identify open-ended classes and threshold-resolution limits before running a
+large analysis.
+
+```{r}
+is_gsd_tbl(gs)
+head(gs_diagnostics(gs, output = "summary"))
+```
+
+## Cumulative Percentages
+
+`gs_cumulative()` returns finite-boundary cumulative percentages by sample.
+
+```{r}
+head(gs_cumulative(gs))
+```
+
+## D-Values and GRADISTAT-Style D-Spread Descriptors
+
+Use `gs_d_values()` for requested percentiles and `gs_d_spread()` for
+GRADISTAT-style D-ratio and D-difference descriptors. Open-ended tails require
+an explicit extrapolation choice when a requested value falls outside resolved
+boundaries.
+
+```{r}
+head(suppressWarnings(gs_d_values(
+  gs,
+  probs = c(10, 50, 90),
+  extrapolate = "warn_linear"
+)))
+
+head(suppressWarnings(gs_d_spread(
+  gs,
+  extrapolate = "warn_linear"
+)))
+```
+
+## Folk and Ward Graphical Statistics
+
+`gs_folk_ward()` calculates graphical statistics from percentile estimates.
+
+```{r}
+head(suppressWarnings(gs_folk_ward(
+  gs,
+  extrapolate = "warn_linear"
+)))
+```
+
+## Moment Statistics
+
+Moment statistics require explicit open-end handling. This example extends
+terminal classes by one phi unit.
+
+```{r}
+head(suppressWarnings(gs_moments(
+  gs,
+  open_end = "extend_phi"
+)))
+```
+
+## Modes and Sample Modality
+
+`gs_modes()` reports ranked retained-class modes and an operational modality
+label.
+
+```{r}
+head(gs_modes(gs))
+```
+
+## Fraction Summaries
+
+Fraction summaries can be returned in long or wide form. The long form is
+convenient for plotting and joins; the wide form is convenient for reports.
+
+```{r}
+head(gs_fractions(gs, scheme = "wentworth_major"))
+head(gs_fractions_wide(gs, scheme = "wentworth_major"))
+```
+
+## Descriptive Terms
+
+`gs_describe_parameters()` adds GRADISTAT-style printout descriptors for
+calculated Folk and Ward or moment statistics.
+
+```{r}
+head(suppressWarnings(gs_describe_parameters(gs)))
+```
+
+## Quality Flags
+
+`gs_quality_flags()` records advisory flags for supplied sediment loss and
+open-ended fine pan fractions.
+
+```{r}
+head(gs_quality_flags(
+  gs,
+  sediment_loss_percent = c(WN1_upper = 1.5, WN2_upper = 2.5)
+))
+```
+
+## Distribution Plots
+
+`plot_distribution()` returns a ggplot object and supports metric and phi axis
+scales.
+
+```{r}
+plot_distribution(gs, sample_id = c("WN1_upper", "WN2_upper"))
+plot_distribution(gs, x_scale = "phi", type = "line", sample_id = c("WN1_upper", "WN2_upper"))
+```
+
+## Cumulative Plots
+
+`plot_cumulative()` can also add D-value markers.
+
+```{r}
+suppressWarnings(plot_cumulative(
+  gs,
+  sample_id = c("WN1_upper", "WN2_upper"),
+  show_percentiles = c(10, 50, 90),
+  extrapolate = "warn_linear"
+))
+```
+
+## Fraction Plots
+
+`plot_fractions()` draws size-class percentage bars.
+
+```{r}
+plot_fractions(gs, scheme = "wentworth_major", sample_id = c("WN1_upper", "WN2_upper"))
+```
+
+## Building a Combined Analysis Table
+
+`gs_parameters()` collects common outputs into a single table. More specialized
+helpers remain available when you need a narrower result.
+
+```{r}
+combined <- suppressWarnings(gs_parameters(
+  gs,
+  parameters = c("d_values", "d_spread", "folk_ward", "modes", "descriptors", "quality"),
+  d_values = c(10, 50, 90),
+  extrapolate = "warn_linear",
+  moments_open_end = "extend_phi"
+))
+
+head(combined)
+```
+
+## Notes on Open-Ended Tails and Extrapolation
+
+Open-ended terminal classes are common in sediment data. grainsizeR does not
+silently turn them into closed intervals. Functions that need unresolved
+thresholds require an explicit extrapolation or open-end option, which makes
+the assumption visible in the analysis script.

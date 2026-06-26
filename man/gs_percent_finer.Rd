@@ -8,8 +8,9 @@ gs_percent_finer(
   x,
   sizes,
   size_unit = "um",
-  scale = c("phi", "log_um", "linear_um"),
-  extrapolate = c("error", "warn_linear")
+  interpolation_scale = c("phi", "log_um", "linear_um"),
+  extrapolate = c("error", "warn_linear"),
+  scale = NULL
 )
 }
 \arguments{
@@ -20,13 +21,17 @@ gs_percent_finer(
 \item{size_unit}{Unit for \code{sizes}. Supported values are \code{"um"}, \code{"mm"}, and
 \code{"phi"}.}
 
-\item{scale}{Interpolation scale. \code{"phi"} interpolates in phi units,
+\item{interpolation_scale}{Interpolation scale. \code{"phi"} interpolates in phi units,
 \code{"log_um"} interpolates in log10 micrometers, and \code{"linear_um"}
 interpolates directly in micrometers.}
 
 \item{extrapolate}{Behavior when a requested threshold falls outside the
-observed finite boundary size range. \code{"error"} throws an error, and
-\code{"warn_linear"} warns and linearly extrapolates on the selected scale.}
+observed finite boundary size range, including thresholds inside
+open-ended terminal classes. \code{"error"} throws an error, and
+\code{"warn_linear"} warns, linearly extrapolates on the selected scale, and
+marks affected rows with \code{extrapolated = TRUE}.}
+
+\item{scale}{Compatibility alias for \code{interpolation_scale}.}
 }
 \value{
 A tibble with one row per sample and requested threshold.
@@ -35,5 +40,15 @@ A tibble with one row per sample and requested threshold.
 \code{gs_percent_finer()} returns the cumulative percent finer than one or more
 requested grain-size thresholds for each sample. Values are taken exactly
 from finite boundaries when thresholds match them, otherwise they are
-interpolated on the selected scale.
+interpolated between finite class boundaries on the selected scale. This is
+the function used by grainsizeR to estimate percent finer at arbitrary
+particle-size thresholds such as 2, 20, 50, 60, and 63 um; requested
+thresholds do not need to match measured class boundaries.
+}
+\details{
+Interpolation is based on \code{gs_cumulative()}. Terminal open-ended fine or
+coarse classes are not silently treated as bounded intervals. Thresholds
+that fall inside an open-ended terminal class are unresolved with
+\code{extrapolate = "error"} and are linearly extrapolated with a warning only
+when \code{extrapolate = "warn_linear"}.
 }

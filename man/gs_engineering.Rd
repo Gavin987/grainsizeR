@@ -2,7 +2,7 @@
 % Please edit documentation in R/engineering.R
 \name{gs_engineering}
 \alias{gs_engineering}
-\title{Calculate engineering grain-size indices}
+\title{Calculate additional grain-size indices}
 \usage{
 gs_engineering(
   x,
@@ -16,16 +16,18 @@ gs_engineering(
 
 \item{fine_threshold_um}{Fine-content threshold in micrometers.}
 
-\item{interpolation_scale}{Interpolation scale passed to \code{gs_percentile()}
+\item{interpolation_scale}{Interpolation scale passed to \code{gs_d_values()}
 and \code{gs_percent_finer()}.}
 
-\item{extrapolate}{Extrapolation behavior passed to \code{gs_percentile()} and
+\item{extrapolate}{Extrapolation behavior passed to \code{gs_d_values()} and
 \code{gs_percent_finer()}.}
 }
 \value{
-A tibble with one row per sample and engineering grain-size indices.
+A tibble with one row per sample and grain-size indices.
 }
 \description{
-\code{gs_engineering()} calculates common engineering-style grain-size indices
-from boundary-based percentile interpolation and a fine-content threshold.
+\code{gs_engineering()} is a compatibility alias for
+\code{gs_grain_size_indices()}. It returns grain-size index values only; it does
+not implement complete civil-engineering classification systems such as
+AASHTO or USCS.
 }

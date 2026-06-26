@@ -91,28 +91,44 @@ percent_finer_one_sample <- function(curve, threshold_um, scale, extrapolate) {
 #' `gs_percent_finer()` returns the cumulative percent finer than one or more
 #' requested grain-size thresholds for each sample. Values are taken exactly
 #' from finite boundaries when thresholds match them, otherwise they are
-#' interpolated on the selected scale.
+#' interpolated between finite class boundaries on the selected scale. This is
+#' the function used by grainsizeR to estimate percent finer at arbitrary
+#' particle-size thresholds such as 2, 20, 50, 60, and 63 um; requested
+#' thresholds do not need to match measured class boundaries.
+#'
+#' Interpolation is based on `gs_cumulative()`. Terminal open-ended fine or
+#' coarse classes are not silently treated as bounded intervals. Thresholds
+#' that fall inside an open-ended terminal class are unresolved with
+#' `extrapolate = "error"` and are linearly extrapolated with a warning only
+#' when `extrapolate = "warn_linear"`.
 #'
 #' @param x A valid `gsd_tbl` object.
 #' @param sizes Numeric vector of grain-size thresholds.
 #' @param size_unit Unit for `sizes`. Supported values are `"um"`, `"mm"`, and
 #'   `"phi"`.
-#' @param scale Interpolation scale. `"phi"` interpolates in phi units,
+#' @param interpolation_scale Interpolation scale. `"phi"` interpolates in phi units,
 #'   `"log_um"` interpolates in log10 micrometers, and `"linear_um"`
 #'   interpolates directly in micrometers.
 #' @param extrapolate Behavior when a requested threshold falls outside the
-#'   observed finite boundary size range. `"error"` throws an error, and
-#'   `"warn_linear"` warns and linearly extrapolates on the selected scale.
+#'   observed finite boundary size range, including thresholds inside
+#'   open-ended terminal classes. `"error"` throws an error, and
+#'   `"warn_linear"` warns, linearly extrapolates on the selected scale, and
+#'   marks affected rows with `extrapolated = TRUE`.
+#' @param scale Compatibility alias for `interpolation_scale`.
 #'
 #' @return A tibble with one row per sample and requested threshold.
 #' @export
 gs_percent_finer <- function(x,
                              sizes,
                              size_unit = "um",
-                             scale = c("phi", "log_um", "linear_um"),
-                             extrapolate = c("error", "warn_linear")) {
+                             interpolation_scale = c("phi", "log_um", "linear_um"),
+                             extrapolate = c("error", "warn_linear"),
+                             scale = NULL) {
   validate_gsd_tbl(x)
-  scale <- match.arg(scale)
+  if (!is.null(scale)) {
+    interpolation_scale <- scale
+  }
+  interpolation_scale <- match.arg(interpolation_scale)
   extrapolate <- match.arg(extrapolate)
   threshold_um <- thresholds_to_um(sizes, size_unit)
 
@@ -122,7 +138,7 @@ gs_percent_finer <- function(x,
     split_curve,
     percent_finer_one_sample,
     threshold_um = threshold_um,
-    scale = scale,
+    scale = interpolation_scale,
     extrapolate = extrapolate
   )
 

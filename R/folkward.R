@@ -54,32 +54,32 @@ folkward_one_sample <- function(sample_id, percentiles, interpolation_scale, inc
 
 #' Calculate Folk and Ward graphical grain-size statistics
 #'
-#' `gs_folkward()` calculates Folk and Ward graphical statistics from
+#' `gs_folk_ward()` calculates Folk and Ward graphical statistics from
 #' boundary-interpolated grain-size percentiles. Percentiles follow the package
 #' convention where `D_p` is the grain size at which `p` percent of the sample
 #' is finer.
 #'
 #' @param x A valid `gsd_tbl` object.
-#' @param interpolation_scale Interpolation scale passed to `gs_percentile()`.
-#' @param extrapolate Extrapolation behavior passed to `gs_percentile()`.
+#' @param interpolation_scale Interpolation scale passed to `gs_d_values()`.
+#' @param extrapolate Extrapolation behavior passed to `gs_d_values()`.
 #' @param include_descriptions Should descriptive Folk and Ward class labels be
 #'   included?
 #'
 #' @return A tibble with one row per sample and Folk and Ward graphical
 #'   statistics.
 #' @export
-gs_folkward <- function(x,
-                        interpolation_scale = "phi",
-                        extrapolate = c("error", "warn_linear"),
-                        include_descriptions = TRUE) {
+gs_folk_ward <- function(x,
+                         interpolation_scale = "phi",
+                         extrapolate = c("error", "warn_linear"),
+                         include_descriptions = TRUE) {
   validate_gsd_tbl(x)
   interpolation_scale <- match.arg(interpolation_scale, c("phi", "log_um", "linear_um"))
   extrapolate <- match.arg(extrapolate)
 
-  percentiles <- gs_percentile(
+  percentiles <- gs_d_values(
     x,
     probs = c(5, 16, 25, 50, 75, 84, 95),
-    scale = interpolation_scale,
+    interpolation_scale = interpolation_scale,
     output_unit = "um",
     extrapolate = extrapolate
   )
@@ -96,4 +96,25 @@ gs_folkward <- function(x,
   out <- do.call(rbind, unname(out))
   rownames(out) <- NULL
   tibble::as_tibble(out)
+}
+
+#' Calculate Folk and Ward graphical grain-size statistics
+#'
+#' `gs_folkward()` is a compatibility alias for `gs_folk_ward()`.
+#'
+#' @inheritParams gs_folk_ward
+#'
+#' @return A tibble with one row per sample and Folk and Ward graphical
+#'   statistics.
+#' @export
+gs_folkward <- function(x,
+                        interpolation_scale = "phi",
+                        extrapolate = c("error", "warn_linear"),
+                        include_descriptions = TRUE) {
+  gs_folk_ward(
+    x = x,
+    interpolation_scale = interpolation_scale,
+    extrapolate = extrapolate,
+    include_descriptions = include_descriptions
+  )
 }

@@ -1,0 +1,225 @@
+---
+title: "Replacing GRADISTAT and G2Sd Workflows"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Replacing GRADISTAT and G2Sd Workflows}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 6,
+  fig.height = 4
+)
+```
+
+## Purpose
+
+This vignette shows how grainsizeR can be used as an R-native functional
+replacement workflow for many GRADISTAT and G2Sd-style grain-size analysis
+tasks. It is not an Excel visual clone and does not claim byte-for-byte parity
+with workbook printouts.
+
+```{r}
+library(grainsizeR)
+```
+
+## What GRADISTAT and G2Sd Workflows Usually Provide
+
+Typical workflows include importing retained grain-size data, calculating
+D-values and graphical statistics, describing sediment parameters, checking
+quality cautions, classifying texture, composing sediment names, and producing
+distribution, cumulative, fraction, and texture ternary plots.
+
+## grainsizeR Equivalent Functions
+
+| GRADISTAT / G2Sd output | grainsizeR function | Notes |
+|---|---|---|
+| Retained grain-size input | `read_gsd()`, `read_gsd_wide()` | Long and wide retained tables are supported. |
+| D-values | `gs_d_values()` | Percentile grain sizes with explicit extrapolation behavior. |
+| D-ratio and D-difference descriptors | `gs_d_spread()` | GRADISTAT-style spread descriptors. |
+| Folk and Ward statistics | `gs_folk_ward()` | Graphical statistics in R tabular output. |
+| Moment statistics | `gs_moments()` | Explicit open-end handling is required. |
+| Modes and modality | `gs_modes()` | Ranked retained-class modes and sample modality. |
+| Fraction percentages | `gs_fractions()`, `gs_fractions_wide()` | Built-in particle-size schemes. |
+| Descriptive terms | `gs_describe_parameters()` | GRADISTAT-style printout descriptors. |
+| Quality cautions | `gs_quality_flags()` | Sediment loss and open fine-pan advisories. |
+| Summary table | `gs_parameters()` | Combined R table for reporting. |
+| Distribution plot | `plot_distribution()` | ggplot output with metric and phi scales. |
+| Cumulative curve | `plot_cumulative()` | ggplot output with optional D-value markers. |
+| Fraction plot | `plot_fractions()` | ggplot stacked bars by sample. |
+| Texture classification | `classify_texture()` | USDA and GRADISTAT rule paths plus user polygons. |
+| Sediment names | `gs_gradistat_sediment_name()` | GRADISTAT-style composition from texture classes. |
+| Texture ternary plots | `plot_texture_ternary()` | Preferred terminology-correct alias; `plot_texture_triangle()` remains available for compatibility. |
+
+Short aliases such as `gs_fw57()`, `gs_frac()`, `gs_diag()`, and `gs_qc()` are
+available for interactive work. The full names in the table remain the clearest
+choices for reproducible scripts and method descriptions.
+
+## Input Data
+
+```{r}
+long_file <- system.file("extdata", "grain.long.csv", package = "grainsizeR")
+gs <- read_gsd(
+  long_file,
+  format = "long",
+  sample_col = "sample",
+  size_col = "size",
+  value_col = "proportion",
+  size_unit = "mm",
+  value_type = "proportion"
+)
+
+head(gs)
+```
+
+## Summary Statistics
+
+```{r}
+head(suppressWarnings(gs_parameters(
+  gs,
+  parameters = c("d_values", "indices", "folk_ward", "fractions"),
+  d_values = c(10, 50, 90),
+  fraction_scheme = "gradistat",
+  extrapolate = "warn_linear"
+)))
+```
+
+## D-Values and Spread Descriptors
+
+```{r}
+head(suppressWarnings(gs_d_values(gs, probs = c(10, 50, 90), extrapolate = "warn_linear")))
+head(suppressWarnings(gs_d_spread(gs, extrapolate = "warn_linear")))
+```
+
+## Modes and Modality
+
+```{r}
+head(gs_modes(gs))
+```
+
+## Descriptive Terms and Quality Flags
+
+```{r}
+head(suppressWarnings(gs_describe_parameters(gs)))
+head(gs_quality_flags(gs, sediment_loss_percent = c(WN1_upper = 1.2, WN2_upper = 2.4)))
+```
+
+## Texture Classification
+
+USDA major texture classification uses sand, silt, and clay percentages. USDA
+sand-size modifier subclasses remain future work.
+
+```{r}
+usda_samples <- data.frame(
+  sample_id = c("A", "B", "C"),
+  sand = c(85, 40, 20),
+  silt = c(10, 40, 20),
+  clay = c(5, 20, 60)
+)
+
+classify_texture(usda_samples, scheme = "usda_tt", method = "rules")
+```
+
+GRADISTAT texture classification supports the gravel-sand-mud and sand-silt-clay
+no-gravel bases.
+
+```{r}
+gsm <- data.frame(
+  sample_id = c("A", "B", "C"),
+  gravel = c(0, 10, 40),
+  sand = c(95, 80, 40),
+  mud = c(5, 10, 20)
+)
+
+ssc <- data.frame(
+  sample_id = c("A", "B", "C"),
+  sand = c(95, 60, 20),
+  silt = c(3, 30, 60),
+  clay = c(2, 10, 20)
+)
+
+gsm_classified <- classify_texture(
+  gsm,
+  scheme = "gradistat",
+  method = "rules",
+  basis = "gravel_sand_mud",
+  include_sediment_name = TRUE
+)
+
+ssc_classified <- classify_texture(
+  ssc,
+  scheme = "gradistat",
+  method = "rules",
+  basis = "sand_silt_clay_no_gravel"
+)
+
+gsm_classified
+ssc_classified
+```
+
+## Sediment Names
+
+```{r}
+gs_gradistat_sediment_name(gsm_classified)
+```
+
+## Distribution and Cumulative Plots
+
+```{r}
+plot_distribution(gs, sample_id = c("WN1_upper", "WN2_upper"))
+suppressWarnings(plot_cumulative(
+  gs,
+  sample_id = c("WN1_upper", "WN2_upper"),
+  show_percentiles = c(10, 50, 90),
+  extrapolate = "warn_linear"
+))
+```
+
+## Texture Ternary Plots
+
+```{r}
+plot_texture_ternary(
+  gsm_classified,
+  scheme = "gradistat",
+  basis = "gravel_sand_mud",
+  point_id = "sample_id"
+)
+
+plot_texture_ternary(
+  ssc_classified,
+  scheme = "gradistat",
+  basis = "sand_silt_clay_no_gravel",
+  point_id = "sample_id"
+)
+```
+
+## What Differs From Excel-Based GRADISTAT
+
+grainsizeR returns R objects, not fixed spreadsheet worksheets. Plots are
+ggplot objects and can be styled or combined with ordinary R tools. The package
+does not copy GRADISTAT VBA code, chart objects, or workbook printout layouts.
+
+## What Is Not Claimed
+
+This vignette does not claim full Excel visual parity, byte-for-byte output
+identity, complete modified Udden-Wentworth subclass parity, or a CRAN release
+claim. It demonstrates a functional replacement workflow for the implemented
+package scope.
+
+## Remaining Future Work
+
+Future work includes a separate CRAN-specific audit before any CRAN submission
+and deferred features such as USDA sand-size modifier subclasses, additional
+texture systems, and civil-engineering classifications if they are scoped
+later.
+
+## Reproducibility Advantages in R
+
+An R-native workflow keeps import choices, extrapolation assumptions,
+classification settings, plots, and output tables in a script. That makes the
+analysis easier to rerun, review, and version-control than a manual spreadsheet
+workflow.

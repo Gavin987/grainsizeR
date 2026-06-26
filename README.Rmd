@@ -1,0 +1,487 @@
+---
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 6,
+  fig.height = 4
+)
+```
+
+# grainsizeR
+
+## Overview
+
+grainsizeR provides R tools for sediment grain-size analysis. It reads retained
+grain-size distributions, builds validated `gsd_tbl` objects, calculates
+D-values and percent-finer thresholds, summarizes grain-size statistics and
+fractions, supports GRADISTAT/G2Sd-style functional replacement workflows, and
+creates common plots for sedimentology and soil texture workflows.
+
+Built-in official texture polygon datasets are not bundled yet. User-supplied
+texture polygons are supported. The package scope is sedimentology,
+grain-size statistics, particle-size fractions, soil texture fractions, texture
+ternary plots, and documented soil or sediment texture systems.
+
+## Installation
+
+```{r installation, eval=FALSE}
+# Development installation from GitHub.
+install.packages("remotes")
+remotes::install_github("Gavin987/grainsizeR")
+```
+
+grainsizeR is under active development. Built-in official texture polygon
+datasets are not bundled yet, and polygon reconstruction scaffolds under
+`data-raw/` are development materials.
+
+## Data Format
+
+grainsizeR accepts long and wide retained-size data.
+
+Long format has one row per sample and grain-size class:
+
+```text
+sample,size,proportion
+WN1_upper,2,0.023552612
+WN1_upper,1,0.026157166
+```
+
+Wide format stores size classes in rows and samples in columns. Terminal fine
+classes such as `<0.0625` are supported.
+
+## Basic Workflow
+
+```{r basic-workflow}
+library(grainsizeR)
+
+long_file <- system.file("extdata", "grain.long.csv", package = "grainsizeR")
+wide_file <- system.file("extdata", "grain.wide.csv", package = "grainsizeR")
+
+if (!nzchar(long_file)) {
+  long_file <- file.path("inst", "extdata", "grain.long.csv")
+  wide_file <- file.path("inst", "extdata", "grain.wide.csv")
+}
+
+gs <- read_gsd(
+  long_file,
+  format = "long",
+  sample_col = "sample",
+  size_col = "size",
+  value_col = "proportion",
+  size_unit = "mm",
+  value_type = "proportion"
+)
+
+gs_wide <- read_gsd(
+  wide_file,
+  format = "wide",
+  size_col = 1,
+  size_unit = "mm",
+  value_type = "percent"
+)
+
+head(gs)
+```
+
+## End-to-End Workflow
+
+The compact workflow below reads retained data, calculates common replacement
+outputs, and creates the main plot families. The full examples are in
+`vignette("grain-size-workflow")` and
+`vignette("replacing-gradistat-g2sd")`.
+
+```{r end-to-end-workflow, eval=FALSE}
+gs <- read_gsd(
+  long_file,
+  format = "long",
+  sample_col = "sample",
+  size_col = "size",
+  value_col = "proportion",
+  size_unit = "mm",
+  value_type = "proportion"
+)
+
+d_values <- gs_d_values(gs, probs = c(10, 50, 90), extrapolate = "warn_linear")
+spread <- gs_d_spread(gs, extrapolate = "warn_linear")
+folk_ward <- gs_folk_ward(gs, extrapolate = "warn_linear")
+modes <- gs_modes(gs)
+fractions <- gs_fractions(gs, scheme = "wentworth_major")
+descriptors <- gs_describe_parameters(gs)
+quality <- gs_quality_flags(gs)
+
+plot_distribution(gs)
+plot_cumulative(gs, show_percentiles = c(10, 50, 90), extrapolate = "warn_linear")
+plot_fractions(gs, scheme = "wentworth_major")
+```
+
+## Data Quality Diagnostics
+
+`gs_diagnostics()` reports retained-total issues, open-ended terminal bins, and
+whether requested D-values, thresholds, and fraction schemes are resolvable
+without silent open-tail assumptions.
+
+```{r diagnostics}
+head(gs_diagnostics(gs_wide, output = "summary"))
+
+head(gs_diagnostics(
+  gs,
+  d_values = c(5, 10, 50, 90, 95),
+  fraction_schemes = c("wentworth_major", "usda_tt", "uk_ssew")
+))
+```
+
+## Table Layouts and Measurement Workflows
+
+grainsizeR supports both tidy long tables and multi-sample wide tables. These
+file layouts are independent of measurement workflow. The included
+`grain.wide.csv` file demonstrates a dry-sieve dataset stored as a multi-sample
+wide table. The included `grain.long.csv` file demonstrates a sieve +
+hydrometer dataset stored as a tidy long table.
+
+Pipette-method and laser-diffraction data may also be stored as wide or long
+tables. Laser outputs reported as volume percent by bin can usually be
+represented as retained class values after checking bin definitions. Laser
+cumulative outputs must be converted to retained bin increments before import.
+Use `gs_diagnostics()` to determine whether target thresholds and D-values are
+resolvable. Clay/silt/sand texture workflows require sufficient
+fine-resolution data.
+
+## D-Values and Percent Finer
+
+`D_p` is the grain size at which `p` percent of the sample is finer.
+
+```{r d-values}
+head(gs_d_values(gs, probs = c(10, 50, 90)))
+
+head(suppressWarnings(gs_percent_finer(
+  gs,
+  sizes = c(2, 20, 50, 60, 63),
+  size_unit = "um",
+  extrapolate = "warn_linear"
+)))
+```
+
+Percent-finer thresholds do not need to match measured class boundaries. Values
+are interpolated between finite boundaries. Open-ended terminal classes are not
+silently treated as bounded intervals.
+
+## Grain-Size Indices
+
+```{r indices}
+head(suppressWarnings(gs_grain_size_indices(
+  gs,
+  extrapolate = "warn_linear"
+)))
+```
+
+## Folk and Ward Statistics
+
+```{r folk-ward}
+head(suppressWarnings(gs_folk_ward(
+  gs,
+  extrapolate = "warn_linear"
+)))
+```
+
+## Moment Statistics and Open-Ended Classes
+
+Moment statistics require explicit handling of open-ended terminal classes.
+
+```{r moments}
+head(suppressWarnings(gs_moments(
+  gs,
+  open_end = "extend_phi"
+)))
+```
+
+## Grain-Size Fractions
+
+```{r fractions}
+head(gs_fractions_wide(gs, scheme = "wentworth_major"))
+head(particle_size_systems())
+```
+
+## Summary Tables
+
+`gs_parameters()` returns ordinary R tabular output that can be used directly in
+reports or exported with standard R functions.
+
+```{r summary-table}
+summary <- suppressWarnings(gs_parameters(
+  gs,
+  parameters = c("d_values", "indices", "folk_ward", "fractions"),
+  fraction_scheme = "gradistat",
+  extrapolate = "warn_linear"
+))
+
+head(summary)
+```
+
+GRADISTAT-style D-spread descriptors, retained-class modes, printout
+descriptors, and quality flags are available as explicit summaries:
+
+```{r d-spread-modes}
+head(suppressWarnings(gs_d_spread(gs, extrapolate = "warn_linear")))
+head(gs_modes(gs))
+```
+
+They can also be requested from `gs_parameters()`:
+
+```{r summary-table-gradistat-fields}
+head(suppressWarnings(gs_parameters(
+  gs,
+  parameters = c("d_spread", "modes", "descriptors", "quality"),
+  extrapolate = "warn_linear"
+)))
+```
+
+```{r summary-table-export, eval=FALSE}
+write.csv(summary, "grain_size_summary.csv", row.names = FALSE)
+```
+
+grainsizeR intentionally does not provide a dedicated
+`export_gradistat_summary()` helper; export format choices are left to standard
+R workflows.
+
+## GRADISTAT and G2Sd Workflows
+
+grainsizeR provides R-native workflows for many tasks commonly handled in
+GRADISTAT and G2Sd-style grain-size analysis. The package covers retained-data
+import, D-values, percent-finer interpolation, grain-size indices,
+GRADISTAT-style D-spread descriptors, retained-class modes, Folk and Ward
+statistics, moment statistics, descriptive terms, quality flags,
+particle-size fractions, summary tables, and distribution, cumulative,
+fraction, texture ternary, and summary plots.
+
+These workflows are functional R replacements, not Excel printout clones. The
+package does not copy GRADISTAT VBA code, G2Sd source code, workbook chart
+objects, or spreadsheet layouts. CRAN readiness is not claimed.
+
+## Validation and Numerical Assumptions
+
+The method-validation vignette documents the D-value convention, threshold
+interpolation, open-tail behavior, long/wide example-data interpretation, and
+summary-table consistency. Read it before comparing grainsizeR results with
+other software.
+
+## Plotting
+
+```{r plotting, eval=FALSE}
+plot_distribution(gs)
+plot_distribution(gs, x_scale = "phi", type = "line")
+plot_cumulative(gs, show_percentiles = c(10, 50, 90), extrapolate = "warn_linear")
+plot_cumulative(gs, x_scale = "phi")
+plot_fractions(gs, scheme = "wentworth_major")
+```
+
+### GRADISTAT-Inspired Summary Plot
+
+`plot_gradistat_summary()` creates an original sediment grain-size diagnostic
+plot for a single sample. It combines retained distribution, cumulative percent
+finer, D-value markers, fraction boundaries, and a compact summary caption.
+
+```{r gradistat-summary, eval=FALSE}
+plot_gradistat_summary(gs, sample_id = "WN1_upper", extrapolate = "warn_linear")
+```
+
+## USDA Major Texture Classes
+
+USDA 12-class major textural classification is available through the
+existing `classify_texture()` workflow. It uses the validated internal rule
+helper and does not require bundled USDA polygon data.
+
+```{r usda-texture-rules}
+samples <- data.frame(
+  sample_id = c("A", "B", "C"),
+  sand = c(85, 40, 20),
+  silt = c(10, 40, 20),
+  clay = c(5, 20, 60)
+)
+
+classify_texture(samples, scheme = "usda_tt", method = "rules")
+```
+
+```{r usda-texture-ternary, eval=FALSE}
+usda_plot_gs <- as_gsd_tbl(
+  data.frame(
+    sample_id = "A",
+    size_mm = c(2, 1, 0.5, 0.25, 0.125, 0.063, 0.031, 0.016, 0.008, 0.004, 0.002, 0.001),
+    retained = c(2, 3, 5, 10, 15, 18, 12, 10, 8, 7, 6, 4)
+  ),
+  sample_id,
+  size_mm,
+  retained,
+  value_type = "percent"
+)
+
+plot_texture_ternary(usda_plot_gs, scheme = "usda_tt")
+```
+
+`method = "auto"` selects the same USDA rule path for `scheme = "usda_tt"`
+when no texture polygons are supplied.
+
+This path covers only the 12 USDA major classes. Sand-size modifier subclasses
+such as coarse sand, fine sand, very fine sand, coarse sandy loam, fine sandy
+loam, and very fine sandy loam are not implemented yet. They may be considered
+later as qualitative descriptor columns for D50 or particle-size summaries. No
+USDA polygon dataset is bundled.
+The rule path is vectorized; current performance notes are informational and
+are not formal benchmarks.
+
+## GRADISTAT Texture Classification
+
+GRADISTAT-style texture classification is available through the existing
+`classify_texture()` workflow. The supported rule bases are `gravel_sand_mud`
+for gravel-sand-mud textural groups and `sand_silt_clay_no_gravel` for
+no-gravel sand-silt-clay mini texture classes. GRADISTAT-style sediment-name
+composition is available with `gs_gradistat_sediment_name()` or by setting
+`include_sediment_name = TRUE` in the GRADISTAT classification call.
+
+```{r gradistat-texture-rules}
+gsm <- data.frame(
+  sample_id = c("A", "B", "C"),
+  gravel = c(0, 10, 40),
+  sand = c(95, 80, 40),
+  mud = c(5, 10, 20)
+)
+
+classify_texture(
+  gsm,
+  scheme = "gradistat",
+  method = "rules",
+  basis = "gravel_sand_mud",
+  include_sediment_name = TRUE
+)
+```
+
+`TEXTURAL GROUP` and `SEDIMENT NAME` are distinct GRADISTAT-style outputs.
+When dominant size-subclass columns are missing, grainsizeR returns the
+textural group as a partial sediment name rather than inventing subclass
+modifiers. GRADISTAT ternary plotting is available through the preferred
+`plot_texture_ternary()` alias. The stable `plot_texture_triangle()` function
+name remains available for compatibility. USDA classification remains
+available separately through `scheme = "usda_tt"`.
+
+```{r gradistat-ternary-plot, eval=FALSE}
+plot_texture_ternary(
+  gsm,
+  scheme = "gradistat",
+  basis = "gravel_sand_mud",
+  point_id = "sample_id"
+)
+```
+
+## Texture Ternary Plots and User-Supplied Polygons
+
+Texture class polygons are separate from particle-size fraction schemes.
+grainsizeR does not include official polygon coordinates yet, but users can
+provide their own polygons.
+
+Source-audit helpers list planned texture systems and source-review status:
+
+```{r texture-source-audit}
+texture_polygon_sources()
+texture_source_audit()
+```
+
+No official texture polygon dataset is bundled. Future built-in polygon data
+would need a separate source review, independent reconstruction from primary
+official or academic sources, validation examples, tests, and package
+documentation. Soil Texture Wizard or other secondary references may help find
+sources, but they are not coordinate sources for grainsizeR.
+
+USDA major 12-class texture classification is available through
+`classify_texture(..., scheme = "usda_tt", method = "rules")`. This is a
+rule-based classifier, not a bundled USDA polygon dataset.
+
+```{r texture-triangle, eval=FALSE}
+synthetic <- data.frame(
+  sample_id = rep(c("A", "B"), each = 4),
+  size_mm = rep(c(2, 0.05, 0.002, 0.001), 2),
+  retained = c(10, 40, 30, 20, 5, 20, 35, 40)
+)
+
+synthetic_gs <- as_gsd_tbl(
+  synthetic,
+  sample_id,
+  size_mm,
+  retained,
+  value_type = "percent"
+)
+
+polygons <- data.frame(
+  scheme = "synthetic_ternary",
+  class_id = "all",
+  class_name = "Synthetic full ternary area",
+  vertex_id = 1:3,
+  left = c(100, 0, 0),
+  right = c(0, 100, 0),
+  top = c(0, 0, 100),
+  left_component = "sand",
+  right_component = "silt",
+  top_component = "clay",
+  reference_id = NA_character_,
+  reference = NA_character_
+)
+
+polygons <- validate_texture_polygons(polygons)
+classify_texture(synthetic_gs, polygons, scheme = "synthetic_ternary")
+plot_texture_ternary(synthetic_gs, polygons = polygons, scheme = "synthetic_ternary")
+```
+
+## Convenience Aliases
+
+Full descriptive function names remain the recommended names in most
+documentation. Short aliases are available for interactive use and do not
+change behavior. Common aliases include `gs_fw57()` for `gs_folk_ward()`,
+`gs_frac()` for `gs_fractions()`, `gs_diag()` for `gs_diagnostics()`, and
+`plot_texture_ternary()` for texture ternary plots. `plot_texture_triangle()`
+remains available as a stable compatibility function name.
+
+| Task | Preferred function | Shortcut or compatibility name |
+|---|---|---|
+| Folk and Ward statistics | `gs_folk_ward()` | `gs_fw57()`, `gs_folkward()` |
+| Fraction summaries | `gs_fractions()` | `gs_frac()` |
+| Fraction scheme list | `gs_fraction_schemes()` | `gs_frac_schemes()` |
+| Wide fraction table | `gs_fractions_wide()` | `gs_frac_wide()` |
+| Diagnostics | `gs_diagnostics()` | `gs_diag()` |
+| Descriptive terms | `gs_describe_parameters()` | `gs_desc()` |
+| Quality flags | `gs_quality_flags()` | `gs_qc()` |
+| D-values | `gs_d_values()` | `gs_percentile()` |
+| Texture ternary plot | `plot_texture_ternary()` | `plot_texture_triangle()`, `plot_trigon()` |
+
+## License and Data Provenance
+
+grainsizeR is licensed under the MIT License. Package code and original package
+documentation are MIT-licensed.
+
+Future built-in official texture polygon datasets are not bundled yet. Official
+polygon datasets will only be added after independent reconstruction from
+primary official or academic sources, review, testing, and documentation.
+Secondary resources may be used as source-finding guides only.
+
+grainsizeR will not copy `soiltexture` code, class tables, internal data
+objects, vertex tables, polygon coordinates, or internal polygon definitions.
+The public provenance notes in `data-raw/provenance/` document source
+boundaries before any future built-in texture polygon dataset is considered.
+
+## Current Limitations
+
+- Built-in official texture polygon datasets are not included yet.
+- Full Excel visual parity for GRADISTAT and G2Sd plot outputs is not claimed.
+- CRAN readiness is not claimed; it requires a separate future audit.
+- Open-ended terminal classes require explicit extrapolation or unresolved-value
+  handling.
+- The package focuses on sedimentology, grain-size statistics, particle-size
+  fractions, soil texture fractions, texture ternary plots, and documented
+  soil/sediment texture systems.
+
+## Development Status
+
+grainsizeR is in active development. Function names and documentation are being
+polished before broader release, while compatibility aliases are retained for
+earlier development names.

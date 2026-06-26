@@ -1,0 +1,10 @@
+bibentry(
+  bibtype = "Manual",
+  title = "grainsizeR: Sediment Grain-Size Analysis Tools",
+  author = c(
+    person(given = "Ching-Sung G.", family = "Chang", email = "cschang.bt10@nycu.edu.tw")
+  ),
+  year = "2026",
+  note = "R package version 0.0.0.9000, development software",
+  url = "https://github.com/Gavin987/grainsizeR"
+)

@@ -38,7 +38,6 @@ _site/
 # revdepcheck artifacts
 revdep/
 revdepcheck/
-cran-comments.md.bak
 
 # renv / pak / local dependency caches
 renv/library/
@@ -63,6 +62,15 @@ scratch/
 local/
 output/
 outputs/
+_local_audit/
+/data-raw/*
+!/data-raw/provenance/
+!/data-raw/provenance/**
+/grain.long.csv
+/grain.wide.csv
+!/docs/
+/docs/*
+!/docs/texture-polygon-github-backlog.md
 *.tmp
 *.bak
 *.log
@@ -81,3 +89,5 @@ Desktop.ini
 *.swp
 *.swo
 *~
+/doc/
+/Meta/

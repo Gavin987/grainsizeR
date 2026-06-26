@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: grainsizeR documentation
+    url: https://github.com/Gavin987/grainsizeR#readme
+    about: Check the README and vignettes before opening a new issue.

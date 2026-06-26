@@ -1,0 +1,215 @@
+---
+title: "Basic grainsizeR Workflow"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Basic grainsizeR Workflow}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```
+
+## Introduction
+
+This vignette shows a complete sediment grain-size workflow with grainsizeR.
+The examples use package data stored in `inst/extdata`.
+
+For a more detailed discussion of table layouts versus measurement workflows,
+including the dry-sieve and sieve + hydrometer example files, see the table
+layouts and measurement workflows vignette.
+
+```{r}
+library(grainsizeR)
+```
+
+## Reading Long-Format Data
+
+Long-format input has one row per sample and grain-size class.
+
+```{r}
+long_file <- system.file("extdata", "grain.long.csv", package = "grainsizeR")
+
+gs <- read_gsd(
+  long_file,
+  format = "long",
+  sample_col = "sample",
+  size_col = "size",
+  value_col = "proportion",
+  size_unit = "mm",
+  value_type = "proportion"
+)
+
+head(gs)
+```
+
+## Reading Wide-Format Data
+
+Wide input stores size classes in rows and samples in columns. Terminal fine
+rows such as `<0.0625` are supported and become open-ended fine classes.
+
+```{r}
+wide_file <- system.file("extdata", "grain.wide.csv", package = "grainsizeR")
+
+gs_wide <- read_gsd(
+  wide_file,
+  format = "wide",
+  size_col = 1,
+  size_unit = "mm",
+  value_type = "percent"
+)
+
+head(gs_wide)
+```
+
+## The `gsd_tbl` Object
+
+`gsd_tbl` stores retained percentages, finite class boundaries, cumulative
+percent finer and coarser values, and open-ended class flags.
+
+```{r}
+is_gsd_tbl(gs)
+validate_gsd_tbl(gs)
+```
+
+## Data Quality Diagnostics
+
+`gs_diagnostics()` is useful after reading data and before calculating summary
+tables. It reports retained-total checks, open-ended tails, unresolved D-values,
+threshold interpolation limits, and fraction-scheme resolvability. The example
+wide file is a dry-sieve dataset stored in a wide layout, so fine clay/silt
+thresholds may be unresolved unless finer measurements or explicit
+extrapolation are supplied.
+
+```{r}
+head(gs_diagnostics(gs_wide, output = "summary"))
+head(gs_diagnostics(
+  gs,
+  d_values = c(5, 10, 50, 90, 95),
+  fraction_schemes = c("wentworth_major", "usda_tt", "uk_ssew")
+))
+```
+
+## Cumulative Curves and D-Values
+
+`D_p` is the grain size at which `p` percent of the sample is finer.
+
+```{r}
+head(gs_cumulative(gs))
+head(gs_d_values(gs, probs = c(10, 50, 90)))
+```
+
+## Arbitrary Threshold Interpolation
+
+`gs_percent_finer()` estimates percent finer at arbitrary thresholds, including
+thresholds that were not measured exactly, as long as the threshold is bracketed
+by finite class boundaries. Terminal open-ended classes require explicit
+extrapolation or unresolved-value handling.
+
+```{r}
+head(suppressWarnings(gs_percent_finer(
+  gs,
+  sizes = c(2, 20, 50, 60, 63),
+  size_unit = "um",
+  extrapolate = "warn_linear"
+)))
+```
+
+## Grain-Size Indices
+
+```{r}
+head(suppressWarnings(gs_grain_size_indices(
+  gs,
+  extrapolate = "warn_linear"
+)))
+```
+
+## Folk and Ward Statistics
+
+```{r}
+head(suppressWarnings(gs_folk_ward(
+  gs,
+  extrapolate = "warn_linear"
+)))
+```
+
+## Moment Statistics and Open-Ended Classes
+
+Moment statistics require an explicit open-end policy. `open_end =
+"extend_phi"` estimates open-ended midpoints by extending adjacent intervals in
+phi space.
+
+```{r}
+head(suppressWarnings(gs_moments(
+  gs,
+  open_end = "extend_phi"
+)))
+```
+
+## Grain-Size Fractions and Particle-Size Systems
+
+```{r}
+head(gs_fractions_wide(gs, scheme = "wentworth_major"))
+particle_size_systems()
+```
+
+## Creating a Report Table
+
+`gs_parameters()` is the recommended way to create a compact grain-size summary
+table for reporting. It can combine D-values, grain-size indices, Folk and Ward
+statistics, moment statistics, and fractions in one row per sample.
+
+```{r}
+report_table <- suppressWarnings(gs_parameters(
+  gs,
+  parameters = c("d_values", "indices", "folk_ward", "fractions"),
+  fraction_scheme = "gradistat",
+  extrapolate = "warn_linear"
+))
+
+head(report_table)
+```
+
+`plot_gradistat_summary()` is for visual diagnostics. Standard R functions can
+export tables when needed:
+
+```{r, eval=FALSE}
+write.csv(report_table, "grain_size_summary.csv", row.names = FALSE)
+```
+
+Keeping export in standard R workflows avoids tying grainsizeR to a specific
+report format.
+
+## Basic Plots
+
+```{r, fig.width=6, fig.height=4}
+plot_distribution(gs)
+```
+
+```{r, fig.width=6, fig.height=4}
+plot_cumulative(gs, show_percentiles = c(10, 50, 90), extrapolate = "warn_linear")
+```
+
+```{r, fig.width=6, fig.height=4}
+plot_fractions(gs, scheme = "wentworth_major")
+```
+
+`plot_gradistat_summary()` provides a single-sample diagnostic plot that
+combines retained distribution, cumulative percent finer, D-value markers, and
+summary statistics. It is inspired by common sediment grain-size reporting
+needs, not copied from GRADISTAT software.
+
+```{r, fig.width=7, fig.height=5}
+suppressWarnings(plot_gradistat_summary(
+  gs,
+  sample_id = "WN1_upper",
+  extrapolate = "warn_linear"
+))
+```
+
+## Recommended Reporting Workflow
+
+For reproducible reporting, state the input format, measurement units,
+interpolation scale, open-end policy, fraction scheme, and whether any values
+were extrapolated or unresolved.

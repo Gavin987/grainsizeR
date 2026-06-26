@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you use grainsizeR, please cite the package."
+title: "grainsizeR: Sediment Grain-Size Analysis Tools"
+authors:
+  - family-names: "Chang"
+    given-names: "Ching-Sung G."
+    email: "cschang.bt10@nycu.edu.tw"
+repository-code: "https://github.com/Gavin987/grainsizeR"
+license: "MIT"
+version: "0.0.0.9000"

@@ -1,0 +1,88 @@
+template:
+  bootstrap: 5
+
+title: grainsizeR
+url: https://Gavin987.github.io/grainsizeR/
+
+home:
+  links:
+    - text: Source code
+      href: https://github.com/Gavin987/grainsizeR
+    - text: Issues
+      href: https://github.com/Gavin987/grainsizeR/issues
+
+navbar:
+  structure:
+    left: [intro, reference, articles, news]
+    right: [search]
+
+reference:
+  - title: Input and validation
+    contents:
+      - read_gsd
+      - read_gsd_wide
+      - as_gsd_tbl
+      - is_gsd_tbl
+      - validate_gsd_tbl
+      - gs_diagnostics
+  - title: Unit conversion
+    contents:
+      - mm_to_um
+      - um_to_mm
+      - mm_to_phi
+      - phi_to_mm
+      - um_to_phi
+      - phi_to_um
+  - title: Cumulative curves and D-values
+    contents:
+      - gs_cumulative
+      - gs_d_values
+      - gs_percent_finer
+  - title: Grain-size indices
+    contents:
+      - gs_grain_size_indices
+      - gs_parameters
+  - title: Folk and Ward statistics
+    contents:
+      - gs_folk_ward
+      - starts_with("describe_")
+  - title: Moment statistics
+    contents:
+      - gs_moments
+  - title: Fractions and particle-size systems
+    contents:
+      - particle_size_systems
+      - texture_source_audit
+      - gs_fraction_schemes
+      - gs_fractions
+      - gs_fractions_wide
+  - title: Texture polygons and classification
+    contents:
+      - texture_polygon_sources
+      - texture_polygon_template
+      - validate_texture_polygons
+      - classify_texture
+      - ternary_to_xy
+  - title: Plotting
+    contents:
+      - plot_distribution
+      - plot_cumulative
+      - plot_fractions
+      - plot_gradistat_summary
+      - plot_texture_triangle
+  - title: Compatibility aliases
+    contents:
+      - gs_percentile
+      - gs_engineering
+      - gs_folkward
+      - plot_trigon
+
+articles:
+  - title: Workflows
+    navbar: ~
+    contents:
+      - basic-workflow
+      - table-layouts-and-measurement-workflows
+      - method-validation
+      - texture-polygons
+      - texture-source-audit

@@ -29,32 +29,34 @@ engineering_one_sample <- function(sample_id, percentiles, fine_content, interpo
   )
 }
 
-#' Calculate engineering grain-size indices
+#' Calculate additional grain-size indices
 #'
-#' `gs_engineering()` calculates common engineering-style grain-size indices
-#' from boundary-based percentile interpolation and a fine-content threshold.
+#' `gs_grain_size_indices()` calculates additional grain-size indices from
+#' boundary-based D-value interpolation and a fine-content threshold. Returned
+#' indices include coefficient of uniformity (`Cu`), coefficient of curvature
+#' (`Cc`), Trask sorting, Trask skewness, fine content, and fine equivalent.
 #'
 #' @param x A valid `gsd_tbl` object.
 #' @param fine_threshold_um Fine-content threshold in micrometers.
-#' @param interpolation_scale Interpolation scale passed to `gs_percentile()`
+#' @param interpolation_scale Interpolation scale passed to `gs_d_values()`
 #'   and `gs_percent_finer()`.
-#' @param extrapolate Extrapolation behavior passed to `gs_percentile()` and
+#' @param extrapolate Extrapolation behavior passed to `gs_d_values()` and
 #'   `gs_percent_finer()`.
 #'
-#' @return A tibble with one row per sample and engineering grain-size indices.
+#' @return A tibble with one row per sample and grain-size indices.
 #' @export
-gs_engineering <- function(x,
-                           fine_threshold_um = 62.5,
-                           interpolation_scale = "phi",
-                           extrapolate = "error") {
+gs_grain_size_indices <- function(x,
+                                  fine_threshold_um = 62.5,
+                                  interpolation_scale = "phi",
+                                  extrapolate = "error") {
   validate_gsd_tbl(x)
   interpolation_scale <- match.arg(interpolation_scale, c("phi", "log_um", "linear_um"))
   extrapolate <- match.arg(extrapolate, c("error", "warn_linear"))
 
-  percentiles <- gs_percentile(
+  percentiles <- gs_d_values(
     x,
     probs = c(10, 25, 30, 50, 60, 75),
-    scale = interpolation_scale,
+    interpolation_scale = interpolation_scale,
     output_unit = "um",
     extrapolate = extrapolate
   )
@@ -62,7 +64,7 @@ gs_engineering <- function(x,
     x,
     sizes = fine_threshold_um,
     size_unit = "um",
-    scale = interpolation_scale,
+    interpolation_scale = interpolation_scale,
     extrapolate = extrapolate
   )
 
@@ -79,4 +81,27 @@ gs_engineering <- function(x,
   out <- do.call(rbind, unname(out))
   rownames(out) <- NULL
   tibble::as_tibble(out)
+}
+
+#' Calculate additional grain-size indices
+#'
+#' `gs_engineering()` is a compatibility alias for
+#' `gs_grain_size_indices()`. It returns grain-size index values only; it does
+#' not implement complete civil-engineering classification systems such as
+#' AASHTO or USCS.
+#'
+#' @inheritParams gs_grain_size_indices
+#'
+#' @return A tibble with one row per sample and grain-size indices.
+#' @export
+gs_engineering <- function(x,
+                           fine_threshold_um = 62.5,
+                           interpolation_scale = "phi",
+                           extrapolate = "error") {
+  gs_grain_size_indices(
+    x = x,
+    fine_threshold_um = fine_threshold_um,
+    interpolation_scale = interpolation_scale,
+    extrapolate = extrapolate
+  )
 }

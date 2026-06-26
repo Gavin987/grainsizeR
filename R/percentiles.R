@@ -101,13 +101,13 @@ percentile_one_sample <- function(curve, probs, scale, extrapolate) {
 
 #' Calculate grain-size percentiles
 #'
-#' `gs_percentile()` estimates `D_p`, the grain size at which `p` percent of a
+#' `gs_d_values()` estimates `D_p`, the grain size at which `p` percent of a
 #' sample is finer. Interpolation is based on finite class boundaries from
 #' `gs_cumulative()`, not class midpoints.
 #'
 #' @param x A valid `gsd_tbl` object.
 #' @param probs Numeric vector of percentiles on the 0-100 scale.
-#' @param scale Interpolation scale. `"phi"` interpolates in phi units,
+#' @param interpolation_scale Interpolation scale. `"phi"` interpolates in phi units,
 #'   `"log_um"` interpolates in log10 micrometers, and `"linear_um"`
 #'   interpolates directly in micrometers.
 #' @param output_unit Preferred reporting unit. The returned table always
@@ -115,16 +115,21 @@ percentile_one_sample <- function(curve, probs, scale, extrapolate) {
 #' @param extrapolate Behavior when a requested percentile falls outside the
 #'   observed finite boundary curve. `"error"` throws an error, and
 #'   `"warn_linear"` warns and linearly extrapolates on the selected scale.
+#' @param scale Compatibility alias for `interpolation_scale`.
 #'
 #' @return A tibble with one row per sample and requested percentile.
 #' @export
-gs_percentile <- function(x,
-                          probs = c(5, 10, 16, 25, 30, 50, 60, 75, 84, 90, 95),
-                          scale = c("phi", "log_um", "linear_um"),
-                          output_unit = c("um", "mm", "phi"),
-                          extrapolate = c("error", "warn_linear")) {
+gs_d_values <- function(x,
+                        probs = c(5, 10, 16, 25, 30, 50, 60, 75, 84, 90, 95),
+                        interpolation_scale = c("phi", "log_um", "linear_um"),
+                        output_unit = c("um", "mm", "phi"),
+                        extrapolate = c("error", "warn_linear"),
+                        scale = NULL) {
   validate_gsd_tbl(x)
-  scale <- match.arg(scale)
+  if (!is.null(scale)) {
+    interpolation_scale <- scale
+  }
+  interpolation_scale <- match.arg(interpolation_scale)
   output_unit <- match.arg(output_unit)
   extrapolate <- match.arg(extrapolate)
 
@@ -142,7 +147,7 @@ gs_percentile <- function(x,
     split_curve,
     percentile_one_sample,
     probs = probs,
-    scale = scale,
+    scale = interpolation_scale,
     extrapolate = extrapolate
   )
 
@@ -173,4 +178,28 @@ gs_percentile <- function(x,
   }
 
   out
+}
+
+#' Calculate grain-size percentiles
+#'
+#' `gs_percentile()` is a compatibility alias for `gs_d_values()`.
+#'
+#' @inheritParams gs_d_values
+#'
+#' @return A tibble with one row per sample and requested percentile.
+#' @export
+gs_percentile <- function(x,
+                          probs = c(5, 10, 16, 25, 30, 50, 60, 75, 84, 90, 95),
+                          interpolation_scale = c("phi", "log_um", "linear_um"),
+                          output_unit = c("um", "mm", "phi"),
+                          extrapolate = c("error", "warn_linear"),
+                          scale = NULL) {
+  gs_d_values(
+    x = x,
+    probs = probs,
+    interpolation_scale = interpolation_scale,
+    output_unit = output_unit,
+    extrapolate = extrapolate,
+    scale = scale
+  )
 }

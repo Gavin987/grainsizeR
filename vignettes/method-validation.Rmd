@@ -1,0 +1,191 @@
+---
+title: "Method Validation and Numerical Assumptions"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Method Validation and Numerical Assumptions}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```
+
+## Purpose
+
+This vignette documents numerical conventions used by grainsizeR and explains
+how the package validates them with synthetic examples and package example
+data. It is a method-audit document, not a new scientific method.
+
+Detailed interpretation of table layouts versus measurement workflows is
+covered in the table layouts and measurement workflows vignette.
+
+```{r}
+library(grainsizeR)
+```
+
+## Example Data Used for Validation
+
+The package includes two example files:
+
+```{r}
+long_file <- system.file("extdata", "grain.long.csv", package = "grainsizeR")
+wide_file <- system.file("extdata", "grain.wide.csv", package = "grainsizeR")
+
+gs_long <- read_gsd(
+  long_file,
+  format = "long",
+  sample_col = "sample",
+  size_col = "size",
+  value_col = "proportion",
+  size_unit = "mm",
+  value_type = "proportion"
+)
+
+gs_wide <- read_gsd(
+  wide_file,
+  format = "wide",
+  size_col = 1,
+  size_unit = "mm",
+  value_type = "percent"
+)
+```
+
+`grain.long.csv` is a sieve + hydrometer example stored as a tidy long table
+and has finer particle-size resolution where hydrometer data were added.
+`grain.wide.csv` is a dry-sieve example stored as a multi-sample wide table and
+is useful for coarse gravel/sand/mud summaries.
+
+## Input-Bin Convention
+
+Input rows describe retained material in grain-size classes. A numeric label is
+used as a class boundary. Terminal coarse and fine classes can be open-ended.
+Open-ended classes are retained in the data structure, but their missing
+boundary is not silently replaced by zero or infinity for interpolation.
+
+## Long Versus Wide Example Data
+
+The long and wide examples contain the same sample IDs. Here, the file names
+describe table layout, not measurement method. Coarse Wentworth-style gravel,
+sand, and mud summaries agree between the two files because both represent the
+same aggregate behavior at 62.5 um. Clay/silt-level schemes such as USDA, ISSS,
+and UK SSEW require thresholds such as 2, 20, 50, 60, or 63 um; these are
+better resolved when finite measured boundaries bracket those thresholds.
+
+Instrument outputs such as laser cumulative percent-finer curves may require
+preprocessing before import. `read_gsd()` expects retained proportions or
+retained percentages by size class, not cumulative percent passing.
+
+## Percent-Finer Convention
+
+grainsizeR uses cumulative percent finer. At a finite boundary, percent finer
+is the retained percent below that boundary. This convention is used by
+`gs_cumulative()`, `gs_percent_finer()`, and `gs_d_values()`.
+
+## D-Values
+
+`D_p` is the grain size at which `p` percent of the sample is finer. For
+example, `D50` is the median grain size by the percent-finer convention.
+
+```{r}
+gs_d_values(subset(gs_long, sample_id == "WN1_upper"), probs = c(10, 50, 90), extrapolate = "warn_linear")
+```
+
+## Threshold Interpolation
+
+`gs_percent_finer()` estimates percent finer at arbitrary thresholds by
+interpolating the cumulative percent-finer curve between finite boundaries.
+Thresholds do not need to be measured boundaries. This is how thresholds such
+as 2, 20, 50, 60, and 63 um are handled when they are bracketed by finite
+class boundaries.
+
+```{r}
+suppressWarnings(gs_percent_finer(
+  subset(gs_long, sample_id == "WN1_upper"),
+  sizes = c(20, 50, 60, 63),
+  size_unit = "um",
+  extrapolate = "warn_linear"
+))
+```
+
+## Open-Ended Terminal Classes
+
+Terminal open-ended classes are not silently treated as bounded intervals. For
+example, a final class such as `<0.0625 mm` is not treated as `[0, 62.5]`.
+When a requested D-value or threshold falls inside an open-ended class,
+`extrapolate = "error"` reports the unresolved value. Users can explicitly set
+`extrapolate = "warn_linear"` when extrapolation is acceptable for their
+workflow.
+
+`gs_diagnostics()` can be used before summary calculations to identify samples
+with unresolved D-values, unresolved clay/silt thresholds, open-ended terminal
+classes, or fraction schemes that require finer measurements.
+
+```{r}
+gs_diagnostics(subset(gs_wide, sample_id == "WN1_upper"), output = "summary")
+```
+
+## Fraction Schemes
+
+Fraction schemes use `gs_percent_finer()` internally at scheme boundaries.
+Coarse schemes such as `wentworth_major` can be robust when their thresholds
+are resolved. Texture fraction schemes with fine thresholds should use input
+data that bracket those thresholds with finite boundaries, regardless of
+whether the table is long or wide.
+
+```{r}
+head(gs_fractions_wide(gs_long, scheme = "wentworth_major"))
+head(gs_fractions_wide(gs_wide, scheme = "wentworth_major"))
+```
+
+## Folk and Ward Statistics
+
+Folk and Ward statistics are calculated from boundary-interpolated D-values.
+If a required D-value falls outside the finite boundary curve, users must
+choose whether to error or explicitly extrapolate.
+
+```{r}
+suppressWarnings(gs_folk_ward(
+  subset(gs_long, sample_id == "WN1_upper"),
+  extrapolate = "warn_linear"
+))
+```
+
+## Moment Statistics
+
+Moment statistics require explicit open-end handling. `open_end = "error"`
+prevents silent assumptions. `open_end = "extend_phi"` estimates open-ended
+midpoints by extending adjacent phi intervals, and `open_end = "omit"` omits
+open-ended retained classes.
+
+```{r}
+suppressWarnings(gs_moments(
+  subset(gs_long, sample_id == "WN1_upper"),
+  open_end = "extend_phi"
+))
+```
+
+## Summary-Table Consistency
+
+`gs_parameters()` is a reporting convenience wrapper around lower-level
+functions. It does not introduce new calculations; tests compare its output
+against `gs_d_values()`, `gs_grain_size_indices()`, `gs_folk_ward()`, and
+`gs_fractions_wide()`.
+
+```{r}
+sample_id <- "WN1_upper"
+summary <- suppressWarnings(gs_parameters(
+  subset(gs_long, sample_id == sample_id),
+  parameters = c("d_values", "indices", "folk_ward", "fractions"),
+  fraction_scheme = "gradistat",
+  extrapolate = "warn_linear"
+))
+summary
+```
+
+## What This Package Does Not Do
+
+grainsizeR does not implement civil-engineering classification systems. Built-in
+official texture polygon datasets are not bundled yet. User-supplied texture
+polygons are supported, and source-audit scaffolds document how future
+official polygon datasets should be reconstructed and reviewed.
