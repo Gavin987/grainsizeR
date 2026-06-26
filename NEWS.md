@@ -2,6 +2,8 @@
 
 ## Development version
 
+- Added reproducible README showcase figures for dry-sieve GRADISTAT-style
+  workflows and long-format USDA texture workflows.
 - Prepared public GitHub repository materials, including contribution guidance,
   issue templates, citation metadata, security notes, and a lightweight check
   workflow.

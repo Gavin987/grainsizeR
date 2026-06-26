@@ -120,6 +120,14 @@ test_that("no external binary reference files are bundled", {
     ignore.case = TRUE
   )
   candidates <- candidates[!grepl("\\.git|\\.Rcheck|/doc/|/Meta/|\\\\doc\\\\|\\\\Meta\\\\", candidates)]
+  allowed <- file.path(root, c(
+    "man/figures/readme-wide-distribution.png",
+    "man/figures/readme-wide-cumulative.png",
+    "man/figures/readme-wide-fractions.png",
+    "man/figures/readme-gradistat-ternary.png",
+    "man/figures/readme-usda-ternary.png"
+  ))
+  candidates <- setdiff(normalizePath(candidates, winslash = "/", mustWork = FALSE), normalizePath(allowed, winslash = "/", mustWork = FALSE))
 
   expect_equal(candidates, character())
 })

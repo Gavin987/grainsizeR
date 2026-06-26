@@ -34,6 +34,14 @@ through `plot_texture_ternary()`.
 library(grainsizeR)
 ```
 
+```{r}
+long_file <- system.file("extdata", "grain.long.csv", package = "grainsizeR")
+wide_file <- system.file("extdata", "grain.wide.csv", package = "grainsizeR")
+
+long_gs <- read_gsd(long_file)
+wide_gs <- read_gsd(wide_file, format = "wide")
+```
+
 ## USDA Major Texture Classification
 
 Use `scheme = "usda_tt"` and `method = "rules"` for the validated USDA
@@ -52,27 +60,34 @@ classify_texture(samples, scheme = "usda_tt", method = "rules")
 
 USDA texture ternary plotting is available through `plot_texture_ternary()`.
 The stable `plot_texture_triangle()` function name remains available for
-compatibility. This point-only example uses a compact
-grain-size distribution with enough fine-resolution boundaries to resolve sand,
-silt, and clay fractions. No USDA polygon dataset is bundled as runtime package
-data.
+compatibility. The bundled long-format example includes finer fractions and can
+be used for the USDA texture workflow. Some open-ended tails require explicit
+extrapolation for resolved sand, silt, and clay percentages; this example makes
+that assumption visible.
 
 ```{r}
-usda_plot_input <- data.frame(
-  sample_id = "A",
-  size_mm = c(2, 1, 0.5, 0.25, 0.125, 0.063, 0.031, 0.016, 0.008, 0.004, 0.002, 0.001),
-  retained = c(2, 3, 5, 10, 15, 18, 12, 10, 8, 7, 6, 4)
-)
+usda_fractions <- suppressWarnings(gs_fractions_wide(
+  long_gs,
+  scheme = "usda_tt",
+  extrapolate = "warn_linear"
+))
 
-usda_plot_gs <- as_gsd_tbl(
-  usda_plot_input,
-  sample_id,
-  size_mm,
-  retained,
-  value_type = "percent"
+usda_example <- data.frame(
+  sample_id = usda_fractions$sample_id,
+  sand = usda_fractions$sand_percent,
+  silt = usda_fractions$silt_percent,
+  clay = usda_fractions$clay_percent
 )
+usda_components <- c("sand", "silt", "clay")
+usda_example <- usda_example[
+  stats::complete.cases(usda_example[usda_components]) &
+    rowSums(usda_example[usda_components] >= 0 & usda_example[usda_components] <= 100) == 3 &
+    abs(rowSums(usda_example[usda_components]) - 100) < 1e-6,
+]
 
-suppressWarnings(plot_texture_ternary(usda_plot_gs, scheme = "usda_tt"))
+head(classify_texture(usda_example, scheme = "usda_tt", method = "rules"))
+
+suppressWarnings(plot_texture_ternary(long_gs, scheme = "usda_tt"))
 ```
 
 Input percentages must be numeric, finite, between 0 and 100, and sum to
@@ -103,18 +118,22 @@ built-in texture polygon datasets yet.
 
 Use `scheme = "gradistat"` and `method = "rules"` for GRADISTAT-style texture
 classification. The `gravel_sand_mud` basis requires `gravel`, `sand`, and
-`mud` percentage columns.
+`mud` percentage columns. The bundled dry-sieve wide example supports this
+GRADISTAT-style gravel-sand-mud workflow.
 
 ```{r}
+wide_gradistat <- suppressWarnings(gs_fractions_wide(wide_gs, scheme = "gradistat"))
+
 gsm <- data.frame(
-  sample_id = c("A", "B", "C"),
-  gravel = c(0, 10, 40),
-  sand = c(95, 80, 40),
-  mud = c(5, 10, 20)
+  sample_id = wide_gradistat$sample_id,
+  gravel = wide_gradistat$gravel_percent,
+  sand = wide_gradistat$sand_percent,
+  mud = wide_gradistat$mud_percent
 )
+gsm <- gsm[stats::complete.cases(gsm[c("gravel", "sand", "mud")]), ]
 
 classify_texture(
-  gsm,
+  head(gsm, 6),
   scheme = "gradistat",
   method = "rules",
   basis = "gravel_sand_mud",
@@ -156,7 +175,7 @@ The same supported bases can be drawn as texture ternary plots.
 
 ```{r}
 plot_texture_ternary(
-  gsm,
+  head(gsm, 6),
   scheme = "gradistat",
   basis = "gravel_sand_mud",
   point_id = "sample_id"

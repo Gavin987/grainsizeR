@@ -63,6 +63,8 @@ choices for reproducible scripts and method descriptions.
 
 ```{r}
 long_file <- system.file("extdata", "grain.long.csv", package = "grainsizeR")
+wide_file <- system.file("extdata", "grain.wide.csv", package = "grainsizeR")
+
 gs <- read_gsd(
   long_file,
   format = "long",
@@ -73,8 +75,15 @@ gs <- read_gsd(
   value_type = "proportion"
 )
 
+gs_wide <- read_gsd(wide_file, format = "wide")
+
 head(gs)
 ```
+
+The wide dry-sieve example is used below for the GRADISTAT-style
+gravel-sand-mud workflow. The long example includes finer fractions and is used
+for USDA texture examples. Open-ended tails are not silently extrapolated; calls
+that need extrapolation use `extrapolate = "warn_linear"` explicitly.
 
 ## Summary Statistics
 
@@ -114,26 +123,41 @@ USDA major texture classification uses sand, silt, and clay percentages. USDA
 sand-size modifier subclasses remain future work.
 
 ```{r}
-usda_samples <- data.frame(
-  sample_id = c("A", "B", "C"),
-  sand = c(85, 40, 20),
-  silt = c(10, 40, 20),
-  clay = c(5, 20, 60)
-)
+usda_fractions <- suppressWarnings(gs_fractions_wide(
+  gs,
+  scheme = "usda_tt",
+  extrapolate = "warn_linear"
+))
 
-classify_texture(usda_samples, scheme = "usda_tt", method = "rules")
+usda_samples <- data.frame(
+  sample_id = usda_fractions$sample_id,
+  sand = usda_fractions$sand_percent,
+  silt = usda_fractions$silt_percent,
+  clay = usda_fractions$clay_percent
+)
+usda_components <- c("sand", "silt", "clay")
+usda_samples <- usda_samples[
+  stats::complete.cases(usda_samples[usda_components]) &
+    rowSums(usda_samples[usda_components] >= 0 & usda_samples[usda_components] <= 100) == 3 &
+    abs(rowSums(usda_samples[usda_components]) - 100) < 1e-6,
+]
+
+head(classify_texture(usda_samples, scheme = "usda_tt", method = "rules"))
 ```
 
 GRADISTAT texture classification supports the gravel-sand-mud and sand-silt-clay
 no-gravel bases.
 
 ```{r}
+gradistat_fractions <- suppressWarnings(gs_fractions_wide(gs_wide, scheme = "gradistat"))
+
 gsm <- data.frame(
-  sample_id = c("A", "B", "C"),
-  gravel = c(0, 10, 40),
-  sand = c(95, 80, 40),
-  mud = c(5, 10, 20)
+  sample_id = gradistat_fractions$sample_id,
+  gravel = gradistat_fractions$gravel_percent,
+  sand = gradistat_fractions$sand_percent,
+  mud = gradistat_fractions$mud_percent
 )
+gsm <- gsm[stats::complete.cases(gsm[c("gravel", "sand", "mud")]), ]
 
 ssc <- data.frame(
   sample_id = c("A", "B", "C"),
@@ -143,7 +167,7 @@ ssc <- data.frame(
 )
 
 gsm_classified <- classify_texture(
-  gsm,
+  head(gsm, 6),
   scheme = "gradistat",
   method = "rules",
   basis = "gravel_sand_mud",
@@ -172,11 +196,12 @@ gs_gradistat_sediment_name(gsm_classified)
 ```{r}
 plot_distribution(gs, sample_id = c("WN1_upper", "WN2_upper"))
 suppressWarnings(plot_cumulative(
-  gs,
+  gs_wide,
   sample_id = c("WN1_upper", "WN2_upper"),
   show_percentiles = c(10, 50, 90),
   extrapolate = "warn_linear"
 ))
+plot_fractions(gs_wide, scheme = "gradistat", sample_id = c("WN1_upper", "WN2_upper"))
 ```
 
 ## Texture Ternary Plots

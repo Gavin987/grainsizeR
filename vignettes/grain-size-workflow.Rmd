@@ -135,10 +135,14 @@ head(gs_modes(gs))
 
 Fraction summaries can be returned in long or wide form. The long form is
 convenient for plotting and joins; the wide form is convenient for reports.
+The dry-sieve wide example is useful for GRADISTAT-style gravel-sand-mud
+summaries. The long example includes finer fractions and is used later for
+USDA texture workflows.
 
 ```{r}
 head(gs_fractions(gs, scheme = "wentworth_major"))
 head(gs_fractions_wide(gs, scheme = "wentworth_major"))
+head(gs_fractions_wide(gs_wide, scheme = "gradistat"))
 ```
 
 ## Descriptive Terms
@@ -165,11 +169,12 @@ head(gs_quality_flags(
 ## Distribution Plots
 
 `plot_distribution()` returns a ggplot object and supports metric and phi axis
-scales.
+scales. The examples below use the dry-sieve wide dataset so the plotted
+samples align with the README GRADISTAT-style showcase.
 
 ```{r}
-plot_distribution(gs, sample_id = c("WN1_upper", "WN2_upper"))
-plot_distribution(gs, x_scale = "phi", type = "line", sample_id = c("WN1_upper", "WN2_upper"))
+plot_distribution(gs_wide, sample_id = c("WN1_upper", "WN2_upper"))
+plot_distribution(gs_wide, x_scale = "phi", type = "line", sample_id = c("WN1_upper", "WN2_upper"))
 ```
 
 ## Cumulative Plots
@@ -178,7 +183,7 @@ plot_distribution(gs, x_scale = "phi", type = "line", sample_id = c("WN1_upper",
 
 ```{r}
 suppressWarnings(plot_cumulative(
-  gs,
+  gs_wide,
   sample_id = c("WN1_upper", "WN2_upper"),
   show_percentiles = c(10, 50, 90),
   extrapolate = "warn_linear"
@@ -190,7 +195,7 @@ suppressWarnings(plot_cumulative(
 `plot_fractions()` draws size-class percentage bars.
 
 ```{r}
-plot_fractions(gs, scheme = "wentworth_major", sample_id = c("WN1_upper", "WN2_upper"))
+plot_fractions(gs_wide, scheme = "gradistat", sample_id = c("WN1_upper", "WN2_upper"))
 ```
 
 ## Building a Combined Analysis Table

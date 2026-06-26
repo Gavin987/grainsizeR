@@ -91,6 +91,30 @@ head(gs)
 #> #   is_open_upper <lgl>, measurement_method <chr>
 ```
 
+## Example Outputs
+
+The wide dry-sieve example supports a GRADISTAT-style gravel-sand-mud
+workflow, including retained-size distribution, cumulative curves,
+fraction composition, GRADISTAT `gravel_sand_mud` classification, and a
+GRADISTAT texture ternary plot. The long-format example includes finer
+fractions and is used here for the USDA texture workflow and USDA
+texture ternary plot.
+
+The figures below are generated reproducibly by
+`data-raw/readme-figures.R` from bundled example data. They are
+demonstration outputs, not universal sediment interpretation templates.
+Open-ended tails may require explicit `extrapolate = "warn_linear"` for
+graphical statistics or percentile markers; grainsizeR does not apply
+that assumption silently.
+
+<img src="man/figures/readme-wide-distribution.png" width="100%" />
+
+<img src="man/figures/readme-wide-cumulative.png" width="100%" />
+
+<img src="man/figures/readme-wide-fractions.png" width="100%" />
+
+<img src="man/figures/readme-gradistat-ternary.png" width="49%" /><img src="man/figures/readme-usda-ternary.png" width="49%" />
+
 ## End-to-End Workflow
 
 The compact workflow below reads retained data, calculates common
