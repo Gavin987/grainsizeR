@@ -62,7 +62,8 @@ plot_cumulative <- function(x,
   p <- ggplot2::ggplot(curve, ggplot2::aes(x = .data$x_value, y = .data$y_value, color = .data$sample_id, group = .data$sample_id)) +
     ggplot2::geom_line() +
     ggplot2::geom_point() +
-    ggplot2::labs(x = "Grain size", y = paste("Percent", direction), color = "Sample")
+    ggplot2::labs(x = "Grain size", y = paste("Percent", direction), color = "Sample") +
+    ggplot2::theme_bw()
 
   if (x_scale == "log10") {
     p <- p + ggplot2::scale_x_log10()

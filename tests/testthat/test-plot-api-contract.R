@@ -46,6 +46,10 @@ test_that("distribution and cumulative plots support documented scale behavior",
   expect_s3_class(plot_distribution(gsd, x_scale = "log10"), "ggplot")
   expect_s3_class(plot_distribution(gsd, x_scale = "phi", type = "line"), "ggplot")
   expect_s3_class(plot_distribution(gsd, x_scale = "linear_um"), "ggplot")
+  combined <- plot_distribution(gsd, cumulative = TRUE)
+  expect_s3_class(combined, "ggplot")
+  expect_true(any(vapply(combined$layers, function(layer) inherits(layer$geom, "GeomCol"), logical(1))))
+  expect_true(any(vapply(combined$layers, function(layer) inherits(layer$geom, "GeomLine"), logical(1))))
 
   expect_s3_class(plot_cumulative(gsd, x_scale = "log10"), "ggplot")
   expect_s3_class(plot_cumulative(gsd, x_scale = "phi"), "ggplot")
@@ -56,12 +60,33 @@ test_that("distribution and cumulative plots support documented scale behavior",
   )
 })
 
+test_that("exported plotting functions use theme_bw-compatible defaults", {
+  gsd <- plot_contract_gsd()
+  gsm <- data.frame(sample_id = c("A", "B"), gravel = c(0, 40), sand = c(95, 40), mud = c(5, 20))
+
+  plots <- list(
+    plot_distribution(gsd),
+    plot_cumulative(gsd),
+    suppressWarnings(plot_fractions(gsd, scheme = "gravel_sand_mud")),
+    plot_texture_triangle(gsm, scheme = "gradistat", basis = "gravel_sand_mud", point_id = "sample_id"),
+    suppressWarnings(plot_trigon(plot_contract_fine_gsd(), scheme = "usda_tt"))
+  )
+
+  for (plot in plots) {
+    expect_equal(plot$theme$panel.background$fill, "white")
+  }
+})
+
 test_that("fraction plots and texture ternary plots return ggplot objects", {
   gsd <- plot_contract_gsd()
   gsm <- data.frame(sample_id = c("A", "B"), gravel = c(0, 40), sand = c(95, 40), mud = c(5, 20))
   ssc <- data.frame(sample_id = c("A", "B"), sand = c(95, 20), silt = c(3, 60), clay = c(2, 20))
 
   expect_s3_class(suppressWarnings(plot_fractions(gsd, scheme = "wentworth_major")), "ggplot")
+  fraction_plot <- suppressWarnings(plot_fractions(gsd, scheme = "gravel_sand_mud", fill_palette = "YlOrBr"))
+  expect_s3_class(fraction_plot, "ggplot")
+  fill_scales <- vapply(fraction_plot$scales$scales, function(scale) "fill" %in% scale$aesthetics, logical(1))
+  expect_equal(fraction_plot$scales$scales[[which(fill_scales)[1]]]$breaks, c("gravel", "sand", "mud"))
   expect_s3_class(
     plot_texture_triangle(gsm, scheme = "gradistat", basis = "gravel_sand_mud", point_id = "sample_id"),
     "ggplot"

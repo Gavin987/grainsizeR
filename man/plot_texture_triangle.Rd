@@ -19,7 +19,11 @@ plot_texture_triangle(
   basis = c("gravel_sand_mud", "sand_silt_clay_no_gravel"),
   point_id = NULL,
   show_boundaries = TRUE,
-  show_classes = TRUE
+  show_classes = TRUE,
+  show_sample_labels = labels,
+  sample_label_size = 3,
+  class_label_size = 2.2,
+  label_style = c("inside", "none")
 )
 }
 \arguments{
@@ -55,6 +59,15 @@ data-frame plots.}
 \item{show_boundaries}{Should GRADISTAT classification boundaries be drawn?}
 
 \item{show_classes}{Should GRADISTAT class labels be drawn?}
+
+\item{show_sample_labels}{Should sample labels be drawn?}
+
+\item{sample_label_size}{Text size for sample labels.}
+
+\item{class_label_size}{Text size for class labels.}
+
+\item{label_style}{Label style for GRADISTAT class labels. \code{"inside"} draws
+labels inside the ternary diagram and \code{"none"} suppresses them.}
 }
 \value{
 A \code{ggplot} object.
@@ -73,8 +86,11 @@ GRADISTAT-style ternary plots for \code{basis = "gravel_sand_mud"} and
 \code{basis = "sand_silt_clay_no_gravel"}. These plots use internal boundary
 definitions generated from the package's re-expressed GRADISTAT decision
 rules. They support point overlays and return ggplot objects; full visual
-parity with the original Excel output is not claimed. The existing gsd_tbl
-and user-supplied polygon workflows are preserved.
+parity with the original Excel output is not claimed. For
+\code{scheme = "usda_tt"} and data-frame inputs, the function accepts \code{sand},
+\code{silt}, and \code{clay} percentage columns and draws USDA major-class
+boundaries. The existing gsd_tbl and user-supplied polygon workflows are
+preserved.
 }
 \examples{
 gsm <- data.frame(

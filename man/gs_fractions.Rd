@@ -6,8 +6,8 @@
 \usage{
 gs_fractions(
   x,
-  scheme = c("wentworth_major", "gradistat", "usda_tt", "isss", "uk_ssew", "hypres",
-    "germany_63", "australia_20", "sweden_60"),
+  scheme = c("wentworth_major", "gravel_sand_mud", "wentworth_detailed", "gradistat",
+    "usda_tt", "isss", "uk_ssew", "hypres", "germany_63", "australia_20", "sweden_60"),
   normalize = c("none", "fine_earth"),
   interpolation_scale = "phi",
   unresolved = c("warn_na", "error"),

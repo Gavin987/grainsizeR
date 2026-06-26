@@ -3,6 +3,8 @@ test_that("gs_fraction_schemes lists built-in schemes and components", {
 
   expect_true(all(c(
     "wentworth_major",
+    "gravel_sand_mud",
+    "wentworth_detailed",
     "gradistat",
     "usda_tt",
     "isss",
@@ -17,8 +19,32 @@ test_that("gs_fraction_schemes lists built-in schemes and components", {
     c("gravel", "sand", "mud")
   )
   expect_equal(
+    schemes$component[schemes$scheme == "gravel_sand_mud"],
+    c("gravel", "sand", "mud")
+  )
+  expect_equal(
     schemes$component[schemes$scheme == "gradistat"],
     c("gravel", "sand", "silt", "clay", "mud")
+  )
+  expect_equal(
+    schemes$component[schemes$scheme == "wentworth_detailed"],
+    c(
+      "coarse_gravel",
+      "medium_gravel",
+      "fine_gravel",
+      "very_fine_gravel",
+      "very_coarse_sand",
+      "coarse_sand",
+      "medium_sand",
+      "fine_sand",
+      "very_fine_sand",
+      "very_coarse_silt",
+      "coarse_silt",
+      "medium_silt",
+      "fine_silt",
+      "very_fine_silt",
+      "clay"
+    )
   )
 
   soil_schemes <- c("usda_tt", "isss", "uk_ssew", "hypres", "germany_63", "australia_20", "sweden_60")

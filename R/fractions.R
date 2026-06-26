@@ -202,6 +202,8 @@ fractions_one_sample <- function(sample_id, components, lookup, scheme, normaliz
 gs_fractions <- function(x,
                          scheme = c(
                            "wentworth_major",
+                           "gravel_sand_mud",
+                           "wentworth_detailed",
                            "gradistat",
                            "usda_tt",
                            "isss",
@@ -259,6 +261,8 @@ gs_fractions <- function(x,
 gs_fractions_wide <- function(x,
                               scheme = c(
                                 "wentworth_major",
+                                "gravel_sand_mud",
+                                "wentworth_detailed",
                                 "gradistat",
                                 "usda_tt",
                                 "isss",

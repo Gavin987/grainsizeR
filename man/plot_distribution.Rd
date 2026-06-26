@@ -9,7 +9,8 @@ plot_distribution(
   x_scale = c("log10", "phi", "linear_um"),
   type = c("bar", "line"),
   sample_id = NULL,
-  show_open_ends = TRUE
+  show_open_ends = TRUE,
+  cumulative = FALSE
 )
 }
 \arguments{
@@ -24,6 +25,10 @@ plot_distribution(
 
 \item{show_open_ends}{Should open-ended classes be included using raw size
 labels as plotting proxies?}
+
+\item{cumulative}{Should a cumulative percent-finer line be overlaid on the
+retained-size bars? This combined display is useful for GRADISTAT-style
+grain-size summaries.}
 }
 \value{
 A \code{ggplot} object.
@@ -41,5 +46,6 @@ x <- data.frame(
 )
 gsd <- as_gsd_tbl(x, sample_id, size_mm, retained_proportion)
 plot_distribution(gsd, x_scale = "log10")
+plot_distribution(gsd, cumulative = TRUE)
 plot_distribution(gsd, x_scale = "phi", type = "line")
 }

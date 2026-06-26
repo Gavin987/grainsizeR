@@ -33,6 +33,9 @@ distribution_x_values <- function(x, x_scale) {
 #' @param sample_id Optional character vector of sample identifiers to include.
 #' @param show_open_ends Should open-ended classes be included using raw size
 #'   labels as plotting proxies?
+#' @param cumulative Should a cumulative percent-finer line be overlaid on the
+#'   retained-size bars? This combined display is useful for GRADISTAT-style
+#'   grain-size summaries.
 #'
 #' @return A `ggplot` object.
 #' @importFrom rlang .data
@@ -46,12 +49,14 @@ distribution_x_values <- function(x, x_scale) {
 #' )
 #' gsd <- as_gsd_tbl(x, sample_id, size_mm, retained_proportion)
 #' plot_distribution(gsd, x_scale = "log10")
+#' plot_distribution(gsd, cumulative = TRUE)
 #' plot_distribution(gsd, x_scale = "phi", type = "line")
 plot_distribution <- function(x,
                               x_scale = c("log10", "phi", "linear_um"),
                               type = c("bar", "line"),
                               sample_id = NULL,
-                              show_open_ends = TRUE) {
+                              show_open_ends = TRUE,
+                              cumulative = FALSE) {
   validate_gsd_tbl(x)
   x_scale <- match.arg(x_scale)
   type <- match.arg(type)
@@ -75,7 +80,28 @@ plot_distribution <- function(x,
       ggplot2::geom_point(ggplot2::aes(color = .data$sample_id))
   }
 
-  p <- p + ggplot2::labs(x = "Grain size", y = "Retained percent", fill = "Sample", color = "Sample")
+  if (isTRUE(cumulative)) {
+    curve <- gs_cumulative(plot_filter_samples(x, sample_id))
+    curve$x_value <- cumulative_x_values(curve, x_scale)
+    p <- p +
+      ggplot2::geom_line(
+        data = curve,
+        ggplot2::aes(x = .data$x_value, y = .data$percent_finer, color = .data$sample_id, group = .data$sample_id),
+        inherit.aes = FALSE,
+        linewidth = 0.8
+      ) +
+      ggplot2::geom_point(
+        data = curve,
+        ggplot2::aes(x = .data$x_value, y = .data$percent_finer, color = .data$sample_id),
+        inherit.aes = FALSE,
+        size = 1.4
+      )
+  }
+
+  p <- p +
+    ggplot2::labs(x = "Grain size", y = "Percent", fill = "Sample", color = "Sample") +
+    ggplot2::coord_cartesian(ylim = c(0, 100)) +
+    ggplot2::theme_bw()
   if (x_scale == "log10") {
     p <- p + ggplot2::scale_x_log10()
   }

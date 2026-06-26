@@ -111,6 +111,7 @@
   data.frame(
     class_id = points$class_id,
     class_name = unname(.gradistat_class_names[points$class_id]),
+    class_label = gsub(" ", "\n", unname(.gradistat_class_names[points$class_id]), fixed = TRUE),
     x = xy$x,
     y = xy$y,
     stringsAsFactors = FALSE

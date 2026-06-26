@@ -8,7 +8,8 @@ plot_fractions(
   x,
   scheme = "wentworth_major",
   normalize = "none",
-  sample_id = NULL
+  sample_id = NULL,
+  fill_palette = c("default", "YlOrBr", "none")
 )
 }
 \arguments{
@@ -19,6 +20,10 @@ plot_fractions(
 \item{normalize}{Normalization mode passed to \code{gs_fractions()}.}
 
 \item{sample_id}{Optional character vector of sample identifiers to include.}
+
+\item{fill_palette}{Fill palette. \code{"default"} uses ggplot2 defaults,
+\code{"YlOrBr"} uses \code{grDevices::hcl.colors()} with a yellow-orange-brown
+sequence, and \code{"none"} leaves the scale unchanged.}
 }
 \value{
 A \code{ggplot} object.
@@ -35,4 +40,5 @@ x <- data.frame(
 )
 gsd <- as_gsd_tbl(x, sample_id, size_mm, retained_proportion)
 plot_fractions(gsd, scheme = "wentworth_major")
+plot_fractions(gsd, scheme = "gravel_sand_mud", fill_palette = "YlOrBr")
 }

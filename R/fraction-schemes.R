@@ -11,6 +11,19 @@ gs_fraction_schemes <- function() {
   systems <- particle_size_systems()
   rows <- list(
     fraction_rows("wentworth_major", c("gravel", "sand", "mud"), c(2000, 62.5, 0), c(Inf, 2000, 62.5)),
+    fraction_rows("gravel_sand_mud", c("gravel", "sand", "mud"), c(2000, 62.5, 0), c(Inf, 2000, 62.5)),
+    fraction_rows(
+      "wentworth_detailed",
+      c(
+        "coarse_gravel", "medium_gravel", "fine_gravel", "very_fine_gravel",
+        "very_coarse_sand", "coarse_sand", "medium_sand", "fine_sand", "very_fine_sand",
+        "very_coarse_silt", "coarse_silt", "medium_silt", "fine_silt", "very_fine_silt",
+        "clay"
+      ),
+      c(16000, 8000, 4000, 2000, 1000, 500, 250, 125, 62.5, 31.25, 15.625, 7.8125, 3.90625, 2, 0),
+      c(Inf, 16000, 8000, 4000, 2000, 1000, 500, 250, 125, 62.5, 31.25, 15.625, 7.8125, 3.90625, 2),
+      component_type = rep("detailed", 15)
+    ),
     fraction_rows_from_system(systems, "gradistat", include_mud = TRUE),
     fraction_rows_from_system(systems, "usda_tt"),
     fraction_rows_from_system(systems, "isss"),
@@ -83,6 +96,8 @@ fraction_rows_from_system <- function(systems, system_id, include_mud = FALSE) {
 fraction_scheme_label <- function(scheme) {
   labels <- c(
     wentworth_major = "Wentworth major",
+    gravel_sand_mud = "Gravel-sand-mud",
+    wentworth_detailed = "Wentworth detailed",
     gradistat = "GRADISTAT",
     usda_tt = "USDA texture triangle",
     isss = "International Society of Soil Science",

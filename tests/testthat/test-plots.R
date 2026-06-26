@@ -8,6 +8,7 @@ test_that("plot_distribution returns ggplot objects", {
 
   expect_s3_class(plot_distribution(gsd), "ggplot")
   expect_s3_class(plot_distribution(gsd, type = "line"), "ggplot")
+  expect_s3_class(plot_distribution(gsd, cumulative = TRUE), "ggplot")
 })
 
 test_that("plot_cumulative returns ggplot objects", {
@@ -38,6 +39,8 @@ test_that("plot_fractions returns a ggplot object", {
   )
 
   expect_s3_class(plot_fractions(gsd, scheme = "wentworth_major"), "ggplot")
+  plot <- plot_fractions(gsd, scheme = "gravel_sand_mud", fill_palette = "YlOrBr")
+  expect_s3_class(plot, "ggplot")
 })
 
 test_that("plot_trigon warns and drops unresolved samples", {

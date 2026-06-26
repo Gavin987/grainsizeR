@@ -94,18 +94,24 @@ head(gs)
 ## Example Outputs
 
 The wide dry-sieve example supports a GRADISTAT-style gravel-sand-mud
-workflow, including retained-size distribution, cumulative curves,
-fraction composition, GRADISTAT `gravel_sand_mud` classification, and a
-GRADISTAT texture ternary plot. The long-format example includes finer
-fractions and is used here for the USDA texture workflow and USDA
-texture ternary plot.
+workflow, including a retained-size distribution with cumulative
+overlay, cumulative curves, non-overlapping `Gravel`, `Sand`, and `Mud`
+fractions, GRADISTAT `gravel_sand_mud` classification, and a GRADISTAT
+texture ternary plot. The long-format example includes finer fractions
+and is used for the USDA texture workflow. The USDA ternary plot below
+uses clearly labeled demonstration sand-silt-clay points so the 12-class
+boundary layout is visible in a compact README figure.
 
 The figures below are generated reproducibly by
 `data-raw/readme-figures.R` from bundled example data. They are
 demonstration outputs, not universal sediment interpretation templates.
 Open-ended tails may require explicit `extrapolate = "warn_linear"` for
 graphical statistics or percentile markers; grainsizeR does not apply
-that assumption silently.
+that assumption silently. Detailed Wentworth-style fraction classes are
+available when the input resolution supports them, but dry-sieve data
+should not be interpreted as resolving silt and clay subclasses unless
+those boundaries are present. USDA and GRADISTAT ternary plots show
+classification boundaries with sample points or demonstration points.
 
 <img src="man/figures/readme-wide-distribution.png" width="100%" />
 
@@ -142,6 +148,7 @@ descriptors <- gs_describe_parameters(gs)
 quality <- gs_quality_flags(gs)
 
 plot_distribution(gs)
+plot_distribution(gs, cumulative = TRUE)
 plot_cumulative(gs, show_percentiles = c(10, 50, 90), extrapolate = "warn_linear")
 plot_fractions(gs, scheme = "wentworth_major")
 ```
@@ -457,6 +464,7 @@ grainsizeR results with other software.
 
 ``` r
 plot_distribution(gs)
+plot_distribution(gs, cumulative = TRUE)
 plot_distribution(gs, x_scale = "phi", type = "line")
 plot_cumulative(gs, show_percentiles = c(10, 50, 90), extrapolate = "warn_linear")
 plot_cumulative(gs, x_scale = "phi")

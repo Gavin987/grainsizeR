@@ -49,22 +49,16 @@ wide_gsm <- data.frame(
 )
 wide_gsm <- wide_gsm[stats::complete.cases(wide_gsm[c("gravel", "sand", "mud")]), ]
 
-long_usda <- suppressWarnings(gs_fractions_wide(
-  long,
-  scheme = "usda_tt",
-  extrapolate = "warn_linear"
-))
-long_ssc <- data.frame(
-  sample_id = long_usda$sample_id,
-  sand = long_usda$sand_percent,
-  silt = long_usda$silt_percent,
-  clay = long_usda$clay_percent,
+usda_demo <- data.frame(
+  sample_id = c("sand demo", "loam demo", "clay demo"),
+  sand = c(92, 42, 22),
+  silt = c(5, 38, 22),
+  clay = c(3, 20, 56),
   stringsAsFactors = FALSE
 )
-long_ssc <- long_ssc[stats::complete.cases(long_ssc[c("sand", "silt", "clay")]), ]
 
 save_readme_plot(
-  plot_distribution(wide, sample_id = wide_samples, type = "line"),
+  plot_distribution(wide, sample_id = wide_samples, cumulative = TRUE),
   "readme-wide-distribution.png"
 )
 
@@ -79,7 +73,12 @@ save_readme_plot(
 )
 
 save_readme_plot(
-  plot_fractions(wide, scheme = "gradistat", sample_id = wide_samples),
+  plot_fractions(
+    wide,
+    scheme = "gravel_sand_mud",
+    sample_id = wide_samples,
+    fill_palette = "YlOrBr"
+  ),
   "readme-wide-fractions.png"
 )
 
@@ -88,7 +87,9 @@ save_readme_plot(
     wide_gsm[wide_gsm$sample_id %in% wide_samples, ],
     scheme = "gradistat",
     basis = "gravel_sand_mud",
-    point_id = "sample_id"
+    point_id = "sample_id",
+    show_sample_labels = FALSE,
+    class_label_size = 2.1
   ),
   "readme-gradistat-ternary.png",
   width = 6,
@@ -96,7 +97,13 @@ save_readme_plot(
 )
 
 save_readme_plot(
-  suppressWarnings(plot_texture_ternary(long, scheme = "usda_tt", sample_id = long_samples)),
+  plot_texture_ternary(
+    usda_demo,
+    scheme = "usda_tt",
+    point_id = "sample_id",
+    show_sample_labels = FALSE,
+    class_label_size = 2.1
+  ),
   "readme-usda-ternary.png",
   width = 6,
   height = 5.2

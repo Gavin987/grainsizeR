@@ -169,11 +169,14 @@ head(gs_quality_flags(
 ## Distribution Plots
 
 `plot_distribution()` returns a ggplot object and supports metric and phi axis
-scales. The examples below use the dry-sieve wide dataset so the plotted
-samples align with the README GRADISTAT-style showcase.
+scales. The same function can overlay cumulative percent finer on the retained
+size-class bars for a GRADISTAT-style combined display. The examples below use
+the dry-sieve wide dataset so the plotted samples align with the README
+GRADISTAT-style showcase.
 
 ```{r}
 plot_distribution(gs_wide, sample_id = c("WN1_upper", "WN2_upper"))
+plot_distribution(gs_wide, sample_id = c("WN1_upper", "WN2_upper"), cumulative = TRUE)
 plot_distribution(gs_wide, x_scale = "phi", type = "line", sample_id = c("WN1_upper", "WN2_upper"))
 ```
 
@@ -192,10 +195,18 @@ suppressWarnings(plot_cumulative(
 
 ## Fraction Plots
 
-`plot_fractions()` draws size-class percentage bars.
+`plot_fractions()` draws size-class percentage bars. For dry-sieve
+GRADISTAT-style examples, use non-overlapping `Gravel`, `Sand`, and `Mud`
+fractions. More detailed Wentworth-style classes are available with
+`scheme = "wentworth_detailed"` when the input resolves those boundaries.
 
 ```{r}
-plot_fractions(gs_wide, scheme = "gradistat", sample_id = c("WN1_upper", "WN2_upper"))
+plot_fractions(
+  gs_wide,
+  scheme = "gravel_sand_mud",
+  sample_id = c("WN1_upper", "WN2_upper"),
+  fill_palette = "YlOrBr"
+)
 ```
 
 ## Building a Combined Analysis Table

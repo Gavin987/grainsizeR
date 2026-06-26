@@ -63,7 +63,8 @@ The stable `plot_texture_triangle()` function name remains available for
 compatibility. The bundled long-format example includes finer fractions and can
 be used for the USDA texture workflow. Some open-ended tails require explicit
 extrapolation for resolved sand, silt, and clay percentages; this example makes
-that assumption visible.
+that assumption visible. USDA ternary plots draw the 12 major-class boundaries
+from the package's independently expressed rule logic.
 
 ```{r}
 usda_fractions <- suppressWarnings(gs_fractions_wide(
@@ -87,7 +88,7 @@ usda_example <- usda_example[
 
 head(classify_texture(usda_example, scheme = "usda_tt", method = "rules"))
 
-suppressWarnings(plot_texture_ternary(long_gs, scheme = "usda_tt"))
+suppressWarnings(plot_texture_ternary(long_gs, scheme = "usda_tt", labels = FALSE))
 ```
 
 Input percentages must be numeric, finite, between 0 and 100, and sum to
@@ -122,7 +123,7 @@ classification. The `gravel_sand_mud` basis requires `gravel`, `sand`, and
 GRADISTAT-style gravel-sand-mud workflow.
 
 ```{r}
-wide_gradistat <- suppressWarnings(gs_fractions_wide(wide_gs, scheme = "gradistat"))
+wide_gradistat <- suppressWarnings(gs_fractions_wide(wide_gs, scheme = "gravel_sand_mud"))
 
 gsm <- data.frame(
   sample_id = wide_gradistat$sample_id,
@@ -172,13 +173,16 @@ Sediment-name composition can be requested during GRADISTAT classification with
 the textural group is returned as a partial sediment name.
 
 The same supported bases can be drawn as texture ternary plots.
+For the dry-sieve wide example, sample labels are suppressed to keep the
+GRADISTAT gravel-sand-mud class labels readable.
 
 ```{r}
 plot_texture_ternary(
   head(gsm, 6),
   scheme = "gradistat",
   basis = "gravel_sand_mud",
-  point_id = "sample_id"
+  point_id = "sample_id",
+  show_sample_labels = FALSE
 )
 
 plot_texture_ternary(

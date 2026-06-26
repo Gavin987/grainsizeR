@@ -194,14 +194,19 @@ gs_gradistat_sediment_name(gsm_classified)
 ## Distribution and Cumulative Plots
 
 ```{r}
-plot_distribution(gs, sample_id = c("WN1_upper", "WN2_upper"))
+plot_distribution(gs_wide, sample_id = c("WN1_upper", "WN2_upper"), cumulative = TRUE)
 suppressWarnings(plot_cumulative(
   gs_wide,
   sample_id = c("WN1_upper", "WN2_upper"),
   show_percentiles = c(10, 50, 90),
   extrapolate = "warn_linear"
 ))
-plot_fractions(gs_wide, scheme = "gradistat", sample_id = c("WN1_upper", "WN2_upper"))
+plot_fractions(
+  gs_wide,
+  scheme = "gravel_sand_mud",
+  sample_id = c("WN1_upper", "WN2_upper"),
+  fill_palette = "YlOrBr"
+)
 ```
 
 ## Texture Ternary Plots

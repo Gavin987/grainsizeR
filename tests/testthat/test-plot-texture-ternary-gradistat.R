@@ -127,6 +127,40 @@ test_that("GRADISTAT ternary plotting validates required columns and point label
   )
 })
 
+test_that("GRADISTAT ternary plotting supports readable class labels and hidden sample labels", {
+  samples <- data.frame(
+    sample_id = c("A", "B", "C"),
+    gravel = c(0, 10, 40),
+    sand = c(95, 80, 40),
+    mud = c(5, 10, 20)
+  )
+
+  plot <- plot_texture_triangle(
+    samples,
+    scheme = "gradistat",
+    basis = "gravel_sand_mud",
+    point_id = "sample_id",
+    show_sample_labels = FALSE,
+    class_label_size = 2.1
+  )
+
+  label_data <- unlist(lapply(plot$layers, function(layer) {
+    data <- layer$data
+    if (is.data.frame(data) && "class_label" %in% names(data)) {
+      return(data$class_label)
+    }
+    character()
+  }))
+
+  sample_label_layers <- vapply(plot$layers, function(layer) {
+    data <- layer$data
+    inherits(layer$geom, "GeomText") && is.data.frame(data) && "point_label" %in% names(data)
+  }, logical(1))
+
+  expect_true(any(grepl("\n", label_data, fixed = TRUE)))
+  expect_false(any(sample_label_layers))
+})
+
 test_that("GRADISTAT ternary plotting keeps helpers internal and avoids runtime data", {
   exports <- getNamespaceExports("grainsizeR")
   root <- gradistat_ternary_plot_root()

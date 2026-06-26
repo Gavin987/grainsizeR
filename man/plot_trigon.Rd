@@ -15,7 +15,11 @@ plot_trigon(
   show_polygons = TRUE,
   show_polygon_labels = TRUE,
   polygon_alpha = 0.15,
-  classify = FALSE
+  classify = FALSE,
+  show_boundaries = TRUE,
+  show_classes = TRUE,
+  sample_label_size = 3,
+  class_label_size = 2.3
 )
 }
 \arguments{
@@ -41,6 +45,15 @@ left, right, top order.}
 \item{polygon_alpha}{Fill alpha for polygon overlays.}
 
 \item{classify}{Should sample points be classified with \code{classify_texture()}?}
+
+\item{show_boundaries}{Should built-in rule boundaries be drawn where
+available?}
+
+\item{show_classes}{Should built-in class labels be drawn where available?}
+
+\item{sample_label_size}{Text size for sample labels.}
+
+\item{class_label_size}{Text size for class labels.}
 }
 \value{
 A \code{ggplot} object.
@@ -48,6 +61,7 @@ A \code{ggplot} object.
 \description{
 \code{plot_trigon()} is a compatibility plotting name for texture ternary plots.
 Prefer \code{plot_texture_ternary()} in new code and prose. Optional
-user-supplied polygons can be drawn as overlays, but the package does not
-include built-in texture classification polygon datasets in this phase.
+user-supplied polygons can be drawn as overlays. For USDA major texture
+classes, the function draws internal rule-derived class boundaries without
+depending on external texture plotting packages.
 }

@@ -2,6 +2,10 @@
 
 ## Development version
 
+- Polished plotting defaults and README showcase outputs, including
+  `theme_bw()`-based plot functions, combined distribution/cumulative displays,
+  gravel-sand-mud fraction plotting, YlOrBr fraction palettes, and USDA ternary
+  plot class boundaries.
 - Added reproducible README showcase figures for dry-sieve GRADISTAT-style
   workflows and long-format USDA texture workflows.
 - Prepared public GitHub repository materials, including contribution guidance,
