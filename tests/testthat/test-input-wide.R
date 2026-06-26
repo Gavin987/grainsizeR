@@ -37,6 +37,15 @@ test_that("read_gsd dispatches to read_gsd_wide for wide input", {
   expect_equal(dispatched, direct)
 })
 
+test_that("read_gsd wide dispatch uses wide defaults", {
+  path <- system.file("extdata", "grain.wide.csv", package = "grainsizeR")
+
+  direct <- read_gsd_wide(path)
+  dispatched <- read_gsd(path, format = "wide")
+
+  expect_equal(dispatched, direct)
+})
+
 test_that("gs_percentile does not silently calculate inside open fine tails", {
   path <- tempfile(fileext = ".csv")
   wide <- data.frame(

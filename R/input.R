@@ -135,7 +135,8 @@ build_sample_bins <- function(sample_data) {
 #' @param size_unit Unit for `size_col`. Supported values are `"mm"`, `"um"`,
 #'   and `"phi"`.
 #' @param value_type Scale for `value_col`. Supported values are
-#'   `"proportion"`, `"percent"`, and `"weight"`.
+#'   `"proportion"`, `"percent"`, and `"weight"`. For `format = "wide"`,
+#'   omitted `value_type` uses the `read_gsd_wide()` default.
 #' @param measurement_method Measurement method to store in the output.
 #' @param format Input table format. `"long"` reads one row per sample and
 #'   grain-size class. `"wide"` reads grain-size classes from rows and sample
@@ -164,13 +165,16 @@ read_gsd <- function(file,
         eval(size_col_expr, parent.frame())
       }
     }
-    return(read_gsd_wide(
+    wide_args <- list(
       file = file,
       size_col = size_col,
       size_unit = size_unit,
-      value_type = value_type,
       measurement_method = measurement_method
-    ))
+    )
+    if (!missing(value_type)) {
+      wide_args$value_type <- value_type
+    }
+    return(do.call(read_gsd_wide, wide_args))
   }
 
   x <- readr::read_csv(file, show_col_types = FALSE)

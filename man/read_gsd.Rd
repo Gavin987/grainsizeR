@@ -33,7 +33,8 @@ uses \code{"proportion"} when that column exists.}
 and \code{"phi"}.}
 
 \item{value_type}{Scale for \code{value_col}. Supported values are
-\code{"proportion"}, \code{"percent"}, and \code{"weight"}.}
+\code{"proportion"}, \code{"percent"}, and \code{"weight"}. For \code{format = "wide"},
+omitted \code{value_type} uses the \code{read_gsd_wide()} default.}
 
 \item{measurement_method}{Measurement method to store in the output.}
 
