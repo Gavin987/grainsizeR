@@ -20,10 +20,11 @@ plot_texture_triangle(
   point_id = NULL,
   show_boundaries = TRUE,
   show_classes = TRUE,
+  show_class_labels = show_classes,
   show_sample_labels = labels,
   sample_label_size = 3,
   class_label_size = 2.2,
-  label_style = c("inside", "none")
+  label_style = c("inside", "callout", "none")
 )
 }
 \arguments{
@@ -60,14 +61,17 @@ data-frame plots.}
 
 \item{show_classes}{Should GRADISTAT class labels be drawn?}
 
+\item{show_class_labels}{Alias for \code{show_classes}.}
+
 \item{show_sample_labels}{Should sample labels be drawn?}
 
 \item{sample_label_size}{Text size for sample labels.}
 
 \item{class_label_size}{Text size for class labels.}
 
-\item{label_style}{Label style for GRADISTAT class labels. \code{"inside"} draws
-labels inside the ternary diagram and \code{"none"} suppresses them.}
+\item{label_style}{Label style for GRADISTAT class labels. \code{"inside"} and
+\code{"callout"} use the current readable label placement, and \code{"none"}
+suppresses them.}
 }
 \value{
 A \code{ggplot} object.

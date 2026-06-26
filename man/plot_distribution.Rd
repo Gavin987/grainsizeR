@@ -10,7 +10,8 @@ plot_distribution(
   type = c("bar", "line"),
   sample_id = NULL,
   show_open_ends = TRUE,
-  cumulative = FALSE
+  cumulative = FALSE,
+  facet_by_sample = NULL
 )
 }
 \arguments{
@@ -29,6 +30,9 @@ labels as plotting proxies?}
 \item{cumulative}{Should a cumulative percent-finer line be overlaid on the
 retained-size bars? This combined display is useful for GRADISTAT-style
 grain-size summaries.}
+
+\item{facet_by_sample}{Should plots with multiple samples be faceted by
+sample? The default, \code{NULL}, facets when more than one sample is present.}
 }
 \value{
 A \code{ggplot} object.

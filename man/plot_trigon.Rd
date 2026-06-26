@@ -18,6 +18,7 @@ plot_trigon(
   classify = FALSE,
   show_boundaries = TRUE,
   show_classes = TRUE,
+  show_class_labels = show_classes,
   sample_label_size = 3,
   class_label_size = 2.3
 )
@@ -50,6 +51,8 @@ left, right, top order.}
 available?}
 
 \item{show_classes}{Should built-in class labels be drawn where available?}
+
+\item{show_class_labels}{Alias for \code{show_classes}.}
 
 \item{sample_label_size}{Text size for sample labels.}
 

@@ -10,7 +10,8 @@ plot_cumulative(
   x_scale = c("log10", "phi", "linear_um"),
   sample_id = NULL,
   show_percentiles = NULL,
-  extrapolate = "error"
+  extrapolate = "error",
+  facet_by_sample = NULL
 )
 }
 \arguments{
@@ -28,6 +29,9 @@ mark on the plot.}
 
 \item{extrapolate}{Extrapolation behavior passed to \code{gs_d_values()} when
 \code{show_percentiles} is supplied.}
+
+\item{facet_by_sample}{Should plots with multiple samples be faceted by
+sample? The default, \code{NULL}, facets when more than one sample is present.}
 }
 \value{
 A \code{ggplot} object.

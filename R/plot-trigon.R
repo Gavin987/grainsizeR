@@ -69,6 +69,7 @@ fine_resolution_ok <- function(x, sample_id, scheme) {
 #' @param show_boundaries Should built-in rule boundaries be drawn where
 #'   available?
 #' @param show_classes Should built-in class labels be drawn where available?
+#' @param show_class_labels Alias for `show_classes`.
 #' @param sample_label_size Text size for sample labels.
 #' @param class_label_size Text size for class labels.
 #'
@@ -87,6 +88,7 @@ plot_trigon <- function(x,
                         classify = FALSE,
                         show_boundaries = TRUE,
                         show_classes = TRUE,
+                        show_class_labels = show_classes,
                         sample_label_size = 3,
                         class_label_size = 2.3) {
   validate_gsd_tbl(x)
@@ -96,6 +98,7 @@ plot_trigon <- function(x,
     scheme <- as.character(scheme)[1]
     polygons <- validate_texture_polygons(polygons)
   }
+  show_classes <- isTRUE(show_class_labels)
   normalize <- match.arg(normalize, c("none", "fine_earth"))
   plot_x <- plot_filter_samples(x, sample_id)
   components <- if (is.null(polygons)) {
@@ -165,9 +168,21 @@ plot_trigon <- function(x,
 
   p <- ggplot2::ggplot() +
     ggplot2::geom_path(data = triangle, ggplot2::aes(x = .data$x, y = .data$y)) +
-    ggplot2::coord_equal() +
+    ggplot2::coord_equal(xlim = c(-0.12, 1.12), ylim = c(-0.12, sqrt(3) / 2 + 0.1), clip = "off") +
     ggplot2::labs(x = NULL, y = NULL) +
-    ggplot2::theme_bw()
+    ggplot2::theme_bw() +
+    .ternary_cartesian_theme()
+
+  guides <- if (identical(scheme, "usda_tt")) {
+    .usda_ternary_axis_guides()
+  } else {
+    .ternary_axis_guides(
+      left = tools::toTitleCase(components[1]),
+      right = tools::toTitleCase(components[2]),
+      top = tools::toTitleCase(components[3])
+    )
+  }
+  p <- .add_ternary_axis_guides(p, guides)
 
   if (is.null(polygons) && identical(scheme, "usda_tt")) {
     if (show_boundaries) {
@@ -258,11 +273,13 @@ plot_trigon <- function(x,
 #'   data-frame plots.
 #' @param show_boundaries Should GRADISTAT classification boundaries be drawn?
 #' @param show_classes Should GRADISTAT class labels be drawn?
+#' @param show_class_labels Alias for `show_classes`.
 #' @param show_sample_labels Should sample labels be drawn?
 #' @param sample_label_size Text size for sample labels.
 #' @param class_label_size Text size for class labels.
-#' @param label_style Label style for GRADISTAT class labels. `"inside"` draws
-#'   labels inside the ternary diagram and `"none"` suppresses them.
+#' @param label_style Label style for GRADISTAT class labels. `"inside"` and
+#'   `"callout"` use the current readable label placement, and `"none"`
+#'   suppresses them.
 #'
 #' @return A `ggplot` object.
 #' @export
@@ -310,12 +327,14 @@ plot_texture_triangle <- function(x,
                                   point_id = NULL,
                                   show_boundaries = TRUE,
                                   show_classes = TRUE,
+                                  show_class_labels = show_classes,
                                   show_sample_labels = labels,
                                   sample_label_size = 3,
                                   class_label_size = 2.2,
-                                  label_style = c("inside", "none")) {
+                                  label_style = c("inside", "callout", "none")) {
   basis <- match.arg(basis)
   label_style <- match.arg(label_style)
+  show_classes <- isTRUE(show_class_labels)
   scheme_value <- if (is.null(polygons)) match.arg(scheme) else as.character(scheme)[1]
   if (identical(scheme_value, "usda_tt") && is.data.frame(x) && !is_gsd_tbl(x)) {
     return(plot_usda_texture_ternary(
@@ -324,6 +343,7 @@ plot_texture_triangle <- function(x,
       labels = show_sample_labels,
       show_boundaries = show_boundaries,
       show_classes = show_classes,
+      show_class_labels = show_classes,
       sample_label_size = sample_label_size,
       class_label_size = class_label_size
     ))
@@ -336,6 +356,7 @@ plot_texture_triangle <- function(x,
       labels = show_sample_labels,
       show_boundaries = show_boundaries,
       show_classes = show_classes,
+      show_class_labels = show_classes,
       sample_label_size = sample_label_size,
       class_label_size = class_label_size,
       label_style = label_style
@@ -356,6 +377,7 @@ plot_texture_triangle <- function(x,
     classify = classify,
     show_boundaries = show_boundaries,
     show_classes = show_classes,
+    show_class_labels = show_classes,
     sample_label_size = sample_label_size,
     class_label_size = class_label_size
   )
@@ -367,26 +389,25 @@ plot_gradistat_texture_ternary <- function(x,
                                            labels,
                                            show_boundaries,
                                            show_classes,
+                                           show_class_labels,
                                            sample_label_size,
                                            class_label_size,
                                            label_style) {
+  show_classes <- isTRUE(show_class_labels)
   points <- .gradistat_ternary_points(x, basis = basis, point_id = point_id)
   outline <- tibble::tibble(
     x = c(0, 1, 0.5, 0),
     y = c(0, 0, sqrt(3) / 2, 0)
   )
-  axis_labels <- .gradistat_ternary_axis_labels(basis)
+  axis_guides <- .gradistat_ternary_axis_guides(basis)
 
   p <- ggplot2::ggplot() +
     ggplot2::geom_path(data = outline, ggplot2::aes(x = .data$x, y = .data$y)) +
-    ggplot2::geom_text(
-      data = axis_labels,
-      ggplot2::aes(x = .data$x, y = .data$y, label = .data$label),
-      inherit.aes = FALSE
-    ) +
-    ggplot2::coord_equal(xlim = c(-0.08, 1.08), ylim = c(-0.08, sqrt(3) / 2 + 0.08), clip = "off") +
+    ggplot2::coord_equal(xlim = c(-0.12, 1.12), ylim = c(-0.12, sqrt(3) / 2 + 0.1), clip = "off") +
     ggplot2::labs(x = NULL, y = NULL) +
-    ggplot2::theme_bw()
+    ggplot2::theme_bw() +
+    .ternary_cartesian_theme()
+  p <- .add_ternary_axis_guides(p, axis_guides)
 
   if (show_boundaries) {
     segments <- .gradistat_ternary_segments(basis)
@@ -438,8 +459,10 @@ plot_usda_texture_ternary <- function(x,
                                       labels,
                                       show_boundaries,
                                       show_classes,
+                                      show_class_labels,
                                       sample_label_size,
                                       class_label_size) {
+  show_classes <- isTRUE(show_class_labels)
   required <- c("sand", "silt", "clay")
   missing <- setdiff(required, names(x))
   if (length(missing) > 0) {
@@ -467,22 +490,15 @@ plot_usda_texture_ternary <- function(x,
     x = c(0, 1, 0.5, 0),
     y = c(0, 0, sqrt(3) / 2, 0)
   )
-  axis_labels <- tibble::tibble(
-    x = c(-0.03, 1.03, 0.5),
-    y = c(-0.03, -0.03, sqrt(3) / 2 + 0.03),
-    label = c("sand", "silt", "clay")
-  )
+  axis_guides <- .usda_ternary_axis_guides()
 
   p <- ggplot2::ggplot() +
     ggplot2::geom_path(data = outline, ggplot2::aes(x = .data$x, y = .data$y)) +
-    ggplot2::geom_text(
-      data = axis_labels,
-      ggplot2::aes(x = .data$x, y = .data$y, label = .data$label),
-      inherit.aes = FALSE
-    ) +
-    ggplot2::coord_equal(xlim = c(-0.08, 1.08), ylim = c(-0.08, sqrt(3) / 2 + 0.08), clip = "off") +
+    ggplot2::coord_equal(xlim = c(-0.12, 1.12), ylim = c(-0.12, sqrt(3) / 2 + 0.1), clip = "off") +
     ggplot2::labs(x = NULL, y = NULL) +
-    ggplot2::theme_bw()
+    ggplot2::theme_bw() +
+    .ternary_cartesian_theme()
+  p <- .add_ternary_axis_guides(p, axis_guides)
 
   if (show_boundaries) {
     p <- p + ggplot2::geom_segment(
@@ -506,7 +522,9 @@ plot_usda_texture_ternary <- function(x,
 
   p <- p + ggplot2::geom_point(
     data = coords,
-    ggplot2::aes(x = .data$x, y = .data$y, color = .data$class_name)
+    ggplot2::aes(x = .data$x, y = .data$y, color = .data$class_name),
+    alpha = 0.75,
+    size = 1.8
   ) +
     ggplot2::labs(color = "Class")
   if (labels) {

@@ -161,6 +161,51 @@ test_that("GRADISTAT ternary plotting supports readable class labels and hidden 
   expect_false(any(sample_label_layers))
 })
 
+test_that("GRADISTAT ternary plotting uses sediment-oriented ternary axes", {
+  samples <- data.frame(
+    sample_id = c("mud", "sand", "gravel"),
+    gravel = c(0, 0, 100),
+    sand = c(0, 100, 0),
+    mud = c(100, 0, 0)
+  )
+
+  plot <- plot_texture_triangle(
+    samples,
+    scheme = "gradistat",
+    basis = "gravel_sand_mud",
+    point_id = "sample_id",
+    show_sample_labels = FALSE
+  )
+  points <- grainsizeR:::.gradistat_ternary_points(samples, "gravel_sand_mud", point_id = "sample_id")
+  guide_labels <- unlist(lapply(plot$layers, function(layer) {
+    data <- layer$data
+    if (is.data.frame(data) && "label" %in% names(data)) {
+      return(data$label)
+    }
+    character()
+  }))
+
+  expect_equal(points$x, c(0, 1, 0.5))
+  expect_equal(points$y, c(0, 0, sqrt(3) / 2))
+  expect_true(all(c("Mud", "Sand", "Gravel", "% gravel", "sand/mud ratio") %in% guide_labels))
+  expect_true(all(c("1:9", "5:5", "9:1") %in% guide_labels))
+  expect_equal(plot$labels$x, NULL)
+  expect_equal(plot$labels$y, NULL)
+  expect_s3_class(plot$theme$axis.text, "element_blank")
+  expect_s3_class(plot$theme$axis.ticks, "element_blank")
+})
+
+test_that("GRADISTAT gravel-sand-mud boundaries match reference geometry", {
+  segments <- grainsizeR:::.gradistat_ternary_segments("gravel_sand_mud")
+
+  expect_true(all(c("gravel = 5", "gravel = 30", "gravel = 80") %in% unique(segments$boundary)))
+  ratio <- segments[grepl("sand / mud", segments$boundary, fixed = TRUE), ]
+  expect_equal(length(unique(ratio$segment_id)), 3)
+  expect_equal(min(ratio$y), 0)
+  expect_lte(max(ratio$y), sqrt(3) / 2 * 0.8 + 1e-8)
+  expect_true(all(tapply(ratio$y, ratio$segment_id, function(value) any(abs(value - sqrt(3) / 2 * 0.8) < 1e-8))))
+})
+
 test_that("GRADISTAT ternary plotting keeps helpers internal and avoids runtime data", {
   exports <- getNamespaceExports("grainsizeR")
   root <- gradistat_ternary_plot_root()

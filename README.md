@@ -99,8 +99,8 @@ overlay, cumulative curves, non-overlapping `Gravel`, `Sand`, and `Mud`
 fractions, GRADISTAT `gravel_sand_mud` classification, and a GRADISTAT
 texture ternary plot. The long-format example includes finer fractions
 and is used for the USDA texture workflow. The USDA ternary plot below
-uses clearly labeled demonstration sand-silt-clay points so the 12-class
-boundary layout is visible in a compact README figure.
+uses clearly labeled demo points and includes bundled long-format
+example points when they resolve to valid sand-silt-clay percentages.
 
 The figures below are generated reproducibly by
 `data-raw/readme-figures.R` from bundled example data. They are
@@ -112,6 +112,8 @@ available when the input resolution supports them, but dry-sieve data
 should not be interpreted as resolving silt and clay subclasses unless
 those boundaries are present. USDA and GRADISTAT ternary plots show
 classification boundaries with sample points or demonstration points.
+Distribution and cumulative plots use log-scaled particle-size axes by
+default, with tick labels shown as plain micrometre values.
 
 <img src="man/figures/readme-wide-distribution.png" width="100%" />
 
@@ -471,6 +473,10 @@ plot_cumulative(gs, x_scale = "phi")
 plot_fractions(gs, scheme = "wentworth_major")
 ```
 
+Metric distribution and cumulative plots use particle size in
+micrometres on a log-scaled x-axis by default. When more than one sample
+is plotted, the default display facets by sample.
+
 ### GRADISTAT-Inspired Summary Plot
 
 `plot_gradistat_summary()` creates an original sediment grain-size
@@ -581,7 +587,9 @@ inventing subclass modifiers. GRADISTAT ternary plotting is available
 through the preferred `plot_texture_ternary()` alias. The stable
 `plot_texture_triangle()` function name remains available for
 compatibility. USDA classification remains available separately through
-`scheme = "usda_tt"`.
+`scheme = "usda_tt"`. GRADISTAT gravel-sand-mud ternary plots place
+`Gravel` at the top, `Mud` at the lower-left apex, and `Sand` at the
+lower-right apex.
 
 ``` r
 plot_texture_ternary(

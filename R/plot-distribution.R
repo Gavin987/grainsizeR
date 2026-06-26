@@ -20,6 +20,30 @@ distribution_x_values <- function(x, x_scale) {
   )
 }
 
+.log10_particle_breaks <- function(limits) {
+  limits <- limits[is.finite(limits) & limits > 0]
+  if (length(limits) == 0) {
+    return(c(1, 10, 100, 1000, 10000))
+  }
+  powers <- floor(log10(min(limits))):ceiling(log10(max(limits)))
+  10^powers
+}
+
+.format_particle_size_ticks <- function(x) {
+  out <- format(x, scientific = FALSE, trim = TRUE)
+  out[is.na(x)] <- NA_character_
+  out
+}
+
+.particle_size_axis_label <- function(x_scale) {
+  switch(
+    x_scale,
+    log10 = "Particle size (um)",
+    phi = "Particle size (phi)",
+    linear_um = "Particle size (um)"
+  )
+}
+
 #' Plot retained grain-size distributions
 #'
 #' `plot_distribution()` plots retained grain-size percentages by class. Closed
@@ -36,6 +60,8 @@ distribution_x_values <- function(x, x_scale) {
 #' @param cumulative Should a cumulative percent-finer line be overlaid on the
 #'   retained-size bars? This combined display is useful for GRADISTAT-style
 #'   grain-size summaries.
+#' @param facet_by_sample Should plots with multiple samples be faceted by
+#'   sample? The default, `NULL`, facets when more than one sample is present.
 #'
 #' @return A `ggplot` object.
 #' @importFrom rlang .data
@@ -56,7 +82,8 @@ plot_distribution <- function(x,
                               type = c("bar", "line"),
                               sample_id = NULL,
                               show_open_ends = TRUE,
-                              cumulative = FALSE) {
+                              cumulative = FALSE,
+                              facet_by_sample = NULL) {
   validate_gsd_tbl(x)
   x_scale <- match.arg(x_scale)
   type <- match.arg(type)
@@ -71,6 +98,9 @@ plot_distribution <- function(x,
 
   plot_data$x_value <- distribution_x_values(plot_data, x_scale)
   plot_data$sample_id <- as.character(plot_data$sample_id)
+  if (is.null(facet_by_sample)) {
+    facet_by_sample <- length(unique(plot_data$sample_id)) > 1
+  }
 
   p <- ggplot2::ggplot(plot_data, ggplot2::aes(x = .data$x_value, y = .data$retained_percent))
   if (type == "bar") {
@@ -99,11 +129,17 @@ plot_distribution <- function(x,
   }
 
   p <- p +
-    ggplot2::labs(x = "Grain size", y = "Percent", fill = "Sample", color = "Sample") +
+    ggplot2::labs(x = .particle_size_axis_label(x_scale), y = "Percent", fill = "Sample", color = "Sample") +
     ggplot2::coord_cartesian(ylim = c(0, 100)) +
     ggplot2::theme_bw()
   if (x_scale == "log10") {
-    p <- p + ggplot2::scale_x_log10()
+    p <- p + ggplot2::scale_x_log10(
+      breaks = .log10_particle_breaks,
+      labels = .format_particle_size_ticks
+    )
+  }
+  if (isTRUE(facet_by_sample)) {
+    p <- p + ggplot2::facet_wrap(ggplot2::vars(.data$sample_id))
   }
   p
 }

@@ -193,6 +193,10 @@ gs_gradistat_sediment_name(gsm_classified)
 
 ## Distribution and Cumulative Plots
 
+Metric distribution and cumulative plots use particle size in micrometres on a
+log-scaled x-axis by default. Multi-sample displays facet by sample unless that
+behavior is turned off.
+
 ```{r}
 plot_distribution(gs_wide, sample_id = c("WN1_upper", "WN2_upper"), cumulative = TRUE)
 suppressWarnings(plot_cumulative(
@@ -210,6 +214,11 @@ plot_fractions(
 ```
 
 ## Texture Ternary Plots
+
+GRADISTAT gravel-sand-mud ternary plots place `Gravel` at the top, `Mud` at the
+lower-left apex, and `Sand` at the lower-right apex. The plotting functions draw
+ternary guides for gravel percentage and sand/mud ratio directly on the diagram
+and suppress ordinary Cartesian x/y axes.
 
 ```{r}
 plot_texture_ternary(

@@ -1,7 +1,7 @@
 .gradistat_ternary_components <- function(basis) {
   basis <- match.arg(basis, c("gravel_sand_mud", "sand_silt_clay_no_gravel"))
   if (basis == "gravel_sand_mud") {
-    c(left = "sand", right = "mud", top = "gravel")
+    c(left = "mud", right = "sand", top = "gravel")
   } else {
     c(left = "sand", right = "silt", top = "clay")
   }
@@ -42,7 +42,7 @@
 .gradistat_line_ratio <- function(numerator, denominator, ratio, basis) {
   components <- .gradistat_ternary_components(basis)
   third <- setdiff(unname(components), c(numerator, denominator))
-  third_values <- c(0, 100)
+  third_values <- c(0, if (basis == "gravel_sand_mud") 80 else 100)
   one <- data.frame(
     left = c(0, 0),
     right = c(0, 0),
@@ -67,7 +67,7 @@
   if (basis == "gravel_sand_mud") {
     rows <- c(
       lapply(c(5, 30, 80), .gradistat_line_constant_component, component = "gravel", basis = basis),
-      lapply(c(9, 1, 1 / 9), .gradistat_line_ratio, numerator = "sand", denominator = "mud", basis = basis)
+      lapply(c(1 / 9, 1, 9), .gradistat_line_ratio, numerator = "sand", denominator = "mud", basis = basis)
     )
   } else {
     rows <- c(
@@ -95,7 +95,7 @@
       sand = c(10, 55, 82, 90, 95, 40, 60, 60, 60, 5, 10, 20, 20, 5, 5),
       mud = c(0, 5, 8, 7, 5, 20, 30, 37, 40, 55, 80, 77, 80, 92, 95)
     )
-    xy <- ternary_to_xy(points$sand, points$mud, points$gravel)
+    xy <- ternary_to_xy(points$mud, points$sand, points$gravel)
   } else {
     points <- data.frame(
       class_id = c(

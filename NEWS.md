@@ -2,6 +2,12 @@
 
 ## Development version
 
+- Refined ternary plot output so USDA and GRADISTAT plots hide Cartesian axes,
+  draw ternary axis guides, correct GRADISTAT gravel-sand-mud orientation, and
+  keep the top gravel field continuous.
+- Updated distribution and cumulative plots to use plain log-scaled
+  particle-size tick labels and default sample faceting for multi-sample
+  displays.
 - Polished plotting defaults and README showcase outputs, including
   `theme_bw()`-based plot functions, combined distribution/cumulative displays,
   gravel-sand-mud fraction plotting, YlOrBr fraction palettes, and USDA ternary

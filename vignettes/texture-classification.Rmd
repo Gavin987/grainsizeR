@@ -64,7 +64,8 @@ compatibility. The bundled long-format example includes finer fractions and can
 be used for the USDA texture workflow. Some open-ended tails require explicit
 extrapolation for resolved sand, silt, and clay percentages; this example makes
 that assumption visible. USDA ternary plots draw the 12 major-class boundaries
-from the package's independently expressed rule logic.
+from the package's independently expressed rule logic and annotate ternary
+percentage axes directly, without ordinary Cartesian x/y tick labels.
 
 ```{r}
 usda_fractions <- suppressWarnings(gs_fractions_wide(
@@ -174,7 +175,10 @@ the textural group is returned as a partial sediment name.
 
 The same supported bases can be drawn as texture ternary plots.
 For the dry-sieve wide example, sample labels are suppressed to keep the
-GRADISTAT gravel-sand-mud class labels readable.
+GRADISTAT gravel-sand-mud class labels readable. In the gravel-sand-mud basis,
+the ternary plot places `Gravel` at the top, `Mud` at the lower-left apex, and
+`Sand` at the lower-right apex. Gravel percentage guides and sand/mud ratio
+guides are drawn as ternary annotations rather than Cartesian axes.
 
 ```{r}
 plot_texture_ternary(

@@ -60,6 +60,23 @@ test_that("distribution and cumulative plots support documented scale behavior",
   )
 })
 
+test_that("distribution and cumulative plots facet multiple samples with plain log ticks", {
+  gsd <- plot_contract_gsd()
+
+  combined <- plot_distribution(gsd, cumulative = TRUE)
+  cumulative <- plot_cumulative(gsd)
+  for (plot in list(combined, cumulative)) {
+    x_scales <- vapply(plot$scales$scales, function(scale) "x" %in% scale$aesthetics, logical(1))
+    scale <- plot$scales$scales[[which(x_scales)[1]]]
+    breaks <- scale$breaks(c(1, 10000))
+
+    expect_s3_class(plot$facet, "FacetWrap")
+    expect_equal(plot$labels$x, "Particle size (um)")
+    expect_equal(scale$labels(c(1, 10, 100, 1000, 10000)), c("1", "10", "100", "1000", "10000"))
+    expect_true(all(c(1, 10, 100, 1000, 10000) %in% breaks))
+  }
+})
+
 test_that("exported plotting functions use theme_bw-compatible defaults", {
   gsd <- plot_contract_gsd()
   gsm <- data.frame(sample_id = c("A", "B"), gravel = c(0, 40), sand = c(95, 40), mud = c(5, 20))

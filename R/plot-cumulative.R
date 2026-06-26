@@ -30,6 +30,8 @@ percentile_x_values <- function(x, x_scale) {
 #'   mark on the plot.
 #' @param extrapolate Extrapolation behavior passed to `gs_d_values()` when
 #'   `show_percentiles` is supplied.
+#' @param facet_by_sample Should plots with multiple samples be faceted by
+#'   sample? The default, `NULL`, facets when more than one sample is present.
 #'
 #' @return A `ggplot` object.
 #' @export
@@ -48,7 +50,8 @@ plot_cumulative <- function(x,
                             x_scale = c("log10", "phi", "linear_um"),
                             sample_id = NULL,
                             show_percentiles = NULL,
-                            extrapolate = "error") {
+                            extrapolate = "error",
+                            facet_by_sample = NULL) {
   validate_gsd_tbl(x)
   direction <- match.arg(direction)
   x_scale <- match.arg(x_scale)
@@ -58,15 +61,22 @@ plot_cumulative <- function(x,
   curve <- gs_cumulative(plot_x)
   curve$x_value <- cumulative_x_values(curve, x_scale)
   curve$y_value <- if (direction == "finer") curve$percent_finer else curve$percent_coarser
+  curve$sample_id <- as.character(curve$sample_id)
+  if (is.null(facet_by_sample)) {
+    facet_by_sample <- length(unique(curve$sample_id)) > 1
+  }
 
   p <- ggplot2::ggplot(curve, ggplot2::aes(x = .data$x_value, y = .data$y_value, color = .data$sample_id, group = .data$sample_id)) +
     ggplot2::geom_line() +
     ggplot2::geom_point() +
-    ggplot2::labs(x = "Grain size", y = paste("Percent", direction), color = "Sample") +
+    ggplot2::labs(x = .particle_size_axis_label(x_scale), y = paste("Percent", direction), color = "Sample") +
     ggplot2::theme_bw()
 
   if (x_scale == "log10") {
-    p <- p + ggplot2::scale_x_log10()
+    p <- p + ggplot2::scale_x_log10(
+      breaks = .log10_particle_breaks,
+      labels = .format_particle_size_ticks
+    )
   }
 
   if (!is.null(show_percentiles)) {
@@ -79,6 +89,7 @@ plot_cumulative <- function(x,
     )
     percentiles$x_value <- percentile_x_values(percentiles, x_scale)
     percentiles$y_value <- if (direction == "finer") percentiles$percentile else 100 - percentiles$percentile
+    percentiles$sample_id <- as.character(percentiles$sample_id)
     p <- p +
       ggplot2::geom_point(
         data = percentiles,
@@ -86,6 +97,9 @@ plot_cumulative <- function(x,
         inherit.aes = FALSE,
         shape = 4
       )
+  }
+  if (isTRUE(facet_by_sample)) {
+    p <- p + ggplot2::facet_wrap(ggplot2::vars(.data$sample_id))
   }
 
   p

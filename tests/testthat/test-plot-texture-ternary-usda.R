@@ -46,6 +46,36 @@ test_that("USDA ternary plotting draws internal boundaries and class labels", {
   expect_equal(length(unique(class_labels)), 12)
 })
 
+test_that("USDA ternary plotting draws ternary axis labels without Cartesian axes", {
+  samples <- data.frame(
+    sample_id = c("sand demo", "loam demo", "clay demo"),
+    sand = c(92, 42, 22),
+    silt = c(5, 38, 22),
+    clay = c(3, 20, 56)
+  )
+
+  plot <- plot_texture_ternary(
+    samples,
+    scheme = "usda_tt",
+    point_id = "sample_id",
+    show_sample_labels = FALSE
+  )
+  guide_labels <- unlist(lapply(plot$layers, function(layer) {
+    data <- layer$data
+    if (is.data.frame(data) && "label" %in% names(data)) {
+      return(data$label)
+    }
+    character()
+  }))
+
+  expect_true(all(c("Sand", "Silt", "Clay") %in% guide_labels))
+  expect_true(all(c("0", "20", "40", "60", "80", "100") %in% guide_labels))
+  expect_equal(plot$labels$x, NULL)
+  expect_equal(plot$labels$y, NULL)
+  expect_s3_class(plot$theme$axis.text, "element_blank")
+  expect_s3_class(plot$theme$axis.ticks, "element_blank")
+})
+
 test_that("USDA ternary plotting accepts sand-silt-clay data frames", {
   samples <- data.frame(
     sample_id = c("sand demo", "loam demo", "clay demo"),

@@ -50,12 +50,31 @@ wide_gsm <- data.frame(
 wide_gsm <- wide_gsm[stats::complete.cases(wide_gsm[c("gravel", "sand", "mud")]), ]
 
 usda_demo <- data.frame(
-  sample_id = c("sand demo", "loam demo", "clay demo"),
+  sample_id = c("demo: sand", "demo: loam", "demo: clay"),
   sand = c(92, 42, 22),
   silt = c(5, 38, 22),
   clay = c(3, 20, 56),
   stringsAsFactors = FALSE
 )
+
+long_usda_fractions <- suppressWarnings(gs_fractions_wide(
+  long,
+  scheme = "usda_tt",
+  normalize = "none",
+  unresolved = "warn_na",
+  extrapolate = "warn_linear"
+))
+long_usda <- data.frame(
+  sample_id = paste0("example: ", long_usda_fractions$sample_id),
+  sand = long_usda_fractions$sand_percent,
+  silt = long_usda_fractions$silt_percent,
+  clay = long_usda_fractions$clay_percent,
+  stringsAsFactors = FALSE
+)
+long_usda_valid <- stats::complete.cases(long_usda[c("sand", "silt", "clay")]) &
+  rowSums(long_usda[c("sand", "silt", "clay")] >= 0 & long_usda[c("sand", "silt", "clay")] <= 100) == 3 &
+  abs(rowSums(long_usda[c("sand", "silt", "clay")]) - 100) < 1e-6
+usda_points <- rbind(usda_demo, long_usda[long_usda_valid, ])
 
 save_readme_plot(
   plot_distribution(wide, sample_id = wide_samples, cumulative = TRUE),
@@ -98,7 +117,7 @@ save_readme_plot(
 
 save_readme_plot(
   plot_texture_ternary(
-    usda_demo,
+    usda_points,
     scheme = "usda_tt",
     point_id = "sample_id",
     show_sample_labels = FALSE,
