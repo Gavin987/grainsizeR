@@ -104,12 +104,46 @@ ternary_to_xy <- function(left, right, top, normalize = TRUE) {
   list(titles = titles, ticks = tick_data)
 }
 
-.usda_ternary_axis_guides <- function(tick_values = seq(0, 100, by = 20)) {
-  .ternary_axis_guides(
-    left = "Sand",
-    right = "Silt",
-    top = "Clay",
-    tick_values = tick_values
+.usda_ternary_axis_guides <- function(tick_values = seq(10, 100, by = 10)) {
+  height <- sqrt(3) / 2
+  ticks <- tick_values[tick_values > 0 & tick_values <= 100]
+  p <- ticks / 100
+
+  list(
+    titles = data.frame(
+      axis = c("sand", "silt", "clay"),
+      label = c("percent sand", "percent silt", "percent clay"),
+      x = c(0.5, 0.82, 0.18),
+      y = c(-0.105, 0.43, 0.43),
+      angle = c(0, -60, 60),
+      stringsAsFactors = FALSE
+    ),
+    ticks = rbind(
+      data.frame(
+        axis = "sand",
+        label = as.character(ticks),
+        x = 1 - p,
+        y = -0.035,
+        angle = 0,
+        stringsAsFactors = FALSE
+      ),
+      data.frame(
+        axis = "silt",
+        label = as.character(ticks),
+        x = 1 - 0.5 * p + 0.035,
+        y = height * p,
+        angle = -60,
+        stringsAsFactors = FALSE
+      ),
+      data.frame(
+        axis = "clay",
+        label = as.character(ticks),
+        x = 0.5 * p - 0.035,
+        y = height * p,
+        angle = 60,
+        stringsAsFactors = FALSE
+      )
+    )
   )
 }
 

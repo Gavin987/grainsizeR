@@ -189,6 +189,16 @@ test_that("GRADISTAT ternary plotting uses sediment-oriented ternary axes", {
   expect_equal(points$y, c(0, 0, sqrt(3) / 2))
   expect_true(all(c("Mud", "Sand", "Gravel", "% gravel", "sand/mud ratio") %in% guide_labels))
   expect_true(all(c("1:9", "5:5", "9:1") %in% guide_labels))
+  axis_title_data <- unique(do.call(rbind, lapply(plot$layers, function(layer) {
+    data <- layer$data
+    if (is.data.frame(data) && all(c("label", "x", "y") %in% names(data))) {
+      return(data[data$label %in% c("Mud", "Sand", "Gravel"), c("label", "x", "y")])
+    }
+    data.frame(label = character(), x = numeric(), y = numeric())
+  })))
+  expect_equal(axis_title_data$x[axis_title_data$label == "Mud"], -0.055)
+  expect_equal(axis_title_data$x[axis_title_data$label == "Sand"], 1.055)
+  expect_gt(axis_title_data$y[axis_title_data$label == "Gravel"], sqrt(3) / 2)
   expect_equal(plot$labels$x, NULL)
   expect_equal(plot$labels$y, NULL)
   expect_s3_class(plot$theme$axis.text, "element_blank")
@@ -203,7 +213,32 @@ test_that("GRADISTAT gravel-sand-mud boundaries match reference geometry", {
   expect_equal(length(unique(ratio$segment_id)), 3)
   expect_equal(min(ratio$y), 0)
   expect_lte(max(ratio$y), sqrt(3) / 2 * 0.8 + 1e-8)
-  expect_true(all(tapply(ratio$y, ratio$segment_id, function(value) any(abs(value - sqrt(3) / 2 * 0.8) < 1e-8))))
+  one_to_nine <- ratio[ratio$boundary == "sand / mud = 0.111111111111111", ]
+  five_to_five <- ratio[ratio$boundary == "sand / mud = 1", ]
+  nine_to_one <- ratio[ratio$boundary == "sand / mud = 9", ]
+  expect_equal(max(one_to_nine$y), sqrt(3) / 2 * 0.05, tolerance = 1e-8)
+  expect_equal(max(five_to_five$y), sqrt(3) / 2 * 0.3, tolerance = 1e-8)
+  expect_equal(max(nine_to_one$y), sqrt(3) / 2 * 0.8, tolerance = 1e-8)
+})
+
+test_that("GRADISTAT ternary plot uses solid boundaries matching the outline", {
+  plot <- plot_texture_triangle(
+    data.frame(sample_id = "A", gravel = 40, sand = 40, mud = 20),
+    scheme = "gradistat",
+    basis = "gravel_sand_mud",
+    point_id = "sample_id",
+    show_sample_labels = FALSE
+  )
+  boundary_layers <- vapply(plot$layers, function(layer) {
+    data <- layer$data
+    is.data.frame(data) && "segment_id" %in% names(data)
+  }, logical(1))
+  boundary <- plot$layers[[which(boundary_layers)[1]]]
+  boundary_color <- if (is.null(boundary$aes_params$colour)) boundary$aes_params$color else boundary$aes_params$colour
+
+  expect_equal(boundary$aes_params$linetype, "solid")
+  expect_equal(boundary_color, "black")
+  expect_equal(boundary$aes_params$linewidth, plot$layers[[1]]$aes_params$linewidth)
 })
 
 test_that("GRADISTAT ternary plotting keeps helpers internal and avoids runtime data", {

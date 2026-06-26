@@ -57,6 +57,8 @@ test_that("README figure generation script is present", {
   expect_false(any(grepl("[A-Za-z]:[\\/]", script)))
   expect_true(all(vapply(basename(readme_figure_files), grepl, logical(1), x = script_text, fixed = TRUE)))
   expect_true(grepl("plot_distribution\\([^\\n]+cumulative = TRUE", script_text))
+  expect_true(grepl("wide_plot_sample <-", script_text, fixed = TRUE))
+  expect_true(grepl("sample_id = wide_plot_sample", script_text, fixed = TRUE))
   expect_true(grepl("scheme = \"gravel_sand_mud\"", script_text, fixed = TRUE))
   expect_true(grepl("fill_palette = \"YlOrBr\"", script_text, fixed = TRUE))
   expect_true(grepl("show_sample_labels = FALSE", script_text, fixed = TRUE))

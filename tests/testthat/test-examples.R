@@ -74,9 +74,9 @@ test_that("documented example data and workflow functions run", {
   expect_s3_class(suppressWarnings(gs_moments(gs, open_end = "extend_phi")), "tbl_df")
   expect_s3_class(gs_fractions_wide(gs, scheme = "wentworth_major"), "tbl_df")
 
-  expect_s3_class(plot_distribution(gs), "ggplot")
+  expect_s3_class(plot_distribution(gs, sample_id = unique(gs$sample_id)[1]), "ggplot")
   expect_s3_class(
-    suppressWarnings(plot_cumulative(gs, show_percentiles = c(10, 50, 90), extrapolate = "warn_linear")),
+    suppressWarnings(plot_cumulative(gs, sample_id = unique(gs$sample_id)[1], show_percentiles = c(10, 50, 90), extrapolate = "warn_linear")),
     "ggplot"
   )
   expect_s3_class(plot_fractions(gs, scheme = "wentworth_major"), "ggplot")

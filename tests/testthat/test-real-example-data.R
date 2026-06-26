@@ -92,8 +92,8 @@ test_that("full workflow runs on long example data", {
   folkward <- suppressWarnings(gs_folkward(gsd, extrapolate = "warn_linear"))
   moments <- suppressWarnings(gs_moments(gsd, open_end = "extend_phi"))
   expect_s3_class(gs_fractions_wide(gsd, scheme = "wentworth_major"), "tbl_df")
-  expect_s3_class(plot_distribution(gsd), "ggplot")
-  expect_s3_class(plot_cumulative(gsd), "ggplot")
+  expect_s3_class(plot_distribution(gsd, sample_id = unique(gsd$sample_id)[1]), "ggplot")
+  expect_s3_class(plot_cumulative(gsd, sample_id = unique(gsd$sample_id)[1]), "ggplot")
   expect_s3_class(plot_fractions(gsd), "ggplot")
 
   expect_equal(nrow(engineering), 44)

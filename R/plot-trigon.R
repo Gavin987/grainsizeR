@@ -167,7 +167,7 @@ plot_trigon <- function(x,
   )
 
   p <- ggplot2::ggplot() +
-    ggplot2::geom_path(data = triangle, ggplot2::aes(x = .data$x, y = .data$y)) +
+    ggplot2::geom_path(data = triangle, ggplot2::aes(x = .data$x, y = .data$y), linewidth = 0.45, color = "black") +
     ggplot2::coord_equal(xlim = c(-0.12, 1.12), ylim = c(-0.12, sqrt(3) / 2 + 0.1), clip = "off") +
     ggplot2::labs(x = NULL, y = NULL) +
     ggplot2::theme_bw() +
@@ -190,8 +190,9 @@ plot_trigon <- function(x,
         data = usda_ternary_boundary_segments(),
         ggplot2::aes(x = .data$x, y = .data$y, xend = .data$xend, yend = .data$yend),
         inherit.aes = FALSE,
-        linewidth = 0.25,
-        color = "grey35"
+        linewidth = 0.45,
+        linetype = "solid",
+        color = "black"
       )
     }
     if (show_classes) {
@@ -402,7 +403,7 @@ plot_gradistat_texture_ternary <- function(x,
   axis_guides <- .gradistat_ternary_axis_guides(basis)
 
   p <- ggplot2::ggplot() +
-    ggplot2::geom_path(data = outline, ggplot2::aes(x = .data$x, y = .data$y)) +
+    ggplot2::geom_path(data = outline, ggplot2::aes(x = .data$x, y = .data$y), linewidth = 0.45, color = "black") +
     ggplot2::coord_equal(xlim = c(-0.12, 1.12), ylim = c(-0.12, sqrt(3) / 2 + 0.1), clip = "off") +
     ggplot2::labs(x = NULL, y = NULL) +
     ggplot2::theme_bw() +
@@ -414,13 +415,15 @@ plot_gradistat_texture_ternary <- function(x,
     p <- p + ggplot2::geom_path(
       data = segments,
       ggplot2::aes(x = .data$x, y = .data$y, group = .data$segment_id),
-      linewidth = 0.3,
-      linetype = "dashed"
+      linewidth = 0.45,
+      linetype = "solid",
+      color = "black"
     )
   }
 
   if (show_classes && label_style != "none") {
     class_labels <- .gradistat_ternary_labels(basis)
+    class_labels <- class_labels[class_labels$show_label, ]
     p <- p + ggplot2::geom_text(
       data = class_labels,
       ggplot2::aes(x = .data$x, y = .data$y, label = .data$class_label),
@@ -493,7 +496,7 @@ plot_usda_texture_ternary <- function(x,
   axis_guides <- .usda_ternary_axis_guides()
 
   p <- ggplot2::ggplot() +
-    ggplot2::geom_path(data = outline, ggplot2::aes(x = .data$x, y = .data$y)) +
+    ggplot2::geom_path(data = outline, ggplot2::aes(x = .data$x, y = .data$y), linewidth = 0.45, color = "black") +
     ggplot2::coord_equal(xlim = c(-0.12, 1.12), ylim = c(-0.12, sqrt(3) / 2 + 0.1), clip = "off") +
     ggplot2::labs(x = NULL, y = NULL) +
     ggplot2::theme_bw() +
@@ -505,8 +508,9 @@ plot_usda_texture_ternary <- function(x,
       data = usda_ternary_boundary_segments(),
       ggplot2::aes(x = .data$x, y = .data$y, xend = .data$xend, yend = .data$yend),
       inherit.aes = FALSE,
-      linewidth = 0.25,
-      color = "grey35"
+      linewidth = 0.45,
+      linetype = "solid",
+      color = "black"
     )
   }
   if (show_classes) {

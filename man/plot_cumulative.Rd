@@ -19,8 +19,9 @@ plot_cumulative(
 
 \item{direction}{Cumulative direction to plot.}
 
-\item{x_scale}{Display scale for the grain-size axis. \code{"log10"} and
-\code{"linear_um"} use micrometre grain-size values; \code{"phi"} uses phi units.}
+\item{x_scale}{Display scale for the grain-size axis. \code{"log10"} uses
+millimetre grain-size values; \code{"linear_um"} uses micrometre values;
+\code{"phi"} uses phi units.}
 
 \item{sample_id}{Optional character vector of sample identifiers to include.}
 
@@ -30,8 +31,9 @@ mark on the plot.}
 \item{extrapolate}{Extrapolation behavior passed to \code{gs_d_values()} when
 \code{show_percentiles} is supplied.}
 
-\item{facet_by_sample}{Should plots with multiple samples be faceted by
-sample? The default, \code{NULL}, facets when more than one sample is present.}
+\item{facet_by_sample}{Deprecated. Cumulative plots are single-sample
+displays; use \code{sample_id} to select one sample, loop over samples, or
+arrange returned plots externally with another plotting package.}
 }
 \value{
 A \code{ggplot} object.

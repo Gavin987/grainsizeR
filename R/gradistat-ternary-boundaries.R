@@ -39,10 +39,13 @@
   )
 }
 
-.gradistat_line_ratio <- function(numerator, denominator, ratio, basis) {
+.gradistat_line_ratio <- function(numerator, denominator, ratio, basis, max_third = NULL) {
   components <- .gradistat_ternary_components(basis)
   third <- setdiff(unname(components), c(numerator, denominator))
-  third_values <- c(0, if (basis == "gravel_sand_mud") 80 else 100)
+  if (is.null(max_third)) {
+    max_third <- if (basis == "gravel_sand_mud") 80 else 100
+  }
+  third_values <- c(0, max_third)
   one <- data.frame(
     left = c(0, 0),
     right = c(0, 0),
@@ -67,7 +70,11 @@
   if (basis == "gravel_sand_mud") {
     rows <- c(
       lapply(c(5, 30, 80), .gradistat_line_constant_component, component = "gravel", basis = basis),
-      lapply(c(1 / 9, 1, 9), .gradistat_line_ratio, numerator = "sand", denominator = "mud", basis = basis)
+      list(
+        .gradistat_line_ratio(numerator = "sand", denominator = "mud", ratio = 1 / 9, basis = basis, max_third = 5),
+        .gradistat_line_ratio(numerator = "sand", denominator = "mud", ratio = 1, basis = basis, max_third = 30),
+        .gradistat_line_ratio(numerator = "sand", denominator = "mud", ratio = 9, basis = basis, max_third = 80)
+      )
     )
   } else {
     rows <- c(
@@ -92,8 +99,12 @@
         "slightly_gravelly_mud", "mud"
       ),
       gravel = c(90, 40, 10, 3, 0, 40, 10, 3, 0, 40, 10, 3, 0, 3, 0),
-      sand = c(10, 55, 82, 90, 95, 40, 60, 60, 60, 5, 10, 20, 20, 5, 5),
-      mud = c(0, 5, 8, 7, 5, 20, 30, 37, 40, 55, 80, 77, 80, 92, 95)
+      sand = c(10, 55, 82, 90, 95, 40, 60, 60, 60, 5, 18, 20, 24, 5, 5),
+      mud = c(0, 5, 8, 7, 5, 20, 30, 37, 40, 55, 72, 77, 76, 92, 95),
+      show_label = c(
+        TRUE, TRUE, TRUE, FALSE, TRUE, TRUE, TRUE,
+        FALSE, TRUE, TRUE, TRUE, FALSE, TRUE, FALSE, TRUE
+      )
     )
     xy <- ternary_to_xy(points$mud, points$sand, points$gravel)
   } else {
@@ -107,6 +118,7 @@
       clay = c(2, 10, 15, 30, 20, 35, 60, 25, 40, 75)
     )
     xy <- ternary_to_xy(points$sand, points$silt, points$clay)
+    points$show_label <- TRUE
   }
   data.frame(
     class_id = points$class_id,
@@ -114,6 +126,7 @@
     class_label = gsub(" ", "\n", unname(.gradistat_class_names[points$class_id]), fixed = TRUE),
     x = xy$x,
     y = xy$y,
+    show_label = points$show_label,
     stringsAsFactors = FALSE
   )
 }

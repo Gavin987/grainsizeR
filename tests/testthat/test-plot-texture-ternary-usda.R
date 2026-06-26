@@ -44,6 +44,17 @@ test_that("USDA ternary plotting draws internal boundaries and class labels", {
   expect_gt(length(plot$layers), 3)
   expect_gt(boundary_rows, 0)
   expect_equal(length(unique(class_labels)), 12)
+
+  outline <- plot$layers[[1]]
+  boundary_layers <- vapply(plot$layers, function(layer) {
+    data <- layer$data
+    is.data.frame(data) && all(c("xend", "yend") %in% names(data))
+  }, logical(1))
+  boundary <- plot$layers[[which(boundary_layers)[1]]]
+  boundary_color <- if (is.null(boundary$aes_params$colour)) boundary$aes_params$color else boundary$aes_params$colour
+  expect_equal(boundary$aes_params$linetype, "solid")
+  expect_equal(boundary_color, "black")
+  expect_equal(boundary$aes_params$linewidth, outline$aes_params$linewidth)
 })
 
 test_that("USDA ternary plotting draws ternary axis labels without Cartesian axes", {
@@ -68,8 +79,9 @@ test_that("USDA ternary plotting draws ternary axis labels without Cartesian axe
     character()
   }))
 
-  expect_true(all(c("Sand", "Silt", "Clay") %in% guide_labels))
-  expect_true(all(c("0", "20", "40", "60", "80", "100") %in% guide_labels))
+  expect_true(all(c("percent sand", "percent silt", "percent clay") %in% guide_labels))
+  expect_false(any(c("Sand", "Silt", "Clay") %in% guide_labels))
+  expect_true(all(as.character(seq(10, 100, by = 10)) %in% guide_labels))
   expect_equal(plot$labels$x, NULL)
   expect_equal(plot$labels$y, NULL)
   expect_s3_class(plot$theme$axis.text, "element_blank")

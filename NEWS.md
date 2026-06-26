@@ -2,6 +2,9 @@
 
 ## Development version
 
+- Polished ternary diagram guide placement and boundary styling, and restored
+  single-sample log-scaled grain-size distribution and cumulative plots using
+  millimetre particle-size axes.
 - Refined ternary plot output so USDA and GRADISTAT plots hide Cartesian axes,
   draw ternary axis guides, correct GRADISTAT gravel-sand-mud orientation, and
   keep the top gravel field continuous.

@@ -43,37 +43,40 @@ test_that("documented plot functions exist", {
 test_that("distribution and cumulative plots support documented scale behavior", {
   gsd <- plot_contract_gsd()
 
-  expect_s3_class(plot_distribution(gsd, x_scale = "log10"), "ggplot")
-  expect_s3_class(plot_distribution(gsd, x_scale = "phi", type = "line"), "ggplot")
-  expect_s3_class(plot_distribution(gsd, x_scale = "linear_um"), "ggplot")
-  combined <- plot_distribution(gsd, cumulative = TRUE)
+  expect_s3_class(plot_distribution(gsd, sample_id = "A", x_scale = "log10"), "ggplot")
+  expect_s3_class(plot_distribution(gsd, sample_id = "A", x_scale = "phi", type = "line"), "ggplot")
+  expect_s3_class(plot_distribution(gsd, sample_id = "A", x_scale = "linear_um"), "ggplot")
+  combined <- plot_distribution(gsd, sample_id = "A", cumulative = TRUE)
   expect_s3_class(combined, "ggplot")
   expect_true(any(vapply(combined$layers, function(layer) inherits(layer$geom, "GeomCol"), logical(1))))
   expect_true(any(vapply(combined$layers, function(layer) inherits(layer$geom, "GeomLine"), logical(1))))
 
-  expect_s3_class(plot_cumulative(gsd, x_scale = "log10"), "ggplot")
-  expect_s3_class(plot_cumulative(gsd, x_scale = "phi"), "ggplot")
-  expect_s3_class(plot_cumulative(gsd, x_scale = "linear_um"), "ggplot")
+  expect_s3_class(plot_cumulative(gsd, sample_id = "A", x_scale = "log10"), "ggplot")
+  expect_s3_class(plot_cumulative(gsd, sample_id = "A", x_scale = "phi"), "ggplot")
+  expect_s3_class(plot_cumulative(gsd, sample_id = "A", x_scale = "linear_um"), "ggplot")
   expect_s3_class(
-    plot_cumulative(gsd, show_percentiles = c(10, 50, 90), extrapolate = "warn_linear"),
+    plot_cumulative(gsd, sample_id = "A", show_percentiles = c(10, 50, 90), extrapolate = "warn_linear"),
     "ggplot"
   )
 })
 
-test_that("distribution and cumulative plots facet multiple samples with plain log ticks", {
+test_that("distribution and cumulative plots are single-sample with plain millimetre log ticks", {
   gsd <- plot_contract_gsd()
 
-  combined <- plot_distribution(gsd, cumulative = TRUE)
-  cumulative <- plot_cumulative(gsd)
+  expect_error(plot_distribution(gsd), "plots one sample at a time")
+  expect_error(plot_cumulative(gsd), "plots one sample at a time")
+
+  combined <- plot_distribution(gsd, sample_id = "A", cumulative = TRUE)
+  cumulative <- plot_cumulative(gsd, sample_id = "A")
   for (plot in list(combined, cumulative)) {
     x_scales <- vapply(plot$scales$scales, function(scale) "x" %in% scale$aesthetics, logical(1))
     scale <- plot$scales$scales[[which(x_scales)[1]]]
-    breaks <- scale$breaks(c(1, 10000))
+    breaks <- scale$breaks(c(0.001, 10))
 
-    expect_s3_class(plot$facet, "FacetWrap")
-    expect_equal(plot$labels$x, "Particle size (um)")
-    expect_equal(scale$labels(c(1, 10, 100, 1000, 10000)), c("1", "10", "100", "1000", "10000"))
-    expect_true(all(c(1, 10, 100, 1000, 10000) %in% breaks))
+    expect_s3_class(plot$facet, "FacetNull")
+    expect_equal(plot$labels$x, "Particle size (mm)")
+    expect_equal(scale$labels(c(0.001, 0.01, 0.1, 1, 10)), c("0.001", "0.01", "0.1", "1", "10"))
+    expect_true(all(c(0.001, 0.01, 0.1, 1, 10) %in% breaks))
   }
 })
 
@@ -82,8 +85,8 @@ test_that("exported plotting functions use theme_bw-compatible defaults", {
   gsm <- data.frame(sample_id = c("A", "B"), gravel = c(0, 40), sand = c(95, 40), mud = c(5, 20))
 
   plots <- list(
-    plot_distribution(gsd),
-    plot_cumulative(gsd),
+    plot_distribution(gsd, sample_id = "A"),
+    plot_cumulative(gsd, sample_id = "A"),
     suppressWarnings(plot_fractions(gsd, scheme = "gravel_sand_mud")),
     plot_texture_triangle(gsm, scheme = "gradistat", basis = "gravel_sand_mud", point_id = "sample_id"),
     suppressWarnings(plot_trigon(plot_contract_fine_gsd(), scheme = "usda_tt"))

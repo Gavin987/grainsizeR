@@ -184,11 +184,11 @@ report format.
 ## Basic Plots
 
 ```{r, fig.width=6, fig.height=4}
-plot_distribution(gs)
+plot_distribution(gs, sample_id = "WN1_upper")
 ```
 
 ```{r, fig.width=6, fig.height=4}
-plot_cumulative(gs, show_percentiles = c(10, 50, 90), extrapolate = "warn_linear")
+plot_cumulative(gs, sample_id = "WN1_upper", show_percentiles = c(10, 50, 90), extrapolate = "warn_linear")
 ```
 
 ```{r, fig.width=6, fig.height=4}

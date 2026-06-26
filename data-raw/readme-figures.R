@@ -38,6 +38,7 @@ long <- read_gsd(long_path)
 
 wide_samples <- c("WN1_upper", "WN2_upper", "WN3_upper", "WS1_upper")
 long_samples <- c("WN1_upper", "WN2_upper", "WN3_upper", "WS1_upper")
+wide_plot_sample <- "WN1_upper"
 
 wide_fractions <- suppressWarnings(gs_fractions_wide(wide, scheme = "gradistat"))
 wide_gsm <- data.frame(
@@ -77,14 +78,14 @@ long_usda_valid <- stats::complete.cases(long_usda[c("sand", "silt", "clay")]) &
 usda_points <- rbind(usda_demo, long_usda[long_usda_valid, ])
 
 save_readme_plot(
-  plot_distribution(wide, sample_id = wide_samples, cumulative = TRUE),
+  plot_distribution(wide, sample_id = wide_plot_sample, cumulative = TRUE),
   "readme-wide-distribution.png"
 )
 
 save_readme_plot(
   plot_cumulative(
     wide,
-    sample_id = wide_samples,
+    sample_id = wide_plot_sample,
     show_percentiles = c(10, 50, 90),
     extrapolate = "warn_linear"
   ),

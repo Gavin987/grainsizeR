@@ -6,9 +6,9 @@ test_that("plot_distribution returns ggplot objects", {
     retained_proportion
   )
 
-  expect_s3_class(plot_distribution(gsd), "ggplot")
-  expect_s3_class(plot_distribution(gsd, type = "line"), "ggplot")
-  expect_s3_class(plot_distribution(gsd, cumulative = TRUE), "ggplot")
+  expect_s3_class(plot_distribution(gsd, sample_id = "WN2"), "ggplot")
+  expect_s3_class(plot_distribution(gsd, sample_id = "WN2", type = "line"), "ggplot")
+  expect_s3_class(plot_distribution(gsd, sample_id = "WN2", cumulative = TRUE), "ggplot")
 })
 
 test_that("plot_cumulative returns ggplot objects", {
@@ -19,10 +19,11 @@ test_that("plot_cumulative returns ggplot objects", {
     retained_proportion
   )
 
-  expect_s3_class(plot_cumulative(gsd), "ggplot")
+  expect_s3_class(plot_cumulative(gsd, sample_id = "WN2"), "ggplot")
   expect_s3_class(
     plot_cumulative(
       gsd,
+      sample_id = "WN2",
       show_percentiles = c(10, 50, 90),
       extrapolate = "warn_linear"
     ),

@@ -10,27 +10,41 @@ plot_filter_samples <- function(x, sample_id) {
   out
 }
 
+.require_single_plot_sample <- function(x, function_name) {
+  samples <- unique(as.character(x$sample_id))
+  if (length(samples) != 1) {
+    stop(
+      "`", function_name, "()` plots one sample at a time. ",
+      "Use `sample_id` to select one sample, filter `x` before plotting, ",
+      "or loop over samples and arrange the returned plots externally.",
+      call. = FALSE
+    )
+  }
+  samples
+}
+
 distribution_x_values <- function(x, x_scale) {
   proxy_um <- ifelse(is.na(x$size_mid_um), x$raw_size_um, x$size_mid_um)
   switch(
     x_scale,
-    log10 = proxy_um,
+    log10 = proxy_um / 1000,
     phi = ifelse(is.na(x$size_mid_phi), um_to_phi(x$raw_size_um), x$size_mid_phi),
     linear_um = proxy_um
   )
 }
 
 .log10_particle_breaks <- function(limits) {
-  limits <- limits[is.finite(limits) & limits > 0]
-  if (length(limits) == 0) {
-    return(c(1, 10, 100, 1000, 10000))
-  }
-  powers <- floor(log10(min(limits))):ceiling(log10(max(limits)))
-  10^powers
+  c(0.001, 0.01, 0.1, 1, 10)
+}
+
+.log10_particle_minor_breaks <- function(limits) {
+  major <- .log10_particle_breaks(limits)
+  as.vector(outer(1:9, major, `*`))
 }
 
 .format_particle_size_ticks <- function(x) {
   out <- format(x, scientific = FALSE, trim = TRUE)
+  out <- sub("\\.?0+$", "", out)
   out[is.na(x)] <- NA_character_
   out
 }
@@ -38,7 +52,7 @@ distribution_x_values <- function(x, x_scale) {
 .particle_size_axis_label <- function(x_scale) {
   switch(
     x_scale,
-    log10 = "Particle size (um)",
+    log10 = "Particle size (mm)",
     phi = "Particle size (phi)",
     linear_um = "Particle size (um)"
   )
@@ -51,8 +65,9 @@ distribution_x_values <- function(x, x_scale) {
 #' open-ended classes are plotted at their raw size labels as a display proxy.
 #'
 #' @param x A valid `gsd_tbl` object.
-#' @param x_scale Display scale for the grain-size axis. `"log10"` and
-#'   `"linear_um"` use micrometre grain-size values; `"phi"` uses phi units.
+#' @param x_scale Display scale for the grain-size axis. `"log10"` uses
+#'   millimetre grain-size values; `"linear_um"` uses micrometre values;
+#'   `"phi"` uses phi units.
 #' @param type Plot type: `"bar"` or `"line"`.
 #' @param sample_id Optional character vector of sample identifiers to include.
 #' @param show_open_ends Should open-ended classes be included using raw size
@@ -60,8 +75,9 @@ distribution_x_values <- function(x, x_scale) {
 #' @param cumulative Should a cumulative percent-finer line be overlaid on the
 #'   retained-size bars? This combined display is useful for GRADISTAT-style
 #'   grain-size summaries.
-#' @param facet_by_sample Should plots with multiple samples be faceted by
-#'   sample? The default, `NULL`, facets when more than one sample is present.
+#' @param facet_by_sample Deprecated. Distribution plots are single-sample
+#'   displays; use `sample_id` to select one sample, loop over samples, or
+#'   arrange returned plots externally with another plotting package.
 #'
 #' @return A `ggplot` object.
 #' @importFrom rlang .data
@@ -98,48 +114,49 @@ plot_distribution <- function(x,
 
   plot_data$x_value <- distribution_x_values(plot_data, x_scale)
   plot_data$sample_id <- as.character(plot_data$sample_id)
-  if (is.null(facet_by_sample)) {
-    facet_by_sample <- length(unique(plot_data$sample_id)) > 1
-  }
+  .require_single_plot_sample(plot_data, "plot_distribution")
 
   p <- ggplot2::ggplot(plot_data, ggplot2::aes(x = .data$x_value, y = .data$retained_percent))
   if (type == "bar") {
-    p <- p + ggplot2::geom_col(ggplot2::aes(fill = .data$sample_id), position = "dodge")
+    p <- p + ggplot2::geom_col(fill = "grey75", color = "black", linewidth = 0.25)
   } else {
-    p <- p + ggplot2::geom_line(ggplot2::aes(color = .data$sample_id, group = .data$sample_id)) +
-      ggplot2::geom_point(ggplot2::aes(color = .data$sample_id))
+    p <- p + ggplot2::geom_line(linewidth = 0.7, color = "black") +
+      ggplot2::geom_point(color = "black", size = 1.3)
   }
 
   if (isTRUE(cumulative)) {
     curve <- gs_cumulative(plot_filter_samples(x, sample_id))
+    .require_single_plot_sample(curve, "plot_distribution")
     curve$x_value <- cumulative_x_values(curve, x_scale)
     p <- p +
       ggplot2::geom_line(
         data = curve,
-        ggplot2::aes(x = .data$x_value, y = .data$percent_finer, color = .data$sample_id, group = .data$sample_id),
+        ggplot2::aes(x = .data$x_value, y = .data$percent_finer),
         inherit.aes = FALSE,
-        linewidth = 0.8
+        linewidth = 1.1,
+        color = "black"
       ) +
       ggplot2::geom_point(
         data = curve,
-        ggplot2::aes(x = .data$x_value, y = .data$percent_finer, color = .data$sample_id),
+        ggplot2::aes(x = .data$x_value, y = .data$percent_finer),
         inherit.aes = FALSE,
-        size = 1.4
+        size = 1.2,
+        color = "black"
       )
   }
 
   p <- p +
-    ggplot2::labs(x = .particle_size_axis_label(x_scale), y = "Percent", fill = "Sample", color = "Sample") +
+    ggplot2::labs(x = .particle_size_axis_label(x_scale), y = "Percent") +
     ggplot2::coord_cartesian(ylim = c(0, 100)) +
-    ggplot2::theme_bw()
+    ggplot2::theme_bw() +
+    ggplot2::theme(panel.grid.minor.y = ggplot2::element_blank())
   if (x_scale == "log10") {
     p <- p + ggplot2::scale_x_log10(
       breaks = .log10_particle_breaks,
+      minor_breaks = .log10_particle_minor_breaks,
       labels = .format_particle_size_ticks
-    )
-  }
-  if (isTRUE(facet_by_sample)) {
-    p <- p + ggplot2::facet_wrap(ggplot2::vars(.data$sample_id))
+    ) +
+      ggplot2::annotation_logticks(sides = "b")
   }
   p
 }

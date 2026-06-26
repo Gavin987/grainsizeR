@@ -172,14 +172,15 @@ head(gs_quality_flags(
 scales. The same function can overlay cumulative percent finer on the retained
 size-class bars for a GRADISTAT-style combined display. The examples below use
 the dry-sieve wide dataset so the plotted samples align with the README
-GRADISTAT-style showcase. Metric displays use particle size in micrometres on a
-log-scaled x-axis by default and facet by sample when multiple samples are
-shown.
+GRADISTAT-style showcase. Metric displays use particle size in millimetres on a
+log-scaled x-axis by default. Distribution and cumulative plots show one sample
+at a time; loop over samples or arrange returned plots externally for
+multi-sample figures.
 
 ```{r}
-plot_distribution(gs_wide, sample_id = c("WN1_upper", "WN2_upper"))
-plot_distribution(gs_wide, sample_id = c("WN1_upper", "WN2_upper"), cumulative = TRUE)
-plot_distribution(gs_wide, x_scale = "phi", type = "line", sample_id = c("WN1_upper", "WN2_upper"))
+plot_distribution(gs_wide, sample_id = "WN1_upper")
+plot_distribution(gs_wide, sample_id = "WN1_upper", cumulative = TRUE)
+plot_distribution(gs_wide, x_scale = "phi", type = "line", sample_id = "WN1_upper")
 ```
 
 ## Cumulative Plots
@@ -190,7 +191,7 @@ add D-value markers.
 ```{r}
 suppressWarnings(plot_cumulative(
   gs_wide,
-  sample_id = c("WN1_upper", "WN2_upper"),
+  sample_id = "WN1_upper",
   show_percentiles = c(10, 50, 90),
   extrapolate = "warn_linear"
 ))

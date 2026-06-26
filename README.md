@@ -112,8 +112,13 @@ available when the input resolution supports them, but dry-sieve data
 should not be interpreted as resolving silt and clay subclasses unless
 those boundaries are present. USDA and GRADISTAT ternary plots show
 classification boundaries with sample points or demonstration points.
+USDA ternary plots use external percent-axis labels, while GRADISTAT
+gravel-sand-mud ternary plots keep the `Gravel`, `Mud`, and `Sand` apex
+labels with GRADISTAT-style gravel and sand/mud ratio guides.
 Distribution and cumulative plots use log-scaled particle-size axes by
-default, with tick labels shown as plain micrometre values.
+default, with tick labels shown as plain millimetre values. They are
+single-sample plots; select one sample with `sample_id`, then loop or
+arrange returned plots externally for multi-sample figures.
 
 <img src="man/figures/readme-wide-distribution.png" width="100%" />
 
@@ -149,9 +154,9 @@ fractions <- gs_fractions(gs, scheme = "wentworth_major")
 descriptors <- gs_describe_parameters(gs)
 quality <- gs_quality_flags(gs)
 
-plot_distribution(gs)
-plot_distribution(gs, cumulative = TRUE)
-plot_cumulative(gs, show_percentiles = c(10, 50, 90), extrapolate = "warn_linear")
+plot_distribution(gs, sample_id = "WN1_upper")
+plot_distribution(gs, sample_id = "WN1_upper", cumulative = TRUE)
+plot_cumulative(gs, sample_id = "WN1_upper", show_percentiles = c(10, 50, 90), extrapolate = "warn_linear")
 plot_fractions(gs, scheme = "wentworth_major")
 ```
 
@@ -465,17 +470,19 @@ grainsizeR results with other software.
 ## Plotting
 
 ``` r
-plot_distribution(gs)
-plot_distribution(gs, cumulative = TRUE)
-plot_distribution(gs, x_scale = "phi", type = "line")
-plot_cumulative(gs, show_percentiles = c(10, 50, 90), extrapolate = "warn_linear")
-plot_cumulative(gs, x_scale = "phi")
+plot_distribution(gs, sample_id = "WN1_upper")
+plot_distribution(gs, sample_id = "WN1_upper", cumulative = TRUE)
+plot_distribution(gs, sample_id = "WN1_upper", x_scale = "phi", type = "line")
+plot_cumulative(gs, sample_id = "WN1_upper", show_percentiles = c(10, 50, 90), extrapolate = "warn_linear")
+plot_cumulative(gs, sample_id = "WN1_upper", x_scale = "phi")
 plot_fractions(gs, scheme = "wentworth_major")
 ```
 
 Metric distribution and cumulative plots use particle size in
-micrometres on a log-scaled x-axis by default. When more than one sample
-is plotted, the default display facets by sample.
+millimetres on a log-scaled x-axis by default. They plot one sample at a
+time; use `sample_id` or filter the input first, then loop over samples
+or combine plots externally with a plotting-arrangement package if
+needed.
 
 ### GRADISTAT-Inspired Summary Plot
 

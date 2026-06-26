@@ -17,8 +17,9 @@ plot_distribution(
 \arguments{
 \item{x}{A valid \code{gsd_tbl} object.}
 
-\item{x_scale}{Display scale for the grain-size axis. \code{"log10"} and
-\code{"linear_um"} use micrometre grain-size values; \code{"phi"} uses phi units.}
+\item{x_scale}{Display scale for the grain-size axis. \code{"log10"} uses
+millimetre grain-size values; \code{"linear_um"} uses micrometre values;
+\code{"phi"} uses phi units.}
 
 \item{type}{Plot type: \code{"bar"} or \code{"line"}.}
 
@@ -31,8 +32,9 @@ labels as plotting proxies?}
 retained-size bars? This combined display is useful for GRADISTAT-style
 grain-size summaries.}
 
-\item{facet_by_sample}{Should plots with multiple samples be faceted by
-sample? The default, \code{NULL}, facets when more than one sample is present.}
+\item{facet_by_sample}{Deprecated. Distribution plots are single-sample
+displays; use \code{sample_id} to select one sample, loop over samples, or
+arrange returned plots externally with another plotting package.}
 }
 \value{
 A \code{ggplot} object.

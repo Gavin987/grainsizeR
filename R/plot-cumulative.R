@@ -1,7 +1,7 @@
 cumulative_x_values <- function(x, x_scale) {
   switch(
     x_scale,
-    log10 = x$boundary_um,
+    log10 = x$boundary_um / 1000,
     phi = x$boundary_phi,
     linear_um = x$boundary_um
   )
@@ -10,7 +10,7 @@ cumulative_x_values <- function(x, x_scale) {
 percentile_x_values <- function(x, x_scale) {
   switch(
     x_scale,
-    log10 = x$grain_size_um,
+    log10 = x$grain_size_um / 1000,
     phi = x$grain_size_phi,
     linear_um = x$grain_size_um
   )
@@ -23,15 +23,17 @@ percentile_x_values <- function(x, x_scale) {
 #'
 #' @param x A valid `gsd_tbl` object.
 #' @param direction Cumulative direction to plot.
-#' @param x_scale Display scale for the grain-size axis. `"log10"` and
-#'   `"linear_um"` use micrometre grain-size values; `"phi"` uses phi units.
+#' @param x_scale Display scale for the grain-size axis. `"log10"` uses
+#'   millimetre grain-size values; `"linear_um"` uses micrometre values;
+#'   `"phi"` uses phi units.
 #' @param sample_id Optional character vector of sample identifiers to include.
 #' @param show_percentiles Optional numeric vector of D-value percentiles to
 #'   mark on the plot.
 #' @param extrapolate Extrapolation behavior passed to `gs_d_values()` when
 #'   `show_percentiles` is supplied.
-#' @param facet_by_sample Should plots with multiple samples be faceted by
-#'   sample? The default, `NULL`, facets when more than one sample is present.
+#' @param facet_by_sample Deprecated. Cumulative plots are single-sample
+#'   displays; use `sample_id` to select one sample, loop over samples, or
+#'   arrange returned plots externally with another plotting package.
 #'
 #' @return A `ggplot` object.
 #' @export
@@ -62,21 +64,23 @@ plot_cumulative <- function(x,
   curve$x_value <- cumulative_x_values(curve, x_scale)
   curve$y_value <- if (direction == "finer") curve$percent_finer else curve$percent_coarser
   curve$sample_id <- as.character(curve$sample_id)
-  if (is.null(facet_by_sample)) {
-    facet_by_sample <- length(unique(curve$sample_id)) > 1
-  }
+  .require_single_plot_sample(curve, "plot_cumulative")
 
-  p <- ggplot2::ggplot(curve, ggplot2::aes(x = .data$x_value, y = .data$y_value, color = .data$sample_id, group = .data$sample_id)) +
-    ggplot2::geom_line() +
-    ggplot2::geom_point() +
-    ggplot2::labs(x = .particle_size_axis_label(x_scale), y = paste("Percent", direction), color = "Sample") +
-    ggplot2::theme_bw()
+  p <- ggplot2::ggplot(curve, ggplot2::aes(x = .data$x_value, y = .data$y_value)) +
+    ggplot2::geom_line(linewidth = 1.1, color = "black") +
+    ggplot2::geom_point(size = 1.2, color = "black") +
+    ggplot2::labs(x = .particle_size_axis_label(x_scale), y = paste("Percent", direction)) +
+    ggplot2::coord_cartesian(ylim = c(0, 100)) +
+    ggplot2::theme_bw() +
+    ggplot2::theme(panel.grid.minor.y = ggplot2::element_blank())
 
   if (x_scale == "log10") {
     p <- p + ggplot2::scale_x_log10(
       breaks = .log10_particle_breaks,
+      minor_breaks = .log10_particle_minor_breaks,
       labels = .format_particle_size_ticks
-    )
+    ) +
+      ggplot2::annotation_logticks(sides = "b")
   }
 
   if (!is.null(show_percentiles)) {
@@ -93,13 +97,11 @@ plot_cumulative <- function(x,
     p <- p +
       ggplot2::geom_point(
         data = percentiles,
-        ggplot2::aes(x = .data$x_value, y = .data$y_value, color = .data$sample_id),
+        ggplot2::aes(x = .data$x_value, y = .data$y_value),
         inherit.aes = FALSE,
-        shape = 4
+        shape = 4,
+        color = "black"
       )
-  }
-  if (isTRUE(facet_by_sample)) {
-    p <- p + ggplot2::facet_wrap(ggplot2::vars(.data$sample_id))
   }
 
   p
