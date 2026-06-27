@@ -66,3 +66,25 @@ test_that("log10 distribution bars use centered class values", {
   expect_false("xmin" %in% names(col_layer$mapping))
   expect_false("xmax" %in% names(col_layer$mapping))
 })
+
+test_that("distribution bar x values use selected particle-size units before log scaling", {
+  gsd <- plot_distribution_test_gsd()
+  mm_data <- grainsizeR:::.prepare_distribution_plot_data(
+    gsd,
+    x_scale = "log10",
+    particle_unit = "mm",
+    sample_id = "A"
+  )
+  um_data <- grainsizeR:::.prepare_distribution_plot_data(
+    gsd,
+    x_scale = "log10",
+    particle_unit = "um",
+    sample_id = "A"
+  )
+
+  expect_true(1 %in% mm_data$size_plot)
+  expect_true(1000 %in% um_data$size_plot)
+  expect_false(log10(1) %in% mm_data$size_plot[mm_data$size_original_um == 1000])
+  expect_equal(mm_data$size_plot[mm_data$size_original_um == 1000], 1)
+  expect_equal(um_data$size_plot[um_data$size_original_um == 1000], 1000)
+})

@@ -42,13 +42,34 @@ particle_unit_divisor <- function(particle_unit) {
 }
 
 distribution_x_values <- function(x, x_scale, particle_unit = "mm") {
-  proxy_um <- ifelse(is.na(x$size_mid_um), x$raw_size_um, x$size_mid_um)
   switch(
     x_scale,
-    log10 = proxy_um / particle_unit_divisor(particle_unit),
-    phi = ifelse(is.na(x$size_mid_phi), um_to_phi(x$raw_size_um), x$size_mid_phi),
-    linear_um = proxy_um
+    log10 = x$raw_size_um / particle_unit_divisor(particle_unit),
+    phi = um_to_phi(x$raw_size_um),
+    linear_um = x$raw_size_um
   )
+}
+
+.prepare_distribution_plot_data <- function(x,
+                                            x_scale,
+                                            particle_unit = "mm",
+                                            sample_id = NULL,
+                                            show_open_ends = TRUE) {
+  plot_data <- plot_filter_samples(x, sample_id)
+  if (!show_open_ends) {
+    plot_data <- plot_data[!plot_data$is_open_lower & !plot_data$is_open_upper, ]
+  }
+  if (nrow(plot_data) == 0) {
+    stop("No grain-size classes are available to plot.", call. = FALSE)
+  }
+
+  plot_data$size_original_um <- plot_data$raw_size_um
+  plot_data$size_plot <- distribution_x_values(plot_data, x_scale, particle_unit = particle_unit)
+  plot_data$x_value <- plot_data$size_plot
+  plot_data$particle_unit <- if (x_scale == "log10") particle_unit else NA_character_
+  plot_data$percent <- plot_data$retained_percent
+  plot_data$sample_id <- as.character(plot_data$sample_id)
+  plot_data
 }
 
 .log10_particle_breaks <- function(particle_unit = "mm") {
@@ -97,9 +118,9 @@ distribution_x_values <- function(x, x_scale, particle_unit = "mm") {
 
 #' Plot retained grain-size distributions
 #'
-#' `plot_distribution()` plots retained grain-size percentages by class. Closed
-#' classes are plotted at class midpoints. When `show_open_ends = TRUE`,
-#' open-ended classes are plotted at their raw size labels as a display proxy.
+#' `plot_distribution()` plots retained grain-size percentages by particle-size
+#' class. Metric displays center bars on the original particle-size class
+#' values after unit conversion.
 #'
 #' @param x A valid `gsd_tbl` object.
 #' @param x_scale Display scale for the grain-size axis. `"log10"` uses
@@ -146,16 +167,13 @@ plot_distribution <- function(x,
   type <- match.arg(type)
   particle_unit <- normalize_particle_unit(particle_unit)
 
-  plot_data <- plot_filter_samples(x, sample_id)
-  if (!show_open_ends) {
-    plot_data <- plot_data[!plot_data$is_open_lower & !plot_data$is_open_upper, ]
-  }
-  if (nrow(plot_data) == 0) {
-    stop("No grain-size classes are available to plot.", call. = FALSE)
-  }
-
-  plot_data$x_value <- distribution_x_values(plot_data, x_scale, particle_unit = particle_unit)
-  plot_data$sample_id <- as.character(plot_data$sample_id)
+  plot_data <- .prepare_distribution_plot_data(
+    x,
+    x_scale = x_scale,
+    particle_unit = particle_unit,
+    sample_id = sample_id,
+    show_open_ends = show_open_ends
+  )
   .require_single_plot_sample(plot_data, "plot_distribution")
 
   p <- ggplot2::ggplot(plot_data, ggplot2::aes(x = .data$x_value, y = .data$retained_percent))

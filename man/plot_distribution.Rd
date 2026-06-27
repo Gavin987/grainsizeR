@@ -45,9 +45,9 @@ arrange returned plots externally with another plotting package.}
 A \code{ggplot} object.
 }
 \description{
-\code{plot_distribution()} plots retained grain-size percentages by class. Closed
-classes are plotted at class midpoints. When \code{show_open_ends = TRUE},
-open-ended classes are plotted at their raw size labels as a display proxy.
+\code{plot_distribution()} plots retained grain-size percentages by particle-size
+class. Metric displays center bars on the original particle-size class
+values after unit conversion.
 }
 \examples{
 x <- data.frame(

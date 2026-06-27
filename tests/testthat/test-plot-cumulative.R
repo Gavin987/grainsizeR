@@ -48,3 +48,12 @@ test_that("plot_cumulative uses a thick black cumulative line", {
   expect_equal(line_color, "black")
   expect_gte(line_layer$aes_params$linewidth, 1)
 })
+
+test_that("plot_cumulative curve x values use selected particle-size units before log scaling", {
+  mm_plot <- plot_cumulative(plot_cumulative_test_gsd(), sample_id = "A", particle_unit = "mm")
+  um_plot <- plot_cumulative(plot_cumulative_test_gsd(), sample_id = "A", particle_unit = "um")
+
+  expect_true(1 %in% mm_plot$data$x_value)
+  expect_true(1000 %in% um_plot$data$x_value)
+  expect_false(0 %in% mm_plot$data$x_value)
+})

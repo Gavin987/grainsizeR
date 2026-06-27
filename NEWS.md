@@ -2,6 +2,8 @@
 
 ## Development version
 
+- Fixed log-scaled distribution plots so centered bars use the original
+  particle-size class values after unit conversion.
 - Added a plotting-only GRADISTAT Trace guide while preserving workbook-derived
   gravel classification thresholds, and restored centered distribution bars for
   log-scaled grain-size displays.
