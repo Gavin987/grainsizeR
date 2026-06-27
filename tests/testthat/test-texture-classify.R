@@ -8,7 +8,7 @@ test_that("classify_texture classifies resolvable samples", {
   expect_true(all(c("left", "right", "top", "x", "y") %in% names(result)))
 })
 
-test_that("classify_texture returns unresolved samples without class assignment", {
+test_that("classify_texture resolves closed fraction partitions for coarse samples", {
   gsd <- as_gsd_tbl(
     ragged_input_phase2[ragged_input_phase2$sample_id == "WN1", ],
     sample_id,
@@ -16,14 +16,11 @@ test_that("classify_texture returns unresolved samples without class assignment"
     retained_proportion
   )
 
-  expect_warning(
-    result <- classify_texture(gsd, test_texture_polygons(), scheme = "test_triangle"),
-    "could not be resolved"
-  )
+  result <- classify_texture(gsd, test_texture_polygons(), scheme = "test_triangle")
 
-  expect_false(result$resolved)
-  expect_true(is.na(result$class_id))
-  expect_true(is.na(result$class_name))
+  expect_true(result$resolved)
+  expect_equal(result$class_id, "all")
+  expect_equal(result$class_name, "All triangle")
 })
 
 test_that("classify_texture marks ambiguous polygon matches", {

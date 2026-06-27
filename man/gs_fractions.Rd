@@ -38,9 +38,10 @@ A tibble with one row per sample and scheme component.
 }
 \description{
 \code{gs_fractions()} calculates sediment or soil fraction percentages using a
-named built-in particle-size scheme. Fractions are calculated from
+named built-in particle-size scheme. Schemes are treated as complete,
+non-overlapping particle-size partitions. Fractions are calculated from
 cumulative percent-finer values at scheme thresholds by calling
-\code{gs_percent_finer()} for all finite scheme boundaries.
+\code{gs_percent_finer()} for thresholds inside the observed finite size range.
 }
 \details{
 Scheme thresholds do not need to match observed grain-size boundaries. When
@@ -49,9 +50,11 @@ boundaries, percent-finer values are interpolated on the cumulative curve.
 Fraction and texture functions automatically use the normalized particle-size
 scale from \code{gsd_tbl}; users do not need to specify millimetres or
 micrometres after import.
-Complete sand, silt, and clay fractions require the relevant scheme
-boundaries to be resolvable. If a required threshold falls inside an
-open-ended terminal class, \code{unresolved} controls whether affected components
-are returned as \code{NA} or the calculation errors. Fraction schemes do not
-extrapolate unless \code{extrapolate = "warn_linear"} is passed explicitly.
+Thresholds above the largest observed finite boundary resolve to 100 percent
+finer, and thresholds below the smallest observed finite boundary resolve to
+0 percent finer. This returns absent particle-size classes as zero rather
+than \code{NA}, so complete schemes close to 100 percent for samples whose
+retained percentages sum to 100. \code{NA} is reserved for thresholds that are
+genuinely unresolved inside the finite observed size range. Fraction schemes
+do not extrapolate unless \code{extrapolate = "warn_linear"} is passed explicitly.
 }

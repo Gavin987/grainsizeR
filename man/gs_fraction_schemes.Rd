@@ -13,7 +13,8 @@ A tibble describing built-in fraction schemes.
 \code{gs_fraction_schemes()} returns the particle-size component definitions used
 by \code{gs_fractions()}. Bounds are returned in millimetres and micrometres.
 Fraction calculations use the millimetre bounds after normalizing \code{gsd_tbl}
-sizes from their internal micrometre storage. Lower bounds are inclusive for
-interpretation, and upper bounds define the cumulative threshold used to
-calculate each fraction.
+sizes from their internal micrometre storage. Each scheme is represented as
+a complete, non-overlapping particle-size partition. Lower bounds are
+inclusive for interpretation, and upper bounds define the cumulative
+threshold used to calculate each fraction.
 }

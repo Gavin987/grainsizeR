@@ -28,75 +28,74 @@ percent_finer_lookup <- function(x, thresholds_mm, interpolation_scale, extrapol
     ))
   }
 
-  result <- tryCatch(
-    gs_percent_finer(
-      normalized_x,
-      sizes = thresholds_mm,
-      size_unit = "mm",
-      interpolation_scale = interpolation_scale,
-      extrapolate = extrapolate
-    ),
-    error = function(err) {
-      if (unresolved == "error") {
-        stop(
-          "Required fraction thresholds could not be resolved: ",
-          conditionMessage(err),
-          call. = FALSE
-        )
-      }
-      warning(
-        "Some required fraction thresholds could not be resolved; affected components are returned as NA.",
-        call. = FALSE
-      )
-      NULL
-    }
-  )
-
-  if (!is.null(result)) {
-    return(tibble::tibble(
-      sample_id = result$sample_id,
-      threshold_mm = result$threshold_mm,
-      threshold_um = result$threshold_um,
-      percent_finer = result$percent_finer,
-      resolved = TRUE
-    ))
-  }
-
   rows <- list()
   row_id <- 1
+  unresolved_seen <- FALSE
   for (sample_id in sample_ids) {
     sample_x <- normalized_x[normalized_x$sample_id == sample_id, ]
+    curve <- gs_cumulative(sample_x)
+    finite_mm <- curve$boundary_mm
+    min_mm <- min(finite_mm)
+    max_mm <- max(finite_mm)
     for (threshold in thresholds_mm) {
-      one <- tryCatch(
-        gs_percent_finer(
-          sample_x,
-          sizes = threshold,
-          size_unit = "mm",
-          interpolation_scale = interpolation_scale,
-          extrapolate = extrapolate
-        ),
-        error = function(err) NULL
-      )
-
-      if (is.null(one)) {
+      if (threshold < min_mm) {
         rows[[row_id]] <- tibble::tibble(
           sample_id = sample_id,
           threshold_mm = threshold,
           threshold_um = mm_to_um(threshold),
-          percent_finer = NA_real_,
-          resolved = FALSE
-        )
-      } else {
-        rows[[row_id]] <- tibble::tibble(
-          sample_id = sample_id,
-          threshold_mm = one$threshold_mm,
-          threshold_um = one$threshold_um,
-          percent_finer = one$percent_finer,
+          percent_finer = 0,
           resolved = TRUE
         )
+      } else if (threshold > max_mm) {
+        rows[[row_id]] <- tibble::tibble(
+          sample_id = sample_id,
+          threshold_mm = threshold,
+          threshold_um = mm_to_um(threshold),
+          percent_finer = 100,
+          resolved = TRUE
+        )
+      } else {
+        one <- tryCatch(
+          gs_percent_finer(
+            sample_x,
+            sizes = threshold,
+            size_unit = "mm",
+            interpolation_scale = interpolation_scale,
+            extrapolate = extrapolate
+          ),
+          error = function(err) NULL
+        )
+        if (is.null(one)) {
+          unresolved_seen <- TRUE
+          if (unresolved == "error") {
+            stop("Required fraction thresholds could not be resolved.", call. = FALSE)
+          }
+          rows[[row_id]] <- tibble::tibble(
+            sample_id = sample_id,
+            threshold_mm = threshold,
+            threshold_um = mm_to_um(threshold),
+            percent_finer = NA_real_,
+            resolved = FALSE
+          )
+        } else {
+          rows[[row_id]] <- tibble::tibble(
+            sample_id = sample_id,
+            threshold_mm = one$threshold_mm,
+            threshold_um = one$threshold_um,
+            percent_finer = one$percent_finer,
+            resolved = TRUE
+          )
+        }
       }
       row_id <- row_id + 1
     }
+  }
+
+  if (unresolved_seen) {
+    warning(
+      "Some required fraction thresholds could not be resolved; affected components are returned as NA.",
+      call. = FALSE
+    )
   }
 
   out <- do.call(rbind, rows)
@@ -178,9 +177,10 @@ fractions_one_sample <- function(sample_id, components, lookup, scheme, normaliz
 #' Calculate grain-size fraction percentages
 #'
 #' `gs_fractions()` calculates sediment or soil fraction percentages using a
-#' named built-in particle-size scheme. Fractions are calculated from
+#' named built-in particle-size scheme. Schemes are treated as complete,
+#' non-overlapping particle-size partitions. Fractions are calculated from
 #' cumulative percent-finer values at scheme thresholds by calling
-#' `gs_percent_finer()` for all finite scheme boundaries.
+#' `gs_percent_finer()` for thresholds inside the observed finite size range.
 #'
 #' Scheme thresholds do not need to match observed grain-size boundaries. When
 #' thresholds such as 0.002, 0.020, 0.050, 0.060, or 0.063 mm are bracketed by finite class
@@ -188,11 +188,13 @@ fractions_one_sample <- function(sample_id, components, lookup, scheme, normaliz
 #' Fraction and texture functions automatically use the normalized particle-size
 #' scale from `gsd_tbl`; users do not need to specify millimetres or
 #' micrometres after import.
-#' Complete sand, silt, and clay fractions require the relevant scheme
-#' boundaries to be resolvable. If a required threshold falls inside an
-#' open-ended terminal class, `unresolved` controls whether affected components
-#' are returned as `NA` or the calculation errors. Fraction schemes do not
-#' extrapolate unless `extrapolate = "warn_linear"` is passed explicitly.
+#' Thresholds above the largest observed finite boundary resolve to 100 percent
+#' finer, and thresholds below the smallest observed finite boundary resolve to
+#' 0 percent finer. This returns absent particle-size classes as zero rather
+#' than `NA`, so complete schemes close to 100 percent for samples whose
+#' retained percentages sum to 100. `NA` is reserved for thresholds that are
+#' genuinely unresolved inside the finite observed size range. Fraction schemes
+#' do not extrapolate unless `extrapolate = "warn_linear"` is passed explicitly.
 #'
 #' @param x A valid `gsd_tbl` object.
 #' @param scheme Built-in fraction scheme name.

@@ -109,7 +109,7 @@ test_that("open fine tails and unresolved fine-end calculations are reported", {
   expect_true(any(diag$check == "open_fine_tail" & diag$status == "info"))
   expect_true(any(diag$check == "d_value_resolvable" & diag$parameter == "D5" & diag$status == "warning"))
   expect_true(any(diag$check == "threshold_resolvable" & diag$parameter == "2 um" & diag$status == "warning"))
-  expect_true(any(diag$check == "fraction_scheme_resolvable" & diag$parameter == "usda_tt" & diag$status == "warning"))
+  expect_true(any(diag$check == "fraction_scheme_resolvable" & diag$parameter == "usda_tt" & diag$status == "ok"))
 })
 
 test_that("diagnostics do not silently extrapolate by default", {

@@ -74,7 +74,7 @@ test_that("gs_fractions interpolates scheme boundaries when bracketed", {
   }
 })
 
-test_that("gs_fractions applies unresolved policy for open fine tail thresholds", {
+test_that("gs_fractions closes open fine tail thresholds without extrapolation", {
   gsd <- as_gsd_tbl(
     threshold_interpolation_fixture(),
     sample_id,
@@ -84,21 +84,16 @@ test_that("gs_fractions applies unresolved policy for open fine tail thresholds"
   )
   sample_b <- gsd[gsd$sample_id == "B", ]
 
-  expect_warning(
-    result <- gs_fractions(sample_b, scheme = "usda_tt", unresolved = "warn_na"),
-    "could not be resolved"
-  )
-  expect_true(is.na(result$percent[result$component == "clay"]))
-  expect_true(is.na(result$percent[result$component == "silt"]))
+  result <- gs_fractions(sample_b, scheme = "usda_tt", unresolved = "warn_na")
+  expect_equal(result$percent[result$component == "clay"], 0)
+  expect_false(is.na(result$percent[result$component == "silt"]))
   expect_false(is.na(result$percent[result$component == "sand"]))
+  expect_equal(sum(result$percent), 100, tolerance = 1e-8)
 
-  expect_error(
-    gs_fractions(sample_b, scheme = "usda_tt", unresolved = "error"),
-    "could not be resolved"
-  )
+  expect_s3_class(gs_fractions(sample_b, scheme = "usda_tt", unresolved = "error"), "tbl_df")
 })
 
-test_that("real example data resolves available arbitrary thresholds and keeps unresolved fractions as NA", {
+test_that("real example data resolves available arbitrary thresholds and closes fractions", {
   path <- system.file("extdata", "grain.long.csv", package = "grainsizeR")
   if (!nzchar(path)) {
     path <- file.path("..", "..", "inst", "extdata", "grain.long.csv")
@@ -127,12 +122,9 @@ test_that("real example data resolves available arbitrary thresholds and keeps u
       !any(result$extrapolated)
   }, logical(1))))
 
-  expect_warning(
-    fractions <- gs_fractions(gsd, scheme = "usda_tt", unresolved = "warn_na"),
-    "could not be resolved"
-  )
-  expect_true(any(is.na(fractions$percent)))
-  expect_true(any(!is.na(fractions$percent)))
+  fractions <- gs_fractions(gsd, scheme = "usda_tt", unresolved = "warn_na")
+  expect_false(any(is.na(fractions$percent)))
+  expect_equal(as.numeric(rowsum(fractions$percent, fractions$sample_id)), rep(100, length(unique(fractions$sample_id))), tolerance = 1e-8)
 
   sand <- fractions[fractions$component == "sand", ]
   expect_true(any(!is.na(sand$percent)))

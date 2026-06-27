@@ -77,13 +77,16 @@ test_that("coarse long and wide summaries agree for Wentworth major scheme", {
   }
 })
 
-test_that("fine texture schemes are better resolved by long example data", {
+test_that("fine texture schemes close for long and wide example data", {
   ex <- read_real_examples_for_regression()
 
   for (scheme in c("usda_tt", "isss", "uk_ssew")) {
-    long <- suppressWarnings(gs_fractions(ex$long, scheme = scheme, unresolved = "warn_na"))
-    wide <- suppressWarnings(gs_fractions(ex$wide, scheme = scheme, unresolved = "warn_na"))
-    expect_lt(sum(is.na(long$percent)), sum(is.na(wide$percent)))
+    long <- gs_fractions(ex$long, scheme = scheme, unresolved = "warn_na")
+    wide <- gs_fractions(ex$wide, scheme = scheme, unresolved = "warn_na")
+    expect_false(any(is.na(long$percent)), info = scheme)
+    expect_false(any(is.na(wide$percent)), info = scheme)
+    expect_equal(as.numeric(rowsum(long$percent, long$sample_id)), rep(100, length(unique(long$sample_id))), tolerance = 1e-8, info = scheme)
+    expect_equal(as.numeric(rowsum(wide$percent, wide$sample_id)), rep(100, length(unique(wide$sample_id))), tolerance = 1e-8, info = scheme)
   }
 })
 
@@ -119,7 +122,7 @@ test_that("selected real sample returns stable regression outputs", {
   expect_s3_class(p, "ggplot")
 })
 
-test_that("dry-sieve example does not silently invent fine-tail texture structure", {
+test_that("dry-sieve example closes texture fractions without extrapolating percent-finer thresholds", {
   ex <- read_real_examples_for_regression()
 
   expect_error(
@@ -127,6 +130,7 @@ test_that("dry-sieve example does not silently invent fine-tail texture structur
     "fall outside"
   )
 
-  wide_usda <- suppressWarnings(gs_fractions(ex$wide, scheme = "usda_tt", unresolved = "warn_na"))
-  expect_true(any(is.na(wide_usda$percent)))
+  wide_usda <- gs_fractions(ex$wide, scheme = "usda_tt", unresolved = "warn_na")
+  expect_false(any(is.na(wide_usda$percent)))
+  expect_equal(as.numeric(rowsum(wide_usda$percent, wide_usda$sample_id)), rep(100, length(unique(wide_usda$sample_id))), tolerance = 1e-8)
 })

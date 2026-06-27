@@ -29,7 +29,7 @@ test_that("gs_fraction_schemes lists built-in schemes and components", {
   )
   expect_equal(
     schemes$component[schemes$scheme == "gradistat"],
-    c("gravel", "sand", "silt", "clay", "mud")
+    c("gravel", "sand", "silt", "clay")
   )
   expect_equal(
     schemes$component[schemes$scheme == "wentworth_detailed"],
@@ -103,7 +103,7 @@ test_that("gs_fractions calculates Wentworth major whole-sample percentages", {
   expect_true(all(result$resolved))
 })
 
-test_that("gs_fractions returns NA for unresolved GRADISTAT components", {
+test_that("gs_fractions returns zero for absent GRADISTAT components", {
   gsd <- as_gsd_tbl(
     ragged_input_phase2,
     sample_id,
@@ -111,27 +111,26 @@ test_that("gs_fractions returns NA for unresolved GRADISTAT components", {
     retained_proportion
   )
 
-  expect_warning(
-    result <- gs_fractions(gsd, scheme = "gradistat", unresolved = "warn_na"),
-    "could not be resolved"
-  )
+  result <- gs_fractions(gsd, scheme = "gradistat", unresolved = "warn_na")
 
   wn1 <- result[result$sample_id == "WN1", ]
   wn2 <- result[result$sample_id == "WN2", ]
 
-  expect_true(is.na(wn1$percent[wn1$component == "clay"]))
-  expect_true(is.na(wn1$percent[wn1$component == "silt"]))
+  expect_equal(wn1$percent[wn1$component == "clay"], 0)
+  expect_false(is.na(wn1$percent[wn1$component == "silt"]))
   expect_false(is.na(wn1$percent[wn1$component == "gravel"]))
   expect_false(is.na(wn1$percent[wn1$component == "sand"]))
 
   expect_false(is.na(wn2$percent[wn2$component == "gravel"]))
   expect_false(is.na(wn2$percent[wn2$component == "sand"]))
-  expect_false(is.na(wn2$percent[wn2$component == "mud"]))
-  expect_true(is.na(wn2$percent[wn2$component == "silt"]))
-  expect_true(is.na(wn2$percent[wn2$component == "clay"]))
+  expect_false(is.na(wn2$percent[wn2$component == "silt"]))
+  expect_equal(wn2$percent[wn2$component == "clay"], 0)
+
+  totals <- rowsum(result$percent, result$sample_id, reorder = FALSE)
+  expect_equal(as.numeric(totals), c(100, 100), tolerance = 1e-8)
 })
 
-test_that("gs_fractions errors for unresolved components when requested", {
+test_that("unresolved error mode does not fail for absent outer classes", {
   gsd <- as_gsd_tbl(
     ragged_input_phase2,
     sample_id,
@@ -139,10 +138,7 @@ test_that("gs_fractions errors for unresolved components when requested", {
     retained_proportion
   )
 
-  expect_error(
-    gs_fractions(gsd, scheme = "gradistat", unresolved = "error"),
-    "could not be resolved"
-  )
+  expect_s3_class(gs_fractions(gsd, scheme = "gradistat", unresolved = "error"), "tbl_df")
 })
 
 test_that("gs_fractions can normalize fine-earth fractions", {
@@ -202,8 +198,8 @@ test_that("gs_fractions supports new schemes on real example data", {
   expect_equal(australia$upper_um, isss$upper_um)
   expect_equal(australia$percent, isss$percent, tolerance = 1e-8)
 
-  expect_warning(germany <- gs_fractions(gsd, scheme = "germany_63"), "could not be resolved")
-  expect_warning(sweden <- gs_fractions(gsd, scheme = "sweden_60"), "could not be resolved")
+  germany <- gs_fractions(gsd, scheme = "germany_63")
+  sweden <- gs_fractions(gsd, scheme = "sweden_60")
   expect_s3_class(germany, "tbl_df")
   expect_s3_class(sweden, "tbl_df")
   expect_true(all(c("gravel", "sand", "silt", "clay") %in% germany$component))
@@ -231,16 +227,53 @@ test_that("gs_fractions uses normalized units for G2Sd-style micrometre input", 
   expect_equal(gsm$percent[gsm$sample_id == "Q1" & gsm$component == "gravel"], 5)
 })
 
-test_that("wentworth_detailed fractions run on auto-detected G2Sd-style micrometre input", {
+test_that("wentworth_detailed fractions close on auto-detected G2Sd-style micrometre input", {
   long_um <- g2sd_wide_to_long(g2sd_style_wide())
   gsd <- as_gsd_tbl(long_um, sample_id, size, retained_percent, size_unit = "auto", value_type = "percent")
 
-  expect_warning(
-    detailed <- gs_fractions(gsd, scheme = "wentworth_detailed"),
-    "could not be resolved"
-  )
+  detailed <- gs_fractions(gsd, scheme = "wentworth_detailed")
 
   expect_s3_class(detailed, "tbl_df")
   expect_true(any(detailed$sample_id == "Q1"))
-  expect_true(any(!is.na(detailed$percent)))
+  expect_false(any(is.na(detailed$percent)))
+  expect_equal(
+    detailed$percent[detailed$sample_id == "Q1" & detailed$component == "coarse_gravel"],
+    0
+  )
+  expect_equal(
+    as.numeric(rowsum(detailed$percent, detailed$sample_id, reorder = FALSE)),
+    c(100, 100),
+    tolerance = 1e-8
+  )
+})
+
+test_that("fraction schemes are complete non-overlapping partitions", {
+  schemes <- gs_fraction_schemes()
+
+  for (scheme in unique(schemes$scheme)) {
+    one <- schemes[schemes$scheme == scheme, ]
+    one <- one[order(one$order), ]
+
+    expect_equal(one$lower_mm[nrow(one)], 0, info = scheme)
+    expect_true(is.infinite(one$upper_mm[1]), info = scheme)
+    expect_false(any(duplicated(one$component)), info = scheme)
+    expect_equal(one$lower_mm[-nrow(one)], one$upper_mm[-1], tolerance = 1e-12, info = scheme)
+  }
+})
+
+test_that("all fraction schemes close to 100 on a spanning synthetic sample", {
+  x <- data.frame(
+    sample_id = "A",
+    size_mm = c(32, 16, 8, 4, 2, 1, 0.5, 0.25, 0.125, 0.063, 0.03125, 0.015625, 0.0078125, 0.00390625, 0.002, 0.001),
+    retained = c(1, 2, 3, 4, 5, 7, 8, 9, 10, 9, 8, 7, 6, 5, 4, 12)
+  )
+  gsd <- as_gsd_tbl(x, sample_id, size_mm, retained, value_type = "percent")
+
+  for (scheme in unique(gs_fraction_schemes()$scheme)) {
+    result <- gs_fractions(gsd, scheme = scheme)
+    expect_equal(nrow(result), sum(gs_fraction_schemes()$scheme == scheme), info = scheme)
+    expect_false(any(is.na(result$percent)), info = scheme)
+    expect_equal(sum(result$percent), 100, tolerance = 1e-8, info = scheme)
+    expect_false(any(duplicated(result$component)), info = scheme)
+  }
 })

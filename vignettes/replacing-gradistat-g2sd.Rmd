@@ -149,7 +149,7 @@ GRADISTAT texture classification supports the gravel-sand-mud and sand-silt-clay
 no-gravel bases.
 
 ```{r}
-gradistat_fractions <- suppressWarnings(gs_fractions_wide(gs_wide, scheme = "gradistat"))
+gradistat_fractions <- suppressWarnings(gs_fractions_wide(gs_wide, scheme = "gravel_sand_mud"))
 
 gsm <- data.frame(
   sample_id = gradistat_fractions$sample_id,
