@@ -97,3 +97,64 @@ test_that("read_gsd infers bundled long example columns", {
   expect_true(all(c("sample_id", "bin_id", "raw_size_um") %in% names(gsd)))
   expect_true(all(c("WN1_upper", "WN2_upper") %in% gsd$sample_id))
 })
+
+test_that("as_gsd_tbl auto-detects G2Sd-style micrometre size labels", {
+  long_um <- g2sd_wide_to_long(g2sd_style_wide())
+  gsd_um <- as_gsd_tbl(
+    long_um,
+    sample_id,
+    size,
+    retained_percent,
+    size_unit = "auto",
+    value_type = "percent"
+  )
+
+  q1 <- gsd_um[gsd_um$sample_id == "Q1", ]
+  expect_equal(q1$raw_size_um, c(2000, 1000, 500, 250, 125, 63, 40, 1))
+  expect_equal(um_to_mm(q1$raw_size_um[1:7]), c(2, 1, 0.5, 0.25, 0.125, 0.063, 0.04))
+  expect_equal(q1$raw_size_um[nrow(q1)], 1)
+  expect_true(q1$is_open_lower[nrow(q1)])
+  expect_true(is.na(q1$size_lower_um[nrow(q1)]))
+})
+
+test_that("as_gsd_tbl auto-detected micrometre input matches equivalent millimetre input", {
+  long_um <- g2sd_wide_to_long(g2sd_style_wide())
+  long_mm <- g2sd_wide_to_long(g2sd_style_wide(c("2", "1", "0.5", "0.25", "0.125", "0.063", "0.04", "0")))
+
+  gsd_um <- as_gsd_tbl(long_um, sample_id, size, retained_percent, size_unit = "auto", value_type = "percent")
+  gsd_mm <- as_gsd_tbl(long_mm, sample_id, size, retained_percent, size_unit = "auto", value_type = "percent")
+
+  expect_equal(gsd_um$raw_size_um, gsd_mm$raw_size_um)
+  expect_equal(gsd_um$size_lower_um, gsd_mm$size_lower_um)
+  expect_equal(gsd_um$size_upper_um, gsd_mm$size_upper_um)
+  expect_equal(gsd_um$retained_percent, gsd_mm$retained_percent)
+})
+
+test_that("explicit size_unit overrides auto-detection", {
+  x <- data.frame(
+    sample_id = c("A", "A"),
+    size = c(1000, 1),
+    retained_percent = c(40, 60)
+  )
+
+  as_um <- as_gsd_tbl(x, sample_id, size, retained_percent, size_unit = "um", value_type = "percent")
+  as_mm <- as_gsd_tbl(x, sample_id, size, retained_percent, size_unit = "mm", value_type = "percent")
+  as_auto <- as_gsd_tbl(x, sample_id, size, retained_percent, size_unit = "auto", value_type = "percent")
+
+  expect_equal(as_um$raw_size_um, c(1000, 1))
+  expect_equal(as_mm$raw_size_um, c(1000000, 1000))
+  expect_equal(as_auto$raw_size_um, as_um$raw_size_um)
+})
+
+test_that("zero lower-tail rows do not affect auto unit detection", {
+  x <- data.frame(
+    sample_id = c("A", "A", "A"),
+    size = c(2, 0.063, 0),
+    retained_percent = c(20, 70, 10)
+  )
+
+  gsd <- as_gsd_tbl(x, sample_id, size, retained_percent, size_unit = "auto", value_type = "percent")
+
+  expect_equal(gsd$raw_size_um, c(2000, 63, 1))
+  expect_true(gsd$is_open_lower[nrow(gsd)])
+})

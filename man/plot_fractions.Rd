@@ -9,7 +9,8 @@ plot_fractions(
   scheme = "wentworth_major",
   normalize = "none",
   sample_id = NULL,
-  fill_palette = c("default", "YlOrBr", "none")
+  fill_palette = c("default", "YlOrBr", "none"),
+  na_to_zero = FALSE
 )
 }
 \arguments{
@@ -24,6 +25,13 @@ plot_fractions(
 \item{fill_palette}{Fill palette. \code{"default"} uses ggplot2 defaults,
 \code{"YlOrBr"} uses \code{grDevices::hcl.colors()} with a yellow-orange-brown
 sequence, and \code{"none"} leaves the scale unchanged.}
+
+\item{na_to_zero}{Should unresolved fraction percentages be plotted as zero?
+The default \code{FALSE} preserves \code{NA} values returned by \code{gs_fractions()}.
+Use \code{TRUE} to draw stacked bars without dropping components whose
+thresholds could not be resolved from the available grain-size classes.
+This affects only the plotted data and does not change the underlying
+\code{gs_fractions()} calculation.}
 }
 \value{
 A \code{ggplot} object.

@@ -10,6 +10,12 @@
 #' @param fill_palette Fill palette. `"default"` uses ggplot2 defaults,
 #'   `"YlOrBr"` uses `grDevices::hcl.colors()` with a yellow-orange-brown
 #'   sequence, and `"none"` leaves the scale unchanged.
+#' @param na_to_zero Should unresolved fraction percentages be plotted as zero?
+#'   The default `FALSE` preserves `NA` values returned by `gs_fractions()`.
+#'   Use `TRUE` to draw stacked bars without dropping components whose
+#'   thresholds could not be resolved from the available grain-size classes.
+#'   This affects only the plotted data and does not change the underlying
+#'   `gs_fractions()` calculation.
 #'
 #' @return A `ggplot` object.
 #' @export
@@ -27,11 +33,18 @@ plot_fractions <- function(x,
                            scheme = "wentworth_major",
                            normalize = "none",
                            sample_id = NULL,
-                           fill_palette = c("default", "YlOrBr", "none")) {
+                           fill_palette = c("default", "YlOrBr", "none"),
+                           na_to_zero = FALSE) {
   validate_gsd_tbl(x)
   fill_palette <- match.arg(fill_palette)
+  if (!is.logical(na_to_zero) || length(na_to_zero) != 1 || is.na(na_to_zero)) {
+    stop("`na_to_zero` must be `TRUE` or `FALSE`.", call. = FALSE)
+  }
   plot_x <- plot_filter_samples(x, sample_id)
   fractions <- gs_fractions(plot_x, scheme = scheme, normalize = normalize)
+  if (na_to_zero) {
+    fractions$percent[is.na(fractions$percent)] <- 0
+  }
   components <- scheme_components(scheme)
   component_levels <- components$component
   fractions$component <- factor(fractions$component, levels = component_levels)

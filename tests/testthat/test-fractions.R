@@ -204,3 +204,34 @@ test_that("gs_fractions supports new schemes on real example data", {
   expect_true(all(c("gravel", "sand", "silt", "clay") %in% germany$component))
   expect_true(all(c("gravel", "sand", "silt", "clay") %in% sweden$component))
 })
+
+test_that("gs_fractions uses normalized units for G2Sd-style micrometre input", {
+  long_um <- g2sd_wide_to_long(g2sd_style_wide())
+  long_mm <- g2sd_wide_to_long(g2sd_style_wide(c("2", "1", "0.5", "0.25", "0.125", "0.063", "0.04", "0")))
+
+  gsd_um <- as_gsd_tbl(long_um, sample_id, size, retained_percent, size_unit = "auto", value_type = "percent")
+  gsd_mm <- as_gsd_tbl(long_mm, sample_id, size, retained_percent, size_unit = "auto", value_type = "percent")
+
+  um_fractions <- gs_fractions(gsd_um, scheme = "gravel_sand_mud")
+  mm_fractions <- gs_fractions(gsd_mm, scheme = "gravel_sand_mud")
+
+  expect_equal(um_fractions$percent, mm_fractions$percent, tolerance = 1e-8)
+  expect_equal(
+    um_fractions$percent[um_fractions$sample_id == "Q1" & um_fractions$component == "gravel"],
+    5
+  )
+})
+
+test_that("wentworth_detailed fractions run on auto-detected G2Sd-style micrometre input", {
+  long_um <- g2sd_wide_to_long(g2sd_style_wide())
+  gsd <- as_gsd_tbl(long_um, sample_id, size, retained_percent, size_unit = "auto", value_type = "percent")
+
+  expect_warning(
+    detailed <- gs_fractions(gsd, scheme = "wentworth_detailed"),
+    "could not be resolved"
+  )
+
+  expect_s3_class(detailed, "tbl_df")
+  expect_true(any(detailed$sample_id == "Q1"))
+  expect_true(any(!is.na(detailed$percent)))
+})

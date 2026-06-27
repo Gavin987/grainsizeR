@@ -7,7 +7,7 @@
 read_gsd_wide(
   file,
   size_col = 1,
-  size_unit = "mm",
+  size_unit = "auto",
   value_type = "percent",
   measurement_method = NA_character_
 )
@@ -18,8 +18,10 @@ read_gsd_wide(
 \item{size_col}{Column containing grain-size class labels or thresholds.
 This can be a one-based column index or a column name.}
 
-\item{size_unit}{Unit for \code{size_col}. Supported values are \code{"mm"}, \code{"um"},
-and \code{"phi"}.}
+\item{size_unit}{Unit for \code{size_col}. Supported values are \code{"auto"},
+\code{"mm"}, \code{"um"}, and \code{"phi"}. \code{"auto"} treats finite positive values
+greater than or equal to 1000 as micrometres and otherwise treats values
+as millimetres. Explicit \code{"mm"} and \code{"um"} values override detection.}
 
 \item{value_type}{Scale for sample values. Supported values are
 \code{"proportion"}, \code{"percent"}, and \code{"weight"}.}
@@ -39,5 +41,6 @@ proportions, retained percentages, or weights.
 Numeric size labels such as \code{"2"} and \code{"0.0625"} are interpreted as class
 thresholds. Terminal fine labels such as \code{"<0.0625"} are parsed as the
 numeric threshold while still producing an open-ended fine class in the
-returned \code{gsd_tbl}.
+returned \code{gsd_tbl}. A size label of \code{"0"} is treated as a pan or lower
+open-ended row and imported with the package's 1 um lower-tail marker.
 }

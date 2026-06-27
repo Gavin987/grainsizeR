@@ -67,3 +67,41 @@ test_that("gs_percentile does not silently calculate inside open fine tails", {
   )
   expect_true(result$extrapolated)
 })
+
+test_that("read_gsd_wide auto-detects G2Sd-style micrometre rows and pan row", {
+  path <- tempfile(fileext = ".csv")
+  values <- g2sd_style_wide()
+  rownames(values) <- NULL
+  wide <- data.frame(
+    size = c("2000", "1000", "500", "250", "125", "63", "40", "0"),
+    values,
+    row.names = NULL,
+    check.names = FALSE
+  )
+  write.csv(wide, path, row.names = FALSE)
+
+  gsd <- read_gsd_wide(path, size_col = "size", size_unit = "auto", value_type = "percent")
+
+  sample_q1 <- gsd[gsd$sample_id == "Q1", ]
+  expect_equal(sample_q1$raw_size_um, c(2000, 1000, 500, 250, 125, 63, 40, 1))
+  expect_equal(sample_q1$size_upper_um[nrow(sample_q1)], 40)
+  expect_true(sample_q1$is_open_lower[nrow(sample_q1)])
+})
+
+test_that("read_gsd wide dispatch uses auto size units", {
+  path <- tempfile(fileext = ".csv")
+  values <- g2sd_style_wide()
+  rownames(values) <- NULL
+  wide <- data.frame(
+    size = c("2000", "1000", "500", "250", "125", "63", "40", "0"),
+    values,
+    row.names = NULL,
+    check.names = FALSE
+  )
+  write.csv(wide, path, row.names = FALSE)
+
+  direct <- read_gsd_wide(path, size_col = "size", size_unit = "auto", value_type = "percent")
+  dispatched <- read_gsd(path, size_col = "size", size_unit = "auto", value_type = "percent", format = "wide")
+
+  expect_equal(dispatched, direct)
+})

@@ -9,7 +9,7 @@ read_gsd(
   sample_col,
   size_col,
   value_col,
-  size_unit = "mm",
+  size_unit = "auto",
   value_type = "proportion",
   measurement_method = NA_character_,
   format = c("long", "wide")
@@ -29,8 +29,10 @@ exists.}
 percentages, or weights. If omitted for long-format input, \code{read_gsd()}
 uses \code{"proportion"} when that column exists.}
 
-\item{size_unit}{Unit for \code{size_col}. Supported values are \code{"mm"}, \code{"um"},
-and \code{"phi"}.}
+\item{size_unit}{Unit for \code{size_col}. Supported values are \code{"auto"},
+\code{"mm"}, \code{"um"}, and \code{"phi"}. \code{"auto"} treats finite positive values
+greater than or equal to 1000 as micrometres and otherwise treats values
+as millimetres. Explicit \code{"mm"} and \code{"um"} values override detection.}
 
 \item{value_type}{Scale for \code{value_col}. Supported values are
 \code{"proportion"}, \code{"percent"}, and \code{"weight"}. For \code{format = "wide"},

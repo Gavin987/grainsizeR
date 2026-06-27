@@ -38,13 +38,16 @@ resolve_wide_size_col <- function(size_col, data) {
 #' Numeric size labels such as `"2"` and `"0.0625"` are interpreted as class
 #' thresholds. Terminal fine labels such as `"<0.0625"` are parsed as the
 #' numeric threshold while still producing an open-ended fine class in the
-#' returned `gsd_tbl`.
+#' returned `gsd_tbl`. A size label of `"0"` is treated as a pan or lower
+#' open-ended row and imported with the package's 1 um lower-tail marker.
 #'
 #' @param file Path to a CSV file.
 #' @param size_col Column containing grain-size class labels or thresholds.
 #'   This can be a one-based column index or a column name.
-#' @param size_unit Unit for `size_col`. Supported values are `"mm"`, `"um"`,
-#'   and `"phi"`.
+#' @param size_unit Unit for `size_col`. Supported values are `"auto"`,
+#'   `"mm"`, `"um"`, and `"phi"`. `"auto"` treats finite positive values
+#'   greater than or equal to 1000 as micrometres and otherwise treats values
+#'   as millimetres. Explicit `"mm"` and `"um"` values override detection.
 #' @param value_type Scale for sample values. Supported values are
 #'   `"proportion"`, `"percent"`, and `"weight"`.
 #' @param measurement_method Measurement method to store in the output. A
@@ -54,7 +57,7 @@ resolve_wide_size_col <- function(size_col, data) {
 #' @export
 read_gsd_wide <- function(file,
                           size_col = 1,
-                          size_unit = "mm",
+                          size_unit = "auto",
                           value_type = "percent",
                           measurement_method = NA_character_) {
   size_unit <- normalize_size_unit(size_unit)

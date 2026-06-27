@@ -22,27 +22,59 @@ resolve_column <- function(expr, env, data, arg_name) {
 }
 
 normalize_size_unit <- function(size_unit) {
-  size_unit <- match.arg(size_unit, c("mm", "um", "phi"))
+  size_unit <- match.arg(size_unit, c("auto", "mm", "um", "phi"))
   size_unit
 }
 
+detect_size_unit <- function(size) {
+  positive <- size[is.finite(size) & size > 0]
+  if (length(positive) > 0 && any(positive >= 1000)) {
+    "um"
+  } else {
+    "mm"
+  }
+}
+
 sizes_to_um <- function(x, size_unit) {
+  size_unit <- normalize_size_unit(size_unit)
   size <- suppressWarnings(as.numeric(as.character(x)))
 
   if (anyNA(size)) {
     stop("Size labels must be numeric or coercible to numeric values.", call. = FALSE)
   }
 
-  if (any(size <= 0)) {
-    stop("Size labels must be positive.", call. = FALSE)
+  if (any(!is.finite(size))) {
+    stop("Size labels must be finite.", call. = FALSE)
   }
 
-  switch(
+  if (size_unit != "phi" && any(size < 0)) {
+    stop("Size labels must be non-negative.", call. = FALSE)
+  }
+
+  if (size_unit == "phi" && any(!is.finite(phi_to_um(size)))) {
+    stop("Phi size labels must convert to finite positive sizes.", call. = FALSE)
+  }
+
+  if (size_unit == "auto") {
+    size_unit <- detect_size_unit(size)
+  }
+
+  out <- switch(
     size_unit,
     mm = mm_to_um(size),
     um = size,
     phi = phi_to_um(size)
   )
+
+  if (size_unit != "phi") {
+    out[size == 0] <- 1
+  }
+
+  if (any(out <= 0)) {
+    stop("Size labels must be positive after unit conversion.", call. = FALSE)
+  }
+
+  out
 }
 
 values_to_percent <- function(value, sample_id, value_type) {
@@ -132,8 +164,10 @@ build_sample_bins <- function(sample_data) {
 #' @param value_col Column containing retained proportions, retained
 #'   percentages, or weights. If omitted for long-format input, `read_gsd()`
 #'   uses `"proportion"` when that column exists.
-#' @param size_unit Unit for `size_col`. Supported values are `"mm"`, `"um"`,
-#'   and `"phi"`.
+#' @param size_unit Unit for `size_col`. Supported values are `"auto"`,
+#'   `"mm"`, `"um"`, and `"phi"`. `"auto"` treats finite positive values
+#'   greater than or equal to 1000 as micrometres and otherwise treats values
+#'   as millimetres. Explicit `"mm"` and `"um"` values override detection.
 #' @param value_type Scale for `value_col`. Supported values are
 #'   `"proportion"`, `"percent"`, and `"weight"`. For `format = "wide"`,
 #'   omitted `value_type` uses the `read_gsd_wide()` default.
@@ -148,7 +182,7 @@ read_gsd <- function(file,
                      sample_col,
                      size_col,
                      value_col,
-                     size_unit = "mm",
+                     size_unit = "auto",
                      value_type = "proportion",
                      measurement_method = NA_character_,
                      format = c("long", "wide")) {
@@ -221,15 +255,19 @@ read_gsd <- function(file,
 #' For sorted size labels `s1 > s2 > ... > sn`, bins are interpreted as
 #' `> s1`, `s2` to `s1`, ..., and `< s(n - 1)`. The final row's numeric size
 #' label is preserved in `raw_size_um`, but it is not used as the true lower
-#' boundary of the terminal fine class.
+#' boundary of the terminal fine class. A size label of `0`, commonly used for
+#' a pan or lower open-ended class, is imported as the package's 1 um lower-tail
+#' marker rather than as an observed zero-size boundary.
 #'
 #' @param x A data frame containing long-format grain-size data.
 #' @param sample_col Column containing sample identifiers.
 #' @param size_col Column containing grain-size class labels or thresholds.
 #' @param value_col Column containing retained proportions, retained
 #'   percentages, or weights.
-#' @param size_unit Unit for `size_col`. Supported values are `"mm"`, `"um"`,
-#'   and `"phi"`.
+#' @param size_unit Unit for `size_col`. Supported values are `"auto"`,
+#'   `"mm"`, `"um"`, and `"phi"`. `"auto"` treats finite positive values
+#'   greater than or equal to 1000 as micrometres and otherwise treats values
+#'   as millimetres. Explicit `"mm"` and `"um"` values override detection.
 #' @param value_type Scale for `value_col`. Supported values are
 #'   `"proportion"`, `"percent"`, and `"weight"`.
 #' @param measurement_method Measurement method to store in the output. A single
@@ -241,7 +279,7 @@ as_gsd_tbl <- function(x,
                        sample_col,
                        size_col,
                        value_col,
-                       size_unit = "mm",
+                       size_unit = "auto",
                        value_type = "proportion",
                        measurement_method = NA_character_) {
   if (!is.data.frame(x)) {

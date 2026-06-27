@@ -9,7 +9,7 @@ as_gsd_tbl(
   sample_col,
   size_col,
   value_col,
-  size_unit = "mm",
+  size_unit = "auto",
   value_type = "proportion",
   measurement_method = NA_character_
 )
@@ -24,8 +24,10 @@ as_gsd_tbl(
 \item{value_col}{Column containing retained proportions, retained
 percentages, or weights.}
 
-\item{size_unit}{Unit for \code{size_col}. Supported values are \code{"mm"}, \code{"um"},
-and \code{"phi"}.}
+\item{size_unit}{Unit for \code{size_col}. Supported values are \code{"auto"},
+\code{"mm"}, \code{"um"}, and \code{"phi"}. \code{"auto"} treats finite positive values
+greater than or equal to 1000 as micrometres and otherwise treats values
+as millimetres. Explicit \code{"mm"} and \code{"um"} values override detection.}
 
 \item{value_type}{Scale for \code{value_col}. Supported values are
 \code{"proportion"}, \code{"percent"}, and \code{"weight"}.}
@@ -46,5 +48,7 @@ from coarse to fine before class boundaries are constructed.
 For sorted size labels \verb{s1 > s2 > ... > sn}, bins are interpreted as
 \verb{> s1}, \code{s2} to \code{s1}, ..., and \verb{< s(n - 1)}. The final row's numeric size
 label is preserved in \code{raw_size_um}, but it is not used as the true lower
-boundary of the terminal fine class.
+boundary of the terminal fine class. A size label of \code{0}, commonly used for
+a pan or lower open-ended class, is imported as the package's 1 um lower-tail
+marker rather than as an observed zero-size boundary.
 }
