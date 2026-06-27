@@ -6,6 +6,13 @@ readme_figure_files <- c(
   "man/figures/readme-usda-ternary.png"
 )
 
+png_width_px <- function(path) {
+  con <- file(path, "rb")
+  on.exit(close(con), add = TRUE)
+  header <- readBin(con, what = "integer", size = 1, n = 24, signed = FALSE, endian = "big")
+  sum(header[17:20] * c(256^3, 256^2, 256, 1))
+}
+
 readme_repo_root <- function() {
   candidates <- c(
     ".",
@@ -57,6 +64,7 @@ test_that("README figure generation script is present", {
   expect_false(any(grepl("[A-Za-z]:[\\/]", script)))
   expect_true(all(vapply(basename(readme_figure_files), grepl, logical(1), x = script_text, fixed = TRUE)))
   expect_true(grepl("plot_distribution\\([^\\n]+cumulative = TRUE", script_text))
+  expect_true(grepl("readme_width_px <- 1000", script_text, fixed = TRUE))
   expect_true(grepl("wide_plot_sample <-", script_text, fixed = TRUE))
   expect_true(grepl("sample_id = wide_plot_sample", script_text, fixed = TRUE))
   expect_true(grepl("scheme = \"gravel_sand_mud\"", script_text, fixed = TRUE))
@@ -79,6 +87,14 @@ test_that("README references stable existing figure files", {
   expect_setequal(unique(referenced), readme_figure_files)
   expect_false(any(grepl("[A-Za-z]:[\\/]", referenced)))
   expect_true(all(file.exists(vapply(unique(referenced), function(x) readme_test_path(x), character(1)))))
+})
+
+test_that("README PNG figures use the standard output width", {
+  widths <- vapply(readme_figure_files, function(path) {
+    png_width_px(readme_test_path(path))
+  }, numeric(1))
+
+  expect_equal(unname(widths), rep(1000, length(readme_figure_files)))
 })
 
 test_that("bundled examples support README ternary plot workflows", {

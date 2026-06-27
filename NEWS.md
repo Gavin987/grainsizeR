@@ -2,6 +2,8 @@
 
 ## Development version
 
+- Standardize README PNG outputs to 1000 px wide and finalize GRADISTAT
+  gravel-sand-mud schematic guide placement.
 - Adjust GRADISTAT gravel-sand-mud ternary plot guides so the Trace mark is
   shown as a gravel-axis guide and the schematic 5% split has more visual
   space.

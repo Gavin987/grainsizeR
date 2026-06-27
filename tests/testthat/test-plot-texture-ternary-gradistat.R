@@ -191,13 +191,14 @@ test_that("GRADISTAT ternary plotting uses sediment-oriented ternary axes", {
   expect_true(all(c("1:9", "5:5", "9:1") %in% guide_labels))
   axis_tick_data <- unique(do.call(rbind, lapply(plot$layers, function(layer) {
     data <- layer$data
-    if (is.data.frame(data) && all(c("label", "axis", "x", "y") %in% names(data))) {
-      return(data[data$label %in% c("Trace", "5", "30", "80", "100"), c("label", "axis", "x", "y")])
+    if (is.data.frame(data) && all(c("label", "axis", "x", "y", "angle") %in% names(data))) {
+      return(data[data$label %in% c("Trace", "5", "30", "80", "100"), c("label", "axis", "x", "y", "angle")])
     }
-    data.frame(label = character(), axis = character(), x = numeric(), y = numeric())
+    data.frame(label = character(), axis = character(), x = numeric(), y = numeric(), angle = numeric())
   })))
   expect_equal(axis_tick_data$y[axis_tick_data$label == "Trace"], sqrt(3) / 2 * 0.05, tolerance = 1e-8)
   expect_equal(axis_tick_data$y[axis_tick_data$label == "5"], sqrt(3) / 2 * 0.10, tolerance = 1e-8)
+  expect_true(all(axis_tick_data$angle[axis_tick_data$label %in% c("Trace", "5", "30", "80", "100")] == 0))
   axis_title_data <- unique(do.call(rbind, lapply(plot$layers, function(layer) {
     data <- layer$data
     if (is.data.frame(data) && all(c("label", "x", "y") %in% names(data))) {
@@ -233,7 +234,7 @@ test_that("GRADISTAT gravel-sand-mud boundaries match reference geometry", {
   nine_to_one <- ratio[ratio$boundary == "sand / mud = 9", ]
   one_to_nine_segments <- split(one_to_nine, one_to_nine$segment_id)
   expect_true(any(vapply(one_to_nine_segments, function(x) {
-    isTRUE(all.equal(range(x$y), c(0, sqrt(3) / 2 * 0.05), tolerance = 1e-8))
+    isTRUE(all.equal(range(x$y), c(0, sqrt(3) / 2 * 0.10), tolerance = 1e-8))
   }, logical(1))))
   expect_equal(min(five_to_five$y), 0, tolerance = 1e-8)
   expect_equal(max(five_to_five$y), sqrt(3) / 2 * 0.8, tolerance = 1e-8)

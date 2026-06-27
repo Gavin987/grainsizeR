@@ -17,14 +17,18 @@ example_path <- function(filename) {
   installed_path
 }
 
+readme_width_px <- 1000
+readme_dpi <- 144
+
 save_readme_plot <- function(plot, filename, width = 7, height = 4.8) {
+  aspect_ratio <- height / width
   ggplot2::ggsave(
     filename = file.path("man", "figures", filename),
     plot = plot,
-    width = width,
-    height = height,
+    width = readme_width_px / readme_dpi,
+    height = readme_width_px * aspect_ratio / readme_dpi,
     units = "in",
-    dpi = 144
+    dpi = readme_dpi
   )
 }
 

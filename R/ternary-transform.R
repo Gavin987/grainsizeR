@@ -175,7 +175,7 @@ ternary_to_xy <- function(left, right, top, normalize = TRUE) {
         label = gravel_ticks$label,
         x = 0.5 * p - 0.035,
         y = height * p,
-        angle = 60,
+        angle = 0,
         stringsAsFactors = FALSE
       ),
       data.frame(

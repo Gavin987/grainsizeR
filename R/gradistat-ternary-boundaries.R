@@ -105,7 +105,7 @@
       list(trace_line),
       gravel_boundaries,
       list(
-        .gradistat_line_ratio(numerator = "sand", denominator = "mud", ratio = 1 / 9, basis = basis, max_third = 5),
+        .gradistat_line_ratio(numerator = "sand", denominator = "mud", ratio = 1 / 9, basis = basis, max_third = 10),
         .gradistat_line_ratio(numerator = "sand", denominator = "mud", ratio = 1, basis = basis, max_third = 80),
         .gradistat_line_ratio(numerator = "sand", denominator = "mud", ratio = 9, basis = basis, max_third = 80)
       )
