@@ -7,6 +7,32 @@ cumulative_x_values <- function(x, x_scale, particle_unit = "mm") {
   )
 }
 
+.prepare_cumulative_plot_data <- function(x, x_scale, particle_unit = "mm", sample_id = NULL) {
+  plot_x <- plot_filter_samples(x, sample_id)
+  curve <- gs_cumulative(plot_x)
+
+  lower_tail <- plot_x[plot_x$is_open_lower, , drop = FALSE]
+  if (nrow(lower_tail) > 0) {
+    lower_tail <- lower_tail[order(lower_tail$sample_id, lower_tail$bin_id), , drop = FALSE]
+    lower_tail <- lower_tail[!duplicated(lower_tail$sample_id, fromLast = TRUE), , drop = FALSE]
+    tail_curve <- tibble::tibble(
+      sample_id = lower_tail$sample_id,
+      boundary_id = max(curve$boundary_id, 0, na.rm = TRUE) + seq_len(nrow(lower_tail)),
+      boundary_um = .open_tail_plot_size_um(),
+      boundary_mm = um_to_mm(.open_tail_plot_size_um()),
+      boundary_phi = um_to_phi(.open_tail_plot_size_um()),
+      percent_finer = lower_tail$cum_finer_percent,
+      percent_coarser = lower_tail$cum_coarser_percent
+    )
+    curve <- rbind(as.data.frame(curve), as.data.frame(tail_curve))
+    curve <- curve[order(curve$sample_id, curve$boundary_um), , drop = FALSE]
+    curve <- tibble::as_tibble(curve)
+  }
+
+  curve$x_value <- cumulative_x_values(curve, x_scale, particle_unit = particle_unit)
+  curve
+}
+
 percentile_x_values <- function(x, x_scale, particle_unit = "mm") {
   switch(
     x_scale,
@@ -18,8 +44,8 @@ percentile_x_values <- function(x, x_scale, particle_unit = "mm") {
 
 #' Plot cumulative grain-size curves
 #'
-#' `plot_cumulative()` plots finite-boundary cumulative grain-size curves from
-#' `gs_cumulative()`.
+#' `plot_cumulative()` plots cumulative grain-size curves from `gs_cumulative()`.
+#' Lower open-ended classes are displayed at 0.002 mm for plotting only.
 #'
 #' @param x A valid `gsd_tbl` object.
 #' @param direction Cumulative direction to plot.
@@ -65,8 +91,7 @@ plot_cumulative <- function(x,
   extrapolate <- match.arg(extrapolate, c("error", "warn_linear"))
 
   plot_x <- plot_filter_samples(x, sample_id)
-  curve <- gs_cumulative(plot_x)
-  curve$x_value <- cumulative_x_values(curve, x_scale, particle_unit = particle_unit)
+  curve <- .prepare_cumulative_plot_data(x, x_scale, particle_unit = particle_unit, sample_id = sample_id)
   curve$y_value <- if (direction == "finer") curve$percent_finer else curve$percent_coarser
   curve$sample_id <- as.character(curve$sample_id)
   .require_single_plot_sample(curve, "plot_cumulative")

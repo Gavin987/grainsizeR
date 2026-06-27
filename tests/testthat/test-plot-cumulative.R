@@ -52,8 +52,24 @@ test_that("plot_cumulative uses a thick black cumulative line", {
 test_that("plot_cumulative curve x values use selected particle-size units before log scaling", {
   mm_plot <- plot_cumulative(plot_cumulative_test_gsd(), sample_id = "A", particle_unit = "mm")
   um_plot <- plot_cumulative(plot_cumulative_test_gsd(), sample_id = "A", particle_unit = "um")
+  mm_data <- grainsizeR:::.prepare_cumulative_plot_data(
+    plot_cumulative_test_gsd(),
+    x_scale = "log10",
+    particle_unit = "mm",
+    sample_id = "A"
+  )
+  um_data <- grainsizeR:::.prepare_cumulative_plot_data(
+    plot_cumulative_test_gsd(),
+    x_scale = "log10",
+    particle_unit = "um",
+    sample_id = "A"
+  )
 
   expect_true(1 %in% mm_plot$data$x_value)
   expect_true(1000 %in% um_plot$data$x_value)
+  expect_true(0.002 %in% mm_plot$data$x_value)
+  expect_true(2 %in% um_plot$data$x_value)
   expect_false(0 %in% mm_plot$data$x_value)
+  expect_equal(mm_data$x_value[mm_data$boundary_um == 2], 0.002)
+  expect_equal(um_data$x_value[um_data$boundary_um == 2], 2)
 })

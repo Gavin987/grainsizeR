@@ -484,7 +484,9 @@ millimetres on a log-scaled x-axis by default, with major breaks at
 particle-size classes. Use `particle_unit = "um"` to show the same axis
 in micrometres. They plot one sample at a time; use `sample_id` or
 filter the input first, then loop over samples or combine plots
-externally with a plotting-arrangement package if needed.
+externally with a plotting-arrangement package if needed. Lower
+open-ended classes are displayed at 0.002 mm, or 2 um, for plotting
+only; calculations are unchanged.
 
 ### GRADISTAT-Inspired Summary Plot
 

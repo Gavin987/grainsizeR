@@ -44,8 +44,8 @@ arrange returned plots externally with another plotting package.}
 A \code{ggplot} object.
 }
 \description{
-\code{plot_cumulative()} plots finite-boundary cumulative grain-size curves from
-\code{gs_cumulative()}.
+\code{plot_cumulative()} plots cumulative grain-size curves from \code{gs_cumulative()}.
+Lower open-ended classes are displayed at 0.002 mm for plotting only.
 }
 \examples{
 x <- data.frame(

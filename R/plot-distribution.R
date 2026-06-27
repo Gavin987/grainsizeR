@@ -41,12 +41,24 @@ particle_unit_divisor <- function(particle_unit) {
   )
 }
 
+.open_tail_plot_size_um <- function() {
+  2
+}
+
+.plot_size_um <- function(x) {
+  out <- x$raw_size_um
+  lower_tail <- x$is_open_lower
+  out[lower_tail] <- .open_tail_plot_size_um()
+  out
+}
+
 distribution_x_values <- function(x, x_scale, particle_unit = "mm") {
+  plot_size_um <- .plot_size_um(x)
   switch(
     x_scale,
-    log10 = x$raw_size_um / particle_unit_divisor(particle_unit),
-    phi = um_to_phi(x$raw_size_um),
-    linear_um = x$raw_size_um
+    log10 = plot_size_um / particle_unit_divisor(particle_unit),
+    phi = um_to_phi(plot_size_um),
+    linear_um = plot_size_um
   )
 }
 
@@ -120,7 +132,8 @@ distribution_x_values <- function(x, x_scale, particle_unit = "mm") {
 #'
 #' `plot_distribution()` plots retained grain-size percentages by particle-size
 #' class. Metric displays center bars on the original particle-size class
-#' values after unit conversion.
+#' values after unit conversion, with lower open-ended classes displayed at
+#' 0.002 mm for plotting only.
 #'
 #' @param x A valid `gsd_tbl` object.
 #' @param x_scale Display scale for the grain-size axis. `"log10"` uses
