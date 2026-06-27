@@ -18,6 +18,11 @@ test_that("gs_fraction_schemes lists built-in schemes and components", {
     schemes$component[schemes$scheme == "wentworth_major"],
     c("gravel", "sand", "mud")
   )
+  expect_true(all(c("lower_mm", "upper_mm", "lower_um", "upper_um") %in% names(schemes)))
+  expect_equal(
+    schemes$lower_mm[schemes$scheme == "wentworth_major"],
+    c(2, 0.0625, 0)
+  )
   expect_equal(
     schemes$component[schemes$scheme == "gravel_sand_mud"],
     c("gravel", "sand", "mud")
@@ -212,14 +217,18 @@ test_that("gs_fractions uses normalized units for G2Sd-style micrometre input", 
   gsd_um <- as_gsd_tbl(long_um, sample_id, size, retained_percent, size_unit = "auto", value_type = "percent")
   gsd_mm <- as_gsd_tbl(long_mm, sample_id, size, retained_percent, size_unit = "auto", value_type = "percent")
 
-  um_fractions <- gs_fractions(gsd_um, scheme = "gravel_sand_mud")
-  mm_fractions <- gs_fractions(gsd_mm, scheme = "gravel_sand_mud")
+  for (scheme in c("gravel_sand_mud", "wentworth_major", "wentworth_detailed", "gradistat", "usda_tt", "isss", "uk_ssew")) {
+    um_fractions <- suppressWarnings(gs_fractions(gsd_um, scheme = scheme))
+    mm_fractions <- suppressWarnings(gs_fractions(gsd_mm, scheme = scheme))
 
-  expect_equal(um_fractions$percent, mm_fractions$percent, tolerance = 1e-8)
-  expect_equal(
-    um_fractions$percent[um_fractions$sample_id == "Q1" & um_fractions$component == "gravel"],
-    5
-  )
+    expect_equal(um_fractions$component, mm_fractions$component)
+    expect_equal(um_fractions$lower_mm, mm_fractions$lower_mm)
+    expect_equal(um_fractions$upper_mm, mm_fractions$upper_mm)
+    expect_equal(um_fractions$percent, mm_fractions$percent, tolerance = 1e-8)
+  }
+
+  gsm <- gs_fractions(gsd_um, scheme = "gravel_sand_mud")
+  expect_equal(gsm$percent[gsm$sample_id == "Q1" & gsm$component == "gravel"], 5)
 })
 
 test_that("wentworth_detailed fractions run on auto-detected G2Sd-style micrometre input", {

@@ -9,17 +9,19 @@ scheme_components <- function(scheme) {
 
 required_fraction_thresholds <- function(components) {
   sort(unique(c(
-    components$lower_um[is.finite(components$lower_um) & components$lower_um > 0],
-    components$upper_um[is.finite(components$upper_um) & components$upper_um > 0]
+    components$lower_mm[is.finite(components$lower_mm) & components$lower_mm > 0],
+    components$upper_mm[is.finite(components$upper_mm) & components$upper_mm > 0]
   )))
 }
 
-percent_finer_lookup <- function(x, thresholds, interpolation_scale, extrapolate, unresolved) {
+percent_finer_lookup <- function(x, thresholds_mm, interpolation_scale, extrapolate, unresolved) {
   sample_ids <- unique(as.character(x$sample_id))
+  normalized_x <- .gsd_tbl_with_normalized_mm_sizes(x)
 
-  if (length(thresholds) == 0) {
+  if (length(thresholds_mm) == 0) {
     return(tibble::tibble(
       sample_id = character(),
+      threshold_mm = numeric(),
       threshold_um = numeric(),
       percent_finer = numeric(),
       resolved = logical()
@@ -28,9 +30,9 @@ percent_finer_lookup <- function(x, thresholds, interpolation_scale, extrapolate
 
   result <- tryCatch(
     gs_percent_finer(
-      x,
-      sizes = thresholds,
-      size_unit = "um",
+      normalized_x,
+      sizes = thresholds_mm,
+      size_unit = "mm",
       interpolation_scale = interpolation_scale,
       extrapolate = extrapolate
     ),
@@ -53,6 +55,7 @@ percent_finer_lookup <- function(x, thresholds, interpolation_scale, extrapolate
   if (!is.null(result)) {
     return(tibble::tibble(
       sample_id = result$sample_id,
+      threshold_mm = result$threshold_mm,
       threshold_um = result$threshold_um,
       percent_finer = result$percent_finer,
       resolved = TRUE
@@ -62,13 +65,13 @@ percent_finer_lookup <- function(x, thresholds, interpolation_scale, extrapolate
   rows <- list()
   row_id <- 1
   for (sample_id in sample_ids) {
-    sample_x <- x[x$sample_id == sample_id, ]
-    for (threshold in thresholds) {
+    sample_x <- normalized_x[normalized_x$sample_id == sample_id, ]
+    for (threshold in thresholds_mm) {
       one <- tryCatch(
         gs_percent_finer(
           sample_x,
           sizes = threshold,
-          size_unit = "um",
+          size_unit = "mm",
           interpolation_scale = interpolation_scale,
           extrapolate = extrapolate
         ),
@@ -78,14 +81,16 @@ percent_finer_lookup <- function(x, thresholds, interpolation_scale, extrapolate
       if (is.null(one)) {
         rows[[row_id]] <- tibble::tibble(
           sample_id = sample_id,
-          threshold_um = threshold,
+          threshold_mm = threshold,
+          threshold_um = mm_to_um(threshold),
           percent_finer = NA_real_,
           resolved = FALSE
         )
       } else {
         rows[[row_id]] <- tibble::tibble(
           sample_id = sample_id,
-          threshold_um = threshold,
+          threshold_mm = one$threshold_mm,
+          threshold_um = one$threshold_um,
           percent_finer = one$percent_finer,
           resolved = TRUE
         )
@@ -100,7 +105,7 @@ percent_finer_lookup <- function(x, thresholds, interpolation_scale, extrapolate
 }
 
 lookup_threshold <- function(lookup, sample_id, threshold) {
-  row <- lookup[lookup$sample_id == sample_id & lookup$threshold_um == threshold, ]
+  row <- lookup[lookup$sample_id == sample_id & lookup$threshold_mm == threshold, ]
   if (nrow(row) == 0) {
     return(list(value = NA_real_, resolved = FALSE))
   }
@@ -108,8 +113,8 @@ lookup_threshold <- function(lookup, sample_id, threshold) {
 }
 
 component_percent <- function(component, lookup, sample_id) {
-  lower <- component$lower_um
-  upper <- component$upper_um
+  lower <- component$lower_mm
+  upper <- component$upper_mm
 
   lower_value <- 0
   upper_value <- 100
@@ -142,6 +147,8 @@ fractions_one_sample <- function(sample_id, components, lookup, scheme, normaliz
       sample_id = sample_id,
       scheme = scheme,
       component = comp_row$component,
+      lower_mm = comp_row$lower_mm,
+      upper_mm = comp_row$upper_mm,
       lower_um = comp_row$lower_um,
       upper_um = comp_row$upper_um,
       percent = fraction$percent,
@@ -176,8 +183,11 @@ fractions_one_sample <- function(sample_id, components, lookup, scheme, normaliz
 #' `gs_percent_finer()` for all finite scheme boundaries.
 #'
 #' Scheme thresholds do not need to match observed grain-size boundaries. When
-#' thresholds such as 2, 20, 50, 60, or 63 um are bracketed by finite class
+#' thresholds such as 0.002, 0.020, 0.050, 0.060, or 0.063 mm are bracketed by finite class
 #' boundaries, percent-finer values are interpolated on the cumulative curve.
+#' Fraction and texture functions automatically use the normalized particle-size
+#' scale from `gsd_tbl`; users do not need to specify millimetres or
+#' micrometres after import.
 #' Complete sand, silt, and clay fractions require the relevant scheme
 #' boundaries to be resolvable. If a required threshold falls inside an
 #' open-ended terminal class, `unresolved` controls whether affected components
@@ -228,7 +238,7 @@ gs_fractions <- function(x,
   thresholds <- required_fraction_thresholds(components)
   lookup <- percent_finer_lookup(
     x,
-    thresholds = thresholds,
+    thresholds_mm = thresholds,
     interpolation_scale = interpolation_scale,
     extrapolate = extrapolate,
     unresolved = unresolved

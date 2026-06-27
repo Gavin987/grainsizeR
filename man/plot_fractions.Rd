@@ -38,7 +38,9 @@ A \code{ggplot} object.
 }
 \description{
 \code{plot_fractions()} plots fraction percentages from \code{gs_fractions()} as
-stacked bars with one bar per sample.
+stacked bars with one bar per sample. Fraction components use the normalized
+particle-size scale from \code{gsd_tbl}; users do not need to specify size units
+for plotting after import.
 }
 \examples{
 x <- data.frame(

@@ -161,3 +161,19 @@ test_that("GRADISTAT public path does not export helpers", {
   expect_true("classify_texture" %in% exports)
   expect_false(any(grepl("gradistat_texture_rules|classify_gradistat", exports)))
 })
+
+test_that("GRADISTAT rule classification derives equivalent fractions from mm and um gsd_tbl inputs", {
+  long_um <- g2sd_wide_to_long(g2sd_style_wide())
+  long_mm <- g2sd_wide_to_long(g2sd_style_wide(c("2", "1", "0.5", "0.25", "0.125", "0.063", "0.04", "0")))
+
+  gsd_um <- as_gsd_tbl(long_um, sample_id, size, retained_percent, size_unit = "auto", value_type = "percent")
+  gsd_mm <- as_gsd_tbl(long_mm, sample_id, size, retained_percent, size_unit = "auto", value_type = "percent")
+
+  from_um <- classify_texture(gsd_um, scheme = "gradistat", method = "rules", basis = "gravel_sand_mud")
+  from_mm <- classify_texture(gsd_mm, scheme = "gradistat", method = "rules", basis = "gravel_sand_mud")
+
+  expect_equal(from_um$gravel, from_mm$gravel, tolerance = 1e-8)
+  expect_equal(from_um$sand, from_mm$sand, tolerance = 1e-8)
+  expect_equal(from_um$mud, from_mm$mud, tolerance = 1e-8)
+  expect_equal(from_um$texture_class_id, from_mm$texture_class_id)
+})

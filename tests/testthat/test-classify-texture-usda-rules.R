@@ -162,6 +162,33 @@ test_that("classify_texture keeps polygon classification available", {
   expect_false(any(result$ambiguous))
 })
 
+test_that("USDA rule classification derives equivalent fractions from mm and um gsd_tbl inputs", {
+  x_mm <- data.frame(
+    sample_id = rep(c("A", "B"), each = 12),
+    size_mm = rep(c(2, 1, 0.5, 0.25, 0.125, 0.063, 0.031, 0.016, 0.008, 0.004, 0.002, 0.001), 2),
+    retained = c(
+      0.00, 0.02, 0.04, 0.08, 0.15, 0.16, 0.14, 0.12, 0.10, 0.08, 0.06, 0.05,
+      0.00, 0.01, 0.02, 0.04, 0.08, 0.11, 0.12, 0.14, 0.16, 0.14, 0.10, 0.08
+    )
+  )
+  x_um <- data.frame(
+    sample_id = x_mm$sample_id,
+    size_um = x_mm$size_mm * 1000,
+    retained = x_mm$retained
+  )
+
+  gsd_mm <- as_gsd_tbl(x_mm, sample_id, size_mm, retained)
+  gsd_um <- as_gsd_tbl(x_um, sample_id, size_um, retained, size_unit = "um")
+
+  from_mm <- classify_texture(gsd_mm, scheme = "usda_tt", method = "rules", normalize = "fine_earth")
+  from_um <- classify_texture(gsd_um, scheme = "usda_tt", method = "rules", normalize = "fine_earth")
+
+  expect_equal(from_um$sand, from_mm$sand, tolerance = 1e-8)
+  expect_equal(from_um$silt, from_mm$silt, tolerance = 1e-8)
+  expect_equal(from_um$clay, from_mm$clay, tolerance = 1e-8)
+  expect_equal(from_um$texture_class_id, from_mm$texture_class_id)
+})
+
 test_that("classify_texture selects polygon classification when polygons are supplied with auto", {
   result <- classify_texture(
     fine_texture_gsd(),

@@ -41,8 +41,9 @@ polygon_label_data <- function(poly_data) {
 
 fine_resolution_ok <- function(x, sample_id, scheme) {
   sample_x <- x[x$sample_id == sample_id, ]
-  finite_boundaries <- sample_x$raw_size_um[!sample_x$is_open_lower]
-  sand_lower <- scheme_components(scheme)$lower_um[scheme_components(scheme)$component == "sand"][1]
+  finite_boundaries <- .gsd_size_mm(sample_x)[!sample_x$is_open_lower]
+  components <- scheme_components(scheme)
+  sand_lower <- components$lower_mm[components$component == "sand"][1]
   sum(finite_boundaries < sand_lower) >= 2
 }
 
@@ -253,6 +254,9 @@ plot_trigon <- function(x,
 #' name, but it creates texture ternary plots. Prefer
 #' `plot_texture_ternary()` in new code and prose. Both functions use
 #' grain-size fraction components and optional user-supplied texture polygons.
+#' Fraction components are derived from the normalized millimetre particle-size
+#' scale in `gsd_tbl`; users do not need to choose units in texture plotting
+#' functions after import.
 #' The package draws the ternary diagram with ggplot2 and does not depend on
 #' external ternary plotting packages.
 #'

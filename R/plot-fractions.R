@@ -1,7 +1,9 @@
 #' Plot grain-size fraction composition
 #'
 #' `plot_fractions()` plots fraction percentages from `gs_fractions()` as
-#' stacked bars with one bar per sample.
+#' stacked bars with one bar per sample. Fraction components use the normalized
+#' particle-size scale from `gsd_tbl`; users do not need to specify size units
+#' for plotting after import.
 #'
 #' @param x A valid `gsd_tbl` object.
 #' @param scheme Built-in fraction scheme name passed to `gs_fractions()`.

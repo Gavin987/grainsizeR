@@ -1,9 +1,11 @@
 #' List built-in grain-size fraction schemes
 #'
 #' `gs_fraction_schemes()` returns the particle-size component definitions used
-#' by `gs_fractions()`. Bounds are stored in micrometers. Lower bounds are
-#' inclusive for interpretation, and upper bounds define the cumulative
-#' threshold used to calculate each fraction.
+#' by `gs_fractions()`. Bounds are returned in millimetres and micrometres.
+#' Fraction calculations use the millimetre bounds after normalizing `gsd_tbl`
+#' sizes from their internal micrometre storage. Lower bounds are inclusive for
+#' interpretation, and upper bounds define the cumulative threshold used to
+#' calculate each fraction.
 #'
 #' @return A tibble describing built-in fraction schemes.
 #' @export
@@ -49,6 +51,8 @@ fraction_rows <- function(scheme, component, lower_um, upper_um, component_type 
   tibble::tibble(
     scheme = scheme,
     component = component,
+    lower_mm = um_to_mm(lower_um),
+    upper_mm = um_to_mm(upper_um),
     lower_um = lower_um,
     upper_um = upper_um,
     component_type = component_type,

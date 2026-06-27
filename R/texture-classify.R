@@ -189,6 +189,49 @@ usda_texture_percentages <- function(x,
   tibble::as_tibble(out)
 }
 
+gradistat_texture_percentages <- function(x,
+                                          basis,
+                                          normalize,
+                                          interpolation_scale,
+                                          unresolved,
+                                          extrapolate) {
+  if (!is_gsd_tbl(x)) {
+    return(x)
+  }
+
+  fraction_scheme <- if (basis == "gravel_sand_mud") "gravel_sand_mud" else "gradistat"
+  fractions <- gs_fractions_wide(
+    x,
+    scheme = fraction_scheme,
+    normalize = normalize,
+    interpolation_scale = interpolation_scale,
+    unresolved = unresolved,
+    extrapolate = extrapolate
+  )
+
+  required_cols <- if (basis == "gravel_sand_mud") {
+    c("gravel_percent", "sand_percent", "mud_percent")
+  } else {
+    c("sand_percent", "silt_percent", "clay_percent")
+  }
+  missing_cols <- setdiff(required_cols, names(fractions))
+  if (length(missing_cols) > 0) {
+    stop("Required GRADISTAT fraction columns are missing: ", paste(missing_cols, collapse = ", "), call. = FALSE)
+  }
+
+  out <- tibble::tibble(sample_id = fractions$sample_id)
+  if (basis == "gravel_sand_mud") {
+    out$gravel <- fractions$gravel_percent
+    out$sand <- fractions$sand_percent
+    out$mud <- fractions$mud_percent
+  } else {
+    out$sand <- fractions$sand_percent
+    out$silt <- fractions$silt_percent
+    out$clay <- fractions$clay_percent
+  }
+  out
+}
+
 #' Classify samples with texture classes
 #'
 #' `classify_texture()` classifies samples with either the validated internal
@@ -200,8 +243,11 @@ usda_texture_percentages <- function(x,
 #' and `method = "rules"` or `method = "auto"`. It supports
 #' `basis = "gravel_sand_mud"` for physical sediment textural groups and
 #' `basis = "sand_silt_clay_no_gravel"` for no-gravel sand-silt-clay mini
-#' texture classes. The GRADISTAT path re-expresses user-provided GRADISTAT v8
-#' workbook decision tables in R and does not copy VBA source code. Full
+#' texture classes. When `x` is a `gsd_tbl`, USDA and GRADISTAT rule paths
+#' derive the needed fractions from the normalized particle-size scale stored in
+#' the object; users do not need to choose size units in texture functions after
+#' import. The GRADISTAT path re-expresses user-provided GRADISTAT v8 workbook
+#' decision tables in R and does not copy VBA source code. Full
 #' downstream sediment-name composition is supported separately and GRADISTAT
 #' ternary plotting is available through `plot_texture_ternary()`.
 #'
@@ -397,8 +443,16 @@ classify_texture <- function(x,
       ))
     }
     if (identical(scheme, "gradistat")) {
-      result <- .classify_gradistat_texture_rules(
+      gradistat_input <- gradistat_texture_percentages(
         x = x,
+        basis = basis,
+        normalize = normalize,
+        interpolation_scale = interpolation_scale,
+        unresolved = unresolved,
+        extrapolate = extrapolate
+      )
+      result <- .classify_gradistat_texture_rules(
+        x = gradistat_input,
         basis = basis
       )
       if (include_sediment_name) {

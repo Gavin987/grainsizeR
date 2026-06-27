@@ -158,3 +158,13 @@ test_that("zero lower-tail rows do not affect auto unit detection", {
   expect_equal(gsd$raw_size_um, c(2000, 63, 1))
   expect_true(gsd$is_open_lower[nrow(gsd)])
 })
+
+test_that("internal size normalizer respects explicit size metadata", {
+  size_mm <- getFromNamespace(".gsd_size_mm", "grainsizeR")
+
+  expect_equal(size_mm(data.frame(raw_size_um = c(2000, 63, 1))), c(2, 0.063, 0.001))
+  expect_equal(size_mm(data.frame(size_mm = c(2, 0.063, 0))), c(2, 0.063, 0))
+  expect_equal(size_mm(data.frame(size_um = c(2000, 63, 0))), c(2, 0.063, 0))
+  expect_equal(size_mm(c(2000, 1000, 0, NA, Inf)), c(2, 1, 0, NA, Inf))
+  expect_equal(size_mm(c(2, 1, 0.063, 0, NA, Inf)), c(2, 1, 0.063, 0, NA, Inf))
+})

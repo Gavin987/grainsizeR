@@ -90,8 +90,11 @@ GRADISTAT-style rule classification is available with \code{scheme = "gradistat"
 and \code{method = "rules"} or \code{method = "auto"}. It supports
 \code{basis = "gravel_sand_mud"} for physical sediment textural groups and
 \code{basis = "sand_silt_clay_no_gravel"} for no-gravel sand-silt-clay mini
-texture classes. The GRADISTAT path re-expresses user-provided GRADISTAT v8
-workbook decision tables in R and does not copy VBA source code. Full
+texture classes. When \code{x} is a \code{gsd_tbl}, USDA and GRADISTAT rule paths
+derive the needed fractions from the normalized particle-size scale stored in
+the object; users do not need to choose size units in texture functions after
+import. The GRADISTAT path re-expresses user-provided GRADISTAT v8 workbook
+decision tables in R and does not copy VBA source code. Full
 downstream sediment-name composition is supported separately and GRADISTAT
 ternary plotting is available through \code{plot_texture_ternary()}.
 }

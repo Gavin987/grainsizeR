@@ -81,6 +81,9 @@ A \code{ggplot} object.
 name, but it creates texture ternary plots. Prefer
 \code{plot_texture_ternary()} in new code and prose. Both functions use
 grain-size fraction components and optional user-supplied texture polygons.
+Fraction components are derived from the normalized millimetre particle-size
+scale in \code{gsd_tbl}; users do not need to choose units in texture plotting
+functions after import.
 The package draws the ternary diagram with ggplot2 and does not depend on
 external ternary plotting packages.
 }

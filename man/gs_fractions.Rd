@@ -44,8 +44,11 @@ cumulative percent-finer values at scheme thresholds by calling
 }
 \details{
 Scheme thresholds do not need to match observed grain-size boundaries. When
-thresholds such as 2, 20, 50, 60, or 63 um are bracketed by finite class
+thresholds such as 0.002, 0.020, 0.050, 0.060, or 0.063 mm are bracketed by finite class
 boundaries, percent-finer values are interpolated on the cumulative curve.
+Fraction and texture functions automatically use the normalized particle-size
+scale from \code{gsd_tbl}; users do not need to specify millimetres or
+micrometres after import.
 Complete sand, silt, and clay fractions require the relevant scheme
 boundaries to be resolvable. If a required threshold falls inside an
 open-ended terminal class, \code{unresolved} controls whether affected components
