@@ -2,6 +2,9 @@
 
 ## Development version
 
+- Adjust GRADISTAT gravel-sand-mud ternary plot guides so the Trace mark is
+  shown as a gravel-axis guide and the schematic 5% split has more visual
+  space.
 - Display lower open-ended grain-size classes at 0.0015 mm on distribution and
   cumulative log plots without changing calculations.
 - Fixed log-scaled distribution plots so centered bars use the original

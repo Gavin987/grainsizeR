@@ -154,8 +154,12 @@ ternary_to_xy <- function(left, right, top, normalize = TRUE) {
   }
 
   height <- sqrt(3) / 2
-  gravel_ticks <- c(0, 5, 30, 80, 100)
-  p <- gravel_ticks / 100
+  gravel_ticks <- data.frame(
+    label = c("Trace", "5", "30", "80", "100"),
+    visual_gravel = c(5, 10, 30, 80, 100),
+    stringsAsFactors = FALSE
+  )
+  p <- gravel_ticks$visual_gravel / 100
   list(
     titles = data.frame(
       axis = c("left", "right", "top", "gravel_axis", "ratio_axis"),
@@ -168,7 +172,7 @@ ternary_to_xy <- function(left, right, top, normalize = TRUE) {
     ticks = rbind(
       data.frame(
         axis = "gravel",
-        label = as.character(gravel_ticks),
+        label = gravel_ticks$label,
         x = 0.5 * p - 0.035,
         y = height * p,
         angle = 60,

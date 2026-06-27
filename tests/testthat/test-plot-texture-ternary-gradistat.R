@@ -189,6 +189,15 @@ test_that("GRADISTAT ternary plotting uses sediment-oriented ternary axes", {
   expect_equal(points$y, c(0, 0, sqrt(3) / 2))
   expect_true(all(c("Mud", "Sand", "Gravel", "Gravel %", "Sand:Mud Ratio", "Trace") %in% guide_labels))
   expect_true(all(c("1:9", "5:5", "9:1") %in% guide_labels))
+  axis_tick_data <- unique(do.call(rbind, lapply(plot$layers, function(layer) {
+    data <- layer$data
+    if (is.data.frame(data) && all(c("label", "axis", "x", "y") %in% names(data))) {
+      return(data[data$label %in% c("Trace", "5", "30", "80", "100"), c("label", "axis", "x", "y")])
+    }
+    data.frame(label = character(), axis = character(), x = numeric(), y = numeric())
+  })))
+  expect_equal(axis_tick_data$y[axis_tick_data$label == "Trace"], sqrt(3) / 2 * 0.05, tolerance = 1e-8)
+  expect_equal(axis_tick_data$y[axis_tick_data$label == "5"], sqrt(3) / 2 * 0.10, tolerance = 1e-8)
   axis_title_data <- unique(do.call(rbind, lapply(plot$layers, function(layer) {
     data <- layer$data
     if (is.data.frame(data) && all(c("label", "x", "y") %in% names(data))) {
@@ -214,9 +223,10 @@ test_that("GRADISTAT gravel-sand-mud boundaries match reference geometry", {
   expect_equal(min(ratio$y), 0)
   expect_lte(max(ratio$y), sqrt(3) / 2 * 0.8 + 1e-8)
   trace <- segments[segments$boundary == "Trace", ]
+  gravel_five <- segments[segments$boundary == "gravel = 5", ]
   expect_equal(length(unique(trace$segment_id)), 1)
-  expect_gt(unique(trace$y), 0)
-  expect_lt(unique(trace$y), sqrt(3) / 2 * 0.05)
+  expect_equal(unique(trace$y), sqrt(3) / 2 * 0.05, tolerance = 1e-8)
+  expect_equal(unique(gravel_five$y), sqrt(3) / 2 * 0.10, tolerance = 1e-8)
   expect_false(any(ratio$boundary == "sand / mud = 0.111111111111111" & ratio$y > sqrt(3) / 2 * 0.3))
   one_to_nine <- ratio[ratio$boundary == "sand / mud = 0.111111111111111", ]
   five_to_five <- ratio[ratio$boundary == "sand / mud = 1", ]
@@ -244,6 +254,8 @@ test_that("GRADISTAT gravel-sand-mud labels use adjusted readable positions", {
   expect_true(all(slightly %in% labels$class_id[labels$show_label]))
   expect_equal(labels$class_label[labels$class_id == "muddy_sand"], "muddy sand")
   expect_equal(labels$class_label[labels$class_id == "sandy_mud"], "sandy mud")
+  expect_equal(labels$class_label[labels$class_id == "gravelly_muddy_sand"], "gravelly muddy\nsand")
+  expect_equal(labels$class_label[labels$class_id == "muddy_sandy_gravel"], "muddy sandy\ngravel")
   expect_gt(labels$y[labels$class_id == "muddy_sand"], 0)
   expect_gt(labels$y[labels$class_id == "sandy_mud"], 0)
   expect_gt(labels$y[labels$class_id == "mud"], 0)

@@ -66,17 +66,17 @@
 }
 
 .gradistat_trace_visual_gravel <- function() {
-  1.5
+  5
 }
 
-.gradistat_trace_label <- function() {
-  xy <- ternary_to_xy(left = 93, right = 5.5, top = .gradistat_trace_visual_gravel())
-  data.frame(
-    label = "Trace",
-    x = xy$x,
-    y = xy$y + 0.02,
-    stringsAsFactors = FALSE
-  )
+.gradistat_visual_gravel_boundary <- function(threshold) {
+  # The gravel = 5 class boundary is drawn at the 10% visual height so the
+  # schematic slightly gravelly band has readable space above the Trace guide.
+  # This affects only the ternary plot framework, not classification rules.
+  if (identical(threshold, 5)) {
+    return(10)
+  }
+  threshold
 }
 
 .gradistat_ternary_segments <- function(basis = c("gravel_sand_mud", "sand_silt_clay_no_gravel")) {
@@ -92,9 +92,18 @@
     # notes use gravel = 0 for no-gravel classes and gravel = 5 as the true
     # upper boundary of slightly gravelly classes; no separate numeric trace
     # threshold is used for classification.
+    gravel_boundaries <- lapply(c(5, 30, 80), function(threshold) {
+      line <- .gradistat_line_constant_component(
+        component = "gravel",
+        threshold = .gradistat_visual_gravel_boundary(threshold),
+        basis = basis
+      )
+      line$boundary <- paste0("gravel = ", threshold)
+      line
+    })
     rows <- c(
       list(trace_line),
-      lapply(c(5, 30, 80), .gradistat_line_constant_component, component = "gravel", basis = basis),
+      gravel_boundaries,
       list(
         .gradistat_line_ratio(numerator = "sand", denominator = "mud", ratio = 1 / 9, basis = basis, max_third = 5),
         .gradistat_line_ratio(numerator = "sand", denominator = "mud", ratio = 1, basis = basis, max_third = 80),
@@ -148,17 +157,22 @@
   data.frame(
     class_id = points$class_id,
     class_name = unname(.gradistat_class_names[points$class_id]),
-    class_label = ifelse(
-      points$class_id %in% c("muddy_sand", "sandy_mud"),
-      unname(.gradistat_class_names[points$class_id]),
-      gsub(" ", "\n", unname(.gradistat_class_names[points$class_id]), fixed = TRUE)
-    ),
+    class_label = .gradistat_class_label_text(points$class_id),
     x = xy$x,
     y = xy$y,
     label_scale = ifelse(grepl("^slightly_gravelly", points$class_id), 0.55, 1),
     show_label = points$show_label,
     stringsAsFactors = FALSE
   )
+}
+
+.gradistat_class_label_text <- function(class_id) {
+  names <- unname(.gradistat_class_names[class_id])
+  labels <- gsub(" ", "\n", names, fixed = TRUE)
+  labels[class_id %in% c("muddy_sand", "sandy_mud")] <- names[class_id %in% c("muddy_sand", "sandy_mud")]
+  labels[class_id == "gravelly_muddy_sand"] <- "gravelly muddy\nsand"
+  labels[class_id == "muddy_sandy_gravel"] <- "muddy sandy\ngravel"
+  labels
 }
 
 .gradistat_ternary_points <- function(x, basis, point_id = NULL) {
