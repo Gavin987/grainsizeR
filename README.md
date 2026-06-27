@@ -61,9 +61,9 @@ plot_cumulative(
 )
 ```
 
-<img src="man/figures/readme-wide-distribution.png" width="100%" />
+<img src="man/figures/readme-wide-distribution.png" width="49%" />
 
-<img src="man/figures/readme-wide-cumulative.png" width="100%" />
+<img src="man/figures/readme-wide-cumulative.png" width="49%" />
 
 ## Fraction Summaries
 
@@ -96,7 +96,7 @@ plot_texture_ternary(gsm, scheme = "gradistat", basis = "gravel_sand_mud")
 plot_texture_ternary(usda_samples, scheme = "usda_tt")
 ```
 
-<img src="man/figures/readme-gradistat-ternary.png" width="49%" /><img src="man/figures/readme-usda-ternary.png" width="49%" />
+<img src="man/figures/readme-gradistat-ternary.png" width="47%" /><img src="man/figures/readme-usda-ternary.png" width="51%" />
 
 ## Parameter Summaries
 

@@ -71,11 +71,11 @@ plot_cumulative(
 )
 ```
 
-```{r readme-wide-distribution, echo=FALSE, out.width="100%"}
+```{r readme-wide-distribution, echo=FALSE, out.width="49%"}
 knitr::include_graphics("man/figures/readme-wide-distribution.png")
 ```
 
-```{r readme-wide-cumulative, echo=FALSE, out.width="100%"}
+```{r readme-wide-cumulative, echo=FALSE, out.width="49%"}
 knitr::include_graphics("man/figures/readme-wide-cumulative.png")
 ```
 
@@ -111,7 +111,7 @@ plot_texture_ternary(gsm, scheme = "gradistat", basis = "gravel_sand_mud")
 plot_texture_ternary(usda_samples, scheme = "usda_tt")
 ```
 
-```{r readme-ternary-plots, echo=FALSE, out.width=c("49%", "49%"), fig.show="hold"}
+```{r readme-ternary-plots, echo=FALSE, out.width=c("47%", "51%"), fig.show="hold"}
 knitr::include_graphics(c(
   "man/figures/readme-gradistat-ternary.png",
   "man/figures/readme-usda-ternary.png"
