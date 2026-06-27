@@ -173,8 +173,8 @@ scales. The same function can overlay cumulative percent finer on the retained
 size-class bars for a GRADISTAT-style combined display. The examples below use
 the dry-sieve wide dataset so the plotted samples align with the README
 GRADISTAT-style showcase. Metric displays use particle size in millimetres on a
-log-scaled x-axis by default, with major breaks at 0.001, 0.01, 0.1, and
-1 mm. Use `particle_unit = "um"` for micrometre axes. Distribution and
+log-scaled x-axis by default, with major breaks at 0.001, 0.01, 0.1, 1, and
+10 mm. Use `particle_unit = "um"` for micrometre axes. Distribution and
 cumulative plots show one sample at a time; loop over samples or arrange
 returned plots externally for multi-sample figures.
 

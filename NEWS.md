@@ -2,6 +2,9 @@
 
 ## Development version
 
+- Corrected GRADISTAT gravel-sand-mud ternary plot geometry for the central
+  sand/mud boundary and slightly gravelly band, and drew log-scaled
+  distribution bars from true size-class boundaries.
 - Polished ternary diagram guide placement and boundary styling, and restored
   single-sample log-scaled grain-size distribution and cumulative plots using
   millimetre particle-size axes.

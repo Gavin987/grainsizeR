@@ -223,20 +223,30 @@ test_that("GRADISTAT gravel-sand-mud boundaries match reference geometry", {
   expect_true(any(vapply(one_to_nine_segments, function(x) {
     isTRUE(all.equal(range(x$y), c(0, sqrt(3) / 2 * 0.05), tolerance = 1e-8))
   }, logical(1))))
-  expect_equal(max(five_to_five$y), sqrt(3) / 2 * 0.3, tolerance = 1e-8)
+  expect_equal(min(five_to_five$y), 0, tolerance = 1e-8)
+  expect_equal(max(five_to_five$y), sqrt(3) / 2 * 0.8, tolerance = 1e-8)
+  expect_equal(length(unique(five_to_five$segment_id)), 1)
   expect_equal(max(nine_to_one$y), sqrt(3) / 2 * 0.8, tolerance = 1e-8)
+  expect_lte(max(ratio$y), sqrt(3) / 2 * 0.8 + 1e-8)
 })
 
 test_that("GRADISTAT gravel-sand-mud labels use adjusted readable positions", {
   labels <- grainsizeR:::.gradistat_ternary_labels("gravel_sand_mud")
 
+  slightly <- c(
+    "slightly_gravelly_mud",
+    "slightly_gravelly_sandy_mud",
+    "slightly_gravelly_muddy_sand",
+    "slightly_gravelly_sand"
+  )
+  expect_true(all(slightly %in% labels$class_id[labels$show_label]))
   expect_equal(labels$class_label[labels$class_id == "muddy_sand"], "muddy sand")
   expect_equal(labels$class_label[labels$class_id == "sandy_mud"], "sandy mud")
   expect_gt(labels$y[labels$class_id == "muddy_sand"], 0)
   expect_gt(labels$y[labels$class_id == "sandy_mud"], 0)
   expect_gt(labels$y[labels$class_id == "mud"], 0)
   expect_gt(labels$y[labels$class_id == "sand"], 0)
-  expect_lt(labels$x[labels$class_id == "gravel"], 0.5)
+  expect_equal(labels$x[labels$class_id == "gravel"], 0.5, tolerance = 1e-8)
 })
 
 test_that("GRADISTAT ternary plot uses solid boundaries matching the outline", {

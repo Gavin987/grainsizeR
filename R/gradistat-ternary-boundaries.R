@@ -73,7 +73,7 @@
       list(
         .gradistat_line_ratio(numerator = "sand", denominator = "mud", ratio = 1 / 9, basis = basis, max_third = 5),
         .gradistat_line_ratio(numerator = "sand", denominator = "mud", ratio = 1 / 9, basis = basis, min_third = 30, max_third = 80),
-        .gradistat_line_ratio(numerator = "sand", denominator = "mud", ratio = 1, basis = basis, max_third = 30),
+        .gradistat_line_ratio(numerator = "sand", denominator = "mud", ratio = 1, basis = basis, max_third = 80),
         .gradistat_line_ratio(numerator = "sand", denominator = "mud", ratio = 9, basis = basis, max_third = 80)
       )
     )
@@ -99,12 +99,12 @@
         "gravelly_mud", "slightly_gravelly_sandy_mud", "sandy_mud",
         "slightly_gravelly_mud", "mud"
       ),
-      gravel = c(90, 40, 10, 3, 2, 40, 10, 3, 4, 40, 10, 3, 4, 3, 2),
-      sand = c(0, 55, 82, 90, 96, 40, 60, 60, 58, 5, 18, 20, 24, 5, 4),
-      mud = c(10, 5, 8, 7, 2, 20, 30, 37, 38, 55, 72, 77, 72, 92, 94),
+      gravel = c(90, 40, 14, 7, 2, 40, 14, 7, 4, 40, 14, 7, 4, 7, 2),
+      sand = c(5, 55, 80, 88, 96, 40, 58, 59, 58, 5, 18, 30, 24, 6, 4),
+      mud = c(5, 5, 6, 5, 2, 20, 28, 34, 38, 55, 68, 63, 72, 87, 94),
       show_label = c(
-        TRUE, TRUE, TRUE, FALSE, TRUE, TRUE, TRUE,
-        FALSE, TRUE, TRUE, TRUE, FALSE, TRUE, FALSE, TRUE
+        TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE,
+        TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE
       )
     )
     xy <- ternary_to_xy(points$mud, points$sand, points$gravel)
@@ -131,6 +131,7 @@
     ),
     x = xy$x,
     y = xy$y,
+    label_scale = ifelse(grepl("^slightly_gravelly", points$class_id), 0.55, 1),
     show_label = points$show_label,
     stringsAsFactors = FALSE
   )

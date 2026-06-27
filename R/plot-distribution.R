@@ -55,9 +55,9 @@ distribution_x_values <- function(x, x_scale, particle_unit = "mm") {
   force(particle_unit)
   function(limits) {
     if (particle_unit == "mm") {
-      c(0.001, 0.01, 0.1, 1)
+      c(0.001, 0.01, 0.1, 1, 10)
     } else {
-      c(1, 10, 100, 1000)
+      c(1, 10, 100, 1000, 10000)
     }
   }
 }
@@ -72,10 +72,26 @@ distribution_x_values <- function(x, x_scale, particle_unit = "mm") {
 
 .log10_particle_limits <- function(particle_unit = "mm") {
   if (particle_unit == "mm") {
-    c(0.001, 2)
+    c(0.001, 10)
   } else {
-    c(1, 2000)
+    c(1, 10000)
   }
+}
+
+distribution_bar_rectangles <- function(x, particle_unit = "mm") {
+  x_limits <- .log10_particle_limits(particle_unit)
+  divisor <- particle_unit_divisor(particle_unit)
+  xmin <- x$size_lower_um / divisor
+  xmax <- x$size_upper_um / divisor
+  xmin[is.na(xmin)] <- x_limits[1]
+  xmax[is.na(xmax)] <- x_limits[2]
+  xmin <- pmax(xmin, x_limits[1])
+  xmax <- pmin(xmax, x_limits[2])
+
+  out <- x[xmax > xmin & !is.na(xmax) & !is.na(xmin), , drop = FALSE]
+  out$xmin <- xmin[xmax > xmin & !is.na(xmax) & !is.na(xmin)]
+  out$xmax <- xmax[xmax > xmin & !is.na(xmax) & !is.na(xmin)]
+  out
 }
 
 .format_particle_size_ticks <- function(x) {
@@ -160,7 +176,24 @@ plot_distribution <- function(x,
 
   p <- ggplot2::ggplot(plot_data, ggplot2::aes(x = .data$x_value, y = .data$retained_percent))
   if (type == "bar") {
-    p <- p + ggplot2::geom_col(fill = "grey75", color = "black", linewidth = 0.25)
+    if (x_scale == "log10") {
+      bar_data <- distribution_bar_rectangles(plot_data, particle_unit = particle_unit)
+      p <- p + ggplot2::geom_rect(
+        data = bar_data,
+        ggplot2::aes(
+          xmin = .data$xmin,
+          xmax = .data$xmax,
+          ymin = 0,
+          ymax = .data$retained_percent
+        ),
+        inherit.aes = FALSE,
+        fill = "grey75",
+        color = "black",
+        linewidth = 0.25
+      )
+    } else {
+      p <- p + ggplot2::geom_col(fill = "grey75", color = "black", linewidth = 0.25)
+    }
   } else {
     p <- p + ggplot2::geom_line(linewidth = 0.7, color = "black") +
       ggplot2::geom_point(color = "black", size = 1.3)

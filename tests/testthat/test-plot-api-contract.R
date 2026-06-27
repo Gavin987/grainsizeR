@@ -48,7 +48,7 @@ test_that("distribution and cumulative plots support documented scale behavior",
   expect_s3_class(plot_distribution(gsd, sample_id = "A", x_scale = "linear_um"), "ggplot")
   combined <- plot_distribution(gsd, sample_id = "A", cumulative = TRUE)
   expect_s3_class(combined, "ggplot")
-  expect_true(any(vapply(combined$layers, function(layer) inherits(layer$geom, "GeomCol"), logical(1))))
+  expect_true(any(vapply(combined$layers, function(layer) inherits(layer$geom, "GeomRect"), logical(1))))
   expect_true(any(vapply(combined$layers, function(layer) inherits(layer$geom, "GeomLine"), logical(1))))
 
   expect_s3_class(plot_cumulative(gsd, sample_id = "A", x_scale = "log10"), "ggplot")
@@ -71,13 +71,13 @@ test_that("distribution and cumulative plots are single-sample with plain millim
   for (plot in list(combined, cumulative)) {
     x_scales <- vapply(plot$scales$scales, function(scale) "x" %in% scale$aesthetics, logical(1))
     scale <- plot$scales$scales[[which(x_scales)[1]]]
-    breaks <- scale$breaks(c(0.001, 2))
+    breaks <- scale$breaks(c(0.001, 10))
 
     expect_s3_class(plot$facet, "FacetNull")
     expect_equal(plot$labels$x, "Particle size (mm)")
-    expect_equal(scale$limits, log10(c(0.001, 2)))
-    expect_equal(scale$labels(c(0.001, 0.01, 0.1, 1)), c("0.001", "0.01", "0.1", "1"))
-    expect_true(all(c(0.001, 0.01, 0.1, 1) %in% breaks))
+    expect_equal(scale$limits, log10(c(0.001, 10)))
+    expect_equal(scale$labels(c(0.001, 0.01, 0.1, 1, 10)), c("0.001", "0.01", "0.1", "1", "10"))
+    expect_true(all(c(0.001, 0.01, 0.1, 1, 10) %in% breaks))
   }
 })
 

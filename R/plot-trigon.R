@@ -424,15 +424,21 @@ plot_gradistat_texture_ternary <- function(x,
   if (show_classes && label_style != "none") {
     class_labels <- .gradistat_ternary_labels(basis)
     class_labels <- class_labels[class_labels$show_label, ]
+    class_labels$label_size <- class_label_size * class_labels$label_scale
     p <- p + ggplot2::geom_text(
       data = class_labels,
-      ggplot2::aes(x = .data$x, y = .data$y, label = .data$class_label),
-      size = class_label_size,
+      ggplot2::aes(
+        x = .data$x,
+        y = .data$y,
+        label = .data$class_label,
+        size = .data$label_size
+      ),
       alpha = 0.85,
       inherit.aes = FALSE,
       lineheight = 0.85,
       check_overlap = TRUE
-    )
+    ) +
+      ggplot2::scale_size_identity()
   }
 
   if ("texture_class" %in% names(points)) {

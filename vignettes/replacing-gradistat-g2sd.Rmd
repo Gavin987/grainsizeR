@@ -194,8 +194,8 @@ gs_gradistat_sediment_name(gsm_classified)
 ## Distribution and Cumulative Plots
 
 Metric distribution and cumulative plots use particle size in millimetres on a
-log-scaled x-axis by default, with major breaks at 0.001, 0.01, 0.1, and
-1 mm. Use `particle_unit = "um"` for micrometre axes. They show one sample at a
+log-scaled x-axis by default, with major breaks at 0.001, 0.01, 0.1, 1, and
+10 mm. Use `particle_unit = "um"` for micrometre axes. They show one sample at a
 time; loop over samples or arrange returned plots externally for multi-sample
 figures.
 
