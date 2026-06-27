@@ -168,7 +168,7 @@ plot_trigon <- function(x,
 
   p <- ggplot2::ggplot() +
     ggplot2::geom_path(data = triangle, ggplot2::aes(x = .data$x, y = .data$y), linewidth = 0.45, color = "black") +
-    ggplot2::coord_equal(xlim = c(-0.12, 1.12), ylim = c(-0.12, sqrt(3) / 2 + 0.1), clip = "off") +
+    ggplot2::coord_equal(xlim = c(-0.16, 1.16), ylim = c(-0.18, sqrt(3) / 2 + 0.12), clip = "off") +
     ggplot2::labs(x = NULL, y = NULL) +
     ggplot2::theme_bw() +
     .ternary_cartesian_theme()
@@ -404,7 +404,7 @@ plot_gradistat_texture_ternary <- function(x,
 
   p <- ggplot2::ggplot() +
     ggplot2::geom_path(data = outline, ggplot2::aes(x = .data$x, y = .data$y), linewidth = 0.45, color = "black") +
-    ggplot2::coord_equal(xlim = c(-0.12, 1.12), ylim = c(-0.12, sqrt(3) / 2 + 0.1), clip = "off") +
+    ggplot2::coord_equal(xlim = c(-0.16, 1.16), ylim = c(-0.18, sqrt(3) / 2 + 0.12), clip = "off") +
     ggplot2::labs(x = NULL, y = NULL) +
     ggplot2::theme_bw() +
     .ternary_cartesian_theme()
@@ -497,7 +497,7 @@ plot_usda_texture_ternary <- function(x,
 
   p <- ggplot2::ggplot() +
     ggplot2::geom_path(data = outline, ggplot2::aes(x = .data$x, y = .data$y), linewidth = 0.45, color = "black") +
-    ggplot2::coord_equal(xlim = c(-0.12, 1.12), ylim = c(-0.12, sqrt(3) / 2 + 0.1), clip = "off") +
+    ggplot2::coord_equal(xlim = c(-0.16, 1.16), ylim = c(-0.18, sqrt(3) / 2 + 0.12), clip = "off") +
     ggplot2::labs(x = NULL, y = NULL) +
     ggplot2::theme_bw() +
     .ternary_cartesian_theme()

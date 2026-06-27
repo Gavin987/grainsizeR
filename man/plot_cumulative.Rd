@@ -8,6 +8,7 @@ plot_cumulative(
   x,
   direction = c("finer", "coarser"),
   x_scale = c("log10", "phi", "linear_um"),
+  particle_unit = c("mm", "um", "milli", "micro"),
   sample_id = NULL,
   show_percentiles = NULL,
   extrapolate = "error",
@@ -20,8 +21,12 @@ plot_cumulative(
 \item{direction}{Cumulative direction to plot.}
 
 \item{x_scale}{Display scale for the grain-size axis. \code{"log10"} uses
-millimetre grain-size values; \code{"linear_um"} uses micrometre values;
-\code{"phi"} uses phi units.}
+grain-size values in \code{particle_unit}; \code{"linear_um"} uses micrometre
+values; \code{"phi"} uses phi units.}
+
+\item{particle_unit}{Particle-size unit for \code{x_scale = "log10"}.
+Preferred values are \code{"mm"} for millimetres and \code{"um"} for micrometres.
+Aliases \code{"milli"} and \code{"micro"} are also accepted.}
 
 \item{sample_id}{Optional character vector of sample identifiers to include.}
 

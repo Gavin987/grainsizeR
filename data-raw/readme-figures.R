@@ -78,7 +78,7 @@ long_usda_valid <- stats::complete.cases(long_usda[c("sand", "silt", "clay")]) &
 usda_points <- rbind(usda_demo, long_usda[long_usda_valid, ])
 
 save_readme_plot(
-  plot_distribution(wide, sample_id = wide_plot_sample, cumulative = TRUE),
+  plot_distribution(wide, sample_id = wide_plot_sample, cumulative = TRUE, particle_unit = "mm"),
   "readme-wide-distribution.png"
 )
 
@@ -86,6 +86,7 @@ save_readme_plot(
   plot_cumulative(
     wide,
     sample_id = wide_plot_sample,
+    particle_unit = "mm",
     show_percentiles = c(10, 50, 90),
     extrapolate = "warn_linear"
   ),

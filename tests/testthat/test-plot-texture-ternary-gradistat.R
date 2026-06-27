@@ -210,15 +210,33 @@ test_that("GRADISTAT gravel-sand-mud boundaries match reference geometry", {
 
   expect_true(all(c("gravel = 5", "gravel = 30", "gravel = 80") %in% unique(segments$boundary)))
   ratio <- segments[grepl("sand / mud", segments$boundary, fixed = TRUE), ]
-  expect_equal(length(unique(ratio$segment_id)), 3)
+  expect_equal(length(unique(ratio$segment_id)), 4)
   expect_equal(min(ratio$y), 0)
   expect_lte(max(ratio$y), sqrt(3) / 2 * 0.8 + 1e-8)
   one_to_nine <- ratio[ratio$boundary == "sand / mud = 0.111111111111111", ]
   five_to_five <- ratio[ratio$boundary == "sand / mud = 1", ]
   nine_to_one <- ratio[ratio$boundary == "sand / mud = 9", ]
-  expect_equal(max(one_to_nine$y), sqrt(3) / 2 * 0.05, tolerance = 1e-8)
+  one_to_nine_segments <- split(one_to_nine, one_to_nine$segment_id)
+  expect_true(any(vapply(one_to_nine_segments, function(x) {
+    isTRUE(all.equal(range(x$y), c(sqrt(3) / 2 * 0.3, sqrt(3) / 2 * 0.8), tolerance = 1e-8))
+  }, logical(1))))
+  expect_true(any(vapply(one_to_nine_segments, function(x) {
+    isTRUE(all.equal(range(x$y), c(0, sqrt(3) / 2 * 0.05), tolerance = 1e-8))
+  }, logical(1))))
   expect_equal(max(five_to_five$y), sqrt(3) / 2 * 0.3, tolerance = 1e-8)
   expect_equal(max(nine_to_one$y), sqrt(3) / 2 * 0.8, tolerance = 1e-8)
+})
+
+test_that("GRADISTAT gravel-sand-mud labels use adjusted readable positions", {
+  labels <- grainsizeR:::.gradistat_ternary_labels("gravel_sand_mud")
+
+  expect_equal(labels$class_label[labels$class_id == "muddy_sand"], "muddy sand")
+  expect_equal(labels$class_label[labels$class_id == "sandy_mud"], "sandy mud")
+  expect_gt(labels$y[labels$class_id == "muddy_sand"], 0)
+  expect_gt(labels$y[labels$class_id == "sandy_mud"], 0)
+  expect_gt(labels$y[labels$class_id == "mud"], 0)
+  expect_gt(labels$y[labels$class_id == "sand"], 0)
+  expect_lt(labels$x[labels$class_id == "gravel"], 0.5)
 })
 
 test_that("GRADISTAT ternary plot uses solid boundaries matching the outline", {

@@ -39,13 +39,13 @@
   )
 }
 
-.gradistat_line_ratio <- function(numerator, denominator, ratio, basis, max_third = NULL) {
+.gradistat_line_ratio <- function(numerator, denominator, ratio, basis, min_third = 0, max_third = NULL) {
   components <- .gradistat_ternary_components(basis)
   third <- setdiff(unname(components), c(numerator, denominator))
   if (is.null(max_third)) {
     max_third <- if (basis == "gravel_sand_mud") 80 else 100
   }
-  third_values <- c(0, max_third)
+  third_values <- c(min_third, max_third)
   one <- data.frame(
     left = c(0, 0),
     right = c(0, 0),
@@ -72,6 +72,7 @@
       lapply(c(5, 30, 80), .gradistat_line_constant_component, component = "gravel", basis = basis),
       list(
         .gradistat_line_ratio(numerator = "sand", denominator = "mud", ratio = 1 / 9, basis = basis, max_third = 5),
+        .gradistat_line_ratio(numerator = "sand", denominator = "mud", ratio = 1 / 9, basis = basis, min_third = 30, max_third = 80),
         .gradistat_line_ratio(numerator = "sand", denominator = "mud", ratio = 1, basis = basis, max_third = 30),
         .gradistat_line_ratio(numerator = "sand", denominator = "mud", ratio = 9, basis = basis, max_third = 80)
       )
@@ -98,9 +99,9 @@
         "gravelly_mud", "slightly_gravelly_sandy_mud", "sandy_mud",
         "slightly_gravelly_mud", "mud"
       ),
-      gravel = c(90, 40, 10, 3, 0, 40, 10, 3, 0, 40, 10, 3, 0, 3, 0),
-      sand = c(10, 55, 82, 90, 95, 40, 60, 60, 60, 5, 18, 20, 24, 5, 5),
-      mud = c(0, 5, 8, 7, 5, 20, 30, 37, 40, 55, 72, 77, 76, 92, 95),
+      gravel = c(90, 40, 10, 3, 2, 40, 10, 3, 4, 40, 10, 3, 4, 3, 2),
+      sand = c(0, 55, 82, 90, 96, 40, 60, 60, 58, 5, 18, 20, 24, 5, 4),
+      mud = c(10, 5, 8, 7, 2, 20, 30, 37, 38, 55, 72, 77, 72, 92, 94),
       show_label = c(
         TRUE, TRUE, TRUE, FALSE, TRUE, TRUE, TRUE,
         FALSE, TRUE, TRUE, TRUE, FALSE, TRUE, FALSE, TRUE
@@ -123,7 +124,11 @@
   data.frame(
     class_id = points$class_id,
     class_name = unname(.gradistat_class_names[points$class_id]),
-    class_label = gsub(" ", "\n", unname(.gradistat_class_names[points$class_id]), fixed = TRUE),
+    class_label = ifelse(
+      points$class_id %in% c("muddy_sand", "sandy_mud"),
+      unname(.gradistat_class_names[points$class_id]),
+      gsub(" ", "\n", unname(.gradistat_class_names[points$class_id]), fixed = TRUE)
+    ),
     x = xy$x,
     y = xy$y,
     show_label = points$show_label,

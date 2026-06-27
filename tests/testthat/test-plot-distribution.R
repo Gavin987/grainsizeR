@@ -23,8 +23,20 @@ test_that("plot_distribution uses millimetre log10 particle-size breaks", {
   scale <- plot$scales$scales[[which(x_scales)[1]]]
 
   expect_equal(plot$labels$x, "Particle size (mm)")
-  expect_equal(scale$breaks(c(0.001, 10)), c(0.001, 0.01, 0.1, 1, 10))
-  expect_equal(scale$labels(c(0.001, 0.01, 0.1, 1, 10)), c("0.001", "0.01", "0.1", "1", "10"))
+  expect_equal(scale$limits, log10(c(0.001, 2)))
+  expect_equal(scale$breaks(c(0.001, 2)), c(0.001, 0.01, 0.1, 1))
+  expect_equal(scale$labels(c(0.001, 0.01, 0.1, 1)), c("0.001", "0.01", "0.1", "1"))
+})
+
+test_that("plot_distribution can display micrometre log10 particle sizes", {
+  plot <- plot_distribution(plot_distribution_test_gsd(), sample_id = "A", particle_unit = "um")
+  x_scales <- vapply(plot$scales$scales, function(scale) "x" %in% scale$aesthetics, logical(1))
+  scale <- plot$scales$scales[[which(x_scales)[1]]]
+
+  expect_equal(plot$labels$x, "Particle size (um)")
+  expect_equal(scale$limits, log10(c(1, 2000)))
+  expect_equal(scale$breaks(c(1, 2000)), c(1, 10, 100, 1000))
+  expect_equal(scale$labels(c(1, 10, 100, 1000)), c("1", "10", "100", "1000"))
 })
 
 test_that("combined distribution plot uses grey bars and a thick black cumulative line", {

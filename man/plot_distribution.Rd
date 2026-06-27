@@ -8,6 +8,7 @@ plot_distribution(
   x,
   x_scale = c("log10", "phi", "linear_um"),
   type = c("bar", "line"),
+  particle_unit = c("mm", "um", "milli", "micro"),
   sample_id = NULL,
   show_open_ends = TRUE,
   cumulative = FALSE,
@@ -18,10 +19,14 @@ plot_distribution(
 \item{x}{A valid \code{gsd_tbl} object.}
 
 \item{x_scale}{Display scale for the grain-size axis. \code{"log10"} uses
-millimetre grain-size values; \code{"linear_um"} uses micrometre values;
-\code{"phi"} uses phi units.}
+grain-size values in \code{particle_unit}; \code{"linear_um"} uses micrometre
+values; \code{"phi"} uses phi units.}
 
 \item{type}{Plot type: \code{"bar"} or \code{"line"}.}
+
+\item{particle_unit}{Particle-size unit for \code{x_scale = "log10"}.
+Preferred values are \code{"mm"} for millimetres and \code{"um"} for micrometres.
+Aliases \code{"milli"} and \code{"micro"} are also accepted.}
 
 \item{sample_id}{Optional character vector of sample identifiers to include.}
 

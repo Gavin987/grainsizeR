@@ -113,8 +113,8 @@ ternary_to_xy <- function(left, right, top, normalize = TRUE) {
     titles = data.frame(
       axis = c("sand", "silt", "clay"),
       label = c("percent sand", "percent silt", "percent clay"),
-      x = c(0.5, 0.82, 0.18),
-      y = c(-0.105, 0.43, 0.43),
+      x = c(0.5, 0.9, 0.1),
+      y = c(-0.145, 0.43, 0.43),
       angle = c(0, -60, 60),
       stringsAsFactors = FALSE
     ),
@@ -130,8 +130,8 @@ ternary_to_xy <- function(left, right, top, normalize = TRUE) {
       data.frame(
         axis = "silt",
         label = as.character(ticks),
-        x = 1 - 0.5 * p + 0.035,
-        y = height * p,
+        x = 0.5 + 0.5 * p + 0.035,
+        y = height * (1 - p),
         angle = -60,
         stringsAsFactors = FALSE
       ),

@@ -71,12 +71,13 @@ test_that("distribution and cumulative plots are single-sample with plain millim
   for (plot in list(combined, cumulative)) {
     x_scales <- vapply(plot$scales$scales, function(scale) "x" %in% scale$aesthetics, logical(1))
     scale <- plot$scales$scales[[which(x_scales)[1]]]
-    breaks <- scale$breaks(c(0.001, 10))
+    breaks <- scale$breaks(c(0.001, 2))
 
     expect_s3_class(plot$facet, "FacetNull")
     expect_equal(plot$labels$x, "Particle size (mm)")
-    expect_equal(scale$labels(c(0.001, 0.01, 0.1, 1, 10)), c("0.001", "0.01", "0.1", "1", "10"))
-    expect_true(all(c(0.001, 0.01, 0.1, 1, 10) %in% breaks))
+    expect_equal(scale$limits, log10(c(0.001, 2)))
+    expect_equal(scale$labels(c(0.001, 0.01, 0.1, 1)), c("0.001", "0.01", "0.1", "1"))
+    expect_true(all(c(0.001, 0.01, 0.1, 1) %in% breaks))
   }
 })
 

@@ -82,6 +82,21 @@ test_that("USDA ternary plotting draws ternary axis labels without Cartesian axe
   expect_true(all(c("percent sand", "percent silt", "percent clay") %in% guide_labels))
   expect_false(any(c("Sand", "Silt", "Clay") %in% guide_labels))
   expect_true(all(as.character(seq(10, 100, by = 10)) %in% guide_labels))
+  guide_data <- do.call(rbind, lapply(plot$layers, function(layer) {
+    data <- layer$data
+    if (is.data.frame(data) && all(c("axis", "label", "x", "y") %in% names(data))) {
+      return(data[c("axis", "label", "x", "y")])
+    }
+    data.frame(axis = character(), label = character(), x = numeric(), y = numeric())
+  }))
+  title_data <- guide_data[guide_data$label %in% c("percent sand", "percent silt", "percent clay"), ]
+  expect_true(title_data$y[title_data$label == "percent sand"] < 0)
+  expect_true(title_data$x[title_data$label == "percent silt"] > 0.85)
+  expect_true(title_data$x[title_data$label == "percent clay"] < 0.15)
+  silt_ticks <- guide_data[guide_data$axis == "silt" & guide_data$label %in% as.character(seq(10, 100, by = 10)), ]
+  silt_ticks <- silt_ticks[order(as.numeric(silt_ticks$label)), ]
+  expect_true(all(diff(silt_ticks$x) > 0))
+  expect_true(all(diff(silt_ticks$y) < 0))
   expect_equal(plot$labels$x, NULL)
   expect_equal(plot$labels$y, NULL)
   expect_s3_class(plot$theme$axis.text, "element_blank")

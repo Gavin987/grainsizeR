@@ -479,10 +479,11 @@ plot_fractions(gs, scheme = "wentworth_major")
 ```
 
 Metric distribution and cumulative plots use particle size in
-millimetres on a log-scaled x-axis by default. They plot one sample at a
-time; use `sample_id` or filter the input first, then loop over samples
-or combine plots externally with a plotting-arrangement package if
-needed.
+millimetres on a log-scaled x-axis by default, with major breaks at
+0.001, 0.01, 0.1, and 1 mm. Use `particle_unit = "um"` to show the same
+axis in micrometres. They plot one sample at a time; use `sample_id` or
+filter the input first, then loop over samples or combine plots
+externally with a plotting-arrangement package if needed.
 
 ### GRADISTAT-Inspired Summary Plot
 
