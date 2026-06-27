@@ -45,7 +45,7 @@ percentile_x_values <- function(x, x_scale, particle_unit = "mm") {
 #' Plot cumulative grain-size curves
 #'
 #' `plot_cumulative()` plots cumulative grain-size curves from `gs_cumulative()`.
-#' Lower open-ended classes are displayed at 0.002 mm for plotting only.
+#' Lower open-ended classes are displayed at 0.0015 mm for plotting only.
 #'
 #' @param x A valid `gsd_tbl` object.
 #' @param direction Cumulative direction to plot.

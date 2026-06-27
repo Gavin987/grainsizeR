@@ -52,6 +52,8 @@ test_that("combined distribution plot uses grey bars and a thick black cumulativ
   expect_equal(col_color, "black")
   expect_equal(line_color, "black")
   expect_gte(line_layer$aes_params$linewidth, 1)
+  expect_true(0.0015 %in% plot$data$x_value)
+  expect_true(0.0015 %in% line_layer$data$x_value)
 })
 
 test_that("log10 distribution bars use centered class values", {
@@ -84,12 +86,12 @@ test_that("distribution bar x values use selected particle-size units before log
 
   expect_true(1 %in% mm_data$size_plot)
   expect_true(1000 %in% um_data$size_plot)
-  expect_true(0.002 %in% mm_data$size_plot)
-  expect_true(2 %in% um_data$size_plot)
+  expect_true(0.0015 %in% mm_data$size_plot)
+  expect_true(1.5 %in% um_data$size_plot)
   expect_false(log10(1) %in% mm_data$size_plot[mm_data$size_original_um == 1000])
   expect_equal(mm_data$size_plot[mm_data$size_original_um == 1000], 1)
   expect_equal(um_data$size_plot[um_data$size_original_um == 1000], 1000)
-  expect_equal(mm_data$size_plot[mm_data$is_open_lower], 0.002)
-  expect_equal(um_data$size_plot[um_data$is_open_lower], 2)
-  expect_false(any(mm_data$size_plot[!mm_data$is_open_lower] == 0.002))
+  expect_equal(mm_data$size_plot[mm_data$is_open_lower], 0.0015)
+  expect_equal(um_data$size_plot[um_data$is_open_lower], 1.5)
+  expect_false(any(mm_data$size_plot[!mm_data$is_open_lower] == 0.0015))
 })

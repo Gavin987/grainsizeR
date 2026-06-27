@@ -2,7 +2,7 @@
 
 ## Development version
 
-- Display lower open-ended grain-size classes at 0.002 mm on distribution and
+- Display lower open-ended grain-size classes at 0.0015 mm on distribution and
   cumulative log plots without changing calculations.
 - Fixed log-scaled distribution plots so centered bars use the original
   particle-size class values after unit conversion.

@@ -48,7 +48,7 @@ A \code{ggplot} object.
 \code{plot_distribution()} plots retained grain-size percentages by particle-size
 class. Metric displays center bars on the original particle-size class
 values after unit conversion, with lower open-ended classes displayed at
-0.002 mm for plotting only.
+0.0015 mm for plotting only.
 }
 \examples{
 x <- data.frame(

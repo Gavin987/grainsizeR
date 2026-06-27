@@ -67,9 +67,9 @@ test_that("plot_cumulative curve x values use selected particle-size units befor
 
   expect_true(1 %in% mm_plot$data$x_value)
   expect_true(1000 %in% um_plot$data$x_value)
-  expect_true(0.002 %in% mm_plot$data$x_value)
-  expect_true(2 %in% um_plot$data$x_value)
+  expect_true(0.0015 %in% mm_plot$data$x_value)
+  expect_true(1.5 %in% um_plot$data$x_value)
   expect_false(0 %in% mm_plot$data$x_value)
-  expect_equal(mm_data$x_value[mm_data$boundary_um == 2], 0.002)
-  expect_equal(um_data$x_value[um_data$boundary_um == 2], 2)
+  expect_equal(mm_data$x_value[mm_data$boundary_um == 1.5], 0.0015)
+  expect_equal(um_data$x_value[um_data$boundary_um == 1.5], 1.5)
 })

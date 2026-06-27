@@ -178,7 +178,7 @@ log-scaled x-axis by default, with major breaks at 0.001, 0.01, 0.1, 1, and
 `particle_unit = "um"` for micrometre axes. Distribution and cumulative plots
 show one sample at a time; loop over samples or arrange returned plots
 externally for multi-sample figures. Lower open-ended classes are displayed at
-0.002 mm, or 2 um, for plotting only; calculations are unchanged.
+0.0015 mm, or 1.5 um, for plotting only; calculations are unchanged.
 
 ```{r}
 plot_distribution(gs_wide, sample_id = "WN1_upper")

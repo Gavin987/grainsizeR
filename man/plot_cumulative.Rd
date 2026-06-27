@@ -45,7 +45,7 @@ A \code{ggplot} object.
 }
 \description{
 \code{plot_cumulative()} plots cumulative grain-size curves from \code{gs_cumulative()}.
-Lower open-ended classes are displayed at 0.002 mm for plotting only.
+Lower open-ended classes are displayed at 0.0015 mm for plotting only.
 }
 \examples{
 x <- data.frame(

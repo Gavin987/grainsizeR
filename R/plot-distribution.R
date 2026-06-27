@@ -42,7 +42,7 @@ particle_unit_divisor <- function(particle_unit) {
 }
 
 .open_tail_plot_size_um <- function() {
-  2
+  1.5
 }
 
 .plot_size_um <- function(x) {
@@ -133,7 +133,7 @@ distribution_x_values <- function(x, x_scale, particle_unit = "mm") {
 #' `plot_distribution()` plots retained grain-size percentages by particle-size
 #' class. Metric displays center bars on the original particle-size class
 #' values after unit conversion, with lower open-ended classes displayed at
-#' 0.002 mm for plotting only.
+#' 0.0015 mm for plotting only.
 #'
 #' @param x A valid `gsd_tbl` object.
 #' @param x_scale Display scale for the grain-size axis. `"log10"` uses
@@ -198,9 +198,13 @@ plot_distribution <- function(x,
   }
 
   if (isTRUE(cumulative)) {
-    curve <- gs_cumulative(plot_filter_samples(x, sample_id))
+    curve <- .prepare_cumulative_plot_data(
+      x,
+      x_scale = x_scale,
+      particle_unit = particle_unit,
+      sample_id = sample_id
+    )
     .require_single_plot_sample(curve, "plot_distribution")
-    curve$x_value <- cumulative_x_values(curve, x_scale, particle_unit = particle_unit)
     p <- p +
       ggplot2::geom_line(
         data = curve,
