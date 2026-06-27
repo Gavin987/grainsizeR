@@ -187,7 +187,7 @@ test_that("GRADISTAT ternary plotting uses sediment-oriented ternary axes", {
 
   expect_equal(points$x, c(0, 1, 0.5))
   expect_equal(points$y, c(0, 0, sqrt(3) / 2))
-  expect_true(all(c("Mud", "Sand", "Gravel", "% gravel", "sand/mud ratio") %in% guide_labels))
+  expect_true(all(c("Mud", "Sand", "Gravel", "Gravel %", "Sand:Mud Ratio", "Trace") %in% guide_labels))
   expect_true(all(c("1:9", "5:5", "9:1") %in% guide_labels))
   axis_title_data <- unique(do.call(rbind, lapply(plot$layers, function(layer) {
     data <- layer$data
@@ -208,18 +208,20 @@ test_that("GRADISTAT ternary plotting uses sediment-oriented ternary axes", {
 test_that("GRADISTAT gravel-sand-mud boundaries match reference geometry", {
   segments <- grainsizeR:::.gradistat_ternary_segments("gravel_sand_mud")
 
-  expect_true(all(c("gravel = 5", "gravel = 30", "gravel = 80") %in% unique(segments$boundary)))
+  expect_true(all(c("Trace", "gravel = 5", "gravel = 30", "gravel = 80") %in% unique(segments$boundary)))
   ratio <- segments[grepl("sand / mud", segments$boundary, fixed = TRUE), ]
-  expect_equal(length(unique(ratio$segment_id)), 4)
+  expect_equal(length(unique(ratio$segment_id)), 3)
   expect_equal(min(ratio$y), 0)
   expect_lte(max(ratio$y), sqrt(3) / 2 * 0.8 + 1e-8)
+  trace <- segments[segments$boundary == "Trace", ]
+  expect_equal(length(unique(trace$segment_id)), 1)
+  expect_gt(unique(trace$y), 0)
+  expect_lt(unique(trace$y), sqrt(3) / 2 * 0.05)
+  expect_false(any(ratio$boundary == "sand / mud = 0.111111111111111" & ratio$y > sqrt(3) / 2 * 0.3))
   one_to_nine <- ratio[ratio$boundary == "sand / mud = 0.111111111111111", ]
   five_to_five <- ratio[ratio$boundary == "sand / mud = 1", ]
   nine_to_one <- ratio[ratio$boundary == "sand / mud = 9", ]
   one_to_nine_segments <- split(one_to_nine, one_to_nine$segment_id)
-  expect_true(any(vapply(one_to_nine_segments, function(x) {
-    isTRUE(all.equal(range(x$y), c(sqrt(3) / 2 * 0.3, sqrt(3) / 2 * 0.8), tolerance = 1e-8))
-  }, logical(1))))
   expect_true(any(vapply(one_to_nine_segments, function(x) {
     isTRUE(all.equal(range(x$y), c(0, sqrt(3) / 2 * 0.05), tolerance = 1e-8))
   }, logical(1))))

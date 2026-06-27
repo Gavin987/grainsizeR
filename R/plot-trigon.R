@@ -419,6 +419,15 @@ plot_gradistat_texture_ternary <- function(x,
       linetype = "solid",
       color = "black"
     )
+    if (basis == "gravel_sand_mud") {
+      p <- p + ggplot2::geom_text(
+        data = .gradistat_trace_label(),
+        ggplot2::aes(x = .data$x, y = .data$y, label = .data$label),
+        inherit.aes = FALSE,
+        size = 2.4,
+        color = "grey30"
+      )
+    }
   }
 
   if (show_classes && label_style != "none") {

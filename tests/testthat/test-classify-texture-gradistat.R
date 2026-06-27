@@ -57,6 +57,20 @@ test_that("classify_texture auto-selects GRADISTAT rules without polygons", {
   expect_equal(result$classification_method, rep("gradistat_texture_rules", 2))
 })
 
+test_that("GRADISTAT no-gravel and slightly gravelly split follows workbook-derived rules", {
+  samples <- data.frame(
+    sample_id = c("no_gravel", "trace_visual", "five_percent"),
+    gravel = c(0, 1.5, 5),
+    sand = c(60, 59.1, 57),
+    mud = c(40, 39.4, 38),
+    stringsAsFactors = FALSE
+  )
+
+  result <- classify_texture(samples, scheme = "gradistat", method = "rules", basis = "gravel_sand_mud")
+
+  expect_equal(result$texture_class_id, c("muddy_sand", "slightly_gravelly_muddy_sand", "gravelly_muddy_sand"))
+})
+
 test_that("classify_texture can append GRADISTAT sediment-name fields", {
   samples <- data.frame(
     sample_id = c("A", "B"),

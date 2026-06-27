@@ -48,7 +48,7 @@ test_that("distribution and cumulative plots support documented scale behavior",
   expect_s3_class(plot_distribution(gsd, sample_id = "A", x_scale = "linear_um"), "ggplot")
   combined <- plot_distribution(gsd, sample_id = "A", cumulative = TRUE)
   expect_s3_class(combined, "ggplot")
-  expect_true(any(vapply(combined$layers, function(layer) inherits(layer$geom, "GeomRect"), logical(1))))
+  expect_true(any(vapply(combined$layers, function(layer) inherits(layer$geom, "GeomCol"), logical(1))))
   expect_true(any(vapply(combined$layers, function(layer) inherits(layer$geom, "GeomLine"), logical(1))))
 
   expect_s3_class(plot_cumulative(gsd, sample_id = "A", x_scale = "log10"), "ggplot")

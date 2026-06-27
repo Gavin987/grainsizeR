@@ -65,14 +65,38 @@
   )
 }
 
+.gradistat_trace_visual_gravel <- function() {
+  1.5
+}
+
+.gradistat_trace_label <- function() {
+  xy <- ternary_to_xy(left = 93, right = 5.5, top = .gradistat_trace_visual_gravel())
+  data.frame(
+    label = "Trace",
+    x = xy$x,
+    y = xy$y + 0.02,
+    stringsAsFactors = FALSE
+  )
+}
+
 .gradistat_ternary_segments <- function(basis = c("gravel_sand_mud", "sand_silt_clay_no_gravel")) {
   basis <- match.arg(basis)
   if (basis == "gravel_sand_mud") {
+    trace_line <- .gradistat_line_constant_component(
+      component = "gravel",
+      threshold = .gradistat_trace_visual_gravel(),
+      basis = basis
+    )
+    trace_line$boundary <- "Trace"
+    # The Trace line is a plotting-only guide. Local workbook-derived rule
+    # notes use gravel = 0 for no-gravel classes and gravel = 5 as the true
+    # upper boundary of slightly gravelly classes; no separate numeric trace
+    # threshold is used for classification.
     rows <- c(
+      list(trace_line),
       lapply(c(5, 30, 80), .gradistat_line_constant_component, component = "gravel", basis = basis),
       list(
         .gradistat_line_ratio(numerator = "sand", denominator = "mud", ratio = 1 / 9, basis = basis, max_third = 5),
-        .gradistat_line_ratio(numerator = "sand", denominator = "mud", ratio = 1 / 9, basis = basis, min_third = 30, max_third = 80),
         .gradistat_line_ratio(numerator = "sand", denominator = "mud", ratio = 1, basis = basis, max_third = 80),
         .gradistat_line_ratio(numerator = "sand", denominator = "mud", ratio = 9, basis = basis, max_third = 80)
       )

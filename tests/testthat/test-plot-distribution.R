@@ -41,7 +41,7 @@ test_that("plot_distribution can display micrometre log10 particle sizes", {
 
 test_that("combined distribution plot uses grey bars and a thick black cumulative line", {
   plot <- plot_distribution(plot_distribution_test_gsd(), sample_id = "A", cumulative = TRUE)
-  col_layers <- vapply(plot$layers, function(layer) inherits(layer$geom, "GeomRect"), logical(1))
+  col_layers <- vapply(plot$layers, function(layer) inherits(layer$geom, "GeomCol"), logical(1))
   line_layers <- vapply(plot$layers, function(layer) inherits(layer$geom, "GeomLine"), logical(1))
   col_layer <- plot$layers[[which(col_layers)[1]]]
   line_layer <- plot$layers[[which(line_layers)[1]]]
@@ -54,14 +54,15 @@ test_that("combined distribution plot uses grey bars and a thick black cumulativ
   expect_gte(line_layer$aes_params$linewidth, 1)
 })
 
-test_that("log10 distribution bars use class boundaries", {
+test_that("log10 distribution bars use centered class values", {
   plot <- plot_distribution(plot_distribution_test_gsd(), sample_id = "A")
-  rect_layers <- vapply(plot$layers, function(layer) inherits(layer$geom, "GeomRect"), logical(1))
-  rect_data <- plot$layers[[which(rect_layers)[1]]]$data
+  col_layers <- vapply(plot$layers, function(layer) inherits(layer$geom, "GeomCol"), logical(1))
+  col_layer <- plot$layers[[which(col_layers)[1]]]
 
-  expect_true(all(c("xmin", "xmax") %in% names(rect_data)))
-  expect_equal(rect_data$xmin[1], 2)
-  expect_equal(rect_data$xmax[1], 10)
-  expect_equal(tail(rect_data$xmin, 1), 0.001)
-  expect_equal(tail(rect_data$xmax, 1), 0.125)
+  expect_true(any(col_layers))
+  expect_true(isTRUE(col_layer$inherit.aes))
+  expect_true("x" %in% names(plot$mapping))
+  expect_true("y" %in% names(plot$mapping))
+  expect_false("xmin" %in% names(col_layer$mapping))
+  expect_false("xmax" %in% names(col_layer$mapping))
 })

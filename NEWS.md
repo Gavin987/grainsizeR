@@ -2,6 +2,9 @@
 
 ## Development version
 
+- Added a plotting-only GRADISTAT Trace guide while preserving workbook-derived
+  gravel classification thresholds, and restored centered distribution bars for
+  log-scaled grain-size displays.
 - Corrected GRADISTAT gravel-sand-mud ternary plot geometry for the central
   sand/mud boundary and slightly gravelly band, and drew log-scaled
   distribution bars from true size-class boundaries.

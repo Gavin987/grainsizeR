@@ -159,7 +159,7 @@ ternary_to_xy <- function(left, right, top, normalize = TRUE) {
   list(
     titles = data.frame(
       axis = c("left", "right", "top", "gravel_axis", "ratio_axis"),
-      label = c("Mud", "Sand", "Gravel", "% gravel", "sand/mud ratio"),
+      label = c("Mud", "Sand", "Gravel", "Gravel %", "Sand:Mud Ratio"),
       x = c(-0.055, 1.055, 0.5, 0.18, 0.5),
       y = c(-0.055, -0.055, height + 0.055, 0.45, -0.095),
       angle = c(0, 0, 0, 60, 0),
