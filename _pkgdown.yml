@@ -38,13 +38,21 @@ reference:
       - gs_cumulative
       - gs_d_values
       - gs_percent_finer
+      - gs_d_spread
   - title: Grain-size indices
     contents:
       - gs_grain_size_indices
       - gs_parameters
+      - gs_describe_parameters
+      - gs_desc
+      - gs_quality_flags
+      - gs_qc
+      - gs_size_terms
+      - gs_modes
   - title: Folk and Ward statistics
     contents:
       - gs_folk_ward
+      - gs_fw57
       - starts_with("describe_")
   - title: Moment statistics
     contents:
@@ -54,14 +62,20 @@ reference:
       - particle_size_systems
       - texture_source_audit
       - gs_fraction_schemes
+      - gs_frac_schemes
       - gs_fractions
+      - gs_frac
       - gs_fractions_wide
+      - gs_frac_wide
   - title: Texture polygons and classification
     contents:
       - texture_polygon_sources
       - texture_polygon_template
+      - texture_polygon_reconstruction_template
+      - reconstruction_to_texture_polygons
       - validate_texture_polygons
       - classify_texture
+      - gs_gradistat_sediment_name
       - ternary_to_xy
   - title: Plotting
     contents:
@@ -70,11 +84,13 @@ reference:
       - plot_fractions
       - plot_gradistat_summary
       - plot_texture_triangle
+      - plot_texture_ternary
   - title: Compatibility aliases
     contents:
       - gs_percentile
       - gs_engineering
       - gs_folkward
+      - gs_diag
       - plot_trigon
 
 articles:
@@ -82,7 +98,9 @@ articles:
     navbar: ~
     contents:
       - basic-workflow
+      - grain-size-workflow
       - table-layouts-and-measurement-workflows
       - method-validation
+      - replacing-gradistat-g2sd
+      - texture-classification
       - texture-polygons
-      - texture-source-audit
