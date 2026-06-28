@@ -15,6 +15,9 @@ See \code{\link[=plot_texture_triangle]{plot_texture_triangle()}}.
 \description{
 \code{plot_texture_ternary()} is the preferred terminology-correct name for
 \code{\link[=plot_texture_triangle]{plot_texture_triangle()}}. Both functions create texture ternary plots and
-return ggplot objects. \code{plot_texture_triangle()} remains available for API
-stability.
+return ggplot objects. Sample labels are hidden by default; use
+\code{show_sample_labels = TRUE} to draw them. Point appearance can be adjusted
+with \code{point_size}, \code{point_color}, and \code{point_alpha}, or mapped to a
+summarized input column with \code{color_by}. \code{plot_texture_triangle()} remains
+available for API stability.
 }

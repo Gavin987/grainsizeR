@@ -9,6 +9,7 @@ plot_distribution(
   x_scale = c("log10", "phi", "linear_um"),
   type = c("bar", "line"),
   particle_unit = c("mm", "um", "milli", "micro"),
+  sample = NULL,
   sample_id = NULL,
   show_open_ends = TRUE,
   cumulative = FALSE,
@@ -28,7 +29,12 @@ values; \code{"phi"} uses phi units.}
 Preferred values are \code{"mm"} for millimetres and \code{"um"} for micrometres.
 Aliases \code{"milli"} and \code{"micro"} are also accepted.}
 
-\item{sample_id}{Optional character vector of sample identifiers to include.}
+\item{sample}{Optional sample selector. A character value selects by sample
+ID; a numeric value selects by one-based sample index using the order in
+which samples appear in \code{x}.}
+
+\item{sample_id}{Optional character vector of sample identifiers to include.
+Kept for backward compatibility; use \code{sample} for new code.}
 
 \item{show_open_ends}{Should open-ended classes be included using raw size
 labels as plotting proxies?}
@@ -58,6 +64,7 @@ x <- data.frame(
 )
 gsd <- as_gsd_tbl(x, sample_id, size_mm, retained_proportion)
 plot_distribution(gsd, x_scale = "log10")
+plot_distribution(gsd, sample = 1)
 plot_distribution(gsd, cumulative = TRUE)
 plot_distribution(gsd, x_scale = "phi", type = "line")
 }

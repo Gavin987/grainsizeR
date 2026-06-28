@@ -57,6 +57,67 @@ test_that("plot_texture_ternary accepts case-only component name variants", {
   expect_no_error(plot_texture_ternary(ternary, scheme = "gradistat"))
 })
 
+test_that("plot_texture_ternary hides sample labels by default and can opt in", {
+  ternary <- tibble::tibble(
+    sample_id = c("A", "B"),
+    gravel = c(10, 20),
+    sand = c(80, 70),
+    mud = c(10, 10)
+  )
+
+  default_plot <- plot_texture_ternary(ternary, scheme = "gradistat", point_id = "sample_id")
+  labeled_plot <- plot_texture_ternary(
+    ternary,
+    scheme = "gradistat",
+    point_id = "sample_id",
+    show_sample_labels = TRUE
+  )
+
+  has_sample_label_layer <- function(plot) {
+    any(vapply(plot$layers, function(layer) {
+      data <- layer$data
+      inherits(layer$geom, "GeomText") && is.data.frame(data) && "point_label" %in% names(data)
+    }, logical(1)))
+  }
+
+  expect_false(has_sample_label_layer(default_plot))
+  expect_true(has_sample_label_layer(labeled_plot))
+})
+
+test_that("plot_texture_ternary accepts point aesthetics and grouped colors", {
+  ternary <- tibble::tibble(
+    sample_id = c("A", "B"),
+    season = c("dry", "wet"),
+    gravel = c(10, 20),
+    sand = c(80, 70),
+    mud = c(10, 10)
+  )
+
+  constant_plot <- plot_texture_ternary(
+    ternary,
+    scheme = "gradistat",
+    point_size = 2,
+    point_color = "black",
+    point_alpha = 0.8
+  )
+  point_layers <- which(vapply(constant_plot$layers, function(layer) inherits(layer$geom, "GeomPoint"), logical(1)))
+  point_layer <- constant_plot$layers[[point_layers[length(point_layers)]]]
+  point_color <- if (is.null(point_layer$aes_params$colour)) point_layer$aes_params$color else point_layer$aes_params$colour
+  expect_equal(point_color, "black")
+  expect_equal(point_layer$aes_params$size, 2)
+  expect_equal(point_layer$aes_params$alpha, 0.8)
+
+  grouped_plot <- plot_texture_ternary(ternary, scheme = "gradistat", color_by = "season")
+  grouped_point <- grouped_plot$layers[[tail(which(vapply(grouped_plot$layers, function(layer) {
+    inherits(layer$geom, "GeomPoint") && is.data.frame(layer$data) && "season" %in% names(layer$data)
+  }, logical(1))), 1)]]
+  expect_true("colour" %in% names(grouped_point$mapping))
+  expect_error(
+    plot_texture_ternary(ternary, scheme = "gradistat", color_by = "missing"),
+    "`color_by`"
+  )
+})
+
 test_that("plot_texture_ternary rejects raw GRADISTAT gsd_tbl input with workflow guidance", {
   gsd <- as_gsd_tbl(
     ragged_input_phase2,

@@ -1,9 +1,56 @@
-plot_filter_samples <- function(x, sample_id) {
-  if (is.null(sample_id)) {
+plot_sample_ids <- function(x) {
+  unique(as.character(x$sample_id))
+}
+
+format_available_sample_ids <- function(sample_ids, max_ids = 5) {
+  shown <- utils::head(sample_ids, max_ids)
+  suffix <- if (length(sample_ids) > max_ids) ", ..." else ""
+  paste0(paste(shown, collapse = ", "), suffix)
+}
+
+resolve_plot_sample <- function(x, sample = NULL, sample_id = NULL) {
+  if (!is.null(sample) && !is.null(sample_id)) {
+    stop("Use either `sample` or `sample_id`, not both.", call. = FALSE)
+  }
+  selection <- if (!is.null(sample)) sample else sample_id
+  if (is.null(selection)) {
+    return(NULL)
+  }
+
+  sample_ids <- plot_sample_ids(x)
+  if (is.numeric(selection)) {
+    if (any(is.na(selection)) || any(selection != floor(selection))) {
+      stop("Numeric `sample` values must be whole-number sample indices.", call. = FALSE)
+    }
+    if (any(selection < 1 | selection > length(sample_ids))) {
+      stop(
+        "Sample index out of range. Available sample indices are 1 to ",
+        length(sample_ids), ".",
+        call. = FALSE
+      )
+    }
+    return(sample_ids[selection])
+  }
+
+  selection <- as.character(selection)
+  missing <- setdiff(selection, sample_ids)
+  if (length(missing) > 0) {
+    stop(
+      "Sample ID not found: ", paste(missing, collapse = ", "),
+      ". Available sample IDs include: ", format_available_sample_ids(sample_ids), ".",
+      call. = FALSE
+    )
+  }
+  selection
+}
+
+plot_filter_samples <- function(x, sample_id = NULL, sample = NULL) {
+  selected <- resolve_plot_sample(x, sample = sample, sample_id = sample_id)
+  if (is.null(selected)) {
     return(x)
   }
 
-  out <- x[x$sample_id %in% sample_id, ]
+  out <- x[as.character(x$sample_id) %in% selected, ]
   if (nrow(out) == 0) {
     stop("No matching samples were found.", call. = FALSE)
   }
@@ -15,7 +62,7 @@ plot_filter_samples <- function(x, sample_id) {
   if (length(samples) != 1) {
     stop(
       "`", function_name, "()` plots one sample at a time. ",
-      "Use `sample_id` to select one sample, filter `x` before plotting, ",
+      "Use `sample` or `sample_id` to select one sample, filter `x` before plotting, ",
       "or loop over samples and arrange the returned plots externally.",
       call. = FALSE
     )
@@ -66,8 +113,9 @@ distribution_x_values <- function(x, x_scale, particle_unit = "mm") {
                                             x_scale,
                                             particle_unit = "mm",
                                             sample_id = NULL,
+                                            sample = NULL,
                                             show_open_ends = TRUE) {
-  plot_data <- plot_filter_samples(x, sample_id)
+  plot_data <- plot_filter_samples(x, sample_id = sample_id, sample = sample)
   if (!show_open_ends) {
     plot_data <- plot_data[!plot_data$is_open_lower & !plot_data$is_open_upper, ]
   }
@@ -143,7 +191,11 @@ distribution_x_values <- function(x, x_scale, particle_unit = "mm") {
 #' @param particle_unit Particle-size unit for `x_scale = "log10"`.
 #'   Preferred values are `"mm"` for millimetres and `"um"` for micrometres.
 #'   Aliases `"milli"` and `"micro"` are also accepted.
+#' @param sample Optional sample selector. A character value selects by sample
+#'   ID; a numeric value selects by one-based sample index using the order in
+#'   which samples appear in `x`.
 #' @param sample_id Optional character vector of sample identifiers to include.
+#'   Kept for backward compatibility; use `sample` for new code.
 #' @param show_open_ends Should open-ended classes be included using raw size
 #'   labels as plotting proxies?
 #' @param cumulative Should a cumulative percent-finer line be overlaid on the
@@ -165,12 +217,14 @@ distribution_x_values <- function(x, x_scale, particle_unit = "mm") {
 #' )
 #' gsd <- as_gsd_tbl(x, sample_id, size_mm, retained_proportion)
 #' plot_distribution(gsd, x_scale = "log10")
+#' plot_distribution(gsd, sample = 1)
 #' plot_distribution(gsd, cumulative = TRUE)
 #' plot_distribution(gsd, x_scale = "phi", type = "line")
 plot_distribution <- function(x,
                               x_scale = c("log10", "phi", "linear_um"),
                               type = c("bar", "line"),
                               particle_unit = c("mm", "um", "milli", "micro"),
+                              sample = NULL,
                               sample_id = NULL,
                               show_open_ends = TRUE,
                               cumulative = FALSE,
@@ -185,6 +239,7 @@ plot_distribution <- function(x,
     x_scale = x_scale,
     particle_unit = particle_unit,
     sample_id = sample_id,
+    sample = sample,
     show_open_ends = show_open_ends
   )
   .require_single_plot_sample(plot_data, "plot_distribution")
@@ -202,7 +257,8 @@ plot_distribution <- function(x,
       x,
       x_scale = x_scale,
       particle_unit = particle_unit,
-      sample_id = sample_id
+      sample_id = sample_id,
+      sample = sample
     )
     .require_single_plot_sample(curve, "plot_distribution")
     p <- p +

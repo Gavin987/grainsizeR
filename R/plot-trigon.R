@@ -73,6 +73,11 @@ fine_resolution_ok <- function(x, sample_id, scheme) {
 #' @param show_class_labels Alias for `show_classes`.
 #' @param sample_label_size Text size for sample labels.
 #' @param class_label_size Text size for class labels.
+#' @param point_size Sample point size.
+#' @param point_color Constant sample point color used when `color_by` is
+#'   `NULL`.
+#' @param point_alpha Sample point alpha.
+#' @param color_by Optional column name used to map sample point color.
 #'
 #' @return A `ggplot` object.
 #' @export
@@ -91,7 +96,11 @@ plot_trigon <- function(x,
                         show_classes = TRUE,
                         show_class_labels = show_classes,
                         sample_label_size = 3,
-                        class_label_size = 2.5) {
+                        class_label_size = 2.5,
+                        point_size = 1.8,
+                        point_color = "black",
+                        point_alpha = 0.8,
+                        color_by = NULL) {
   validate_gsd_tbl(x)
   if (is.null(polygons)) {
     scheme <- match.arg(scheme)
@@ -149,6 +158,12 @@ plot_trigon <- function(x,
         normalize = TRUE
       )
       coords$sample_id <- fractions$sample_id
+      if (!is.null(color_by)) {
+        if (!color_by %in% names(fractions)) {
+          stop("`color_by` must name a column in `x`.", call. = FALSE)
+        }
+        coords[[color_by]] <- fractions[[color_by]]
+      }
     } else {
       coords <- tibble::tibble()
     }
@@ -229,11 +244,21 @@ plot_trigon <- function(x,
     }
   }
 
-  if (classify && "class_name" %in% names(coords)) {
-    p <- p + ggplot2::geom_point(data = coords, ggplot2::aes(x = .data$x, y = .data$y, color = .data$class_name)) +
-      ggplot2::labs(color = "Class")
+  if (!is.null(color_by)) {
+    p <- p + ggplot2::geom_point(
+      data = coords,
+      ggplot2::aes(x = .data$x, y = .data$y, color = .data[[color_by]]),
+      size = point_size,
+      alpha = point_alpha
+    )
   } else {
-    p <- p + ggplot2::geom_point(data = coords, ggplot2::aes(x = .data$x, y = .data$y))
+    p <- p + ggplot2::geom_point(
+      data = coords,
+      ggplot2::aes(x = .data$x, y = .data$y),
+      color = point_color,
+      size = point_size,
+      alpha = point_alpha
+    )
   }
 
   if (labels) {
@@ -286,12 +311,19 @@ plot_trigon <- function(x,
 #' @param show_boundaries Should GRADISTAT classification boundaries be drawn?
 #' @param show_classes Should GRADISTAT class labels be drawn?
 #' @param show_class_labels Alias for `show_classes`.
-#' @param show_sample_labels Should sample labels be drawn?
+#' @param show_sample_labels Should sample labels be drawn? Defaults to
+#'   `FALSE` for texture ternary plots.
 #' @param sample_label_size Text size for sample labels.
 #' @param class_label_size Text size for class labels.
 #' @param label_style Label style for GRADISTAT class labels. `"inside"` and
 #'   `"callout"` use the current readable label placement, and `"none"`
 #'   suppresses them.
+#' @param point_size Sample point size.
+#' @param point_color Constant sample point color used when `color_by` is
+#'   `NULL`.
+#' @param point_alpha Sample point alpha.
+#' @param color_by Optional column name in the summarized ternary table used to
+#'   map sample point color.
 #'
 #' @return A `ggplot` object.
 #' @export
@@ -329,7 +361,7 @@ plot_texture_triangle <- function(x,
                                   components = NULL,
                                   normalize = "none",
                                   sample_id = NULL,
-                                  labels = TRUE,
+                                  labels = FALSE,
                                   polygons = NULL,
                                   show_polygons = TRUE,
                                   show_polygon_labels = TRUE,
@@ -343,6 +375,10 @@ plot_texture_triangle <- function(x,
                                   show_sample_labels = labels,
                                   sample_label_size = 3,
                                   class_label_size = 2.5,
+                                  point_size = 1.8,
+                                  point_color = "black",
+                                  point_alpha = 0.8,
+                                  color_by = NULL,
                                   label_style = c("inside", "callout", "none")) {
   basis <- match.arg(basis)
   label_style <- match.arg(label_style)
@@ -357,7 +393,11 @@ plot_texture_triangle <- function(x,
       show_classes = show_classes,
       show_class_labels = show_classes,
       sample_label_size = sample_label_size,
-      class_label_size = class_label_size
+      class_label_size = class_label_size,
+      point_size = point_size,
+      point_color = point_color,
+      point_alpha = point_alpha,
+      color_by = color_by
     ))
   }
   if (identical(scheme_value, "gradistat") && is_gsd_tbl(x)) {
@@ -378,6 +418,10 @@ plot_texture_triangle <- function(x,
       show_class_labels = show_classes,
       sample_label_size = sample_label_size,
       class_label_size = class_label_size,
+      point_size = point_size,
+      point_color = point_color,
+      point_alpha = point_alpha,
+      color_by = color_by,
       label_style = label_style
     ))
   }
@@ -398,7 +442,11 @@ plot_texture_triangle <- function(x,
     show_classes = show_classes,
     show_class_labels = show_classes,
     sample_label_size = sample_label_size,
-    class_label_size = class_label_size
+    class_label_size = class_label_size,
+    point_size = point_size,
+    point_color = point_color,
+    point_alpha = point_alpha,
+    color_by = color_by
   )
 }
 
@@ -411,9 +459,13 @@ plot_gradistat_texture_ternary <- function(x,
                                            show_class_labels,
                                            sample_label_size,
                                            class_label_size,
+                                           point_size,
+                                           point_color,
+                                           point_alpha,
+                                           color_by,
                                            label_style) {
   show_classes <- isTRUE(show_class_labels)
-  points <- .gradistat_ternary_points(x, basis = basis, point_id = point_id)
+  points <- .gradistat_ternary_points(x, basis = basis, point_id = point_id, color_by = color_by)
   outline <- tibble::tibble(
     x = c(0, 1, 0.5, 0),
     y = c(0, 0, sqrt(3) / 2, 0)
@@ -459,13 +511,21 @@ plot_gradistat_texture_ternary <- function(x,
       ggplot2::scale_size_identity()
   }
 
-  if ("texture_class" %in% names(points)) {
+  if (!is.null(color_by)) {
     p <- p + ggplot2::geom_point(
       data = points,
-      ggplot2::aes(x = .data$x, y = .data$y, color = .data$texture_class)
+      ggplot2::aes(x = .data$x, y = .data$y, color = .data[[color_by]]),
+      size = point_size,
+      alpha = point_alpha
     )
   } else {
-    p <- p + ggplot2::geom_point(data = points, ggplot2::aes(x = .data$x, y = .data$y))
+    p <- p + ggplot2::geom_point(
+      data = points,
+      ggplot2::aes(x = .data$x, y = .data$y),
+      color = point_color,
+      size = point_size,
+      alpha = point_alpha
+    )
   }
 
   if (labels) {
@@ -488,9 +548,16 @@ plot_usda_texture_ternary <- function(x,
                                       show_classes,
                                       show_class_labels,
                                       sample_label_size,
-                                      class_label_size) {
+                                      class_label_size,
+                                      point_size,
+                                      point_color,
+                                      point_alpha,
+                                      color_by) {
   show_classes <- isTRUE(show_class_labels)
   x <- .canonical_ternary_component_table(x, component_set = "sand_silt_clay", point_id = point_id, texture_system = "usda")
+  if (!is.null(color_by) && !color_by %in% names(x)) {
+    stop("`color_by` must name a column in `x`.", call. = FALSE)
+  }
 
   classified <- .classify_usda_major_texture_rules(x$sand, x$silt, x$clay)
   invalid <- classified$rule_status != "classified"
@@ -505,6 +572,9 @@ plot_usda_texture_ternary <- function(x,
     as.character(x[[point_id]])
   }
   coords$class_name <- classified$class_name
+  if (!is.null(color_by)) {
+    coords[[color_by]] <- x[[color_by]]
+  }
 
   outline <- tibble::tibble(
     x = c(0, 1, 0.5, 0),
@@ -541,13 +611,22 @@ plot_usda_texture_ternary <- function(x,
     )
   }
 
-  p <- p + ggplot2::geom_point(
-    data = coords,
-    ggplot2::aes(x = .data$x, y = .data$y, color = .data$class_name),
-    alpha = 0.75,
-    size = 1.8
-  ) +
-    ggplot2::labs(color = "Class")
+  if (!is.null(color_by)) {
+    p <- p + ggplot2::geom_point(
+      data = coords,
+      ggplot2::aes(x = .data$x, y = .data$y, color = .data[[color_by]]),
+      alpha = point_alpha,
+      size = point_size
+    )
+  } else {
+    p <- p + ggplot2::geom_point(
+      data = coords,
+      ggplot2::aes(x = .data$x, y = .data$y),
+      color = point_color,
+      alpha = point_alpha,
+      size = point_size
+    )
+  }
   if (labels) {
     p <- p + ggplot2::geom_text(
       data = coords,

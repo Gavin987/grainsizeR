@@ -67,6 +67,21 @@
       names(values) <- as.character(long[[sample_id_col]][long$.component_name == component])
       out[[component]] <- unname(values[out$sample_id])
     }
+    extra_cols <- setdiff(names(long), c(sample_id_col, component_col, percent_col, ".component_name"))
+    for (column in extra_cols) {
+      values <- vapply(sample_ids, function(sample_id) {
+        sample_values <- unique(long[[column]][as.character(long[[sample_id_col]]) == sample_id])
+        sample_values <- sample_values[!is.na(sample_values)]
+        if (length(sample_values) == 1) {
+          as.character(sample_values)
+        } else {
+          NA_character_
+        }
+      }, character(1))
+      if (!all(is.na(values)) && !column %in% names(out)) {
+        out[[column]] <- values
+      }
+    }
   }
 
   if (is.null(out)) {
@@ -84,8 +99,9 @@
   if (is.null(out)) {
     percent_cols <- paste0(required, "_percent")
     if (all(percent_cols %in% names(x))) {
-      if ("sample_id" %in% names(x)) {
-        out <- tibble::tibble(sample_id = x$sample_id)
+      keep_cols <- setdiff(names(x), percent_cols)
+      if (length(keep_cols) > 0) {
+        out <- tibble::as_tibble(x[keep_cols])
       } else {
         out <- tibble::tibble(.rows = nrow(x))
       }

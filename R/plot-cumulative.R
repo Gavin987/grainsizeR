@@ -7,8 +7,8 @@ cumulative_x_values <- function(x, x_scale, particle_unit = "mm") {
   )
 }
 
-.prepare_cumulative_plot_data <- function(x, x_scale, particle_unit = "mm", sample_id = NULL) {
-  plot_x <- plot_filter_samples(x, sample_id)
+.prepare_cumulative_plot_data <- function(x, x_scale, particle_unit = "mm", sample_id = NULL, sample = NULL) {
+  plot_x <- plot_filter_samples(x, sample_id = sample_id, sample = sample)
   curve <- gs_cumulative(plot_x)
 
   lower_tail <- plot_x[plot_x$is_open_lower, , drop = FALSE]
@@ -55,11 +55,18 @@ percentile_x_values <- function(x, x_scale, particle_unit = "mm") {
 #' @param particle_unit Particle-size unit for `x_scale = "log10"`.
 #'   Preferred values are `"mm"` for millimetres and `"um"` for micrometres.
 #'   Aliases `"milli"` and `"micro"` are also accepted.
+#' @param sample Optional sample selector. A character value selects by sample
+#'   ID; a numeric value selects by one-based sample index using the order in
+#'   which samples appear in `x`.
 #' @param sample_id Optional character vector of sample identifiers to include.
-#' @param show_percentiles Optional numeric vector of D-value percentiles to
-#'   mark on the plot.
+#'   Kept for backward compatibility; use `sample` for new code.
+#' @param show_percentiles Optional logical or numeric vector of D-value
+#'   percentiles to mark on the plot. `TRUE` marks D10, D50, and D90.
 #' @param extrapolate Extrapolation behavior passed to `gs_d_values()` when
 #'   `show_percentiles` is supplied.
+#' @param percentile_color Color for percentile marker crosses.
+#' @param percentile_size Size for percentile marker crosses.
+#' @param percentile_stroke Stroke width for percentile marker crosses.
 #' @param facet_by_sample Deprecated. Cumulative plots are single-sample
 #'   displays; use `sample_id` to select one sample, loop over samples, or
 #'   arrange returned plots externally with another plotting package.
@@ -75,14 +82,19 @@ percentile_x_values <- function(x, x_scale, particle_unit = "mm") {
 #' )
 #' gsd <- as_gsd_tbl(x, sample_id, size_mm, retained_proportion)
 #' plot_cumulative(gsd, x_scale = "log10")
+#' plot_cumulative(gsd, sample = 1, show_percentiles = TRUE, extrapolate = "warn_linear")
 #' plot_cumulative(gsd, x_scale = "phi", show_percentiles = c(10, 50, 90), extrapolate = "warn_linear")
 plot_cumulative <- function(x,
                             direction = c("finer", "coarser"),
                             x_scale = c("log10", "phi", "linear_um"),
                             particle_unit = c("mm", "um", "milli", "micro"),
+                            sample = NULL,
                             sample_id = NULL,
                             show_percentiles = NULL,
                             extrapolate = "error",
+                            percentile_color = "red",
+                            percentile_size = 3,
+                            percentile_stroke = 1,
                             facet_by_sample = NULL) {
   validate_gsd_tbl(x)
   direction <- match.arg(direction)
@@ -90,8 +102,8 @@ plot_cumulative <- function(x,
   particle_unit <- normalize_particle_unit(particle_unit)
   extrapolate <- match.arg(extrapolate, c("error", "warn_linear"))
 
-  plot_x <- plot_filter_samples(x, sample_id)
-  curve <- .prepare_cumulative_plot_data(x, x_scale, particle_unit = particle_unit, sample_id = sample_id)
+  plot_x <- plot_filter_samples(x, sample_id = sample_id, sample = sample)
+  curve <- .prepare_cumulative_plot_data(x, x_scale, particle_unit = particle_unit, sample_id = sample_id, sample = sample)
   curve$y_value <- if (direction == "finer") curve$percent_finer else curve$percent_coarser
   curve$sample_id <- as.character(curve$sample_id)
   .require_single_plot_sample(curve, "plot_cumulative")
@@ -115,7 +127,10 @@ plot_cumulative <- function(x,
       ggplot2::annotation_logticks(sides = "b")
   }
 
-  if (!is.null(show_percentiles)) {
+  if (isTRUE(show_percentiles)) {
+    show_percentiles <- c(10, 50, 90)
+  }
+  if (!is.null(show_percentiles) && !identical(show_percentiles, FALSE)) {
     percentiles <- gs_d_values(
       plot_x,
       probs = show_percentiles,
@@ -132,7 +147,9 @@ plot_cumulative <- function(x,
         ggplot2::aes(x = .data$x_value, y = .data$y_value),
         inherit.aes = FALSE,
         shape = 4,
-        color = "black"
+        color = percentile_color,
+        size = percentile_size,
+        stroke = percentile_stroke
       )
   }
 

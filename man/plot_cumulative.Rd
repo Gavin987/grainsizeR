@@ -9,9 +9,13 @@ plot_cumulative(
   direction = c("finer", "coarser"),
   x_scale = c("log10", "phi", "linear_um"),
   particle_unit = c("mm", "um", "milli", "micro"),
+  sample = NULL,
   sample_id = NULL,
   show_percentiles = NULL,
   extrapolate = "error",
+  percentile_color = "red",
+  percentile_size = 3,
+  percentile_stroke = 1,
   facet_by_sample = NULL
 )
 }
@@ -28,13 +32,24 @@ values; \code{"phi"} uses phi units.}
 Preferred values are \code{"mm"} for millimetres and \code{"um"} for micrometres.
 Aliases \code{"milli"} and \code{"micro"} are also accepted.}
 
-\item{sample_id}{Optional character vector of sample identifiers to include.}
+\item{sample}{Optional sample selector. A character value selects by sample
+ID; a numeric value selects by one-based sample index using the order in
+which samples appear in \code{x}.}
 
-\item{show_percentiles}{Optional numeric vector of D-value percentiles to
-mark on the plot.}
+\item{sample_id}{Optional character vector of sample identifiers to include.
+Kept for backward compatibility; use \code{sample} for new code.}
+
+\item{show_percentiles}{Optional logical or numeric vector of D-value
+percentiles to mark on the plot. \code{TRUE} marks D10, D50, and D90.}
 
 \item{extrapolate}{Extrapolation behavior passed to \code{gs_d_values()} when
 \code{show_percentiles} is supplied.}
+
+\item{percentile_color}{Color for percentile marker crosses.}
+
+\item{percentile_size}{Size for percentile marker crosses.}
+
+\item{percentile_stroke}{Stroke width for percentile marker crosses.}
 
 \item{facet_by_sample}{Deprecated. Cumulative plots are single-sample
 displays; use \code{sample_id} to select one sample, loop over samples, or
@@ -55,5 +70,6 @@ x <- data.frame(
 )
 gsd <- as_gsd_tbl(x, sample_id, size_mm, retained_proportion)
 plot_cumulative(gsd, x_scale = "log10")
+plot_cumulative(gsd, sample = 1, show_percentiles = TRUE, extrapolate = "warn_linear")
 plot_cumulative(gsd, x_scale = "phi", show_percentiles = c(10, 50, 90), extrapolate = "warn_linear")
 }

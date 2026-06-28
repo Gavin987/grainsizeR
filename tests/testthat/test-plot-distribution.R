@@ -17,6 +17,18 @@ test_that("plot_distribution requires one selected sample", {
   expect_s3_class(plot_distribution(gsd, sample_id = "A"), "ggplot")
 })
 
+test_that("plot_distribution supports numeric and character sample selection", {
+  gsd <- plot_distribution_test_gsd()
+  by_index <- plot_distribution(gsd, sample = 1)
+  by_name <- plot_distribution(gsd, sample = "A")
+
+  expect_s3_class(by_index, "ggplot")
+  expect_equal(unique(by_index$data$sample_id), "A")
+  expect_equal(by_index$data, by_name$data)
+  expect_error(plot_distribution(gsd, sample = 3), "Sample index out of range")
+  expect_error(plot_distribution(gsd, sample = "missing"), "Available sample IDs include")
+})
+
 test_that("plot_distribution uses millimetre log10 particle-size breaks", {
   plot <- plot_distribution(plot_distribution_test_gsd(), sample_id = "A")
   x_scales <- vapply(plot$scales$scales, function(scale) "x" %in% scale$aesthetics, logical(1))

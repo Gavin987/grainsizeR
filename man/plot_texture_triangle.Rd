@@ -10,7 +10,7 @@ plot_texture_triangle(
   components = NULL,
   normalize = "none",
   sample_id = NULL,
-  labels = TRUE,
+  labels = FALSE,
   polygons = NULL,
   show_polygons = TRUE,
   show_polygon_labels = TRUE,
@@ -24,6 +24,10 @@ plot_texture_triangle(
   show_sample_labels = labels,
   sample_label_size = 3,
   class_label_size = 2.5,
+  point_size = 1.8,
+  point_color = "black",
+  point_alpha = 0.8,
+  color_by = NULL,
   label_style = c("inside", "callout", "none")
 )
 }
@@ -63,11 +67,22 @@ data-frame plots.}
 
 \item{show_class_labels}{Alias for \code{show_classes}.}
 
-\item{show_sample_labels}{Should sample labels be drawn?}
+\item{show_sample_labels}{Should sample labels be drawn? Defaults to
+\code{FALSE} for texture ternary plots.}
 
 \item{sample_label_size}{Text size for sample labels.}
 
 \item{class_label_size}{Text size for class labels.}
+
+\item{point_size}{Sample point size.}
+
+\item{point_color}{Constant sample point color used when \code{color_by} is
+\code{NULL}.}
+
+\item{point_alpha}{Sample point alpha.}
+
+\item{color_by}{Optional column name in the summarized ternary table used to
+map sample point color.}
 
 \item{label_style}{Label style for GRADISTAT class labels. \code{"inside"} and
 \code{"callout"} use the current readable label placement, and \code{"none"}

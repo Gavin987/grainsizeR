@@ -17,6 +17,18 @@ test_that("plot_cumulative requires one selected sample", {
   expect_s3_class(plot_cumulative(gsd, sample_id = "A"), "ggplot")
 })
 
+test_that("plot_cumulative supports numeric and character sample selection", {
+  gsd <- plot_cumulative_test_gsd()
+  by_index <- plot_cumulative(gsd, sample = 1)
+  by_name <- plot_cumulative(gsd, sample = "A")
+
+  expect_s3_class(by_index, "ggplot")
+  expect_equal(unique(by_index$data$sample_id), "A")
+  expect_equal(by_index$data, by_name$data)
+  expect_error(plot_cumulative(gsd, sample = 3), "Sample index out of range")
+  expect_error(plot_cumulative(gsd, sample = "missing"), "Available sample IDs include")
+})
+
 test_that("plot_cumulative uses millimetre log10 particle-size breaks", {
   plot <- plot_cumulative(plot_cumulative_test_gsd(), sample_id = "A")
   x_scales <- vapply(plot$scales$scales, function(scale) "x" %in% scale$aesthetics, logical(1))
@@ -47,6 +59,26 @@ test_that("plot_cumulative uses a thick black cumulative line", {
 
   expect_equal(line_color, "black")
   expect_gte(line_layer$aes_params$linewidth, 1)
+})
+
+test_that("plot_cumulative draws prominent percentile markers above the line", {
+  plot <- plot_cumulative(
+    plot_cumulative_test_gsd(),
+    sample = 1,
+    show_percentiles = TRUE,
+    extrapolate = "warn_linear"
+  )
+  line_layers <- which(vapply(plot$layers, function(layer) inherits(layer$geom, "GeomLine"), logical(1)))
+  marker_layers <- which(vapply(plot$layers, function(layer) {
+    inherits(layer$geom, "GeomPoint") && identical(layer$aes_params$shape, 4)
+  }, logical(1)))
+  marker <- plot$layers[[marker_layers[1]]]
+  marker_color <- if (is.null(marker$aes_params$colour)) marker$aes_params$color else marker$aes_params$colour
+
+  expect_gt(marker_layers[1], line_layers[1])
+  expect_equal(marker_color, "red")
+  expect_equal(marker$aes_params$size, 3)
+  expect_equal(marker$aes_params$stroke, 1)
 })
 
 test_that("plot_cumulative curve x values use selected particle-size units before log scaling", {

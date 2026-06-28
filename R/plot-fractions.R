@@ -8,7 +8,11 @@
 #' @param x A valid `gsd_tbl` object.
 #' @param scheme Built-in fraction scheme name passed to `gs_fractions()`.
 #' @param normalize Normalization mode passed to `gs_fractions()`.
+#' @param sample Optional sample selector. A character value selects by sample
+#'   ID; a numeric value selects by one-based sample index using the order in
+#'   which samples appear in `x`.
 #' @param sample_id Optional character vector of sample identifiers to include.
+#'   Kept for backward compatibility; use `sample` for new code.
 #' @param fill_palette Fill palette. `"default"` uses ggplot2 defaults,
 #'   `"YlOrBr"` uses `grDevices::hcl.colors()` with a yellow-orange-brown
 #'   sequence, and `"none"` leaves the scale unchanged.
@@ -30,10 +34,12 @@
 #' )
 #' gsd <- as_gsd_tbl(x, sample_id, size_mm, retained_proportion)
 #' plot_fractions(gsd, scheme = "wentworth_major")
+#' plot_fractions(gsd, sample = 1, scheme = "wentworth_major")
 #' plot_fractions(gsd, scheme = "gravel_sand_mud", fill_palette = "YlOrBr")
 plot_fractions <- function(x,
                            scheme = "wentworth_major",
                            normalize = "none",
+                           sample = NULL,
                            sample_id = NULL,
                            fill_palette = c("default", "YlOrBr", "none"),
                            na_to_zero = FALSE) {
@@ -42,7 +48,7 @@ plot_fractions <- function(x,
   if (!is.logical(na_to_zero) || length(na_to_zero) != 1 || is.na(na_to_zero)) {
     stop("`na_to_zero` must be `TRUE` or `FALSE`.", call. = FALSE)
   }
-  plot_x <- plot_filter_samples(x, sample_id)
+  plot_x <- plot_filter_samples(x, sample_id = sample_id, sample = sample)
   fractions <- gs_fractions(plot_x, scheme = scheme, normalize = normalize)
   if (na_to_zero) {
     fractions$percent[is.na(fractions$percent)] <- 0

@@ -12,6 +12,23 @@ test_that("plot_fractions receives closed fraction results by default", {
   expect_equal(as.numeric(rowsum(plot$data$percent, plot$data$sample_id)), c(100, 100), tolerance = 1e-8)
 })
 
+test_that("plot_fractions supports numeric and character sample selection", {
+  gsd <- as_gsd_tbl(
+    ragged_input_phase2,
+    sample_id,
+    size_mm,
+    retained_proportion
+  )
+  by_index <- plot_fractions(gsd, sample = 1, scheme = "wentworth_major")
+  by_name <- plot_fractions(gsd, sample = "WN1", scheme = "wentworth_major")
+
+  expect_s3_class(by_index, "ggplot")
+  expect_equal(unique(by_index$data$sample_id), "WN1")
+  expect_equal(by_index$data, by_name$data)
+  expect_error(plot_fractions(gsd, sample = 3), "Sample index out of range")
+  expect_error(plot_fractions(gsd, sample = "missing"), "Available sample IDs include")
+})
+
 test_that("plot_fractions na_to_zero preserves closed fraction results", {
   gsd <- as_gsd_tbl(
     ragged_input_phase2,

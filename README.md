@@ -47,19 +47,24 @@ gs_fractions_wide(wide, scheme = "gravel_sand_mud")
 ## Grain-Size Plots
 
 Distribution and cumulative plots are single-sample displays. Select one
-sample with `sample_id`, then loop over samples or arrange returned
-plots externally for multi-sample figures. Metric plots use a log10
-particle-size axis in millimetres by default; `particle_unit = "um"`
-displays micrometres.
+sample with `sample = 1` or `sample = "WN1_upper"`, then loop over
+samples or arrange returned plots externally for multi-sample figures.
+Metric plots use a log10 particle-size axis in millimetres by default;
+`particle_unit = "um"` displays micrometres.
 
 ``` r
-plot_distribution(wide, sample_id = "WN1_upper", cumulative = TRUE)
+plot_distribution(wide, sample = 1, cumulative = TRUE)
 plot_cumulative(
   wide,
-  sample_id = "WN1_upper",
-  show_percentiles = c(10, 50, 90),
+  sample = "WN1_upper",
+  show_percentiles = TRUE,
   extrapolate = "warn_linear"
 )
+
+samples <- unique(wide$sample_id)
+plots <- lapply(samples, function(id) {
+  plot_distribution(wide, sample = id)
+})
 ```
 
 <img src="man/figures/readme-wide-distribution.png" width="49%" />
@@ -97,7 +102,8 @@ texture classes.
 
 ``` r
 plot_texture_ternary(gsm, scheme = "gradistat", basis = "gravel_sand_mud")
-plot_texture_ternary(usda_samples, scheme = "usda_tt")
+plot_texture_ternary(gsm, scheme = "gradistat", color_by = "season")
+plot_texture_ternary(usda_samples, scheme = "usda_tt", show_sample_labels = TRUE)
 ```
 
 <img src="man/figures/readme-gradistat-ternary.png" width="47%" /><img src="man/figures/readme-usda-ternary.png" width="51%" />

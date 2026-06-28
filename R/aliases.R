@@ -85,8 +85,11 @@ gs_qc <- function(...) {
 #'
 #' `plot_texture_ternary()` is the preferred terminology-correct name for
 #' [plot_texture_triangle()]. Both functions create texture ternary plots and
-#' return ggplot objects. `plot_texture_triangle()` remains available for API
-#' stability.
+#' return ggplot objects. Sample labels are hidden by default; use
+#' `show_sample_labels = TRUE` to draw them. Point appearance can be adjusted
+#' with `point_size`, `point_color`, and `point_alpha`, or mapped to a
+#' summarized input column with `color_by`. `plot_texture_triangle()` remains
+#' available for API stability.
 #'
 #' @param ... Arguments forwarded to [plot_texture_triangle()].
 #' @return See [plot_texture_triangle()].

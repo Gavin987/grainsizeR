@@ -125,6 +125,40 @@ test_that("USDA ternary plotting accepts sand-silt-clay data frames", {
   }, logical(1))))
 })
 
+test_that("USDA ternary plotting accepts point aesthetics and grouped colors", {
+  samples <- data.frame(
+    sample_id = c("sand demo", "loam demo", "clay demo"),
+    season = c("dry", "wet", "wet"),
+    sand = c(92, 42, 22),
+    silt = c(5, 38, 22),
+    clay = c(3, 20, 56)
+  )
+
+  plot <- plot_texture_ternary(
+    samples,
+    scheme = "usda_tt",
+    point_size = 2,
+    point_color = "black",
+    point_alpha = 0.8
+  )
+  point_layers <- which(vapply(plot$layers, function(layer) inherits(layer$geom, "GeomPoint"), logical(1)))
+  point_layer <- plot$layers[[point_layers[length(point_layers)]]]
+  point_color <- if (is.null(point_layer$aes_params$colour)) point_layer$aes_params$color else point_layer$aes_params$colour
+  expect_equal(point_color, "black")
+  expect_equal(point_layer$aes_params$size, 2)
+  expect_equal(point_layer$aes_params$alpha, 0.8)
+
+  grouped <- plot_texture_ternary(samples, scheme = "usda_tt", color_by = "season")
+  grouped_point <- grouped$layers[[tail(which(vapply(grouped$layers, function(layer) {
+    inherits(layer$geom, "GeomPoint") && is.data.frame(layer$data) && "season" %in% names(layer$data)
+  }, logical(1))), 1)]]
+  expect_true("colour" %in% names(grouped_point$mapping))
+  expect_error(
+    plot_texture_ternary(samples, scheme = "usda_tt", color_by = "missing"),
+    "`color_by`"
+  )
+})
+
 test_that("USDA ternary plotting does not use soiltexture", {
   root <- usda_plot_root()
   r_files <- list.files(file.path(root, "R"), pattern = "\\.R$", full.names = TRUE)

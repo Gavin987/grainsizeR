@@ -194,14 +194,17 @@
   labels
 }
 
-.gradistat_ternary_points <- function(x, basis, point_id = NULL) {
+.gradistat_ternary_points <- function(x, basis, point_id = NULL, color_by = NULL) {
   components <- .gradistat_ternary_components(basis)
   x <- .canonical_ternary_component_table(
     x,
     component_set = basis,
     point_id = point_id,
-    texture_system = "gradistat"
+      texture_system = "gradistat"
   )
+  if (!is.null(color_by) && !color_by %in% names(x)) {
+    stop("`color_by` must name a column in `x`.", call. = FALSE)
+  }
   invalid <- Reduce(`|`, lapply(x[unname(components)], function(value) {
     !is.finite(value) | value < 0 | value > 100
   }))
@@ -221,6 +224,9 @@
   out$point_label <- if (is.null(point_id)) seq_len(nrow(x)) else as.character(x[[point_id]])
   if ("texture_class" %in% names(x)) {
     out$texture_class <- x$texture_class
+  }
+  if (!is.null(color_by)) {
+    out[[color_by]] <- x[[color_by]]
   }
   tibble::as_tibble(out)
 }
