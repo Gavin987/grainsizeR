@@ -3,6 +3,10 @@
 `plot_texture_ternary()` is the preferred terminology-correct name for
 [`plot_texture_triangle()`](https://Gavin987.github.io/grainsizeR/reference/plot_texture_triangle.md).
 Both functions create texture ternary plots and return ggplot objects.
+Sample labels are hidden by default; use `show_sample_labels = TRUE` to
+draw them. Point appearance can be adjusted with `point_size`,
+`point_color`, and `point_alpha`, or mapped to a summarized input column
+with `color_by`.
 [`plot_texture_triangle()`](https://Gavin987.github.io/grainsizeR/reference/plot_texture_triangle.md)
 remains available for API stability.
 

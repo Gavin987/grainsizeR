@@ -27,7 +27,11 @@ plot_trigon(
   show_classes = TRUE,
   show_class_labels = show_classes,
   sample_label_size = 3,
-  class_label_size = 2.5
+  class_label_size = 2.5,
+  point_size = 1.8,
+  point_color = "black",
+  point_alpha = 0.8,
+  color_by = NULL
 )
 ```
 
@@ -99,6 +103,22 @@ plot_trigon(
 - class_label_size:
 
   Text size for class labels.
+
+- point_size:
+
+  Sample point size.
+
+- point_color:
+
+  Constant sample point color used when `color_by` is `NULL`.
+
+- point_alpha:
+
+  Sample point alpha.
+
+- color_by:
+
+  Optional column name used to map sample point color.
 
 ## Value
 

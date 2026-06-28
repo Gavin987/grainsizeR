@@ -62,6 +62,7 @@ values after unit conversion, with lower open-ended classes displayed at
 <span>  x_scale <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"log10"</span>, <span class="st">"phi"</span>, <span class="st">"linear_um"</span><span class="op">)</span>,</span>
 <span>  type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bar"</span>, <span class="st">"line"</span><span class="op">)</span>,</span>
 <span>  particle_unit <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mm"</span>, <span class="st">"um"</span>, <span class="st">"milli"</span>, <span class="st">"micro"</span><span class="op">)</span>,</span>
+<span>  sample <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  sample_id <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  show_open_ends <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  cumulative <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -93,8 +94,15 @@ Preferred values are <code>"mm"</code> for millimetres and <code>"um"</code> for
 Aliases <code>"milli"</code> and <code>"micro"</code> are also accepted.</p></dd>
 
 
+<dt id="arg-sample">sample<a class="anchor" aria-label="anchor" href="#arg-sample"></a></dt>
+<dd><p>Optional sample selector. A character value selects by sample
+ID; a numeric value selects by one-based sample index using the order in
+which samples appear in <code>x</code>.</p></dd>
+
+
 <dt id="arg-sample-id">sample_id<a class="anchor" aria-label="anchor" href="#arg-sample-id"></a></dt>
-<dd><p>Optional character vector of sample identifiers to include.</p></dd>
+<dd><p>Optional character vector of sample identifiers to include.
+Kept for backward compatibility; use <code>sample</code> for new code.</p></dd>
 
 
 <dt id="arg-show-open-ends">show_open_ends<a class="anchor" aria-label="anchor" href="#arg-show-open-ends"></a></dt>
@@ -129,10 +137,12 @@ arrange returned plots externally with another plotting package.</p></dd>
 <span class="r-in"><span><span class="va">gsd</span> <span class="op">&lt;-</span> <span class="fu"><a href="as_gsd_tbl.html">as_gsd_tbl</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">sample_id</span>, <span class="va">size_mm</span>, <span class="va">retained_proportion</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">plot_distribution</span><span class="op">(</span><span class="va">gsd</span>, x_scale <span class="op">=</span> <span class="st">"log10"</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="plot_distribution-1.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span><span class="fu">plot_distribution</span><span class="op">(</span><span class="va">gsd</span>, cumulative <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">plot_distribution</span><span class="op">(</span><span class="va">gsd</span>, sample <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="plot_distribution-2.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span><span class="fu">plot_distribution</span><span class="op">(</span><span class="va">gsd</span>, x_scale <span class="op">=</span> <span class="st">"phi"</span>, type <span class="op">=</span> <span class="st">"line"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">plot_distribution</span><span class="op">(</span><span class="va">gsd</span>, cumulative <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="plot_distribution-3.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="fu">plot_distribution</span><span class="op">(</span><span class="va">gsd</span>, x_scale <span class="op">=</span> <span class="st">"phi"</span>, type <span class="op">=</span> <span class="st">"line"</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="plot_distribution-4.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

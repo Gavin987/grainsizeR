@@ -81,7 +81,7 @@ external ternary plotting packages.</p>
 <span>  components <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  normalize <span class="op">=</span> <span class="st">"none"</span>,</span>
 <span>  sample_id <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  labels <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  labels <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  polygons <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  show_polygons <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  show_polygon_labels <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -95,6 +95,10 @@ external ternary plotting packages.</p>
 <span>  show_sample_labels <span class="op">=</span> <span class="va">labels</span>,</span>
 <span>  sample_label_size <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>  class_label_size <span class="op">=</span> <span class="fl">2.5</span>,</span>
+<span>  point_size <span class="op">=</span> <span class="fl">1.8</span>,</span>
+<span>  point_color <span class="op">=</span> <span class="st">"black"</span>,</span>
+<span>  point_alpha <span class="op">=</span> <span class="fl">0.8</span>,</span>
+<span>  color_by <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  label_style <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"inside"</span>, <span class="st">"callout"</span>, <span class="st">"none"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -171,7 +175,8 @@ data-frame plots.</p></dd>
 
 
 <dt id="arg-show-sample-labels">show_sample_labels<a class="anchor" aria-label="anchor" href="#arg-show-sample-labels"></a></dt>
-<dd><p>Should sample labels be drawn?</p></dd>
+<dd><p>Should sample labels be drawn? Defaults to
+<code>FALSE</code> for texture ternary plots.</p></dd>
 
 
 <dt id="arg-sample-label-size">sample_label_size<a class="anchor" aria-label="anchor" href="#arg-sample-label-size"></a></dt>
@@ -180,6 +185,24 @@ data-frame plots.</p></dd>
 
 <dt id="arg-class-label-size">class_label_size<a class="anchor" aria-label="anchor" href="#arg-class-label-size"></a></dt>
 <dd><p>Text size for class labels.</p></dd>
+
+
+<dt id="arg-point-size">point_size<a class="anchor" aria-label="anchor" href="#arg-point-size"></a></dt>
+<dd><p>Sample point size.</p></dd>
+
+
+<dt id="arg-point-color">point_color<a class="anchor" aria-label="anchor" href="#arg-point-color"></a></dt>
+<dd><p>Constant sample point color used when <code>color_by</code> is
+<code>NULL</code>.</p></dd>
+
+
+<dt id="arg-point-alpha">point_alpha<a class="anchor" aria-label="anchor" href="#arg-point-alpha"></a></dt>
+<dd><p>Sample point alpha.</p></dd>
+
+
+<dt id="arg-color-by">color_by<a class="anchor" aria-label="anchor" href="#arg-color-by"></a></dt>
+<dd><p>Optional column name in the summarized ternary table used to
+map sample point color.</p></dd>
 
 
 <dt id="arg-label-style">label_style<a class="anchor" aria-label="anchor" href="#arg-label-style"></a></dt>

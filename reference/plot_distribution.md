@@ -13,6 +13,7 @@ plot_distribution(
   x_scale = c("log10", "phi", "linear_um"),
   type = c("bar", "line"),
   particle_unit = c("mm", "um", "milli", "micro"),
+  sample = NULL,
   sample_id = NULL,
   show_open_ends = TRUE,
   cumulative = FALSE,
@@ -42,9 +43,16 @@ plot_distribution(
   `"mm"` for millimetres and `"um"` for micrometres. Aliases `"milli"`
   and `"micro"` are also accepted.
 
+- sample:
+
+  Optional sample selector. A character value selects by sample ID; a
+  numeric value selects by one-based sample index using the order in
+  which samples appear in `x`.
+
 - sample_id:
 
-  Optional character vector of sample identifiers to include.
+  Optional character vector of sample identifiers to include. Kept for
+  backward compatibility; use `sample` for new code.
 
 - show_open_ends:
 
@@ -77,6 +85,8 @@ x <- data.frame(
 )
 gsd <- as_gsd_tbl(x, sample_id, size_mm, retained_proportion)
 plot_distribution(gsd, x_scale = "log10")
+
+plot_distribution(gsd, sample = 1)
 
 plot_distribution(gsd, cumulative = TRUE)
 

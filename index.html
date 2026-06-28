@@ -92,15 +92,20 @@
 <div class="section level2">
 <h2 id="grain-size-plots">Grain-Size Plots<a class="anchor" aria-label="anchor" href="#grain-size-plots"></a>
 </h2>
-<p>Distribution and cumulative plots are single-sample displays. Select one sample with <code>sample_id</code>, then loop over samples or arrange returned plots externally for multi-sample figures. Metric plots use a log10 particle-size axis in millimetres by default; <code>particle_unit = "um"</code> displays micrometres.</p>
+<p>Distribution and cumulative plots are single-sample displays. Select one sample with <code>sample = 1</code> or <code>sample = "WN1_upper"</code>, then loop over samples or arrange returned plots externally for multi-sample figures. Metric plots use a log10 particle-size axis in millimetres by default; <code>particle_unit = "um"</code> displays micrometres.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/plot_distribution.html">plot_distribution</a></span><span class="op">(</span><span class="va">wide</span>, sample_id <span class="op">=</span> <span class="st">"WN1_upper"</span>, cumulative <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/plot_distribution.html">plot_distribution</a></span><span class="op">(</span><span class="va">wide</span>, sample <span class="op">=</span> <span class="fl">1</span>, cumulative <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/plot_cumulative.html">plot_cumulative</a></span><span class="op">(</span></span>
 <span>  <span class="va">wide</span>,</span>
-<span>  sample_id <span class="op">=</span> <span class="st">"WN1_upper"</span>,</span>
-<span>  show_percentiles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">50</span>, <span class="fl">90</span><span class="op">)</span>,</span>
+<span>  sample <span class="op">=</span> <span class="st">"WN1_upper"</span>,</span>
+<span>  show_percentiles <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  extrapolate <span class="op">=</span> <span class="st">"warn_linear"</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">samples</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">wide</span><span class="op">$</span><span class="va">sample_id</span><span class="op">)</span></span>
+<span><span class="va">plots</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">samples</span>, <span class="kw">function</span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu"><a href="reference/plot_distribution.html">plot_distribution</a></span><span class="op">(</span><span class="va">wide</span>, sample <span class="op">=</span> <span class="va">id</span><span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/readme-wide-distribution.png" width="49%"></p>
 <p><img src="reference/figures/readme-wide-cumulative.png" width="49%"></p>
 </div>
@@ -123,7 +128,8 @@
 <p>Fraction schemes convert grain-size data into particle-size components; ternary bases are the three components drawn on a plot; texture systems are the classification or diagram style. For GRADISTAT-style ternary plots, first summarize to the <code>gravel_sand_mud</code> fraction scheme, then plot those summarized <code>gravel</code>, <code>sand</code>, and <code>mud</code> components. Canonical component names are lowercase snake_case; simple case variants such as <code>Sand</code> or <code>SAND</code> are normalized internally. USDA ternary plots use summarized <code>sand</code>, <code>silt</code>, and <code>clay</code> components and the 12 major USDA texture classes.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/plot_texture_ternary.html">plot_texture_ternary</a></span><span class="op">(</span><span class="va">gsm</span>, scheme <span class="op">=</span> <span class="st">"gradistat"</span>, basis <span class="op">=</span> <span class="st">"gravel_sand_mud"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/plot_texture_ternary.html">plot_texture_ternary</a></span><span class="op">(</span><span class="va">usda_samples</span>, scheme <span class="op">=</span> <span class="st">"usda_tt"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="reference/plot_texture_ternary.html">plot_texture_ternary</a></span><span class="op">(</span><span class="va">gsm</span>, scheme <span class="op">=</span> <span class="st">"gradistat"</span>, color_by <span class="op">=</span> <span class="st">"season"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/plot_texture_ternary.html">plot_texture_ternary</a></span><span class="op">(</span><span class="va">usda_samples</span>, scheme <span class="op">=</span> <span class="st">"usda_tt"</span>, show_sample_labels <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/readme-gradistat-ternary.png" width="47%"><img src="reference/figures/readme-usda-ternary.png" width="51%"></p>
 </div>
 <div class="section level2">

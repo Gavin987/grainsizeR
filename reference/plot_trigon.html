@@ -76,7 +76,11 @@ depending on external texture plotting packages.</p>
 <span>  show_classes <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  show_class_labels <span class="op">=</span> <span class="va">show_classes</span>,</span>
 <span>  sample_label_size <span class="op">=</span> <span class="fl">3</span>,</span>
-<span>  class_label_size <span class="op">=</span> <span class="fl">2.5</span></span>
+<span>  class_label_size <span class="op">=</span> <span class="fl">2.5</span>,</span>
+<span>  point_size <span class="op">=</span> <span class="fl">1.8</span>,</span>
+<span>  point_color <span class="op">=</span> <span class="st">"black"</span>,</span>
+<span>  point_alpha <span class="op">=</span> <span class="fl">0.8</span>,</span>
+<span>  color_by <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -148,6 +152,23 @@ available?</p></dd>
 
 <dt id="arg-class-label-size">class_label_size<a class="anchor" aria-label="anchor" href="#arg-class-label-size"></a></dt>
 <dd><p>Text size for class labels.</p></dd>
+
+
+<dt id="arg-point-size">point_size<a class="anchor" aria-label="anchor" href="#arg-point-size"></a></dt>
+<dd><p>Sample point size.</p></dd>
+
+
+<dt id="arg-point-color">point_color<a class="anchor" aria-label="anchor" href="#arg-point-color"></a></dt>
+<dd><p>Constant sample point color used when <code>color_by</code> is
+<code>NULL</code>.</p></dd>
+
+
+<dt id="arg-point-alpha">point_alpha<a class="anchor" aria-label="anchor" href="#arg-point-alpha"></a></dt>
+<dd><p>Sample point alpha.</p></dd>
+
+
+<dt id="arg-color-by">color_by<a class="anchor" aria-label="anchor" href="#arg-color-by"></a></dt>
+<dd><p>Optional column name used to map sample point color.</p></dd>
 
 </dl></div>
     <div class="section level2">

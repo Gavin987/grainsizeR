@@ -12,9 +12,13 @@ plot_cumulative(
   direction = c("finer", "coarser"),
   x_scale = c("log10", "phi", "linear_um"),
   particle_unit = c("mm", "um", "milli", "micro"),
+  sample = NULL,
   sample_id = NULL,
   show_percentiles = NULL,
   extrapolate = "error",
+  percentile_color = "red",
+  percentile_size = 3,
+  percentile_stroke = 1,
   facet_by_sample = NULL
 )
 ```
@@ -41,19 +45,39 @@ plot_cumulative(
   `"mm"` for millimetres and `"um"` for micrometres. Aliases `"milli"`
   and `"micro"` are also accepted.
 
+- sample:
+
+  Optional sample selector. A character value selects by sample ID; a
+  numeric value selects by one-based sample index using the order in
+  which samples appear in `x`.
+
 - sample_id:
 
-  Optional character vector of sample identifiers to include.
+  Optional character vector of sample identifiers to include. Kept for
+  backward compatibility; use `sample` for new code.
 
 - show_percentiles:
 
-  Optional numeric vector of D-value percentiles to mark on the plot.
+  Optional logical or numeric vector of D-value percentiles to mark on
+  the plot. `TRUE` marks D10, D50, and D90.
 
 - extrapolate:
 
   Extrapolation behavior passed to
   [`gs_d_values()`](https://Gavin987.github.io/grainsizeR/reference/gs_d_values.md)
   when `show_percentiles` is supplied.
+
+- percentile_color:
+
+  Color for percentile marker crosses.
+
+- percentile_size:
+
+  Size for percentile marker crosses.
+
+- percentile_stroke:
+
+  Stroke width for percentile marker crosses.
 
 - facet_by_sample:
 
@@ -75,6 +99,8 @@ x <- data.frame(
 )
 gsd <- as_gsd_tbl(x, sample_id, size_mm, retained_proportion)
 plot_cumulative(gsd, x_scale = "log10")
+
+plot_cumulative(gsd, sample = 1, show_percentiles = TRUE, extrapolate = "warn_linear")
 
 plot_cumulative(gsd, x_scale = "phi", show_percentiles = c(10, 50, 90), extrapolate = "warn_linear")
 ```

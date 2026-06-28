@@ -22,7 +22,7 @@ plot_texture_triangle(
   components = NULL,
   normalize = "none",
   sample_id = NULL,
-  labels = TRUE,
+  labels = FALSE,
   polygons = NULL,
   show_polygons = TRUE,
   show_polygon_labels = TRUE,
@@ -36,6 +36,10 @@ plot_texture_triangle(
   show_sample_labels = labels,
   sample_label_size = 3,
   class_label_size = 2.5,
+  point_size = 1.8,
+  point_color = "black",
+  point_alpha = 0.8,
+  color_by = NULL,
   label_style = c("inside", "callout", "none")
 )
 ```
@@ -113,7 +117,8 @@ plot_texture_triangle(
 
 - show_sample_labels:
 
-  Should sample labels be drawn?
+  Should sample labels be drawn? Defaults to `FALSE` for texture ternary
+  plots.
 
 - sample_label_size:
 
@@ -122,6 +127,23 @@ plot_texture_triangle(
 - class_label_size:
 
   Text size for class labels.
+
+- point_size:
+
+  Sample point size.
+
+- point_color:
+
+  Constant sample point color used when `color_by` is `NULL`.
+
+- point_alpha:
+
+  Sample point alpha.
+
+- color_by:
+
+  Optional column name in the summarized ternary table used to map
+  sample point color.
 
 - label_style:
 
