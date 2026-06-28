@@ -132,9 +132,9 @@
         "gravelly_mud", "slightly_gravelly_sandy_mud", "sandy_mud",
         "slightly_gravelly_mud", "mud"
       ),
-      gravel = c(90, 40, 14, 7, 2, 40, 14, 7, 4, 40, 14, 7, 4, 7, 2),
-      sand = c(5, 55, 80, 88, 96, 40, 58, 59, 58, 5, 18, 30, 24, 6, 4),
-      mud = c(5, 5, 6, 5, 2, 20, 28, 34, 38, 55, 68, 63, 72, 87, 94),
+      gravel = c(82, 32, 14, 8, 2, 34, 14, 8, 3, 40, 14, 8, 3, 8, 3),
+      sand = c(5, 58, 82, 88, 96, 45, 58, 65, 62, 20, 18, 28, 26, 4, 5),
+      mud = c(5, 3, 4, 4, 2, 20, 25, 25, 25, 58, 65, 65, 72, 90, 94),
       show_label = c(
         TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE,
         TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE
@@ -160,7 +160,7 @@
     class_label = .gradistat_class_label_text(points$class_id),
     x = xy$x,
     y = xy$y,
-    label_scale = ifelse(grepl("^slightly_gravelly", points$class_id), 0.55, 1),
+    label_scale = ifelse(grepl("^slightly_gravelly", points$class_id), 0.65, 1),
     show_label = points$show_label,
     stringsAsFactors = FALSE
   )
@@ -168,10 +168,29 @@
 
 .gradistat_class_label_text <- function(class_id) {
   names <- unname(.gradistat_class_names[class_id])
+  
   labels <- gsub(" ", "\n", names, fixed = TRUE)
-  labels[class_id %in% c("muddy_sand", "sandy_mud")] <- names[class_id %in% c("muddy_sand", "sandy_mud")]
-  labels[class_id == "gravelly_muddy_sand"] <- "gravelly muddy\nsand"
-  labels[class_id == "muddy_sandy_gravel"] <- "muddy sandy\ngravel"
+  
+  one_line <- grepl("^slightly_", class_id) |
+    class_id %in% c(
+      "muddy_sand",
+      "sandy_mud",
+      "gravelly_muddy_sand",
+      "muddy_sandy_gravel",
+      "muddy_gravel",
+      "gravelly_mud"
+    )
+  
+  labels[one_line] <- names[one_line]
+  
+  label_overrides <- c(
+    slightly_gravelly_sand = "slightly\ngravelly sand",
+    slightly_gravelly_mud  = "slightly\ngravelly mud"
+  )
+  
+  override <- class_id %in% names(label_overrides)
+  labels[override] <- unname(label_overrides[class_id[override]])
+  
   labels
 }
 

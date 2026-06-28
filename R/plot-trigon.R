@@ -91,7 +91,7 @@ plot_trigon <- function(x,
                         show_classes = TRUE,
                         show_class_labels = show_classes,
                         sample_label_size = 3,
-                        class_label_size = 2.3) {
+                        class_label_size = 2.5) {
   validate_gsd_tbl(x)
   if (is.null(polygons)) {
     scheme <- match.arg(scheme)
@@ -335,7 +335,7 @@ plot_texture_triangle <- function(x,
                                   show_class_labels = show_classes,
                                   show_sample_labels = labels,
                                   sample_label_size = 3,
-                                  class_label_size = 2.2,
+                                  class_label_size = 2.5,
                                   label_style = c("inside", "callout", "none")) {
   basis <- match.arg(basis)
   label_style <- match.arg(label_style)
