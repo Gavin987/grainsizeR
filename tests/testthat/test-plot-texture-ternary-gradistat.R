@@ -28,6 +28,49 @@ test_that("plot_texture_triangle supports GRADISTAT gravel-sand-mud ternary plot
   expect_s3_class(plot, "ggplot")
 })
 
+test_that("plot_texture_ternary accepts official GRADISTAT fraction outputs", {
+  path <- system.file("extdata", "grain.wide.csv", package = "grainsizeR")
+  if (!nzchar(path)) {
+    path <- file.path("..", "..", "inst", "extdata", "grain.wide.csv")
+  }
+  wide <- read_gsd(
+    path,
+    format = "wide",
+    value_type = "percent"
+  )
+
+  frac <- suppressWarnings(gs_fractions(wide, scheme = "gravel_sand_mud"))
+  expect_no_error(plot_texture_ternary(frac, scheme = "gradistat"))
+
+  frac_wide <- suppressWarnings(gs_fractions_wide(wide, scheme = "gravel_sand_mud"))
+  expect_no_error(plot_texture_ternary(frac_wide, scheme = "gradistat"))
+})
+
+test_that("plot_texture_ternary accepts case-only component name variants", {
+  ternary <- tibble::tibble(
+    sample_id = "A",
+    Gravel = 10,
+    Sand = 80,
+    Mud = 10
+  )
+
+  expect_no_error(plot_texture_ternary(ternary, scheme = "gradistat"))
+})
+
+test_that("plot_texture_ternary rejects raw GRADISTAT gsd_tbl input with workflow guidance", {
+  gsd <- as_gsd_tbl(
+    ragged_input_phase2,
+    sample_id,
+    size_mm,
+    retained_proportion
+  )
+
+  expect_error(
+    plot_texture_ternary(gsd, scheme = "gradistat"),
+    "expects summarized ternary components"
+  )
+})
+
 test_that("plot_texture_triangle supports GRADISTAT sand-silt-clay no-gravel ternary plots", {
   samples <- data.frame(
     sample_id = c("A", "B", "C"),
@@ -255,8 +298,8 @@ test_that("GRADISTAT gravel-sand-mud labels use adjusted readable positions", {
   expect_true(all(slightly %in% labels$class_id[labels$show_label]))
   expect_equal(labels$class_label[labels$class_id == "muddy_sand"], "muddy sand")
   expect_equal(labels$class_label[labels$class_id == "sandy_mud"], "sandy mud")
-  expect_equal(labels$class_label[labels$class_id == "gravelly_muddy_sand"], "gravelly muddy\nsand")
-  expect_equal(labels$class_label[labels$class_id == "muddy_sandy_gravel"], "muddy sandy\ngravel")
+  expect_equal(labels$class_label[labels$class_id == "gravelly_muddy_sand"], "gravelly muddy sand")
+  expect_equal(labels$class_label[labels$class_id == "muddy_sandy_gravel"], "muddy sandy gravel")
   expect_gt(labels$y[labels$class_id == "muddy_sand"], 0)
   expect_gt(labels$y[labels$class_id == "sandy_mud"], 0)
   expect_gt(labels$y[labels$class_id == "mud"], 0)

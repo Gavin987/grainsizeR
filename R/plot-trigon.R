@@ -252,24 +252,31 @@ plot_trigon <- function(x,
 #'
 #' `plot_texture_triangle()` is retained as a stable compatibility function
 #' name, but it creates texture ternary plots. Prefer
-#' `plot_texture_ternary()` in new code and prose. Both functions use
-#' grain-size fraction components and optional user-supplied texture polygons.
-#' Fraction components are derived from the normalized millimetre particle-size
-#' scale in `gsd_tbl`; users do not need to choose units in texture plotting
-#' functions after import.
+#' `plot_texture_ternary()` in new code and prose. Both functions plot
+#' summarized ternary component percentages and optional user-supplied texture
+#' polygons. A fraction scheme is the rule used by `gs_fractions()` to convert
+#' size-bin data into components, a ternary basis is the three-component set
+#' drawn on the diagram, and a texture system is the classification or diagram
+#' style selected by `scheme`.
 #' The package draws the ternary diagram with ggplot2 and does not depend on
 #' external ternary plotting packages.
 #'
-#' For `scheme = "gradistat"` and data-frame inputs, the function can draw
-#' GRADISTAT-style ternary plots for `basis = "gravel_sand_mud"` and
-#' `basis = "sand_silt_clay_no_gravel"`. These plots use internal boundary
-#' definitions generated from the package's re-expressed GRADISTAT decision
-#' rules. They support point overlays and return ggplot objects; full visual
-#' parity with the original Excel output is not claimed. For
-#' `scheme = "usda_tt"` and data-frame inputs, the function accepts `sand`,
-#' `silt`, and `clay` percentage columns and draws USDA major-class
-#' boundaries. The existing gsd_tbl and user-supplied polygon workflows are
-#' preserved.
+#' The intended GRADISTAT workflow is to read grain-size data, compute
+#' fractions with `gs_fractions()` or `gs_fractions_wide()`, then plot those
+#' summarized components. For `scheme = "gradistat"`, use
+#' `basis = "gravel_sand_mud"` with `gravel`, `sand`, and `mud` components, or
+#' `basis = "sand_silt_clay_no_gravel"` with `sand`, `silt`, and `clay`
+#' components. Official `gs_fractions()` long output, official
+#' `gs_fractions_wide()` output with `*_percent` columns, and canonical
+#' summarized tables with component columns are supported. Component column
+#' matching is case-insensitive, so `Sand` and `SAND` are treated as `sand`;
+#' arbitrary spelling, punctuation, or suffix variants are not interpreted.
+#' Raw `gsd_tbl` input is not plotted directly for GRADISTAT ternary diagrams.
+#'
+#' For `scheme = "usda_tt"` and data-frame inputs, the function accepts
+#' summarized `sand`, `silt`, and `clay` percentage columns and draws USDA
+#' major-class boundaries. The existing gsd_tbl and user-supplied polygon
+#' workflows for non-GRADISTAT texture plotting are preserved.
 #'
 #' @inheritParams plot_trigon
 #' @param basis GRADISTAT ternary plotting basis. Supported values are
@@ -352,6 +359,13 @@ plot_texture_triangle <- function(x,
       sample_label_size = sample_label_size,
       class_label_size = class_label_size
     ))
+  }
+  if (identical(scheme_value, "gradistat") && is_gsd_tbl(x)) {
+    stop(
+      "`plot_texture_ternary()` expects summarized ternary components. ",
+      "Run `gs_fractions(x, scheme = \"gravel_sand_mud\")` before plotting GRADISTAT ternary diagrams.",
+      call. = FALSE
+    )
   }
   if (identical(scheme_value, "gradistat") && is.data.frame(x) && !is_gsd_tbl(x)) {
     return(plot_gradistat_texture_ternary(
@@ -476,14 +490,7 @@ plot_usda_texture_ternary <- function(x,
                                       sample_label_size,
                                       class_label_size) {
   show_classes <- isTRUE(show_class_labels)
-  required <- c("sand", "silt", "clay")
-  missing <- setdiff(required, names(x))
-  if (length(missing) > 0) {
-    stop("USDA ternary plotting requires columns: ", paste(required, collapse = ", "), call. = FALSE)
-  }
-  if (!is.null(point_id) && !point_id %in% names(x)) {
-    stop("`point_id` must name a column in `x`.", call. = FALSE)
-  }
+  x <- .canonical_ternary_component_table(x, component_set = "sand_silt_clay", point_id = point_id, texture_system = "usda")
 
   classified <- .classify_usda_major_texture_rules(x$sand, x$silt, x$clay)
   invalid <- classified$rule_status != "classified"

@@ -196,19 +196,12 @@
 
 .gradistat_ternary_points <- function(x, basis, point_id = NULL) {
   components <- .gradistat_ternary_components(basis)
-  missing_cols <- setdiff(unname(components), names(x))
-  if (length(missing_cols) > 0) {
-    stop(
-      "GRADISTAT `", basis, "` ternary plotting requires columns: ",
-      paste(unname(components), collapse = ", "),
-      call. = FALSE
-    )
-  }
-  for (column in unname(components)) {
-    if (!is.numeric(x[[column]])) {
-      stop("GRADISTAT ternary plot percentages must be numeric, finite, and between 0 and 100.", call. = FALSE)
-    }
-  }
+  x <- .canonical_ternary_component_table(
+    x,
+    component_set = basis,
+    point_id = point_id,
+    texture_system = "gradistat"
+  )
   invalid <- Reduce(`|`, lapply(x[unname(components)], function(value) {
     !is.finite(value) | value < 0 | value > 100
   }))
@@ -218,9 +211,6 @@
   sums <- rowSums(as.data.frame(x[unname(components)]))
   if (any(abs(sums - 100) > 1e-6)) {
     stop("GRADISTAT ternary plot percentages must sum to approximately 100 for the selected basis.", call. = FALSE)
-  }
-  if (!is.null(point_id) && !point_id %in% names(x)) {
-    stop("`point_id` must name a column in `x`.", call. = FALSE)
   }
   xy <- ternary_to_xy(x[[components["left"]]], x[[components["right"]]], x[[components["top"]]])
   out <- data.frame(

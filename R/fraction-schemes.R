@@ -7,14 +7,18 @@
 #' a complete, non-overlapping particle-size partition. Lower bounds are
 #' inclusive for interpretation, and upper bounds define the cumulative
 #' threshold used to calculate each fraction.
+#' `gravel_sand_mud` is an explicit public alias of `wentworth_major`; both
+#' schemes use gravel, sand, and mud components with boundaries at 2000 and
+#' 62.5 micrometres.
 #'
 #' @return A tibble describing built-in fraction schemes.
 #' @export
 gs_fraction_schemes <- function() {
   systems <- particle_size_systems()
+  wentworth_major <- fraction_rows("wentworth_major", c("gravel", "sand", "mud"), c(2000, 62.5, 0), c(Inf, 2000, 62.5))
   rows <- list(
-    fraction_rows("wentworth_major", c("gravel", "sand", "mud"), c(2000, 62.5, 0), c(Inf, 2000, 62.5)),
-    fraction_rows("gravel_sand_mud", c("gravel", "sand", "mud"), c(2000, 62.5, 0), c(Inf, 2000, 62.5)),
+    wentworth_major,
+    fraction_scheme_alias(wentworth_major, "gravel_sand_mud"),
     fraction_rows(
       "wentworth_detailed",
       c(
@@ -40,6 +44,13 @@ gs_fraction_schemes <- function() {
   out <- do.call(rbind, rows)
   rownames(out) <- NULL
   tibble::as_tibble(out)
+}
+
+fraction_scheme_alias <- function(template, scheme) {
+  out <- template
+  out$scheme <- scheme
+  out$description <- paste(fraction_scheme_label(scheme), out$component, "fraction")
+  out
 }
 
 fraction_rows <- function(scheme, component, lower_um, upper_um, component_type = NULL) {

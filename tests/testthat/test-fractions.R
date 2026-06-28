@@ -61,6 +61,18 @@ test_that("gs_fraction_schemes lists built-in schemes and components", {
   }
 })
 
+test_that("gravel_sand_mud is an explicit alias of wentworth_major", {
+  schemes <- gs_fraction_schemes()
+  wentworth <- schemes[schemes$scheme == "wentworth_major", ]
+  gsm <- schemes[schemes$scheme == "gravel_sand_mud", ]
+
+  expect_equal(gsm$component, wentworth$component)
+  expect_equal(gsm$lower_um, wentworth$lower_um)
+  expect_equal(gsm$upper_um, wentworth$upper_um)
+  expect_equal(gsm$lower_mm, wentworth$lower_mm)
+  expect_equal(gsm$upper_mm, wentworth$upper_mm)
+})
+
 test_that("gs_fraction_schemes includes new source-aware boundary schemes", {
   schemes <- gs_fraction_schemes()
 

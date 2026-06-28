@@ -48,11 +48,9 @@ test_that("plot_texture_triangle returns a ggplot object", {
     size_mm,
     retained_proportion
   )
+  fractions <- gs_fractions(gsd, scheme = "gravel_sand_mud")
 
-  expect_warning(
-    plot <- plot_texture_triangle(gsd, scheme = "gradistat"),
-    "dropped"
-  )
+  plot <- plot_texture_triangle(fractions, scheme = "gradistat")
   expect_s3_class(plot, "ggplot")
 })
 

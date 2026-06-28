@@ -23,7 +23,7 @@ plot_texture_triangle(
   show_class_labels = show_classes,
   show_sample_labels = labels,
   sample_label_size = 3,
-  class_label_size = 2.2,
+  class_label_size = 2.5,
   label_style = c("inside", "callout", "none")
 )
 }
@@ -79,25 +79,32 @@ A \code{ggplot} object.
 \description{
 \code{plot_texture_triangle()} is retained as a stable compatibility function
 name, but it creates texture ternary plots. Prefer
-\code{plot_texture_ternary()} in new code and prose. Both functions use
-grain-size fraction components and optional user-supplied texture polygons.
-Fraction components are derived from the normalized millimetre particle-size
-scale in \code{gsd_tbl}; users do not need to choose units in texture plotting
-functions after import.
+\code{plot_texture_ternary()} in new code and prose. Both functions plot
+summarized ternary component percentages and optional user-supplied texture
+polygons. A fraction scheme is the rule used by \code{gs_fractions()} to convert
+size-bin data into components, a ternary basis is the three-component set
+drawn on the diagram, and a texture system is the classification or diagram
+style selected by \code{scheme}.
 The package draws the ternary diagram with ggplot2 and does not depend on
 external ternary plotting packages.
 }
 \details{
-For \code{scheme = "gradistat"} and data-frame inputs, the function can draw
-GRADISTAT-style ternary plots for \code{basis = "gravel_sand_mud"} and
-\code{basis = "sand_silt_clay_no_gravel"}. These plots use internal boundary
-definitions generated from the package's re-expressed GRADISTAT decision
-rules. They support point overlays and return ggplot objects; full visual
-parity with the original Excel output is not claimed. For
-\code{scheme = "usda_tt"} and data-frame inputs, the function accepts \code{sand},
-\code{silt}, and \code{clay} percentage columns and draws USDA major-class
-boundaries. The existing gsd_tbl and user-supplied polygon workflows are
-preserved.
+The intended GRADISTAT workflow is to read grain-size data, compute
+fractions with \code{gs_fractions()} or \code{gs_fractions_wide()}, then plot those
+summarized components. For \code{scheme = "gradistat"}, use
+\code{basis = "gravel_sand_mud"} with \code{gravel}, \code{sand}, and \code{mud} components, or
+\code{basis = "sand_silt_clay_no_gravel"} with \code{sand}, \code{silt}, and \code{clay}
+components. Official \code{gs_fractions()} long output, official
+\code{gs_fractions_wide()} output with \verb{*_percent} columns, and canonical
+summarized tables with component columns are supported. Component column
+matching is case-insensitive, so \code{Sand} and \code{SAND} are treated as \code{sand};
+arbitrary spelling, punctuation, or suffix variants are not interpreted.
+Raw \code{gsd_tbl} input is not plotted directly for GRADISTAT ternary diagrams.
+
+For \code{scheme = "usda_tt"} and data-frame inputs, the function accepts
+summarized \code{sand}, \code{silt}, and \code{clay} percentage columns and draws USDA
+major-class boundaries. The existing gsd_tbl and user-supplied polygon
+workflows for non-GRADISTAT texture plotting are preserved.
 }
 \examples{
 gsm <- data.frame(

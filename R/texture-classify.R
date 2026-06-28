@@ -196,7 +196,11 @@ gradistat_texture_percentages <- function(x,
                                           unresolved,
                                           extrapolate) {
   if (!is_gsd_tbl(x)) {
-    return(x)
+    return(.canonical_ternary_component_table(
+      x,
+      component_set = basis,
+      texture_system = "gradistat"
+    ))
   }
 
   fraction_scheme <- if (basis == "gravel_sand_mud") "gravel_sand_mud" else "gradistat"

@@ -40,6 +40,7 @@ Once imported, use the same object with summary and plotting functions:
 gs_diagnostics(wide, output = "summary")
 gs_d_values(long, probs = c(10, 50, 90), extrapolate = "warn_linear")
 gs_folk_ward(long, extrapolate = "warn_linear")
+gsm <- gs_fractions(wide, scheme = "gravel_sand_mud")
 gs_fractions_wide(wide, scheme = "gravel_sand_mud")
 ```
 
@@ -84,12 +85,15 @@ plot_fractions(
 
 ## Texture Ternary Plots
 
-GRADISTAT-style gravel-sand-mud ternary plots use `Gravel`, `Mud`, and
-`Sand` apex labels with gravel and sand:mud ratio guides. USDA ternary
-plots use external percent-axis labels and the 12 major USDA texture
-classes. The USDA plot below combines labeled demonstration points with
-bundled example points where valid sand-silt-clay fractions are
-resolvable.
+Fraction schemes convert grain-size data into particle-size components;
+ternary bases are the three components drawn on a plot; texture systems
+are the classification or diagram style. For GRADISTAT-style ternary
+plots, first summarize to the `gravel_sand_mud` fraction scheme, then
+plot those summarized `gravel`, `sand`, and `mud` components. Canonical
+component names are lowercase snake_case; simple case variants such as
+`Sand` or `SAND` are normalized internally. USDA ternary plots use
+summarized `sand`, `silt`, and `clay` components and the 12 major USDA
+texture classes.
 
 ``` r
 plot_texture_ternary(gsm, scheme = "gradistat", basis = "gravel_sand_mud")
@@ -134,7 +138,8 @@ gs_parameters(
 plot_distribution(long, sample_id = "WN1_upper", cumulative = TRUE)
 plot_cumulative(long, sample_id = "WN1_upper", extrapolate = "warn_linear")
 plot_fractions(long, scheme = "wentworth_major")
-plot_texture_ternary(long, scheme = "usda_tt")
+usda_components <- gs_fractions_wide(long, scheme = "usda_tt")
+plot_texture_ternary(usda_components, scheme = "usda_tt")
 ```
 
 `plot_texture_triangle()` remains available as a stable compatibility
