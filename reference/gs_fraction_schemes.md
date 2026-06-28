@@ -8,7 +8,9 @@ calculations use the millimetre bounds after normalizing `gsd_tbl` sizes
 from their internal micrometre storage. Each scheme is represented as a
 complete, non-overlapping particle-size partition. Lower bounds are
 inclusive for interpretation, and upper bounds define the cumulative
-threshold used to calculate each fraction.
+threshold used to calculate each fraction. `gravel_sand_mud` is an
+explicit public alias of `wentworth_major`; both schemes use gravel,
+sand, and mud components with boundaries at 2000 and 62.5 micrometres.
 
 ## Usage
 
