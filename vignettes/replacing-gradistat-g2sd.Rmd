@@ -114,7 +114,7 @@ head(gs_modes(gs))
 
 ```{r}
 head(suppressWarnings(gs_describe_parameters(gs)))
-head(gs_quality_flags(gs, sediment_loss_percent = c(WN1_upper = 1.2, WN2_upper = 2.4)))
+head(gs_quality_flags(gs, sediment_loss_percent = c(S01 = 1.2, S02 = 2.4)))
 ```
 
 ## Texture Classification
@@ -126,6 +126,7 @@ sand-size modifier subclasses remain future work.
 usda_fractions <- suppressWarnings(gs_fractions_wide(
   gs,
   scheme = "usda_tt",
+  normalize = "fine_earth",
   extrapolate = "warn_linear"
 ))
 
@@ -202,17 +203,17 @@ Lower open-ended classes are displayed at 0.0015 mm, or 1.5 um, for plotting onl
 calculations are unchanged.
 
 ```{r}
-plot_distribution(gs_wide, sample_id = "WN1_upper", cumulative = TRUE)
+plot_distribution(gs_wide, sample = "S01", cumulative = TRUE)
 suppressWarnings(plot_cumulative(
   gs_wide,
-  sample_id = "WN1_upper",
+  sample_id = "S01",
   show_percentiles = c(10, 50, 90),
   extrapolate = "warn_linear"
 ))
 plot_fractions(
   gs_wide,
   scheme = "gravel_sand_mud",
-  sample_id = c("WN1_upper", "WN2_upper"),
+  sample_id = c("S01", "S02"),
   fill_palette = "YlOrBr"
 )
 ```

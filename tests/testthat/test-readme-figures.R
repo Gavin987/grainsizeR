@@ -68,6 +68,7 @@ test_that("README figure generation script is present", {
   expect_true(grepl("wide_plot_sample <-", script_text, fixed = TRUE))
   expect_true(grepl("sample_id = wide_plot_sample", script_text, fixed = TRUE))
   expect_true(grepl("scheme = \"gravel_sand_mud\"", script_text, fixed = TRUE))
+  expect_false(grepl("usda_demo", script_text, fixed = TRUE))
   expect_true(grepl("fill_palette = \"YlOrBr\"", script_text, fixed = TRUE))
   expect_true(grepl("show_sample_labels = FALSE", script_text, fixed = TRUE))
 })
@@ -101,14 +102,8 @@ test_that("bundled examples support README ternary plot workflows", {
   wide <- read_gsd(readme_example_path("grain.wide.csv"), format = "wide")
   long <- read_gsd(readme_example_path("grain.long.csv"))
 
-  wide_fractions <- suppressWarnings(gs_fractions_wide(wide, scheme = "gravel_sand_mud"))
-  gsm <- data.frame(
-    sample_id = wide_fractions$sample_id,
-    gravel = wide_fractions$gravel_percent,
-    sand = wide_fractions$sand_percent,
-    mud = wide_fractions$mud_percent
-  )
-  gsm <- gsm[stats::complete.cases(gsm[c("gravel", "sand", "mud")]), ]
+  gsm <- suppressWarnings(gs_fractions(wide, scheme = "gravel_sand_mud"))
+  usda <- suppressWarnings(gs_fractions_wide(long, scheme = "usda_tt", normalize = "fine_earth", extrapolate = "warn_linear"))
 
   expect_s3_class(
     plot_texture_ternary(
@@ -120,7 +115,7 @@ test_that("bundled examples support README ternary plot workflows", {
     ),
     "ggplot"
   )
-  expect_s3_class(suppressWarnings(plot_texture_ternary(long, scheme = "usda_tt", labels = FALSE)), "ggplot")
+  expect_s3_class(plot_texture_ternary(usda, scheme = "usda_tt", labels = FALSE), "ggplot")
 })
 
 test_that("README examples do not call gs_fw57 on open-tail long data by default", {

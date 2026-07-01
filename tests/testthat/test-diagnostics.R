@@ -150,11 +150,11 @@ test_that("diagnostics run on real long and wide example data", {
 
 test_that("selected real sample diagnostics and unresolved tails are available", {
   gs_long <- diagnostics_example_long()
-  sample_x <- gs_long[gs_long$sample_id == "WN1_upper", ]
+  sample_x <- gs_long[gs_long$sample_id == "S01", ]
   diag <- gs_diagnostics(sample_x)
 
   expect_s3_class(diag, "data.frame")
-  expect_true(all(diag$sample_id == "WN1_upper"))
+  expect_true(all(diag$sample_id == "S01"))
   expect_true(any(diag$check == "d_value_resolvable"))
 
   all_diag <- gs_diagnostics(gs_long)

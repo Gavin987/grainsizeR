@@ -63,7 +63,10 @@ percentile_x_values <- function(x, x_scale, particle_unit = "mm") {
 #' @param show_percentiles Optional logical or numeric vector of D-value
 #'   percentiles to mark on the plot. `TRUE` marks D10, D50, and D90.
 #' @param extrapolate Extrapolation behavior passed to `gs_d_values()` when
-#'   `show_percentiles` is supplied.
+#'   `show_percentiles` is supplied. With the default `"error"`,
+#'   `plot_cumulative()` retries marker placement with `"warn_linear"` if a
+#'   requested percentile falls just outside the finite boundary curve; this
+#'   affects only the plotted marker layer.
 #' @param percentile_color Color for percentile marker crosses.
 #' @param percentile_size Size for percentile marker crosses.
 #' @param percentile_stroke Stroke width for percentile marker crosses.
@@ -131,12 +134,27 @@ plot_cumulative <- function(x,
     show_percentiles <- c(10, 50, 90)
   }
   if (!is.null(show_percentiles) && !identical(show_percentiles, FALSE)) {
-    percentiles <- gs_d_values(
-      plot_x,
-      probs = show_percentiles,
-      interpolation_scale = if (x_scale == "linear_um") "linear_um" else "phi",
-      output_unit = "um",
-      extrapolate = extrapolate
+    percentile_scale <- if (x_scale == "linear_um") "linear_um" else "phi"
+    percentiles <- tryCatch(
+      gs_d_values(
+        plot_x,
+        probs = show_percentiles,
+        interpolation_scale = percentile_scale,
+        output_unit = "um",
+        extrapolate = extrapolate
+      ),
+      error = function(err) {
+        if (!identical(extrapolate, "error")) {
+          stop(err)
+        }
+        gs_d_values(
+          plot_x,
+          probs = show_percentiles,
+          interpolation_scale = percentile_scale,
+          output_unit = "um",
+          extrapolate = "warn_linear"
+        )
+      }
     )
     percentiles$x_value <- percentile_x_values(percentiles, x_scale, particle_unit = particle_unit)
     percentiles$y_value <- if (direction == "finer") percentiles$percentile else 100 - percentiles$percentile

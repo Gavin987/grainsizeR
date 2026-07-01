@@ -40,23 +40,23 @@ Once imported, use the same object with summary and plotting functions:
 gs_diagnostics(wide, output = "summary")
 gs_d_values(long, probs = c(10, 50, 90), extrapolate = "warn_linear")
 gs_folk_ward(long, extrapolate = "warn_linear")
-gsm <- gs_fractions(wide, scheme = "gravel_sand_mud")
+gradistat_components <- gs_fractions(wide, scheme = "gravel_sand_mud")
 gs_fractions_wide(wide, scheme = "gravel_sand_mud")
 ```
 
 ## Grain-Size Plots
 
 Distribution and cumulative plots are single-sample displays. Select one
-sample with `sample = 1` or `sample = "WN1_upper"`, then loop over
-samples or arrange returned plots externally for multi-sample figures.
-Metric plots use a log10 particle-size axis in millimetres by default;
+sample with `sample = 1` or `sample = "S01"`, then loop over samples or
+arrange returned plots externally for multi-sample figures. Metric plots
+use a log10 particle-size axis in millimetres by default;
 `particle_unit = "um"` displays micrometres.
 
 ``` r
 plot_distribution(wide, sample = 1, cumulative = TRUE)
 plot_cumulative(
   wide,
-  sample = "WN1_upper",
+  sample = "S01",
   show_percentiles = TRUE,
   extrapolate = "warn_linear"
 )
@@ -81,12 +81,12 @@ are available when the input resolves the required class boundaries.
 plot_fractions(
   wide,
   scheme = "gravel_sand_mud",
-  sample_id = c("WN1_upper", "WN2_upper", "WN3_upper", "WS1_upper"),
+  sample = 1:10,
   fill_palette = "YlOrBr"
 )
 ```
 
-<img src="man/figures/readme-wide-fractions.png" width="100%" />
+<img src="man/figures/readme-wide-fractions.png" width="75%" />
 
 ## Texture Ternary Plots
 
@@ -101,9 +101,11 @@ summarized `sand`, `silt`, and `clay` components and the 12 major USDA
 texture classes.
 
 ``` r
-plot_texture_ternary(gsm, scheme = "gradistat", basis = "gravel_sand_mud")
-plot_texture_ternary(gsm, scheme = "gradistat", color_by = "season")
-plot_texture_ternary(usda_samples, scheme = "usda_tt", show_sample_labels = TRUE)
+gradistat_components <- gs_fractions(wide, scheme = "gravel_sand_mud")
+usda_components <- gs_fractions_wide(long, scheme = "usda_tt", normalize = "fine_earth")
+
+plot_texture_ternary(gradistat_components, scheme = "gradistat")
+plot_texture_ternary(usda_components, scheme = "usda_tt", show_sample_labels = TRUE)
 ```
 
 <img src="man/figures/readme-gradistat-ternary.png" width="47%" /><img src="man/figures/readme-usda-ternary.png" width="51%" />
@@ -141,10 +143,10 @@ gs_parameters(
   extrapolate = "warn_linear"
 )
 
-plot_distribution(long, sample_id = "WN1_upper", cumulative = TRUE)
-plot_cumulative(long, sample_id = "WN1_upper", extrapolate = "warn_linear")
+plot_distribution(long, sample = "S01", cumulative = TRUE)
+plot_cumulative(long, sample = "S01", extrapolate = "warn_linear")
 plot_fractions(long, scheme = "wentworth_major")
-usda_components <- gs_fractions_wide(long, scheme = "usda_tt")
+usda_components <- gs_fractions_wide(long, scheme = "usda_tt", normalize = "fine_earth")
 plot_texture_ternary(usda_components, scheme = "usda_tt")
 ```
 

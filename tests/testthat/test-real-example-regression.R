@@ -92,12 +92,12 @@ test_that("fine texture schemes close for long and wide example data", {
 
 test_that("selected real sample returns stable regression outputs", {
   ex <- read_real_examples_for_regression()
-  sample_id <- "WN1_upper"
+  sample_id <- "S01"
   one <- ex$long[ex$long$sample_id == sample_id, ]
 
   d50 <- suppressWarnings(gs_d_values(one, probs = 50, extrapolate = "warn_linear"))
   expect_true(is.finite(d50$grain_size_um))
-  expect_equal(round(d50$grain_size_um, 1), 154.7)
+  expect_equal(round(d50$grain_size_um, 1), 122.9)
 
   finer <- suppressWarnings(gs_percent_finer(
     one,

@@ -187,11 +187,11 @@ report format.
 ## Basic Plots
 
 ```{r, fig.width=6, fig.height=4}
-plot_distribution(gs, sample_id = "WN1_upper")
+plot_distribution(gs, sample = "S01")
 ```
 
 ```{r, fig.width=6, fig.height=4}
-plot_cumulative(gs, sample_id = "WN1_upper", show_percentiles = c(10, 50, 90), extrapolate = "warn_linear")
+plot_cumulative(gs, sample = "S01", show_percentiles = c(10, 50, 90), extrapolate = "warn_linear")
 ```
 
 ```{r, fig.width=6, fig.height=4}
@@ -206,7 +206,7 @@ needs, not copied from GRADISTAT software.
 ```{r, fig.width=7, fig.height=5}
 suppressWarnings(plot_gradistat_summary(
   gs,
-  sample_id = "WN1_upper",
+  sample_id = "S01",
   extrapolate = "warn_linear"
 ))
 ```

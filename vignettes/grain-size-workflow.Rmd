@@ -162,7 +162,7 @@ open-ended fine pan fractions.
 ```{r}
 head(gs_quality_flags(
   gs,
-  sediment_loss_percent = c(WN1_upper = 1.5, WN2_upper = 2.5)
+  sediment_loss_percent = c(S01 = 1.5, S02 = 2.5)
 ))
 ```
 
@@ -181,9 +181,9 @@ externally for multi-sample figures. Lower open-ended classes are displayed at
 0.0015 mm, or 1.5 um, for plotting only; calculations are unchanged.
 
 ```{r}
-plot_distribution(gs_wide, sample_id = "WN1_upper")
-plot_distribution(gs_wide, sample_id = "WN1_upper", cumulative = TRUE)
-plot_distribution(gs_wide, x_scale = "phi", type = "line", sample_id = "WN1_upper")
+plot_distribution(gs_wide, sample = "S01")
+plot_distribution(gs_wide, sample = "S01", cumulative = TRUE)
+plot_distribution(gs_wide, x_scale = "phi", type = "line", sample = "S01")
 ```
 
 ## Cumulative Plots
@@ -194,7 +194,7 @@ add D-value markers.
 ```{r}
 suppressWarnings(plot_cumulative(
   gs_wide,
-  sample_id = "WN1_upper",
+  sample_id = "S01",
   show_percentiles = c(10, 50, 90),
   extrapolate = "warn_linear"
 ))
@@ -211,7 +211,7 @@ fractions. More detailed Wentworth-style classes are available with
 plot_fractions(
   gs_wide,
   scheme = "gravel_sand_mud",
-  sample_id = c("WN1_upper", "WN2_upper"),
+  sample_id = c("S01", "S02"),
   fill_palette = "YlOrBr"
 )
 ```

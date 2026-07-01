@@ -88,7 +88,7 @@ is the retained percent below that boundary. This convention is used by
 example, `D50` is the median grain size by the percent-finer convention.
 
 ```{r}
-gs_d_values(subset(gs_long, sample_id == "WN1_upper"), probs = c(10, 50, 90), extrapolate = "warn_linear")
+gs_d_values(subset(gs_long, sample_id == "S01"), probs = c(10, 50, 90), extrapolate = "warn_linear")
 ```
 
 ## Threshold Interpolation
@@ -101,7 +101,7 @@ class boundaries.
 
 ```{r}
 suppressWarnings(gs_percent_finer(
-  subset(gs_long, sample_id == "WN1_upper"),
+  subset(gs_long, sample_id == "S01"),
   sizes = c(20, 50, 60, 63),
   size_unit = "um",
   extrapolate = "warn_linear"
@@ -122,7 +122,7 @@ with unresolved D-values, unresolved clay/silt thresholds, open-ended terminal
 classes, or fraction schemes that require finer measurements.
 
 ```{r}
-gs_diagnostics(subset(gs_wide, sample_id == "WN1_upper"), output = "summary")
+gs_diagnostics(subset(gs_wide, sample_id == "S01"), output = "summary")
 ```
 
 ## Fraction Schemes
@@ -146,7 +146,7 @@ choose whether to error or explicitly extrapolate.
 
 ```{r}
 suppressWarnings(gs_folk_ward(
-  subset(gs_long, sample_id == "WN1_upper"),
+  subset(gs_long, sample_id == "S01"),
   extrapolate = "warn_linear"
 ))
 ```
@@ -160,7 +160,7 @@ open-ended retained classes.
 
 ```{r}
 suppressWarnings(gs_moments(
-  subset(gs_long, sample_id == "WN1_upper"),
+  subset(gs_long, sample_id == "S01"),
   open_end = "extend_phi"
 ))
 ```
@@ -173,7 +173,7 @@ against `gs_d_values()`, `gs_grain_size_indices()`, `gs_folk_ward()`, and
 `gs_fractions_wide()`.
 
 ```{r}
-sample_id <- "WN1_upper"
+sample_id <- "S01"
 summary <- suppressWarnings(gs_parameters(
   subset(gs_long, sample_id == sample_id),
   parameters = c("d_values", "indices", "folk_ward", "fractions"),

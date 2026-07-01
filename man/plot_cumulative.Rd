@@ -43,7 +43,10 @@ Kept for backward compatibility; use \code{sample} for new code.}
 percentiles to mark on the plot. \code{TRUE} marks D10, D50, and D90.}
 
 \item{extrapolate}{Extrapolation behavior passed to \code{gs_d_values()} when
-\code{show_percentiles} is supplied.}
+\code{show_percentiles} is supplied. With the default \code{"error"},
+\code{plot_cumulative()} retries marker placement with \code{"warn_linear"} if a
+requested percentile falls just outside the finite boundary curve; this
+affects only the plotted marker layer.}
 
 \item{percentile_color}{Color for percentile marker crosses.}
 

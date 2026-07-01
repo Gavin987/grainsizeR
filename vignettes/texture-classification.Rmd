@@ -73,6 +73,7 @@ the corresponding triangle sides.
 usda_fractions <- suppressWarnings(gs_fractions_wide(
   long_gs,
   scheme = "usda_tt",
+  normalize = "fine_earth",
   extrapolate = "warn_linear"
 ))
 
@@ -91,7 +92,7 @@ usda_example <- usda_example[
 
 head(classify_texture(usda_example, scheme = "usda_tt", method = "rules"))
 
-suppressWarnings(plot_texture_ternary(long_gs, scheme = "usda_tt", labels = FALSE))
+plot_texture_ternary(usda_example, scheme = "usda_tt", labels = FALSE)
 ```
 
 Input percentages must be numeric, finite, between 0 and 100, and sum to

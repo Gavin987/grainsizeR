@@ -23,11 +23,14 @@ test_that("long example input returns a valid gsd_tbl", {
   )
 
   expect_s3_class(gsd, "gsd_tbl")
-  expect_equal(length(unique(gsd$sample_id)), 44)
-  expect_equal(as.numeric(rowsum(gsd$retained_percent, gsd$sample_id)), rep(100, 44), tolerance = 1e-5)
+  expect_equal(length(unique(gsd$sample_id)), 30)
+  expect_equal(as.numeric(rowsum(gsd$retained_percent, gsd$sample_id)), rep(100, 30), tolerance = 1e-5)
 })
 
 test_that("wide example input returns seven bins per sample with terminal mud bins", {
+  raw_header <- names(readr::read_csv(example_gsd_path("grain.wide.csv"), show_col_types = FALSE))
+  expect_equal(raw_header[1], "size_mm")
+
   gsd <- read_gsd_wide(
     example_gsd_path("grain.wide.csv"),
     size_col = 1,
@@ -36,15 +39,15 @@ test_that("wide example input returns seven bins per sample with terminal mud bi
   )
 
   expect_s3_class(gsd, "gsd_tbl")
-  expect_equal(length(unique(gsd$sample_id)), 44)
+  expect_equal(length(unique(gsd$sample_id)), 30)
   expect_true(all(as.numeric(table(gsd$sample_id)) == 7))
-  expect_equal(as.numeric(rowsum(gsd$retained_percent, gsd$sample_id)), rep(100, 44), tolerance = 1e-5)
+  expect_equal(as.numeric(rowsum(gsd$retained_percent, gsd$sample_id)), rep(100, 30), tolerance = 1e-5)
 
   final_bins <- gsd[gsd$bin_id == 7, ]
   expect_true(all(final_bins$is_open_lower))
   expect_true(all(is.na(final_bins$size_lower_um)))
-  expect_equal(final_bins$size_upper_um, rep(62.5, 44))
-  expect_equal(final_bins$raw_size_um, rep(62.5, 44))
+  expect_equal(final_bins$size_upper_um, rep(62.5, 30))
+  expect_equal(final_bins$raw_size_um, rep(62.5, 30))
 })
 
 test_that("long and wide example inputs agree for aggregate fractions", {
@@ -92,11 +95,32 @@ test_that("full workflow runs on long example data", {
   folkward <- suppressWarnings(gs_folkward(gsd, extrapolate = "warn_linear"))
   moments <- suppressWarnings(gs_moments(gsd, open_end = "extend_phi"))
   expect_s3_class(gs_fractions_wide(gsd, scheme = "wentworth_major"), "tbl_df")
-  expect_s3_class(plot_distribution(gsd, sample_id = unique(gsd$sample_id)[1]), "ggplot")
-  expect_s3_class(plot_cumulative(gsd, sample_id = unique(gsd$sample_id)[1]), "ggplot")
+  expect_s3_class(plot_distribution(gsd, sample = 1), "ggplot")
+  expect_s3_class(plot_cumulative(gsd, sample = 1, show_percentiles = TRUE), "ggplot")
   expect_s3_class(plot_fractions(gsd), "ggplot")
+  expect_s3_class(plot_texture_ternary(gs_fractions(gsd, scheme = "gravel_sand_mud"), scheme = "gradistat"), "ggplot")
+  expect_s3_class(plot_texture_ternary(gs_fractions_wide(gsd, scheme = "gravel_sand_mud"), scheme = "gradistat"), "ggplot")
 
-  expect_equal(nrow(engineering), 44)
-  expect_equal(nrow(folkward), 44)
-  expect_equal(nrow(moments), 44)
+  expect_equal(nrow(engineering), 30)
+  expect_equal(nrow(folkward), 30)
+  expect_equal(nrow(moments), 30)
+})
+
+test_that("full workflow runs on wide example data", {
+  gsd <- read_gsd(example_gsd_path("grain.wide.csv"), format = "wide")
+
+  validate_gsd_tbl(gsd)
+  expect_s3_class(plot_distribution(gsd, sample = 1), "ggplot")
+  expect_s3_class(suppressWarnings(plot_cumulative(gsd, sample = 1, show_percentiles = TRUE)), "ggplot")
+  expect_s3_class(plot_fractions(gsd, scheme = "gravel_sand_mud"), "ggplot")
+  expect_s3_class(plot_texture_ternary(gs_fractions(gsd, scheme = "gravel_sand_mud"), scheme = "gradistat"), "ggplot")
+  expect_s3_class(plot_texture_ternary(gs_fractions_wide(gsd, scheme = "gravel_sand_mud"), scheme = "gradistat"), "ggplot")
+})
+
+test_that("updated long example data support USDA ternary plotting", {
+  gsd <- read_gsd(example_gsd_path("grain.long.csv"), format = "long")
+  usda <- suppressWarnings(gs_fractions_wide(gsd, scheme = "usda_tt", normalize = "fine_earth"))
+
+  expect_true(all(c("sand_percent", "silt_percent", "clay_percent") %in% names(usda)))
+  expect_s3_class(plot_texture_ternary(usda, scheme = "usda_tt"), "ggplot")
 })

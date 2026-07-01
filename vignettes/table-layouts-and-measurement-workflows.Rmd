@@ -152,7 +152,7 @@ Use diagnostics before clay/silt/sand fractions, D-values near open tails, or
 texture classification.
 
 ```{r}
-sample_id <- "WN1_upper"
+sample_id <- "S01"
 
 head(gs_diagnostics(
   gs_long,

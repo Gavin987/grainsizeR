@@ -105,7 +105,7 @@ test_that("documented fraction workflows run", {
 
 test_that("selected sample reporting and summary plot workflows run", {
   gs_long <- workflow_read_long()
-  sample_id <- "WN1_upper"
+  sample_id <- "S01"
 
   summary <- suppressWarnings(gs_parameters(
     gs_long[gs_long$sample_id == sample_id, ],

@@ -95,7 +95,7 @@ test_that("read_gsd infers bundled long example columns", {
 
   expect_s3_class(gsd, "gsd_tbl")
   expect_true(all(c("sample_id", "bin_id", "raw_size_um") %in% names(gsd)))
-  expect_true(all(c("WN1_upper", "WN2_upper") %in% gsd$sample_id))
+  expect_true(all(c("S01", "S02") %in% gsd$sample_id))
 })
 
 test_that("as_gsd_tbl auto-detects G2Sd-style micrometre size labels", {
