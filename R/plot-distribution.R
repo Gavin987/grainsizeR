@@ -201,9 +201,10 @@ distribution_x_values <- function(x, x_scale, particle_unit = "mm") {
 #' @param cumulative Should a cumulative percent-finer line be overlaid on the
 #'   retained-size bars? This combined display is useful for GRADISTAT-style
 #'   grain-size summaries.
-#' @param facet_by_sample Deprecated. Distribution plots are single-sample
-#'   displays; use `sample_id` to select one sample, loop over samples, or
-#'   arrange returned plots externally with another plotting package.
+#' @param facet_by_sample Ignored compatibility argument. Distribution plots
+#'   are single-sample displays; use `sample` or `sample_id` to select one
+#'   sample, loop over samples, or arrange returned plots externally with
+#'   another plotting package.
 #'
 #' @return A `ggplot` object.
 #' @importFrom rlang .data

@@ -191,6 +191,22 @@ parameters_to_long <- function(wide) {
   tibble::as_tibble(out)
 }
 
+.merge_new_parameter_columns <- function(wide, addition, columns = names(addition)) {
+  columns <- intersect(columns, names(addition))
+  new_cols <- setdiff(columns, names(wide))
+  if (length(new_cols) == 0) {
+    return(wide)
+  }
+
+  merge(
+    wide,
+    addition[c("sample_id", new_cols)],
+    by = "sample_id",
+    all.x = TRUE,
+    sort = FALSE
+  )
+}
+
 #' Summarize grain-size parameters
 #'
 #' `gs_parameters()` is a minimal user-facing summary interface for selected
@@ -337,7 +353,7 @@ gs_parameters <- function(x,
       names(values) <- percentile_values$sample_id[percentile_values$percentile == prob]
       percentile_wide[[paste0("D", prob, "_um")]] <- unname(values[percentile_wide$sample_id])
     }
-    wide <- merge(wide, percentile_wide, by = "sample_id", all.x = TRUE, sort = FALSE)
+    wide <- .merge_new_parameter_columns(wide, percentile_wide)
   }
 
   if ("d_spread" %in% parameters) {
@@ -347,14 +363,7 @@ gs_parameters <- function(x,
       interpolation_scale = interpolation_scale,
       extrapolate = extrapolate
     )
-    new_cols <- setdiff(names(d_spread), names(wide))
-    wide <- merge(
-      wide,
-      d_spread[c("sample_id", new_cols)],
-      by = "sample_id",
-      all.x = TRUE,
-      sort = FALSE
-    )
+    wide <- .merge_new_parameter_columns(wide, d_spread)
   }
 
   if ("indices" %in% parameters) {
@@ -364,14 +373,7 @@ gs_parameters <- function(x,
       interpolation_scale = interpolation_scale,
       extrapolate = extrapolate
     )
-    new_cols <- setdiff(names(indices), names(wide))
-    wide <- merge(
-      wide,
-      indices[c("sample_id", new_cols)],
-      by = "sample_id",
-      all.x = TRUE,
-      sort = FALSE
-    )
+    wide <- .merge_new_parameter_columns(wide, indices)
   }
 
   if ("folk_ward" %in% parameters) {
@@ -381,14 +383,7 @@ gs_parameters <- function(x,
       extrapolate = extrapolate,
       include_descriptions = TRUE
     )
-    new_cols <- setdiff(names(folkward), names(wide))
-    wide <- merge(
-      wide,
-      folkward[c("sample_id", new_cols)],
-      by = "sample_id",
-      all.x = TRUE,
-      sort = FALSE
-    )
+    wide <- .merge_new_parameter_columns(wide, folkward)
   }
 
   if ("moments" %in% parameters) {
@@ -397,14 +392,7 @@ gs_parameters <- function(x,
       moments_method = moments_method,
       moments_open_end = moments_open_end
     )
-    new_cols <- setdiff(names(moments), names(wide))
-    wide <- merge(
-      wide,
-      moments[c("sample_id", new_cols)],
-      by = "sample_id",
-      all.x = TRUE,
-      sort = FALSE
-    )
+    wide <- .merge_new_parameter_columns(wide, moments)
   }
 
   if ("descriptors" %in% parameters) {
@@ -424,26 +412,12 @@ gs_parameters <- function(x,
       "skewness_description", "kurtosis_description",
       "description_method", "description_status"
     )
-    new_cols <- setdiff(keep, names(wide))
-    wide <- merge(
-      wide,
-      descriptors[c("sample_id", new_cols)],
-      by = "sample_id",
-      all.x = TRUE,
-      sort = FALSE
-    )
+    wide <- .merge_new_parameter_columns(wide, descriptors, columns = keep)
   }
 
   if ("modes" %in% parameters) {
     modes <- modes_for_parameters(x, n_modes = n_modes)
-    new_cols <- setdiff(names(modes), names(wide))
-    wide <- merge(
-      wide,
-      modes[c("sample_id", new_cols)],
-      by = "sample_id",
-      all.x = TRUE,
-      sort = FALSE
-    )
+    wide <- .merge_new_parameter_columns(wide, modes)
   }
 
   if ("quality" %in% parameters) {
@@ -454,14 +428,7 @@ gs_parameters <- function(x,
       fine_pan_info_percent = fine_pan_info_percent,
       fine_pan_warning_percent = fine_pan_warning_percent
     )
-    new_cols <- setdiff(names(quality), names(wide))
-    wide <- merge(
-      wide,
-      quality[c("sample_id", new_cols)],
-      by = "sample_id",
-      all.x = TRUE,
-      sort = FALSE
-    )
+    wide <- .merge_new_parameter_columns(wide, quality)
   }
 
   if ("fractions" %in% parameters) {
@@ -473,14 +440,7 @@ gs_parameters <- function(x,
       unresolved = fraction_unresolved,
       extrapolate = extrapolate
     )
-    new_cols <- setdiff(names(fractions), names(wide))
-    wide <- merge(
-      wide,
-      fractions[c("sample_id", new_cols)],
-      by = "sample_id",
-      all.x = TRUE,
-      sort = FALSE
-    )
+    wide <- .merge_new_parameter_columns(wide, fractions)
   }
 
   wide <- tibble::as_tibble(wide)

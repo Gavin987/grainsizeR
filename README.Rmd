@@ -177,9 +177,15 @@ texture ternary plots; `plot_texture_ternary()` is preferred in new code.
 
 Use the vignettes for full workflows and methodological detail:
 
+- `vignette("basic-workflow")`: a compact first-pass import, summary, and plot
+  workflow.
 - `vignette("grain-size-workflow")`: import, diagnostics, summaries, and plots.
+- `vignette("table-layouts-and-measurement-workflows")`: long and wide table
+  layouts for common measurement workflows.
 - `vignette("texture-classification")`: USDA and GRADISTAT-style texture
   classification and ternary plots.
+- `vignette("texture-polygons")`: user-supplied polygon templates and polygon
+  classification workflows.
 - `vignette("replacing-gradistat-g2sd")`: R-native workflows for tasks commonly
   handled with GRADISTAT or G2Sd-style analysis.
 - `vignette("method-validation")`: interpolation conventions, open-tail

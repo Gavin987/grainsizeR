@@ -90,18 +90,10 @@ gs_grain_size_indices <- function(x,
 #' not implement complete civil-engineering classification systems such as
 #' AASHTO or USCS.
 #'
-#' @inheritParams gs_grain_size_indices
+#' @param ... Arguments forwarded to `gs_grain_size_indices()`.
 #'
 #' @return A tibble with one row per sample and grain-size indices.
 #' @export
-gs_engineering <- function(x,
-                           fine_threshold_um = 62.5,
-                           interpolation_scale = "phi",
-                           extrapolate = "error") {
-  gs_grain_size_indices(
-    x = x,
-    fine_threshold_um = fine_threshold_um,
-    interpolation_scale = interpolation_scale,
-    extrapolate = extrapolate
-  )
+gs_engineering <- function(...) {
+  gs_grain_size_indices(...)
 }

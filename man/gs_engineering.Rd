@@ -4,23 +4,10 @@
 \alias{gs_engineering}
 \title{Calculate additional grain-size indices}
 \usage{
-gs_engineering(
-  x,
-  fine_threshold_um = 62.5,
-  interpolation_scale = "phi",
-  extrapolate = "error"
-)
+gs_engineering(...)
 }
 \arguments{
-\item{x}{A valid \code{gsd_tbl} object.}
-
-\item{fine_threshold_um}{Fine-content threshold in micrometers.}
-
-\item{interpolation_scale}{Interpolation scale passed to \code{gs_d_values()}
-and \code{gs_percent_finer()}.}
-
-\item{extrapolate}{Extrapolation behavior passed to \code{gs_d_values()} and
-\code{gs_percent_finer()}.}
+\item{...}{Arguments forwarded to \code{gs_grain_size_indices()}.}
 }
 \value{
 A tibble with one row per sample and grain-size indices.

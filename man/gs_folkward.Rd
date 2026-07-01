@@ -4,22 +4,10 @@
 \alias{gs_folkward}
 \title{Calculate Folk and Ward graphical grain-size statistics}
 \usage{
-gs_folkward(
-  x,
-  interpolation_scale = "phi",
-  extrapolate = c("error", "warn_linear"),
-  include_descriptions = TRUE
-)
+gs_folkward(...)
 }
 \arguments{
-\item{x}{A valid \code{gsd_tbl} object.}
-
-\item{interpolation_scale}{Interpolation scale passed to \code{gs_d_values()}.}
-
-\item{extrapolate}{Extrapolation behavior passed to \code{gs_d_values()}.}
-
-\item{include_descriptions}{Should descriptive Folk and Ward class labels be
-included?}
+\item{...}{Arguments forwarded to \code{gs_folk_ward()}.}
 }
 \value{
 A tibble with one row per sample and Folk and Ward graphical

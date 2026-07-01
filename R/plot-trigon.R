@@ -47,6 +47,22 @@ fine_resolution_ok <- function(x, sample_id, scheme) {
   sum(finite_boundaries < sand_lower) >= 2
 }
 
+.ternary_base_plot <- function(axis_guides) {
+  outline <- tibble::tibble(
+    x = c(0, 1, 0.5, 0),
+    y = c(0, 0, sqrt(3) / 2, 0)
+  )
+
+  p <- ggplot2::ggplot() +
+    ggplot2::geom_path(data = outline, ggplot2::aes(x = .data$x, y = .data$y), linewidth = 0.45, color = "black") +
+    ggplot2::coord_equal(xlim = c(-0.16, 1.16), ylim = c(-0.18, sqrt(3) / 2 + 0.12), clip = "off") +
+    ggplot2::labs(x = NULL, y = NULL) +
+    ggplot2::theme_bw() +
+    .ternary_cartesian_theme()
+
+  .add_ternary_axis_guides(p, axis_guides)
+}
+
 #' Plot samples on a ternary diagram
 #'
 #' `plot_trigon()` is a compatibility plotting name for texture ternary plots.
@@ -177,18 +193,6 @@ plot_trigon <- function(x,
     stop("No samples have fully resolved ternary components to plot.", call. = FALSE)
   }
 
-  triangle <- tibble::tibble(
-    x = c(0, 1, 0.5, 0),
-    y = c(0, 0, sqrt(3) / 2, 0)
-  )
-
-  p <- ggplot2::ggplot() +
-    ggplot2::geom_path(data = triangle, ggplot2::aes(x = .data$x, y = .data$y), linewidth = 0.45, color = "black") +
-    ggplot2::coord_equal(xlim = c(-0.16, 1.16), ylim = c(-0.18, sqrt(3) / 2 + 0.12), clip = "off") +
-    ggplot2::labs(x = NULL, y = NULL) +
-    ggplot2::theme_bw() +
-    .ternary_cartesian_theme()
-
   guides <- if (identical(scheme, "usda_tt")) {
     .usda_ternary_axis_guides()
   } else {
@@ -198,7 +202,7 @@ plot_trigon <- function(x,
       top = tools::toTitleCase(components[3])
     )
   }
-  p <- .add_ternary_axis_guides(p, guides)
+  p <- .ternary_base_plot(guides)
 
   if (is.null(polygons) && identical(scheme, "usda_tt")) {
     if (show_boundaries) {
@@ -466,19 +470,8 @@ plot_gradistat_texture_ternary <- function(x,
                                            label_style) {
   show_classes <- isTRUE(show_class_labels)
   points <- .gradistat_ternary_points(x, basis = basis, point_id = point_id, color_by = color_by)
-  outline <- tibble::tibble(
-    x = c(0, 1, 0.5, 0),
-    y = c(0, 0, sqrt(3) / 2, 0)
-  )
   axis_guides <- .gradistat_ternary_axis_guides(basis)
-
-  p <- ggplot2::ggplot() +
-    ggplot2::geom_path(data = outline, ggplot2::aes(x = .data$x, y = .data$y), linewidth = 0.45, color = "black") +
-    ggplot2::coord_equal(xlim = c(-0.16, 1.16), ylim = c(-0.18, sqrt(3) / 2 + 0.12), clip = "off") +
-    ggplot2::labs(x = NULL, y = NULL) +
-    ggplot2::theme_bw() +
-    .ternary_cartesian_theme()
-  p <- .add_ternary_axis_guides(p, axis_guides)
+  p <- .ternary_base_plot(axis_guides)
 
   if (show_boundaries) {
     segments <- .gradistat_ternary_segments(basis)
@@ -576,19 +569,8 @@ plot_usda_texture_ternary <- function(x,
     coords[[color_by]] <- x[[color_by]]
   }
 
-  outline <- tibble::tibble(
-    x = c(0, 1, 0.5, 0),
-    y = c(0, 0, sqrt(3) / 2, 0)
-  )
   axis_guides <- .usda_ternary_axis_guides()
-
-  p <- ggplot2::ggplot() +
-    ggplot2::geom_path(data = outline, ggplot2::aes(x = .data$x, y = .data$y), linewidth = 0.45, color = "black") +
-    ggplot2::coord_equal(xlim = c(-0.16, 1.16), ylim = c(-0.18, sqrt(3) / 2 + 0.12), clip = "off") +
-    ggplot2::labs(x = NULL, y = NULL) +
-    ggplot2::theme_bw() +
-    .ternary_cartesian_theme()
-  p <- .add_ternary_axis_guides(p, axis_guides)
+  p <- .ternary_base_plot(axis_guides)
 
   if (show_boundaries) {
     p <- p + ggplot2::geom_segment(

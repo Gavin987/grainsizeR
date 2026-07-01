@@ -258,8 +258,6 @@ gradistat_texture_percentages <- function(x,
 #' For rule-based paths, input percentages must be numeric, finite, between 0
 #' and 100, and sum to approximately 100; the function does not silently
 #' normalize invalid sums.
-#' Input percentages must be numeric, finite, between 0 and 100, and sum to
-#' approximately 100; the function does not silently normalize invalid sums.
 #' It does not implement sand-size modifier subclasses such as coarse sand,
 #' fine sand, very fine sand, coarse sandy loam, fine sandy loam, or very fine
 #' sandy loam. Those may be added later as qualitative descriptor columns for
@@ -309,13 +307,16 @@ gradistat_texture_percentages <- function(x,
 #' @return A tibble with one row per sample and texture class assignment. USDA
 #'   rule classification returns the input rows with `texture_class_id`,
 #'   `texture_class`, `classification_method`, `rule_status`,
-#'   `all_rule_matches`, `rule_conflict`, and `rule_gap` appended.
-#'   For valid USDA inputs, `classification_method` is `"usda_major_rules"` and
+#'   `all_rule_matches`, `rule_conflict`, and `rule_gap` appended. For valid
+#'   USDA inputs, `classification_method` is `"usda_major_rules"` and
 #'   `rule_status` is `"classified"`. GRADISTAT rule classification returns the
-#'   input rows with `texture_class_id`, `texture_class`, `classification_method`,
-#'   `classification_status`, `ternary_basis`, `notes`, and a ratio audit column
-#'   appended. If `include_sediment_name = TRUE`, GRADISTAT outputs also include
-#'   `sediment_name` and related sediment-name audit columns.
+#'   input rows with `texture_class_id`, `texture_class`,
+#'   `classification_method`, `classification_status`, `ternary_basis`, `notes`,
+#'   and a ratio audit column appended. If `include_sediment_name = TRUE`,
+#'   GRADISTAT outputs also include `sediment_name` and related sediment-name
+#'   audit columns. Polygon classification returns columns matching
+#'   `texture_polygon_template()`, including `class_id`, `class_name`, `left`,
+#'   `right`, `top`, `x`, `y`, `resolved`, and `ambiguous`.
 #'
 #' @examples
 #' samples <- data.frame(

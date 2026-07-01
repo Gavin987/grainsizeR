@@ -70,9 +70,10 @@ percentile_x_values <- function(x, x_scale, particle_unit = "mm") {
 #' @param percentile_color Color for percentile marker crosses.
 #' @param percentile_size Size for percentile marker crosses.
 #' @param percentile_stroke Stroke width for percentile marker crosses.
-#' @param facet_by_sample Deprecated. Cumulative plots are single-sample
-#'   displays; use `sample_id` to select one sample, loop over samples, or
-#'   arrange returned plots externally with another plotting package.
+#' @param facet_by_sample Ignored compatibility argument. Cumulative plots are
+#'   single-sample displays; use `sample` or `sample_id` to select one sample,
+#'   loop over samples, or arrange returned plots externally with another
+#'   plotting package.
 #'
 #' @return A `ggplot` object.
 #' @export

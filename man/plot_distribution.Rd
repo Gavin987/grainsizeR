@@ -43,9 +43,10 @@ labels as plotting proxies?}
 retained-size bars? This combined display is useful for GRADISTAT-style
 grain-size summaries.}
 
-\item{facet_by_sample}{Deprecated. Distribution plots are single-sample
-displays; use \code{sample_id} to select one sample, loop over samples, or
-arrange returned plots externally with another plotting package.}
+\item{facet_by_sample}{Ignored compatibility argument. Distribution plots
+are single-sample displays; use \code{sample} or \code{sample_id} to select one
+sample, loop over samples, or arrange returned plots externally with
+another plotting package.}
 }
 \value{
 A \code{ggplot} object.

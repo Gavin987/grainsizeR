@@ -3,6 +3,8 @@
 ^\.gitignore$
 ^\.Rbuildignore$
 ^\.Rproj\.user$
+^CLAUDE\.md$
+^\.claude$
 ^.*\.Rproj$
 ^_pkgdown\.yml$
 ^pkgdown$

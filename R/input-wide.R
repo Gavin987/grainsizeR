@@ -53,7 +53,10 @@ resolve_wide_size_col <- function(size_col, data) {
 #' @param measurement_method Measurement method to store in the output. A
 #'   single string is recycled to all rows.
 #'
-#' @return A `gsd_tbl`.
+#' @return A `gsd_tbl` tibble with canonical columns including `sample_id`,
+#'   `bin_id`, `raw_size_um`, `size_lower_um`, `size_upper_um`,
+#'   `retained_percent`, `cum_finer_percent`, `cum_coarser_percent`,
+#'   `is_open_lower`, `is_open_upper`, and `measurement_method`.
 #' @export
 read_gsd_wide <- function(file,
                           size_col = 1,

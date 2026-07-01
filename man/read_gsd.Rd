@@ -45,7 +45,10 @@ grain-size class. \code{"wide"} reads grain-size classes from rows and sample
 identifiers from columns.}
 }
 \value{
-A \code{gsd_tbl}.
+A \code{gsd_tbl} tibble with canonical columns including \code{sample_id},
+\code{bin_id}, \code{raw_size_um}, \code{size_lower_um}, \code{size_upper_um},
+\code{retained_percent}, \code{cum_finer_percent}, \code{cum_coarser_percent},
+\code{is_open_lower}, \code{is_open_upper}, and \code{measurement_method}.
 }
 \description{
 \code{read_gsd()} reads a comma-separated file and converts a long- or

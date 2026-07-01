@@ -72,13 +72,16 @@ classification ignore this argument.}
 A tibble with one row per sample and texture class assignment. USDA
 rule classification returns the input rows with \code{texture_class_id},
 \code{texture_class}, \code{classification_method}, \code{rule_status},
-\code{all_rule_matches}, \code{rule_conflict}, and \code{rule_gap} appended.
-For valid USDA inputs, \code{classification_method} is \code{"usda_major_rules"} and
+\code{all_rule_matches}, \code{rule_conflict}, and \code{rule_gap} appended. For valid
+USDA inputs, \code{classification_method} is \code{"usda_major_rules"} and
 \code{rule_status} is \code{"classified"}. GRADISTAT rule classification returns the
-input rows with \code{texture_class_id}, \code{texture_class}, \code{classification_method},
-\code{classification_status}, \code{ternary_basis}, \code{notes}, and a ratio audit column
-appended. If \code{include_sediment_name = TRUE}, GRADISTAT outputs also include
-\code{sediment_name} and related sediment-name audit columns.
+input rows with \code{texture_class_id}, \code{texture_class},
+\code{classification_method}, \code{classification_status}, \code{ternary_basis}, \code{notes},
+and a ratio audit column appended. If \code{include_sediment_name = TRUE},
+GRADISTAT outputs also include \code{sediment_name} and related sediment-name
+audit columns. Polygon classification returns columns matching
+\code{texture_polygon_template()}, including \code{class_id}, \code{class_name}, \code{left},
+\code{right}, \code{top}, \code{x}, \code{y}, \code{resolved}, and \code{ambiguous}.
 }
 \description{
 \code{classify_texture()} classifies samples with either the validated internal
@@ -102,8 +105,6 @@ ternary plotting is available through \code{plot_texture_ternary()}.
 For rule-based paths, input percentages must be numeric, finite, between 0
 and 100, and sum to approximately 100; the function does not silently
 normalize invalid sums.
-Input percentages must be numeric, finite, between 0 and 100, and sum to
-approximately 100; the function does not silently normalize invalid sums.
 It does not implement sand-size modifier subclasses such as coarse sand,
 fine sand, very fine sand, coarse sandy loam, fine sandy loam, or very fine
 sandy loam. Those may be added later as qualitative descriptor columns for

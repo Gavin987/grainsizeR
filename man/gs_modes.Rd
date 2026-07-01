@@ -12,8 +12,9 @@ gs_modes(x, n_modes = 3)
 \item{n_modes}{Number of modal classes to return per sample.}
 }
 \value{
-A tibble with up to \code{n_modes} rows per sample and modal class
-descriptors.
+A tibble with exactly \code{n_modes} rows per sample and modal class
+descriptors. Samples with fewer observed modal classes are padded with
+\code{NA} descriptor fields and \code{mode_status = "not_observed"}.
 }
 \description{
 \code{gs_modes()} reports the largest retained grain-size classes in each sample.

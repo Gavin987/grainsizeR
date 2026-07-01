@@ -102,19 +102,11 @@ gs_folk_ward <- function(x,
 #'
 #' `gs_folkward()` is a compatibility alias for `gs_folk_ward()`.
 #'
-#' @inheritParams gs_folk_ward
+#' @param ... Arguments forwarded to `gs_folk_ward()`.
 #'
 #' @return A tibble with one row per sample and Folk and Ward graphical
 #'   statistics.
 #' @export
-gs_folkward <- function(x,
-                        interpolation_scale = "phi",
-                        extrapolate = c("error", "warn_linear"),
-                        include_descriptions = TRUE) {
-  gs_folk_ward(
-    x = x,
-    interpolation_scale = interpolation_scale,
-    extrapolate = extrapolate,
-    include_descriptions = include_descriptions
-  )
+gs_folkward <- function(...) {
+  gs_folk_ward(...)
 }

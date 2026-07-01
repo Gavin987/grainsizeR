@@ -137,8 +137,9 @@ modes_one_sample <- function(sample_data, n_modes) {
 #' @param x A valid `gsd_tbl` object.
 #' @param n_modes Number of modal classes to return per sample.
 #'
-#' @return A tibble with up to `n_modes` rows per sample and modal class
-#'   descriptors.
+#' @return A tibble with exactly `n_modes` rows per sample and modal class
+#'   descriptors. Samples with fewer observed modal classes are padded with
+#'   `NA` descriptor fields and `mode_status = "not_observed"`.
 #' @export
 #'
 #' @examples
