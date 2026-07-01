@@ -109,7 +109,10 @@ percentiles to mark on the plot. <code>TRUE</code> marks D10, D50, and D90.</p><
 
 <dt id="arg-extrapolate">extrapolate<a class="anchor" aria-label="anchor" href="#arg-extrapolate"></a></dt>
 <dd><p>Extrapolation behavior passed to <code><a href="gs_d_values.html">gs_d_values()</a></code> when
-<code>show_percentiles</code> is supplied.</p></dd>
+<code>show_percentiles</code> is supplied. With the default <code>"error"</code>,
+<code>plot_cumulative()</code> retries marker placement with <code>"warn_linear"</code> if a
+requested percentile falls just outside the finite boundary curve; this
+affects only the plotted marker layer.</p></dd>
 
 
 <dt id="arg-percentile-color">percentile_color<a class="anchor" aria-label="anchor" href="#arg-percentile-color"></a></dt>

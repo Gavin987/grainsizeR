@@ -31,8 +31,6 @@ wide_file <- system.file("extdata", "grain.wide.csv", package = "grainsizeR")
 
 long_gs <- read_gsd(long_file)
 wide_gs <- read_gsd(wide_file, format = "wide")
-#> New names:
-#> • `` -> `...1`
 ```
 
 ## USDA Major Texture Classification
@@ -78,6 +76,7 @@ sides.
 usda_fractions <- suppressWarnings(gs_fractions_wide(
   long_gs,
   scheme = "usda_tt",
+  normalize = "fine_earth",
   extrapolate = "warn_linear"
 ))
 
@@ -95,13 +94,19 @@ usda_example <- usda_example[
 ]
 
 head(classify_texture(usda_example, scheme = "usda_tt", method = "rules"))
-#> # A tibble: 0 × 11
-#> # ℹ 11 variables: sample_id <chr>, sand <dbl>, silt <dbl>, clay <dbl>,
-#> #   texture_class_id <chr>, texture_class <chr>, classification_method <chr>,
-#> #   rule_status <chr>, all_rule_matches <chr>, rule_conflict <lgl>,
-#> #   rule_gap <lgl>
+#> # A tibble: 6 × 11
+#>   sample_id  sand  silt  clay texture_class_id texture_class
+#>   <chr>     <dbl> <dbl> <dbl> <chr>            <chr>        
+#> 1 S01        87.5 12.5      0 sand             sand         
+#> 2 S02       100    0        0 sand             sand         
+#> 3 S03       100    0        0 sand             sand         
+#> 4 S04        90.9  9.13     0 sand             sand         
+#> 5 S05        92.2  7.76     0 sand             sand         
+#> 6 S06       100    0        0 sand             sand         
+#> # ℹ 5 more variables: classification_method <chr>, rule_status <chr>,
+#> #   all_rule_matches <chr>, rule_conflict <lgl>, rule_gap <lgl>
 
-suppressWarnings(plot_texture_ternary(long_gs, scheme = "usda_tt", labels = FALSE))
+plot_texture_ternary(usda_example, scheme = "usda_tt", labels = FALSE)
 ```
 
 ![](texture-classification_files/figure-html/unnamed-chunk-4-1.png)
@@ -166,14 +171,14 @@ classify_texture(
   include_sediment_name = TRUE
 )
 #> # A tibble: 6 × 21
-#>   sample_id  gravel  sand   mud texture_class_id     texture_class ternary_basis
-#>   <chr>       <dbl> <dbl> <dbl> <chr>                <chr>         <chr>        
-#> 1 Cd1_deeper  2.76   89.4  7.87 slightly_gravelly_s… slightly gra… gravel_sand_…
-#> 2 Cd1_upper   1.05   96.6  2.37 slightly_gravelly_s… slightly gra… gravel_sand_…
-#> 3 Cd2_deeper  1.09   89.5  9.42 slightly_gravelly_s… slightly gra… gravel_sand_…
-#> 4 Cd2_upper   0.359  98.1  1.57 slightly_gravelly_s… slightly gra… gravel_sand_…
-#> 5 Cd3_deeper  0.365  89.9  9.75 slightly_gravelly_s… slightly gra… gravel_sand_…
-#> 6 Cd3_upper   0.411  98.4  1.22 slightly_gravelly_s… slightly gra… gravel_sand_…
+#>   sample_id gravel  sand    mud texture_class_id     texture_class ternary_basis
+#>   <chr>      <dbl> <dbl>  <dbl> <chr>                <chr>         <chr>        
+#> 1 S01        0.624  85.0 14.4   slightly_gravelly_m… slightly gra… gravel_sand_…
+#> 2 S02        0.224  97.8  1.93  slightly_gravelly_s… slightly gra… gravel_sand_…
+#> 3 S03        0.312  95.1  4.60  slightly_gravelly_s… slightly gra… gravel_sand_…
+#> 4 S04        0.153  89.6 10.2   slightly_gravelly_m… slightly gra… gravel_sand_…
+#> 5 S05        0.295  88.8 10.9   slightly_gravelly_m… slightly gra… gravel_sand_…
+#> 6 S06        0.230  98.8  0.964 slightly_gravelly_s… slightly gra… gravel_sand_…
 #> # ℹ 14 more variables: classification_method <chr>,
 #> #   classification_status <chr>, notes <chr>, sand_mud_ratio <dbl>,
 #> #   textural_group_class_id <chr>, textural_group <chr>,

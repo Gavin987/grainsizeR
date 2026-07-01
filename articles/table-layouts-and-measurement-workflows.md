@@ -84,19 +84,17 @@ gs_wide <- read_gsd(
   size_unit = "mm",
   value_type = "percent"
 )
-#> New names:
-#> • `` -> `...1`
 
 head(gs_diagnostics(gs_wide, output = "summary"))
 #> # A tibble: 6 × 8
-#>   sample_id   n_ok n_warning n_error n_info has_error has_warning overall_status
-#>   <chr>      <int>     <int>   <int>  <int> <lgl>     <lgl>       <chr>         
-#> 1 Cd1_deeper    23         6       0      2 FALSE     TRUE        warning       
-#> 2 Cd1_upper     24         5       0      2 FALSE     TRUE        warning       
-#> 3 Cd2_deeper    23         6       0      2 FALSE     TRUE        warning       
-#> 4 Cd2_upper     24         5       0      2 FALSE     TRUE        warning       
-#> 5 Cd3_deeper    23         6       0      2 FALSE     TRUE        warning       
-#> 6 Cd3_upper     24         5       0      2 FALSE     TRUE        warning
+#>   sample_id  n_ok n_warning n_error n_info has_error has_warning overall_status
+#>   <chr>     <int>     <int>   <int>  <int> <lgl>     <lgl>       <chr>         
+#> 1 S01          22         7       0      2 FALSE     TRUE        warning       
+#> 2 S02          24         5       0      2 FALSE     TRUE        warning       
+#> 3 S03          24         5       0      2 FALSE     TRUE        warning       
+#> 4 S04          22         7       0      2 FALSE     TRUE        warning       
+#> 5 S05          22         7       0      2 FALSE     TRUE        warning       
+#> 6 S06          24         5       0      2 FALSE     TRUE        warning
 ```
 
 This example is appropriate for coarse gravel/sand/mud or sand/mud
@@ -108,14 +106,14 @@ silently treated as bounded intervals.
 ``` r
 head(gs_fractions_wide(gs_wide, scheme = "wentworth_major"))
 #> # A tibble: 6 × 4
-#>   sample_id  gravel_percent sand_percent mud_percent
-#>   <chr>               <dbl>        <dbl>       <dbl>
-#> 1 Cd1_deeper          2.76          89.4        7.87
-#> 2 Cd1_upper           1.05          96.6        2.37
-#> 3 Cd2_deeper          1.09          89.5        9.42
-#> 4 Cd2_upper           0.359         98.1        1.57
-#> 5 Cd3_deeper          0.365         89.9        9.75
-#> 6 Cd3_upper           0.411         98.4        1.22
+#>   sample_id gravel_percent sand_percent mud_percent
+#>   <chr>              <dbl>        <dbl>       <dbl>
+#> 1 S01                0.624         85.0      14.4  
+#> 2 S02                0.224         97.8       1.93 
+#> 3 S03                0.312         95.1       4.60 
+#> 4 S04                0.153         89.6      10.2  
+#> 5 S05                0.295         88.8      10.9  
+#> 6 S06                0.230         98.8       0.964
 
 head(suppressWarnings(gs_parameters(
   gs_wide,
@@ -126,12 +124,12 @@ head(suppressWarnings(gs_parameters(
 #> # A tibble: 6 × 40
 #>   sample_id D5_um D10_um D16_um D25_um D50_um D75_um D84_um D90_um D95_um D30_um
 #>   <chr>     <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>
-#> 1 Cd1_deep…  59.7   64.7   71.2   82.2   123.   264.   389.   511.  1133.   89.0
-#> 2 Cd1_upper  66.6   75.2   87.0  108.    175.   286.   366.   432.   496.  122. 
-#> 3 Cd2_deep…  58.7   63.0   68.7   78.1   112.   215.   298.   383.   472.   83.9
-#> 4 Cd2_upper  69.6   81.6   98.6  130.    251.   358.   408.   444.   477.  148. 
-#> 5 Cd3_deep…  58.7   62.7   67.9   76.5   107.   210.   296.   370.   445.   81.8
-#> 6 Cd3_upper  71.8   86.2  107.   142.    261.   365.   412.   447.   478.  161. 
+#> 1 S01        52.3   57.5   64.5   76.5   123.   233.   314.   390.   468.   84.1
+#> 2 S02        67.7   77.2   90.3  114.    175.   267.   346.   412.   476.  128. 
+#> 3 S03        63.0   69.0   77.1   91.0   151.   278.   347.   402.   455.   99.8
+#> 4 S04        57.1   62.3   69.1   80.8   125.   258.   333.   395.   456.   88.2
+#> 5 S05        56.5   61.5   68.2   79.7   123.   270.   347.   410.   472.   86.8
+#> 6 S06        68.1   75.6   85.8  104.    216.   346.   399.   439.   475.  115. 
 #> # ℹ 29 more variables: D60_um <dbl>, Cu <dbl>, Cc <dbl>, So_trask <dbl>,
 #> #   Sk_trask <dbl>, fine_content_percent <dbl>, fine_threshold_um <dbl>,
 #> #   fine_equivalent <dbl>, interpolation_scale <chr>, D5_phi <dbl>,
@@ -158,14 +156,14 @@ gs_long <- read_gsd(
 
 head(gs_diagnostics(gs_long, output = "summary"))
 #> # A tibble: 6 × 8
-#>   sample_id   n_ok n_warning n_error n_info has_error has_warning overall_status
-#>   <chr>      <int>     <int>   <int>  <int> <lgl>     <lgl>       <chr>         
-#> 1 Cd1_deeper    24         5       0      2 FALSE     TRUE        warning       
-#> 2 Cd1_upper     25         4       0      2 FALSE     TRUE        warning       
-#> 3 Cd2_deeper    24         5       0      2 FALSE     TRUE        warning       
-#> 4 Cd2_upper     25         4       0      2 FALSE     TRUE        warning       
-#> 5 Cd3_deeper    24         5       0      2 FALSE     TRUE        warning       
-#> 6 Cd3_upper     25         4       0      2 FALSE     TRUE        warning
+#>   sample_id  n_ok n_warning n_error n_info has_error has_warning overall_status
+#>   <chr>     <int>     <int>   <int>  <int> <lgl>     <lgl>       <chr>         
+#> 1 S01          28         1       0      2 FALSE     TRUE        warning       
+#> 2 S02          25         4       0      2 FALSE     TRUE        warning       
+#> 3 S03          25         4       0      2 FALSE     TRUE        warning       
+#> 4 S04          28         1       0      2 FALSE     TRUE        warning       
+#> 5 S05          28         1       0      2 FALSE     TRUE        warning       
+#> 6 S06          25         4       0      2 FALSE     TRUE        warning
 ```
 
 Sieve + hydrometer measurements are often preferred for clay/silt/sand
@@ -178,24 +176,24 @@ hidden.
 ``` r
 head(suppressWarnings(gs_fractions_wide(gs_long, scheme = "usda_tt")))
 #> # A tibble: 6 × 5
-#>   sample_id  gravel_percent sand_percent silt_percent clay_percent
-#>   <chr>               <dbl>        <dbl>        <dbl>        <dbl>
-#> 1 Cd1_deeper          2.76          97.2            0            0
-#> 2 Cd1_upper           1.05          98.9            0            0
-#> 3 Cd2_deeper          1.09          98.9            0            0
-#> 4 Cd2_upper           0.359         99.6            0            0
-#> 5 Cd3_deeper          0.365         99.6            0            0
-#> 6 Cd3_upper           0.411         99.6            0            0
+#>   sample_id gravel_percent sand_percent silt_percent clay_percent
+#>   <chr>              <dbl>        <dbl>        <dbl>        <dbl>
+#> 1 S01                0.624         86.9        12.5             0
+#> 2 S02                0.224         99.8         0               0
+#> 3 S03                0.312         99.7         0               0
+#> 4 S04                0.153         90.7         9.11            0
+#> 5 S05                0.295         92.0         7.74            0
+#> 6 S06                0.230         99.8         0               0
 head(suppressWarnings(gs_fractions_wide(gs_long, scheme = "uk_ssew")))
 #> # A tibble: 6 × 5
-#>   sample_id  gravel_percent sand_percent silt_percent clay_percent
-#>   <chr>               <dbl>        <dbl>        <dbl>        <dbl>
-#> 1 Cd1_deeper          2.76          97.2            0            0
-#> 2 Cd1_upper           1.05          98.9            0            0
-#> 3 Cd2_deeper          1.09          98.9            0            0
-#> 4 Cd2_upper           0.359         99.6            0            0
-#> 5 Cd3_deeper          0.365         99.6            0            0
-#> 6 Cd3_upper           0.411         99.6            0            0
+#>   sample_id gravel_percent sand_percent silt_percent clay_percent
+#>   <chr>              <dbl>        <dbl>        <dbl>        <dbl>
+#> 1 S01                0.624         85.3        14.0             0
+#> 2 S02                0.224         99.8         0               0
+#> 3 S03                0.312         99.7         0               0
+#> 4 S04                0.153         89.8        10.0             0
+#> 5 S05                0.295         90.5         9.19            0
+#> 6 S06                0.230         99.8         0               0
 ```
 
 ## Why Some Fine-End D-Values Remain Unresolved
@@ -212,7 +210,7 @@ Use diagnostics before clay/silt/sand fractions, D-values near open
 tails, or texture classification.
 
 ``` r
-sample_id <- "WN1_upper"
+sample_id <- "S01"
 
 head(gs_diagnostics(
   gs_long,
@@ -220,14 +218,14 @@ head(gs_diagnostics(
   fraction_schemes = c("wentworth_major", "usda_tt", "uk_ssew")
 ))
 #> # A tibble: 6 × 9
-#>   sample_id  check              status severity value expected parameter message
-#>   <chr>      <chr>              <chr>  <chr>    <chr> <chr>    <chr>     <chr>  
-#> 1 Cd1_deeper missing_values     ok     none     0     finite … NA        Retain…
-#> 2 Cd1_deeper negative_values    ok     none     0     no nega… NA        No neg…
-#> 3 Cd1_deeper zero_total         ok     none     100   > 0      NA        The re…
-#> 4 Cd1_deeper retained_total     ok     none     100   100 +/-… NA        Retain…
-#> 5 Cd1_deeper duplicate_size_cl… ok     none     0     0 dupli… NA        No dup…
-#> 6 Cd1_deeper size_order         ok     none     decr… coarse-… NA        Size c…
+#>   sample_id check               status severity value expected parameter message
+#>   <chr>     <chr>               <chr>  <chr>    <chr> <chr>    <chr>     <chr>  
+#> 1 S01       missing_values      ok     none     0     finite … NA        Retain…
+#> 2 S01       negative_values     ok     none     0     no nega… NA        No neg…
+#> 3 S01       zero_total          ok     none     100   > 0      NA        The re…
+#> 4 S01       retained_total      ok     none     100   100 +/-… NA        Retain…
+#> 5 S01       duplicate_size_cla… ok     none     0     0 dupli… NA        No dup…
+#> 6 S01       size_order          ok     none     decr… coarse-… NA        Size c…
 #> # ℹ 1 more variable: recommendation <chr>
 ```
 
@@ -239,14 +237,14 @@ gravel, sand, and mud are usually the first summary to inspect.
 ``` r
 head(gs_fractions_wide(gs_wide, scheme = "wentworth_major"))
 #> # A tibble: 6 × 4
-#>   sample_id  gravel_percent sand_percent mud_percent
-#>   <chr>               <dbl>        <dbl>       <dbl>
-#> 1 Cd1_deeper          2.76          89.4        7.87
-#> 2 Cd1_upper           1.05          96.6        2.37
-#> 3 Cd2_deeper          1.09          89.5        9.42
-#> 4 Cd2_upper           0.359         98.1        1.57
-#> 5 Cd3_deeper          0.365         89.9        9.75
-#> 6 Cd3_upper           0.411         98.4        1.22
+#>   sample_id gravel_percent sand_percent mud_percent
+#>   <chr>              <dbl>        <dbl>       <dbl>
+#> 1 S01                0.624         85.0      14.4  
+#> 2 S02                0.224         97.8       1.93 
+#> 3 S03                0.312         95.1       4.60 
+#> 4 S04                0.153         89.6      10.2  
+#> 5 S05                0.295         88.8      10.9  
+#> 6 S06                0.230         98.8       0.964
 ```
 
 ## Clay/Silt/Sand Fractions From Finer-Resolution Data
@@ -257,24 +255,24 @@ resolve the relevant boundaries.
 ``` r
 head(suppressWarnings(gs_fractions_wide(gs_long, scheme = "usda_tt")))
 #> # A tibble: 6 × 5
-#>   sample_id  gravel_percent sand_percent silt_percent clay_percent
-#>   <chr>               <dbl>        <dbl>        <dbl>        <dbl>
-#> 1 Cd1_deeper          2.76          97.2            0            0
-#> 2 Cd1_upper           1.05          98.9            0            0
-#> 3 Cd2_deeper          1.09          98.9            0            0
-#> 4 Cd2_upper           0.359         99.6            0            0
-#> 5 Cd3_deeper          0.365         99.6            0            0
-#> 6 Cd3_upper           0.411         99.6            0            0
+#>   sample_id gravel_percent sand_percent silt_percent clay_percent
+#>   <chr>              <dbl>        <dbl>        <dbl>        <dbl>
+#> 1 S01                0.624         86.9        12.5             0
+#> 2 S02                0.224         99.8         0               0
+#> 3 S03                0.312         99.7         0               0
+#> 4 S04                0.153         90.7         9.11            0
+#> 5 S05                0.295         92.0         7.74            0
+#> 6 S06                0.230         99.8         0               0
 head(suppressWarnings(gs_fractions_wide(gs_long, scheme = "uk_ssew")))
 #> # A tibble: 6 × 5
-#>   sample_id  gravel_percent sand_percent silt_percent clay_percent
-#>   <chr>               <dbl>        <dbl>        <dbl>        <dbl>
-#> 1 Cd1_deeper          2.76          97.2            0            0
-#> 2 Cd1_upper           1.05          98.9            0            0
-#> 3 Cd2_deeper          1.09          98.9            0            0
-#> 4 Cd2_upper           0.359         99.6            0            0
-#> 5 Cd3_deeper          0.365         99.6            0            0
-#> 6 Cd3_upper           0.411         99.6            0            0
+#>   sample_id gravel_percent sand_percent silt_percent clay_percent
+#>   <chr>              <dbl>        <dbl>        <dbl>        <dbl>
+#> 1 S01                0.624         85.3        14.0             0
+#> 2 S02                0.224         99.8         0               0
+#> 3 S03                0.312         99.7         0               0
+#> 4 S04                0.153         89.8        10.0             0
+#> 5 S05                0.295         90.5         9.19            0
+#> 6 S06                0.230         99.8         0               0
 ```
 
 ## Summary Tables
@@ -292,7 +290,7 @@ head(suppressWarnings(gs_parameters(
 #> # A tibble: 1 × 41
 #>   sample_id D5_um D10_um D16_um D25_um D50_um D75_um D84_um D90_um D95_um D30_um
 #>   <chr>     <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>
-#> 1 WN1_upper  61.8   67.8   75.7   89.4   155.   327.   419.   494.   996.   98.0
+#> 1 S01        25.1   40.9   64.5   76.5   123.   233.   314.   390.   468.   84.1
 #> # ℹ 30 more variables: D60_um <dbl>, Cu <dbl>, Cc <dbl>, So_trask <dbl>,
 #> #   Sk_trask <dbl>, fine_content_percent <dbl>, fine_threshold_um <dbl>,
 #> #   fine_equivalent <dbl>, interpolation_scale <chr>, D5_phi <dbl>,
@@ -317,18 +315,18 @@ head(suppressWarnings(gs_d_spread(
 #> # A tibble: 1 × 14
 #>   sample_id   D10   D25   D50   D75   D90 d_value_unit D90_D10_ratio
 #>   <chr>     <dbl> <dbl> <dbl> <dbl> <dbl> <chr>                <dbl>
-#> 1 WN1_upper  67.8  89.4  155.  327.  494. um                    7.29
+#> 1 S01        40.9  76.5  123.  233.  390. um                    9.54
 #> # ℹ 6 more variables: D90_minus_D10 <dbl>, D75_D25_ratio <dbl>,
 #> #   D75_minus_D25 <dbl>, D90_D10_log_ratio <dbl>, D75_D25_log_ratio <dbl>,
 #> #   any_extrapolated <lgl>
 
 head(gs_modes(gs_long[gs_long$sample_id == sample_id, ]))
 #> # A tibble: 3 × 12
-#>   sample_id sample_modality mode_rank mode_size_mm mode_size_um mode_phi
-#>   <chr>     <chr>               <int>        <dbl>        <dbl>    <dbl>
-#> 1 WN1_upper bimodal                 1       0.0884         88.4      3.5
-#> 2 WN1_upper bimodal                 2       0.354         354.       1.5
-#> 3 WN1_upper bimodal                 3       0.177         177.       2.5
+#>   sample_id sample_modality  mode_rank mode_size_mm mode_size_um mode_phi
+#>   <chr>     <chr>                <int>        <dbl>        <dbl>    <dbl>
+#> 1 S01       trimodal_or_more         1       0.0884         88.4      3.5
+#> 2 S01       trimodal_or_more         2       0.177         177.       2.5
+#> 3 S01       trimodal_or_more         3       0.354         354.       1.5
 #> # ℹ 6 more variables: mode_class_lower_mm <dbl>, mode_class_upper_mm <dbl>,
 #> #   mode_percent <dbl>, mode_class_label <chr>, is_open_interval <lgl>,
 #> #   mode_status <chr>
@@ -341,7 +339,7 @@ head(suppressWarnings(gs_parameters(
 #> # A tibble: 1 × 55
 #>   sample_id   D10   D25   D50   D75   D90 d_value_unit D90_D10_ratio
 #>   <chr>     <dbl> <dbl> <dbl> <dbl> <dbl> <chr>                <dbl>
-#> 1 WN1_upper  67.8  89.4  155.  327.  494. um                    7.29
+#> 1 S01        40.9  76.5  123.  233.  390. um                    9.54
 #> # ℹ 47 more variables: D90_minus_D10 <dbl>, D75_D25_ratio <dbl>,
 #> #   D75_minus_D25 <dbl>, D90_D10_log_ratio <dbl>, D75_D25_log_ratio <dbl>,
 #> #   any_extrapolated <lgl>, mean_description <chr>, sorting_description <chr>,

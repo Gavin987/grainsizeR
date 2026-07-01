@@ -37,6 +37,8 @@
 - Improved plotting ergonomics with numeric sample selection, clearer
   cumulative percentile markers, and texture ternary point controls for
   labels, constant aesthetics, and grouped color mapping.
+- Updated bundled long and wide example CSV data and regenerated README
+  examples and figures from those bundled files.
 - Refined GRADISTAT and USDA ternary plot guides, labels, boundaries,
   and README showcase figures; README PNG outputs are standardized to
   1000 px wide.

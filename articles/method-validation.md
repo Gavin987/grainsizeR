@@ -39,8 +39,6 @@ gs_wide <- read_gsd(
   size_unit = "mm",
   value_type = "percent"
 )
-#> New names:
-#> • `` -> `...1`
 ```
 
 `grain.long.csv` is a sieve + hydrometer example stored as a tidy long
@@ -88,13 +86,13 @@ and
 example, `D50` is the median grain size by the percent-finer convention.
 
 ``` r
-gs_d_values(subset(gs_long, sample_id == "WN1_upper"), probs = c(10, 50, 90), extrapolate = "warn_linear")
+gs_d_values(subset(gs_long, sample_id == "S01"), probs = c(10, 50, 90), extrapolate = "warn_linear")
 #> # A tibble: 3 × 7
 #>   sample_id percentile grain_size_um grain_size_mm grain_size_phi
 #>   <chr>          <dbl>         <dbl>         <dbl>          <dbl>
-#> 1 WN1_upper         10          67.8        0.0678           3.88
-#> 2 WN1_upper         50         155.         0.155            2.69
-#> 3 WN1_upper         90         494.         0.494            1.02
+#> 1 S01               10          40.9        0.0409           4.61
+#> 2 S01               50         123.         0.123            3.02
+#> 3 S01               90         390.         0.390            1.36
 #> # ℹ 2 more variables: interpolation_scale <chr>, extrapolated <lgl>
 ```
 
@@ -109,7 +107,7 @@ class boundaries.
 
 ``` r
 suppressWarnings(gs_percent_finer(
-  subset(gs_long, sample_id == "WN1_upper"),
+  subset(gs_long, sample_id == "S01"),
   sizes = c(20, 50, 60, 63),
   size_unit = "um",
   extrapolate = "warn_linear"
@@ -117,10 +115,10 @@ suppressWarnings(gs_percent_finer(
 #> # A tibble: 4 × 8
 #>   sample_id threshold_um threshold_mm threshold_phi percent_finer
 #>   <chr>            <dbl>        <dbl>         <dbl>         <dbl>
-#> 1 WN1_upper           20        0.02           5.64        -56.3 
-#> 2 WN1_upper           50        0.05           4.32         -6.53
-#> 3 WN1_upper           60        0.06           4.06          3.37
-#> 4 WN1_upper           63        0.063          3.99          6.01
+#> 1 S01                 20        0.02           5.64          3.90
+#> 2 S01                 50        0.05           4.32         12.5 
+#> 3 S01                 60        0.06           4.06         14.0 
+#> 4 S01                 63        0.063          3.99         14.8 
 #> # ℹ 3 more variables: percent_coarser <dbl>, interpolation_scale <chr>,
 #> #   extrapolated <lgl>
 ```
@@ -140,11 +138,11 @@ unresolved D-values, unresolved clay/silt thresholds, open-ended
 terminal classes, or fraction schemes that require finer measurements.
 
 ``` r
-gs_diagnostics(subset(gs_wide, sample_id == "WN1_upper"), output = "summary")
+gs_diagnostics(subset(gs_wide, sample_id == "S01"), output = "summary")
 #> # A tibble: 1 × 8
 #>   sample_id  n_ok n_warning n_error n_info has_error has_warning overall_status
 #>   <chr>     <int>     <int>   <int>  <int> <lgl>     <lgl>       <chr>         
-#> 1 WN1_upper    23         6       0      2 FALSE     TRUE        warning
+#> 1 S01          22         7       0      2 FALSE     TRUE        warning
 ```
 
 ## Fraction Schemes
@@ -160,24 +158,24 @@ the table is long or wide.
 ``` r
 head(gs_fractions_wide(gs_long, scheme = "wentworth_major"))
 #> # A tibble: 6 × 4
-#>   sample_id  gravel_percent sand_percent mud_percent
-#>   <chr>               <dbl>        <dbl>       <dbl>
-#> 1 Cd1_deeper          2.76          89.4        7.87
-#> 2 Cd1_upper           1.05          96.6        2.37
-#> 3 Cd2_deeper          1.09          89.5        9.42
-#> 4 Cd2_upper           0.359         98.1        1.57
-#> 5 Cd3_deeper          0.365         89.9        9.75
-#> 6 Cd3_upper           0.411         98.4        1.22
+#>   sample_id gravel_percent sand_percent mud_percent
+#>   <chr>              <dbl>        <dbl>       <dbl>
+#> 1 S01                0.624         85.0      14.4  
+#> 2 S02                0.224         97.8       1.93 
+#> 3 S03                0.312         95.1       4.60 
+#> 4 S04                0.153         89.6      10.2  
+#> 5 S05                0.295         88.8      10.9  
+#> 6 S06                0.230         98.8       0.964
 head(gs_fractions_wide(gs_wide, scheme = "wentworth_major"))
 #> # A tibble: 6 × 4
-#>   sample_id  gravel_percent sand_percent mud_percent
-#>   <chr>               <dbl>        <dbl>       <dbl>
-#> 1 Cd1_deeper          2.76          89.4        7.87
-#> 2 Cd1_upper           1.05          96.6        2.37
-#> 3 Cd2_deeper          1.09          89.5        9.42
-#> 4 Cd2_upper           0.359         98.1        1.57
-#> 5 Cd3_deeper          0.365         89.9        9.75
-#> 6 Cd3_upper           0.411         98.4        1.22
+#>   sample_id gravel_percent sand_percent mud_percent
+#>   <chr>              <dbl>        <dbl>       <dbl>
+#> 1 S01                0.624         85.0      14.4  
+#> 2 S02                0.224         97.8       1.93 
+#> 3 S03                0.312         95.1       4.60 
+#> 4 S04                0.153         89.6      10.2  
+#> 5 S05                0.295         88.8      10.9  
+#> 6 S06                0.230         98.8       0.964
 ```
 
 ## Folk and Ward Statistics
@@ -188,13 +186,13 @@ users must choose whether to error or explicitly extrapolate.
 
 ``` r
 suppressWarnings(gs_folk_ward(
-  subset(gs_long, sample_id == "WN1_upper"),
+  subset(gs_long, sample_id == "S01"),
   extrapolate = "warn_linear"
 ))
 #> # A tibble: 1 × 26
 #>   sample_id D5_um D16_um D25_um D50_um D75_um D84_um D95_um D5_phi D16_phi
 #>   <chr>     <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>   <dbl>
-#> 1 WN1_upper  61.8   75.7   89.4   155.   327.   419.   996.   4.02    3.72
+#> 1 S01        25.1   64.5   76.5   123.   233.   314.   468.   5.31    3.96
 #> # ℹ 16 more variables: D25_phi <dbl>, D50_phi <dbl>, D75_phi <dbl>,
 #> #   D84_phi <dbl>, D95_phi <dbl>, mean_fw_phi <dbl>, mean_fw_um <dbl>,
 #> #   sorting_fw_phi <dbl>, skewness_fw <dbl>, kurtosis_fw <dbl>,
@@ -212,13 +210,13 @@ retained classes.
 
 ``` r
 suppressWarnings(gs_moments(
-  subset(gs_long, sample_id == "WN1_upper"),
+  subset(gs_long, sample_id == "S01"),
   open_end = "extend_phi"
 ))
 #> # A tibble: 1 × 14
 #>   sample_id moment_method   mean_moment mean_moment_unit mean_moment_um
 #>   <chr>     <chr>                 <dbl> <chr>                     <dbl>
-#> 1 WN1_upper logarithmic_phi        2.47 phi                        180.
+#> 1 S01       logarithmic_phi        2.98 phi                        127.
 #> # ℹ 9 more variables: mean_moment_phi <dbl>, sd_moment <dbl>,
 #> #   sd_moment_unit <chr>, skewness_moment <dbl>, kurtosis_moment <dbl>,
 #> #   retained_percent_used <dbl>, open_end <chr>, open_end_estimated <lgl>,
@@ -237,7 +235,7 @@ and
 [`gs_fractions_wide()`](https://Gavin987.github.io/grainsizeR/reference/gs_fractions_wide.md).
 
 ``` r
-sample_id <- "WN1_upper"
+sample_id <- "S01"
 summary <- suppressWarnings(gs_parameters(
   subset(gs_long, sample_id == sample_id),
   parameters = c("d_values", "indices", "folk_ward", "fractions"),
@@ -245,20 +243,20 @@ summary <- suppressWarnings(gs_parameters(
   extrapolate = "warn_linear"
 ))
 summary
-#> # A tibble: 44 × 41
-#>    sample_id  D5_um D10_um D16_um D25_um D50_um D75_um D84_um D90_um D95_um
-#>    <chr>      <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>
-#>  1 Cd1_deeper 59.7   64.7    71.2   82.2   123.   264.   389.   511.  1133.
-#>  2 Cd1_upper  66.6   75.2    87.0  108.    175.   286.   366.   432.   496.
-#>  3 Cd2_deeper 58.7   63.0    68.7   78.1   112.   215.   298.   383.   472.
-#>  4 Cd2_upper  69.6   81.6    98.6  130.    251.   358.   408.   444.   477.
-#>  5 Cd3_deeper 58.7   62.7    67.9   76.5   107.   210.   296.   370.   445.
-#>  6 Cd3_upper  71.8   86.2   107.   142.    261.   365.   412.   447.   478.
-#>  7 Cd4_deeper 60.1   63.9    68.7   76.7   104.   197.   299.   396.   509.
-#>  8 Cd4_upper  66.5   77.2    92.4  121.    227.   350.   404.   444.   481.
-#>  9 Nn1_deeper  4.87   9.13   15.9   46.0   104.   245.   338.   417.   497.
-#> 10 Nn1_upper  63.0   69.0    77.1   91.0   151.   278.   347.   402.   455.
-#> # ℹ 34 more rows
+#> # A tibble: 30 × 41
+#>    sample_id D5_um D10_um D16_um D25_um D50_um D75_um D84_um D90_um D95_um
+#>    <chr>     <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>
+#>  1 S01        25.1   40.9   64.5   76.5   123.   233.   314.   390.   468.
+#>  2 S02        67.7   77.2   90.3  114.    175.   267.   346.   412.   476.
+#>  3 S03        63.0   69.0   77.1   91.0   151.   278.   347.   402.   455.
+#>  4 S04        32.3   59.8   69.1   80.8   125.   258.   333.   395.   456.
+#>  5 S05        35.3   62.0   68.2   79.7   123.   270.   347.   410.   472.
+#>  6 S06        68.1   75.6   85.8  104.    216.   346.   399.   439.   475.
+#>  7 S07        66.6   75.2   87.0  108.    175.   286.   366.   432.   496.
+#>  8 S08        69.6   81.6   98.6  130.    251.   358.   408.   444.   477.
+#>  9 S09        71.8   86.2  107.   142.    261.   365.   412.   447.   478.
+#> 10 S10        66.5   77.2   92.4  121.    227.   350.   404.   444.   481.
+#> # ℹ 20 more rows
 #> # ℹ 31 more variables: D30_um <dbl>, D60_um <dbl>, Cu <dbl>, Cc <dbl>,
 #> #   So_trask <dbl>, Sk_trask <dbl>, fine_content_percent <dbl>,
 #> #   fine_threshold_um <dbl>, fine_equivalent <dbl>, interpolation_scale <chr>,

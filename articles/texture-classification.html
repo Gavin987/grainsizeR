@@ -98,9 +98,7 @@ GRADISTAT ternary plotting is available through
 <span><span class="va">wide_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"grain.wide.csv"</span>, package <span class="op">=</span> <span class="st">"grainsizeR"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">long_gs</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_gsd.html">read_gsd</a></span><span class="op">(</span><span class="va">long_file</span><span class="op">)</span></span>
-<span><span class="va">wide_gs</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_gsd.html">read_gsd</a></span><span class="op">(</span><span class="va">wide_file</span>, format <span class="op">=</span> <span class="st">"wide"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; New names:</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> `` -&gt; `...1`</span></span></code></pre></div>
+<span><span class="va">wide_gs</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_gsd.html">read_gsd</a></span><span class="op">(</span><span class="va">wide_file</span>, format <span class="op">=</span> <span class="st">"wide"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="usda-major-texture-classification">USDA Major Texture Classification<a class="anchor" aria-label="anchor" href="#usda-major-texture-classification"></a>
@@ -140,6 +138,7 @@ place <code>percent sand</code>, <code>percent silt</code>, and
 <code class="sourceCode R"><span><span class="va">usda_fractions</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/warning.html" class="external-link">suppressWarnings</a></span><span class="op">(</span><span class="fu"><a href="../reference/gs_fractions_wide.html">gs_fractions_wide</a></span><span class="op">(</span></span>
 <span>  <span class="va">long_gs</span>,</span>
 <span>  scheme <span class="op">=</span> <span class="st">"usda_tt"</span>,</span>
+<span>  normalize <span class="op">=</span> <span class="st">"fine_earth"</span>,</span>
 <span>  extrapolate <span class="op">=</span> <span class="st">"warn_linear"</span></span>
 <span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
@@ -157,13 +156,19 @@ place <code>percent sand</code>, <code>percent silt</code>, and
 <span><span class="op">]</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/classify_texture.html">classify_texture</a></span><span class="op">(</span><span class="va">usda_example</span>, scheme <span class="op">=</span> <span class="st">"usda_tt"</span>, method <span class="op">=</span> <span class="st">"rules"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 0 × 11</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 11 variables: sample_id &lt;chr&gt;, sand &lt;dbl&gt;, silt &lt;dbl&gt;, clay &lt;dbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   texture_class_id &lt;chr&gt;, texture_class &lt;chr&gt;, classification_method &lt;chr&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   rule_status &lt;chr&gt;, all_rule_matches &lt;chr&gt;, rule_conflict &lt;lgl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   rule_gap &lt;lgl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 11</span></span></span>
+<span><span class="co">#&gt;   sample_id  sand  silt  clay texture_class_id texture_class</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S01        87.5 12.5      0 sand             sand         </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> S02       100    0        0 sand             sand         </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> S03       100    0        0 sand             sand         </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> S04        90.9  9.13     0 sand             sand         </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> S05        92.2  7.76     0 sand             sand         </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> S06       100    0        0 sand             sand         </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 5 more variables: classification_method &lt;chr&gt;, rule_status &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   all_rule_matches &lt;chr&gt;, rule_conflict &lt;lgl&gt;, rule_gap &lt;lgl&gt;</span></span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/warning.html" class="external-link">suppressWarnings</a></span><span class="op">(</span><span class="fu"><a href="../reference/plot_texture_ternary.html">plot_texture_ternary</a></span><span class="op">(</span><span class="va">long_gs</span>, scheme <span class="op">=</span> <span class="st">"usda_tt"</span>, labels <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/plot_texture_ternary.html">plot_texture_ternary</a></span><span class="op">(</span><span class="va">usda_example</span>, scheme <span class="op">=</span> <span class="st">"usda_tt"</span>, labels <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="texture-classification_files/figure-html/unnamed-chunk-4-1.png" class="r-plt" alt="" width="700"></p>
 <p>Input percentages must be numeric, finite, between 0 and 100, and sum
 to approximately 100. <code><a href="../reference/classify_texture.html">classify_texture()</a></code> does not silently
@@ -225,14 +230,14 @@ GRADISTAT-style gravel-sand-mud workflow.</p>
 <span>  include_sediment_name <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 21</span></span></span>
-<span><span class="co">#&gt;   sample_id  gravel  sand   mud texture_class_id     texture_class ternary_basis</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Cd1_deeper  2.76   89.4  7.87 slightly_gravelly_s… slightly gra… gravel_sand_…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Cd1_upper   1.05   96.6  2.37 slightly_gravelly_s… slightly gra… gravel_sand_…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Cd2_deeper  1.09   89.5  9.42 slightly_gravelly_s… slightly gra… gravel_sand_…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> Cd2_upper   0.359  98.1  1.57 slightly_gravelly_s… slightly gra… gravel_sand_…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> Cd3_deeper  0.365  89.9  9.75 slightly_gravelly_s… slightly gra… gravel_sand_…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> Cd3_upper   0.411  98.4  1.22 slightly_gravelly_s… slightly gra… gravel_sand_…</span></span>
+<span><span class="co">#&gt;   sample_id gravel  sand    mud texture_class_id     texture_class ternary_basis</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S01        0.624  85.0 14.4   slightly_gravelly_m… slightly gra… gravel_sand_…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> S02        0.224  97.8  1.93  slightly_gravelly_s… slightly gra… gravel_sand_…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> S03        0.312  95.1  4.60  slightly_gravelly_s… slightly gra… gravel_sand_…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> S04        0.153  89.6 10.2   slightly_gravelly_m… slightly gra… gravel_sand_…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> S05        0.295  88.8 10.9   slightly_gravelly_m… slightly gra… gravel_sand_…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> S06        0.230  98.8  0.964 slightly_gravelly_s… slightly gra… gravel_sand_…</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 14 more variables: classification_method &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   classification_status &lt;chr&gt;, notes &lt;chr&gt;, sand_mud_ratio &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   textural_group_class_id &lt;chr&gt;, textural_group &lt;chr&gt;,</span></span></span>

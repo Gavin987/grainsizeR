@@ -66,19 +66,17 @@ gs <- read_gsd(
 )
 
 gs_wide <- read_gsd(wide_file, format = "wide")
-#> New names:
-#> • `` -> `...1`
 
 head(gs)
 #> # A tibble: 6 × 13
-#>   sample_id  bin_id raw_size_um size_lower_um size_upper_um size_mid_um
-#>   <chr>       <int>       <dbl>         <dbl>         <dbl>       <dbl>
-#> 1 Cd1_deeper      1      2000          2000              NA        NA  
-#> 2 Cd1_deeper      2      1000          1000            2000      1414. 
-#> 3 Cd1_deeper      3       500           500            1000       707. 
-#> 4 Cd1_deeper      4       250           250             500       354. 
-#> 5 Cd1_deeper      5       125           125             250       177. 
-#> 6 Cd1_deeper      6        62.5          62.5           125        88.4
+#>   sample_id bin_id raw_size_um size_lower_um size_upper_um size_mid_um
+#>   <chr>      <int>       <dbl>         <dbl>         <dbl>       <dbl>
+#> 1 S01            1      2000          2000              NA        NA  
+#> 2 S01            2      1000          1000            2000      1414. 
+#> 3 S01            3       500           500            1000       707. 
+#> 4 S01            4       250           250             500       354. 
+#> 5 S01            5       125           125             250       177. 
+#> 6 S01            6        62.5          62.5           125        88.4
 #> # ℹ 7 more variables: size_mid_phi <dbl>, retained_percent <dbl>,
 #> #   cum_finer_percent <dbl>, cum_coarser_percent <dbl>, is_open_lower <lgl>,
 #> #   is_open_upper <lgl>, measurement_method <chr>
@@ -101,14 +99,14 @@ head(suppressWarnings(gs_parameters(
   extrapolate = "warn_linear"
 )))
 #> # A tibble: 6 × 41
-#>   sample_id  D10_um D50_um D90_um D25_um D30_um D60_um D75_um    Cu    Cc
-#>   <chr>       <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl> <dbl> <dbl>
-#> 1 Cd1_deeper   64.7   123.   511.   82.2   89.0   164.   264.  2.53 0.748
-#> 2 Cd1_upper    75.2   175.   432.  108.   122.    209.   286.  2.78 0.949
-#> 3 Cd2_deeper   63.0   112.   383.   78.1   83.9   134.   215.  2.13 0.834
-#> 4 Cd2_upper    81.6   251.   444.  130.   148.    289.   358.  3.54 0.932
-#> 5 Cd3_deeper   62.7   107.   370.   76.5   81.8   122.   210.  1.94 0.876
-#> 6 Cd3_upper    86.2   261.   447.  142.   161.    298.   365.  3.46 1.01 
+#>   sample_id D10_um D50_um D90_um D25_um D30_um D60_um D75_um    Cu    Cc
+#>   <chr>      <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl> <dbl> <dbl>
+#> 1 S01         40.9   123.   390.   76.5   84.1   158.   233.  3.87 1.09 
+#> 2 S02         77.2   175.   412.  114.   128.    205.   267.  2.65 1.04 
+#> 3 S03         69.0   151.   402.   91.0   99.8   193.   278.  2.79 0.749
+#> 4 S04         59.8   125.   395.   80.8   88.2   167.   258.  2.79 0.779
+#> 5 S05         62.0   123.   410.   79.7   86.8   167.   270.  2.70 0.728
+#> 6 S06         75.6   216.   439.  104.   115.    273.   346.  3.61 0.644
 #> # ℹ 31 more variables: So_trask <dbl>, Sk_trask <dbl>,
 #> #   fine_content_percent <dbl>, fine_threshold_um <dbl>, fine_equivalent <dbl>,
 #> #   interpolation_scale <chr>, D5_um <dbl>, D16_um <dbl>, D84_um <dbl>,
@@ -123,25 +121,25 @@ head(suppressWarnings(gs_parameters(
 ``` r
 head(suppressWarnings(gs_d_values(gs, probs = c(10, 50, 90), extrapolate = "warn_linear")))
 #> # A tibble: 6 × 7
-#>   sample_id  percentile grain_size_um grain_size_mm grain_size_phi
-#>   <chr>           <dbl>         <dbl>         <dbl>          <dbl>
-#> 1 Cd1_deeper         10          64.7        0.0647          3.95 
-#> 2 Cd1_deeper         50         123.         0.123           3.03 
-#> 3 Cd1_deeper         90         511.         0.511           0.967
-#> 4 Cd1_upper          10          75.2        0.0752          3.73 
-#> 5 Cd1_upper          50         175.         0.175           2.51 
-#> 6 Cd1_upper          90         432.         0.432           1.21 
+#>   sample_id percentile grain_size_um grain_size_mm grain_size_phi
+#>   <chr>          <dbl>         <dbl>         <dbl>          <dbl>
+#> 1 S01               10          40.9        0.0409           4.61
+#> 2 S01               50         123.         0.123            3.02
+#> 3 S01               90         390.         0.390            1.36
+#> 4 S02               10          77.2        0.0772           3.70
+#> 5 S02               50         175.         0.175            2.51
+#> 6 S02               90         412.         0.412            1.28
 #> # ℹ 2 more variables: interpolation_scale <chr>, extrapolated <lgl>
 head(suppressWarnings(gs_d_spread(gs, extrapolate = "warn_linear")))
 #> # A tibble: 6 × 14
-#>   sample_id    D10   D25   D50   D75   D90 d_value_unit D90_D10_ratio
-#>   <chr>      <dbl> <dbl> <dbl> <dbl> <dbl> <chr>                <dbl>
-#> 1 Cd1_deeper  64.7  82.2  123.  264.  511. um                    7.91
-#> 2 Cd1_upper   75.2 108.   175.  286.  432. um                    5.75
-#> 3 Cd2_deeper  63.0  78.1  112.  215.  383. um                    6.08
-#> 4 Cd2_upper   81.6 130.   251.  358.  444. um                    5.45
-#> 5 Cd3_deeper  62.7  76.5  107.  210.  370. um                    5.90
-#> 6 Cd3_upper   86.2 142.   261.  365.  447. um                    5.18
+#>   sample_id   D10   D25   D50   D75   D90 d_value_unit D90_D10_ratio
+#>   <chr>     <dbl> <dbl> <dbl> <dbl> <dbl> <chr>                <dbl>
+#> 1 S01        40.9  76.5  123.  233.  390. um                    9.54
+#> 2 S02        77.2 114.   175.  267.  412. um                    5.33
+#> 3 S03        69.0  91.0  151.  278.  402. um                    5.83
+#> 4 S04        59.8  80.8  125.  258.  395. um                    6.61
+#> 5 S05        62.0  79.7  123.  270.  410. um                    6.62
+#> 6 S06        75.6 104.   216.  346.  439. um                    5.81
 #> # ℹ 6 more variables: D90_minus_D10 <dbl>, D75_D25_ratio <dbl>,
 #> #   D75_minus_D25 <dbl>, D90_D10_log_ratio <dbl>, D75_D25_log_ratio <dbl>,
 #> #   any_extrapolated <lgl>
@@ -152,14 +150,14 @@ head(suppressWarnings(gs_d_spread(gs, extrapolate = "warn_linear")))
 ``` r
 head(gs_modes(gs))
 #> # A tibble: 6 × 12
-#>   sample_id  sample_modality mode_rank mode_size_mm mode_size_um mode_phi
-#>   <chr>      <chr>               <int>        <dbl>        <dbl>    <dbl>
-#> 1 Cd1_deeper bimodal                 1       0.0884         88.4      3.5
-#> 2 Cd1_deeper bimodal                 2       0.177         177.       2.5
-#> 3 Cd1_deeper bimodal                 3       0.354         354.       1.5
-#> 4 Cd1_upper  unimodal                1       0.177         177.       2.5
-#> 5 Cd1_upper  unimodal                2       0.0884         88.4      3.5
-#> 6 Cd1_upper  unimodal                3       0.354         354.       1.5
+#>   sample_id sample_modality  mode_rank mode_size_mm mode_size_um mode_phi
+#>   <chr>     <chr>                <int>        <dbl>        <dbl>    <dbl>
+#> 1 S01       trimodal_or_more         1       0.0884         88.4      3.5
+#> 2 S01       trimodal_or_more         2       0.177         177.       2.5
+#> 3 S01       trimodal_or_more         3       0.354         354.       1.5
+#> 4 S02       unimodal                 1       0.177         177.       2.5
+#> 5 S02       unimodal                 2       0.0884         88.4      3.5
+#> 6 S02       unimodal                 3       0.354         354.       1.5
 #> # ℹ 6 more variables: mode_class_lower_mm <dbl>, mode_class_upper_mm <dbl>,
 #> #   mode_percent <dbl>, mode_class_label <chr>, is_open_interval <lgl>,
 #> #   mode_status <chr>
@@ -170,30 +168,30 @@ head(gs_modes(gs))
 ``` r
 head(suppressWarnings(gs_describe_parameters(gs)))
 #> # A tibble: 6 × 19
-#>   sample_id  bin_id raw_size_um size_lower_um size_upper_um size_mid_um
-#>   <chr>       <int>       <dbl>         <dbl>         <dbl>       <dbl>
-#> 1 Cd1_deeper      1      2000          2000              NA        NA  
-#> 2 Cd1_deeper      2      1000          1000            2000      1414. 
-#> 3 Cd1_deeper      3       500           500            1000       707. 
-#> 4 Cd1_deeper      4       250           250             500       354. 
-#> 5 Cd1_deeper      5       125           125             250       177. 
-#> 6 Cd1_deeper      6        62.5          62.5           125        88.4
+#>   sample_id bin_id raw_size_um size_lower_um size_upper_um size_mid_um
+#>   <chr>      <int>       <dbl>         <dbl>         <dbl>       <dbl>
+#> 1 S01            1      2000          2000              NA        NA  
+#> 2 S01            2      1000          1000            2000      1414. 
+#> 3 S01            3       500           500            1000       707. 
+#> 4 S01            4       250           250             500       354. 
+#> 5 S01            5       125           125             250       177. 
+#> 6 S01            6        62.5          62.5           125        88.4
 #> # ℹ 13 more variables: size_mid_phi <dbl>, retained_percent <dbl>,
 #> #   cum_finer_percent <dbl>, cum_coarser_percent <dbl>, is_open_lower <lgl>,
 #> #   is_open_upper <lgl>, measurement_method <chr>, mean_description <chr>,
 #> #   sorting_description <chr>, skewness_description <chr>,
 #> #   kurtosis_description <chr>, description_method <chr>,
 #> #   description_status <chr>
-head(gs_quality_flags(gs, sediment_loss_percent = c(WN1_upper = 1.2, WN2_upper = 2.4)))
+head(gs_quality_flags(gs, sediment_loss_percent = c(S01 = 1.2, S02 = 2.4)))
 #> # A tibble: 6 × 6
-#>   sample_id  quality_flag      quality_status    quality_value quality_threshold
-#>   <chr>      <chr>             <chr>             <chr>         <chr>            
-#> 1 Cd1_deeper sediment_loss     not_evaluated     NA            > 2%             
-#> 2 Cd1_deeper open_fine_tail    needs_additional… TRUE          reported explici…
-#> 3 Cd1_deeper fine_pan_fraction warning           7.8719146     1% info; 5% warn…
-#> 4 Cd1_upper  sediment_loss     not_evaluated     NA            > 2%             
-#> 5 Cd1_upper  open_fine_tail    needs_additional… TRUE          reported explici…
-#> 6 Cd1_upper  fine_pan_fraction needs_additional… 2.3733818     1% info; 5% warn…
+#>   sample_id quality_flag      quality_status     quality_value quality_threshold
+#>   <chr>     <chr>             <chr>              <chr>         <chr>            
+#> 1 S01       sediment_loss     ok                 1.2           <= 2%            
+#> 2 S01       open_fine_tail    needs_additional_… TRUE          reported explici…
+#> 3 S01       fine_pan_fraction needs_additional_… 2.9952675     1% info; 5% warn…
+#> 4 S02       sediment_loss     warning            2.4           > 2%             
+#> 5 S02       open_fine_tail    needs_additional_… TRUE          reported explici…
+#> 6 S02       fine_pan_fraction needs_additional_… 1.9336191     1% info; 5% warn…
 #> # ℹ 1 more variable: quality_message <chr>
 ```
 
@@ -206,6 +204,7 @@ USDA sand-size modifier subclasses remain future work.
 usda_fractions <- suppressWarnings(gs_fractions_wide(
   gs,
   scheme = "usda_tt",
+  normalize = "fine_earth",
   extrapolate = "warn_linear"
 ))
 
@@ -223,11 +222,17 @@ usda_samples <- usda_samples[
 ]
 
 head(classify_texture(usda_samples, scheme = "usda_tt", method = "rules"))
-#> # A tibble: 0 × 11
-#> # ℹ 11 variables: sample_id <chr>, sand <dbl>, silt <dbl>, clay <dbl>,
-#> #   texture_class_id <chr>, texture_class <chr>, classification_method <chr>,
-#> #   rule_status <chr>, all_rule_matches <chr>, rule_conflict <lgl>,
-#> #   rule_gap <lgl>
+#> # A tibble: 6 × 11
+#>   sample_id  sand  silt  clay texture_class_id texture_class
+#>   <chr>     <dbl> <dbl> <dbl> <chr>            <chr>        
+#> 1 S01        87.5 12.5      0 sand             sand         
+#> 2 S02       100    0        0 sand             sand         
+#> 3 S03       100    0        0 sand             sand         
+#> 4 S04        90.9  9.13     0 sand             sand         
+#> 5 S05        92.2  7.76     0 sand             sand         
+#> 6 S06       100    0        0 sand             sand         
+#> # ℹ 5 more variables: classification_method <chr>, rule_status <chr>,
+#> #   all_rule_matches <chr>, rule_conflict <lgl>, rule_gap <lgl>
 ```
 
 GRADISTAT texture classification supports the gravel-sand-mud and
@@ -268,14 +273,14 @@ ssc_classified <- classify_texture(
 
 gsm_classified
 #> # A tibble: 6 × 21
-#>   sample_id  gravel  sand   mud texture_class_id     texture_class ternary_basis
-#>   <chr>       <dbl> <dbl> <dbl> <chr>                <chr>         <chr>        
-#> 1 Cd1_deeper  2.76   89.4  7.87 slightly_gravelly_s… slightly gra… gravel_sand_…
-#> 2 Cd1_upper   1.05   96.6  2.37 slightly_gravelly_s… slightly gra… gravel_sand_…
-#> 3 Cd2_deeper  1.09   89.5  9.42 slightly_gravelly_s… slightly gra… gravel_sand_…
-#> 4 Cd2_upper   0.359  98.1  1.57 slightly_gravelly_s… slightly gra… gravel_sand_…
-#> 5 Cd3_deeper  0.365  89.9  9.75 slightly_gravelly_s… slightly gra… gravel_sand_…
-#> 6 Cd3_upper   0.411  98.4  1.22 slightly_gravelly_s… slightly gra… gravel_sand_…
+#>   sample_id gravel  sand    mud texture_class_id     texture_class ternary_basis
+#>   <chr>      <dbl> <dbl>  <dbl> <chr>                <chr>         <chr>        
+#> 1 S01        0.624  85.0 14.4   slightly_gravelly_m… slightly gra… gravel_sand_…
+#> 2 S02        0.224  97.8  1.93  slightly_gravelly_s… slightly gra… gravel_sand_…
+#> 3 S03        0.312  95.1  4.60  slightly_gravelly_s… slightly gra… gravel_sand_…
+#> 4 S04        0.153  89.6 10.2   slightly_gravelly_m… slightly gra… gravel_sand_…
+#> 5 S05        0.295  88.8 10.9   slightly_gravelly_m… slightly gra… gravel_sand_…
+#> 6 S06        0.230  98.8  0.964 slightly_gravelly_s… slightly gra… gravel_sand_…
 #> # ℹ 14 more variables: classification_method <chr>,
 #> #   classification_status <chr>, notes <chr>, sand_mud_ratio <dbl>,
 #> #   textural_group_class_id <chr>, textural_group <chr>,
@@ -299,14 +304,14 @@ ssc_classified
 ``` r
 gs_gradistat_sediment_name(gsm_classified)
 #> # A tibble: 6 × 21
-#>   sample_id  gravel  sand   mud texture_class_id     texture_class ternary_basis
-#>   <chr>       <dbl> <dbl> <dbl> <chr>                <chr>         <chr>        
-#> 1 Cd1_deeper  2.76   89.4  7.87 slightly_gravelly_s… slightly gra… gravel_sand_…
-#> 2 Cd1_upper   1.05   96.6  2.37 slightly_gravelly_s… slightly gra… gravel_sand_…
-#> 3 Cd2_deeper  1.09   89.5  9.42 slightly_gravelly_s… slightly gra… gravel_sand_…
-#> 4 Cd2_upper   0.359  98.1  1.57 slightly_gravelly_s… slightly gra… gravel_sand_…
-#> 5 Cd3_deeper  0.365  89.9  9.75 slightly_gravelly_s… slightly gra… gravel_sand_…
-#> 6 Cd3_upper   0.411  98.4  1.22 slightly_gravelly_s… slightly gra… gravel_sand_…
+#>   sample_id gravel  sand    mud texture_class_id     texture_class ternary_basis
+#>   <chr>      <dbl> <dbl>  <dbl> <chr>                <chr>         <chr>        
+#> 1 S01        0.624  85.0 14.4   slightly_gravelly_m… slightly gra… gravel_sand_…
+#> 2 S02        0.224  97.8  1.93  slightly_gravelly_s… slightly gra… gravel_sand_…
+#> 3 S03        0.312  95.1  4.60  slightly_gravelly_s… slightly gra… gravel_sand_…
+#> 4 S04        0.153  89.6 10.2   slightly_gravelly_m… slightly gra… gravel_sand_…
+#> 5 S05        0.295  88.8 10.9   slightly_gravelly_m… slightly gra… gravel_sand_…
+#> 6 S06        0.230  98.8  0.964 slightly_gravelly_s… slightly gra… gravel_sand_…
 #> # ℹ 14 more variables: classification_method <chr>,
 #> #   classification_status <chr>, notes <chr>, sand_mud_ratio <dbl>,
 #> #   textural_group_class_id <chr>, textural_group <chr>,
@@ -328,7 +333,7 @@ displayed at 0.0015 mm, or 1.5 um, for plotting only; calculations are
 unchanged.
 
 ``` r
-plot_distribution(gs_wide, sample_id = "WN1_upper", cumulative = TRUE)
+plot_distribution(gs_wide, sample = "S01", cumulative = TRUE)
 ```
 
 ![](replacing-gradistat-g2sd_files/figure-html/unnamed-chunk-10-1.png)
@@ -336,7 +341,7 @@ plot_distribution(gs_wide, sample_id = "WN1_upper", cumulative = TRUE)
 ``` r
 suppressWarnings(plot_cumulative(
   gs_wide,
-  sample_id = "WN1_upper",
+  sample_id = "S01",
   show_percentiles = c(10, 50, 90),
   extrapolate = "warn_linear"
 ))
@@ -348,7 +353,7 @@ suppressWarnings(plot_cumulative(
 plot_fractions(
   gs_wide,
   scheme = "gravel_sand_mud",
-  sample_id = c("WN1_upper", "WN2_upper"),
+  sample_id = c("S01", "S02"),
   fill_palette = "YlOrBr"
 )
 ```

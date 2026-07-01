@@ -65,7 +65,10 @@ plot_cumulative(
 
   Extrapolation behavior passed to
   [`gs_d_values()`](https://Gavin987.github.io/grainsizeR/reference/gs_d_values.md)
-  when `show_percentiles` is supplied.
+  when `show_percentiles` is supplied. With the default `"error"`,
+  `plot_cumulative()` retries marker placement with `"warn_linear"` if a
+  requested percentile falls just outside the finite boundary curve;
+  this affects only the plotted marker layer.
 
 - percentile_color:
 

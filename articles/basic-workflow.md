@@ -32,14 +32,14 @@ gs <- read_gsd(
 
 head(gs)
 #> # A tibble: 6 × 13
-#>   sample_id  bin_id raw_size_um size_lower_um size_upper_um size_mid_um
-#>   <chr>       <int>       <dbl>         <dbl>         <dbl>       <dbl>
-#> 1 Cd1_deeper      1      2000          2000              NA        NA  
-#> 2 Cd1_deeper      2      1000          1000            2000      1414. 
-#> 3 Cd1_deeper      3       500           500            1000       707. 
-#> 4 Cd1_deeper      4       250           250             500       354. 
-#> 5 Cd1_deeper      5       125           125             250       177. 
-#> 6 Cd1_deeper      6        62.5          62.5           125        88.4
+#>   sample_id bin_id raw_size_um size_lower_um size_upper_um size_mid_um
+#>   <chr>      <int>       <dbl>         <dbl>         <dbl>       <dbl>
+#> 1 S01            1      2000          2000              NA        NA  
+#> 2 S01            2      1000          1000            2000      1414. 
+#> 3 S01            3       500           500            1000       707. 
+#> 4 S01            4       250           250             500       354. 
+#> 5 S01            5       125           125             250       177. 
+#> 6 S01            6        62.5          62.5           125        88.4
 #> # ℹ 7 more variables: size_mid_phi <dbl>, retained_percent <dbl>,
 #> #   cum_finer_percent <dbl>, cum_coarser_percent <dbl>, is_open_lower <lgl>,
 #> #   is_open_upper <lgl>, measurement_method <chr>
@@ -64,19 +64,17 @@ gs_wide <- read_gsd(
   size_unit = "mm",
   value_type = "percent"
 )
-#> New names:
-#> • `` -> `...1`
 
 head(gs_wide)
 #> # A tibble: 6 × 13
-#>   sample_id  bin_id raw_size_um size_lower_um size_upper_um size_mid_um
-#>   <chr>       <int>       <dbl>         <dbl>         <dbl>       <dbl>
-#> 1 Cd1_deeper      1      2000          2000              NA        NA  
-#> 2 Cd1_deeper      2      1000          1000            2000      1414. 
-#> 3 Cd1_deeper      3       500           500            1000       707. 
-#> 4 Cd1_deeper      4       250           250             500       354. 
-#> 5 Cd1_deeper      5       125           125             250       177. 
-#> 6 Cd1_deeper      6        62.5          62.5           125        88.4
+#>   sample_id bin_id raw_size_um size_lower_um size_upper_um size_mid_um
+#>   <chr>      <int>       <dbl>         <dbl>         <dbl>       <dbl>
+#> 1 S01            1      2000          2000              NA        NA  
+#> 2 S01            2      1000          1000            2000      1414. 
+#> 3 S01            3       500           500            1000       707. 
+#> 4 S01            4       250           250             500       354. 
+#> 5 S01            5       125           125             250       177. 
+#> 6 S01            6        62.5          62.5           125        88.4
 #> # ℹ 7 more variables: size_mid_phi <dbl>, retained_percent <dbl>,
 #> #   cum_finer_percent <dbl>, cum_coarser_percent <dbl>, is_open_lower <lgl>,
 #> #   is_open_upper <lgl>, measurement_method <chr>
@@ -106,28 +104,28 @@ explicit extrapolation are supplied.
 ``` r
 head(gs_diagnostics(gs_wide, output = "summary"))
 #> # A tibble: 6 × 8
-#>   sample_id   n_ok n_warning n_error n_info has_error has_warning overall_status
-#>   <chr>      <int>     <int>   <int>  <int> <lgl>     <lgl>       <chr>         
-#> 1 Cd1_deeper    23         6       0      2 FALSE     TRUE        warning       
-#> 2 Cd1_upper     24         5       0      2 FALSE     TRUE        warning       
-#> 3 Cd2_deeper    23         6       0      2 FALSE     TRUE        warning       
-#> 4 Cd2_upper     24         5       0      2 FALSE     TRUE        warning       
-#> 5 Cd3_deeper    23         6       0      2 FALSE     TRUE        warning       
-#> 6 Cd3_upper     24         5       0      2 FALSE     TRUE        warning
+#>   sample_id  n_ok n_warning n_error n_info has_error has_warning overall_status
+#>   <chr>     <int>     <int>   <int>  <int> <lgl>     <lgl>       <chr>         
+#> 1 S01          22         7       0      2 FALSE     TRUE        warning       
+#> 2 S02          24         5       0      2 FALSE     TRUE        warning       
+#> 3 S03          24         5       0      2 FALSE     TRUE        warning       
+#> 4 S04          22         7       0      2 FALSE     TRUE        warning       
+#> 5 S05          22         7       0      2 FALSE     TRUE        warning       
+#> 6 S06          24         5       0      2 FALSE     TRUE        warning
 head(gs_diagnostics(
   gs,
   d_values = c(5, 10, 50, 90, 95),
   fraction_schemes = c("wentworth_major", "usda_tt", "uk_ssew")
 ))
 #> # A tibble: 6 × 9
-#>   sample_id  check              status severity value expected parameter message
-#>   <chr>      <chr>              <chr>  <chr>    <chr> <chr>    <chr>     <chr>  
-#> 1 Cd1_deeper missing_values     ok     none     0     finite … NA        Retain…
-#> 2 Cd1_deeper negative_values    ok     none     0     no nega… NA        No neg…
-#> 3 Cd1_deeper zero_total         ok     none     100   > 0      NA        The re…
-#> 4 Cd1_deeper retained_total     ok     none     100   100 +/-… NA        Retain…
-#> 5 Cd1_deeper duplicate_size_cl… ok     none     0     0 dupli… NA        No dup…
-#> 6 Cd1_deeper size_order         ok     none     decr… coarse-… NA        Size c…
+#>   sample_id check               status severity value expected parameter message
+#>   <chr>     <chr>               <chr>  <chr>    <chr> <chr>    <chr>     <chr>  
+#> 1 S01       missing_values      ok     none     0     finite … NA        Retain…
+#> 2 S01       negative_values     ok     none     0     no nega… NA        No neg…
+#> 3 S01       zero_total          ok     none     100   > 0      NA        The re…
+#> 4 S01       retained_total      ok     none     100   100 +/-… NA        Retain…
+#> 5 S01       duplicate_size_cla… ok     none     0     0 dupli… NA        No dup…
+#> 6 S01       size_order          ok     none     decr… coarse-… NA        Size c…
 #> # ℹ 1 more variable: recommendation <chr>
 ```
 
@@ -138,25 +136,25 @@ head(gs_diagnostics(
 ``` r
 head(gs_cumulative(gs))
 #> # A tibble: 6 × 7
-#>   sample_id  boundary_id boundary_um boundary_mm boundary_phi percent_finer
-#>   <chr>            <int>       <dbl>       <dbl>        <dbl>         <dbl>
-#> 1 Cd1_deeper           1      2000        2                -1         97.2 
-#> 2 Cd1_deeper           2      1000        1                 0         94.5 
-#> 3 Cd1_deeper           3       500        0.5               1         89.8 
-#> 4 Cd1_deeper           4       250        0.25              2         73.7 
-#> 5 Cd1_deeper           5       125        0.125             3         51.2 
-#> 6 Cd1_deeper           6        62.5      0.0625            4          7.87
+#>   sample_id boundary_id boundary_um boundary_mm boundary_phi percent_finer
+#>   <chr>           <int>       <dbl>       <dbl>        <dbl>         <dbl>
+#> 1 S01                 1      2000        2                -1          99.4
+#> 2 S01                 2      1000        1                 0          98.4
+#> 3 S01                 3       500        0.5               1          96.8
+#> 4 S01                 4       250        0.25              2          77.7
+#> 5 S01                 5       125        0.125             3          50.9
+#> 6 S01                 6        62.5      0.0625            4          14.4
 #> # ℹ 1 more variable: percent_coarser <dbl>
 head(gs_d_values(gs, probs = c(10, 50, 90)))
 #> # A tibble: 6 × 7
-#>   sample_id  percentile grain_size_um grain_size_mm grain_size_phi
-#>   <chr>           <dbl>         <dbl>         <dbl>          <dbl>
-#> 1 Cd1_deeper         10          64.7        0.0647          3.95 
-#> 2 Cd1_deeper         50         123.         0.123           3.03 
-#> 3 Cd1_deeper         90         511.         0.511           0.967
-#> 4 Cd1_upper          10          75.2        0.0752          3.73 
-#> 5 Cd1_upper          50         175.         0.175           2.51 
-#> 6 Cd1_upper          90         432.         0.432           1.21 
+#>   sample_id percentile grain_size_um grain_size_mm grain_size_phi
+#>   <chr>          <dbl>         <dbl>         <dbl>          <dbl>
+#> 1 S01               10          40.9        0.0409           4.61
+#> 2 S01               50         123.         0.123            3.02
+#> 3 S01               90         390.         0.390            1.36
+#> 4 S02               10          77.2        0.0772           3.70
+#> 5 S02               50         175.         0.175            2.51
+#> 6 S02               90         412.         0.412            1.28
 #> # ℹ 2 more variables: interpolation_scale <chr>, extrapolated <lgl>
 ```
 
@@ -176,14 +174,14 @@ head(suppressWarnings(gs_percent_finer(
   extrapolate = "warn_linear"
 )))
 #> # A tibble: 6 × 8
-#>   sample_id  threshold_um threshold_mm threshold_phi percent_finer
-#>   <chr>             <dbl>        <dbl>         <dbl>         <dbl>
-#> 1 Cd1_deeper            2        0.002          8.97       -207.  
-#> 2 Cd1_deeper           20        0.02           5.64        -63.4 
-#> 3 Cd1_deeper           50        0.05           4.32         -6.09
-#> 4 Cd1_deeper           60        0.06           4.06          5.32
-#> 5 Cd1_deeper           63        0.063          3.99          8.37
-#> 6 Cd1_upper             2        0.002          8.97       -140.  
+#>   sample_id threshold_um threshold_mm threshold_phi percent_finer
+#>   <chr>            <dbl>        <dbl>         <dbl>         <dbl>
+#> 1 S01                  2        0.002          8.97         -1.22
+#> 2 S01                 20        0.02           5.64          3.90
+#> 3 S01                 50        0.05           4.32         12.5 
+#> 4 S01                 60        0.06           4.06         14.0 
+#> 5 S01                 63        0.063          3.99         14.8 
+#> 6 S02                  2        0.002          8.97       -129.  
 #> # ℹ 3 more variables: percent_coarser <dbl>, interpolation_scale <chr>,
 #> #   extrapolated <lgl>
 ```
@@ -196,14 +194,14 @@ head(suppressWarnings(gs_grain_size_indices(
   extrapolate = "warn_linear"
 )))
 #> # A tibble: 6 × 15
-#>   sample_id  D10_um D25_um D30_um D50_um D60_um D75_um    Cu    Cc So_trask
-#>   <chr>       <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl> <dbl> <dbl>    <dbl>
-#> 1 Cd1_deeper   64.7   82.2   89.0   123.   164.   264.  2.53 0.748     1.79
-#> 2 Cd1_upper    75.2  108.   122.    175.   209.   286.  2.78 0.949     1.63
-#> 3 Cd2_deeper   63.0   78.1   83.9   112.   134.   215.  2.13 0.834     1.66
-#> 4 Cd2_upper    81.6  130.   148.    251.   289.   358.  3.54 0.932     1.66
-#> 5 Cd3_deeper   62.7   76.5   81.8   107.   122.   210.  1.94 0.876     1.66
-#> 6 Cd3_upper    86.2  142.   161.    261.   298.   365.  3.46 1.01      1.60
+#>   sample_id D10_um D25_um D30_um D50_um D60_um D75_um    Cu    Cc So_trask
+#>   <chr>      <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl> <dbl> <dbl>    <dbl>
+#> 1 S01         40.9   76.5   84.1   123.   158.   233.  3.87 1.09      1.75
+#> 2 S02         77.2  114.   128.    175.   205.   267.  2.65 1.04      1.53
+#> 3 S03         69.0   91.0   99.8   151.   193.   278.  2.79 0.749     1.75
+#> 4 S04         59.8   80.8   88.2   125.   167.   258.  2.79 0.779     1.79
+#> 5 S05         62.0   79.7   86.8   123.   167.   270.  2.70 0.728     1.84
+#> 6 S06         75.6  104.   115.    216.   273.   346.  3.61 0.644     1.83
 #> # ℹ 5 more variables: Sk_trask <dbl>, fine_content_percent <dbl>,
 #> #   fine_threshold_um <dbl>, fine_equivalent <dbl>, interpolation_scale <chr>
 ```
@@ -216,14 +214,14 @@ head(suppressWarnings(gs_folk_ward(
   extrapolate = "warn_linear"
 )))
 #> # A tibble: 6 × 26
-#>   sample_id  D5_um D16_um D25_um D50_um D75_um D84_um D95_um D5_phi D16_phi
-#>   <chr>      <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>   <dbl>
-#> 1 Cd1_deeper  59.7   71.2   82.2   123.   264.   389.  1133.   4.07    3.81
-#> 2 Cd1_upper   66.6   87.0  108.    175.   286.   366.   496.   3.91    3.52
-#> 3 Cd2_deeper  58.7   68.7   78.1   112.   215.   298.   472.   4.09    3.86
-#> 4 Cd2_upper   69.6   98.6  130.    251.   358.   408.   477.   3.84    3.34
-#> 5 Cd3_deeper  58.7   67.9   76.5   107.   210.   296.   445.   4.09    3.88
-#> 6 Cd3_upper   71.8  107.   142.    261.   365.   412.   478.   3.80    3.22
+#>   sample_id D5_um D16_um D25_um D50_um D75_um D84_um D95_um D5_phi D16_phi
+#>   <chr>     <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>   <dbl>
+#> 1 S01        25.1   64.5   76.5   123.   233.   314.   468.   5.31    3.96
+#> 2 S02        67.7   90.3  114.    175.   267.   346.   476.   3.88    3.47
+#> 3 S03        63.0   77.1   91.0   151.   278.   347.   455.   3.99    3.70
+#> 4 S04        32.3   69.1   80.8   125.   258.   333.   456.   4.95    3.85
+#> 5 S05        35.3   68.2   79.7   123.   270.   347.   472.   4.82    3.87
+#> 6 S06        68.1   85.8  104.    216.   346.   399.   475.   3.88    3.54
 #> # ℹ 16 more variables: D25_phi <dbl>, D50_phi <dbl>, D75_phi <dbl>,
 #> #   D84_phi <dbl>, D95_phi <dbl>, mean_fw_phi <dbl>, mean_fw_um <dbl>,
 #> #   sorting_fw_phi <dbl>, skewness_fw <dbl>, kurtosis_fw <dbl>,
@@ -243,14 +241,14 @@ head(suppressWarnings(gs_moments(
   open_end = "extend_phi"
 )))
 #> # A tibble: 6 × 14
-#>   sample_id  moment_method   mean_moment mean_moment_unit mean_moment_um
-#>   <chr>      <chr>                 <dbl> <chr>                     <dbl>
-#> 1 Cd1_deeper logarithmic_phi        2.64 phi                        160.
-#> 2 Cd1_upper  logarithmic_phi        2.45 phi                        183.
-#> 3 Cd2_deeper logarithmic_phi        2.91 phi                        133.
-#> 4 Cd2_upper  logarithmic_phi        2.22 phi                        214.
-#> 5 Cd3_deeper logarithmic_phi        2.98 phi                        127.
-#> 6 Cd3_upper  logarithmic_phi        2.15 phi                        225.
+#>   sample_id moment_method   mean_moment mean_moment_unit mean_moment_um
+#>   <chr>     <chr>                 <dbl> <chr>                     <dbl>
+#> 1 S01       logarithmic_phi        2.98 phi                        127.
+#> 2 S02       logarithmic_phi        2.49 phi                        178.
+#> 3 S03       logarithmic_phi        2.66 phi                        159.
+#> 4 S04       logarithmic_phi        2.90 phi                        134.
+#> 5 S05       logarithmic_phi        2.85 phi                        138.
+#> 6 S06       logarithmic_phi        2.36 phi                        194.
 #> # ℹ 9 more variables: mean_moment_phi <dbl>, sd_moment <dbl>,
 #> #   sd_moment_unit <chr>, skewness_moment <dbl>, kurtosis_moment <dbl>,
 #> #   retained_percent_used <dbl>, open_end <chr>, open_end_estimated <lgl>,
@@ -262,14 +260,14 @@ head(suppressWarnings(gs_moments(
 ``` r
 head(gs_fractions_wide(gs, scheme = "wentworth_major"))
 #> # A tibble: 6 × 4
-#>   sample_id  gravel_percent sand_percent mud_percent
-#>   <chr>               <dbl>        <dbl>       <dbl>
-#> 1 Cd1_deeper          2.76          89.4        7.87
-#> 2 Cd1_upper           1.05          96.6        2.37
-#> 3 Cd2_deeper          1.09          89.5        9.42
-#> 4 Cd2_upper           0.359         98.1        1.57
-#> 5 Cd3_deeper          0.365         89.9        9.75
-#> 6 Cd3_upper           0.411         98.4        1.22
+#>   sample_id gravel_percent sand_percent mud_percent
+#>   <chr>              <dbl>        <dbl>       <dbl>
+#> 1 S01                0.624         85.0      14.4  
+#> 2 S02                0.224         97.8       1.93 
+#> 3 S03                0.312         95.1       4.60 
+#> 4 S04                0.153         89.6      10.2  
+#> 5 S05                0.295         88.8      10.9  
+#> 6 S06                0.230         98.8       0.964
 particle_size_systems()
 #> # A tibble: 9 × 15
 #>   system_id     system_name country_or_region domain clay_upper_um silt_upper_um
@@ -307,12 +305,12 @@ head(report_table)
 #> # A tibble: 6 × 41
 #>   sample_id D5_um D10_um D16_um D25_um D50_um D75_um D84_um D90_um D95_um D30_um
 #>   <chr>     <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>
-#> 1 Cd1_deep…  59.7   64.7   71.2   82.2   123.   264.   389.   511.  1133.   89.0
-#> 2 Cd1_upper  66.6   75.2   87.0  108.    175.   286.   366.   432.   496.  122. 
-#> 3 Cd2_deep…  58.7   63.0   68.7   78.1   112.   215.   298.   383.   472.   83.9
-#> 4 Cd2_upper  69.6   81.6   98.6  130.    251.   358.   408.   444.   477.  148. 
-#> 5 Cd3_deep…  58.7   62.7   67.9   76.5   107.   210.   296.   370.   445.   81.8
-#> 6 Cd3_upper  71.8   86.2  107.   142.    261.   365.   412.   447.   478.  161. 
+#> 1 S01        25.1   40.9   64.5   76.5   123.   233.   314.   390.   468.   84.1
+#> 2 S02        67.7   77.2   90.3  114.    175.   267.   346.   412.   476.  128. 
+#> 3 S03        63.0   69.0   77.1   91.0   151.   278.   347.   402.   455.   99.8
+#> 4 S04        32.3   59.8   69.1   80.8   125.   258.   333.   395.   456.   88.2
+#> 5 S05        35.3   62.0   68.2   79.7   123.   270.   347.   410.   472.   86.8
+#> 6 S06        68.1   75.6   85.8  104.    216.   346.   399.   439.   475.  115. 
 #> # ℹ 30 more variables: D60_um <dbl>, Cu <dbl>, Cc <dbl>, So_trask <dbl>,
 #> #   Sk_trask <dbl>, fine_content_percent <dbl>, fine_threshold_um <dbl>,
 #> #   fine_equivalent <dbl>, interpolation_scale <chr>, D5_phi <dbl>,
@@ -336,13 +334,13 @@ specific report format.
 ## Basic Plots
 
 ``` r
-plot_distribution(gs, sample_id = "WN1_upper")
+plot_distribution(gs, sample = "S01")
 ```
 
 ![](basic-workflow_files/figure-html/unnamed-chunk-14-1.png)
 
 ``` r
-plot_cumulative(gs, sample_id = "WN1_upper", show_percentiles = c(10, 50, 90), extrapolate = "warn_linear")
+plot_cumulative(gs, sample = "S01", show_percentiles = c(10, 50, 90), extrapolate = "warn_linear")
 ```
 
 ![](basic-workflow_files/figure-html/unnamed-chunk-15-1.png)
@@ -362,7 +360,7 @@ needs, not copied from GRADISTAT software.
 ``` r
 suppressWarnings(plot_gradistat_summary(
   gs,
-  sample_id = "WN1_upper",
+  sample_id = "S01",
   extrapolate = "warn_linear"
 ))
 ```

@@ -215,19 +215,17 @@ choices for reproducible scripts and method descriptions.</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">gs_wide</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_gsd.html">read_gsd</a></span><span class="op">(</span><span class="va">wide_file</span>, format <span class="op">=</span> <span class="st">"wide"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; New names:</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> `` -&gt; `...1`</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">gs</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 13</span></span></span>
-<span><span class="co">#&gt;   sample_id  bin_id raw_size_um size_lower_um size_upper_um size_mid_um</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Cd1_deeper      1      <span style="text-decoration: underline;">2</span>000          <span style="text-decoration: underline;">2</span>000              <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Cd1_deeper      2      <span style="text-decoration: underline;">1</span>000          <span style="text-decoration: underline;">1</span>000            <span style="text-decoration: underline;">2</span>000      <span style="text-decoration: underline;">1</span>414. </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Cd1_deeper      3       500           500            <span style="text-decoration: underline;">1</span>000       707. </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> Cd1_deeper      4       250           250             500       354. </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> Cd1_deeper      5       125           125             250       177. </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> Cd1_deeper      6        62.5          62.5           125        88.4</span></span>
+<span><span class="co">#&gt;   sample_id bin_id raw_size_um size_lower_um size_upper_um size_mid_um</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S01            1      <span style="text-decoration: underline;">2</span>000          <span style="text-decoration: underline;">2</span>000              <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> S01            2      <span style="text-decoration: underline;">1</span>000          <span style="text-decoration: underline;">1</span>000            <span style="text-decoration: underline;">2</span>000      <span style="text-decoration: underline;">1</span>414. </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> S01            3       500           500            <span style="text-decoration: underline;">1</span>000       707. </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> S01            4       250           250             500       354. </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> S01            5       125           125             250       177. </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> S01            6        62.5          62.5           125        88.4</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 7 more variables: size_mid_phi &lt;dbl&gt;, retained_percent &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   cum_finer_percent &lt;dbl&gt;, cum_coarser_percent &lt;dbl&gt;, is_open_lower &lt;lgl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   is_open_upper &lt;lgl&gt;, measurement_method &lt;chr&gt;</span></span></span></code></pre></div>
@@ -249,14 +247,14 @@ extrapolated; calls that need extrapolation use
 <span>  extrapolate <span class="op">=</span> <span class="st">"warn_linear"</span></span>
 <span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 41</span></span></span>
-<span><span class="co">#&gt;   sample_id  D10_um D50_um D90_um D25_um D30_um D60_um D75_um    Cu    Cc</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Cd1_deeper   64.7   123.   511.   82.2   89.0   164.   264.  2.53 0.748</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Cd1_upper    75.2   175.   432.  108.   122.    209.   286.  2.78 0.949</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Cd2_deeper   63.0   112.   383.   78.1   83.9   134.   215.  2.13 0.834</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> Cd2_upper    81.6   251.   444.  130.   148.    289.   358.  3.54 0.932</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> Cd3_deeper   62.7   107.   370.   76.5   81.8   122.   210.  1.94 0.876</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> Cd3_upper    86.2   261.   447.  142.   161.    298.   365.  3.46 1.01 </span></span>
+<span><span class="co">#&gt;   sample_id D10_um D50_um D90_um D25_um D30_um D60_um D75_um    Cu    Cc</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S01         40.9   123.   390.   76.5   84.1   158.   233.  3.87 1.09 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> S02         77.2   175.   412.  114.   128.    205.   267.  2.65 1.04 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> S03         69.0   151.   402.   91.0   99.8   193.   278.  2.79 0.749</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> S04         59.8   125.   395.   80.8   88.2   167.   258.  2.79 0.779</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> S05         62.0   123.   410.   79.7   86.8   167.   270.  2.70 0.728</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> S06         75.6   216.   439.  104.   115.    273.   346.  3.61 0.644</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 31 more variables: So_trask &lt;dbl&gt;, Sk_trask &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   fine_content_percent &lt;dbl&gt;, fine_threshold_um &lt;dbl&gt;, fine_equivalent &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   interpolation_scale &lt;chr&gt;, D5_um &lt;dbl&gt;, D16_um &lt;dbl&gt;, D84_um &lt;dbl&gt;,</span></span></span>
@@ -271,25 +269,25 @@ extrapolated; calls that need extrapolation use
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/warning.html" class="external-link">suppressWarnings</a></span><span class="op">(</span><span class="fu"><a href="../reference/gs_d_values.html">gs_d_values</a></span><span class="op">(</span><span class="va">gs</span>, probs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">50</span>, <span class="fl">90</span><span class="op">)</span>, extrapolate <span class="op">=</span> <span class="st">"warn_linear"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 7</span></span></span>
-<span><span class="co">#&gt;   sample_id  percentile grain_size_um grain_size_mm grain_size_phi</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Cd1_deeper         10          64.7        0.064<span style="text-decoration: underline;">7</span>          3.95 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Cd1_deeper         50         123.         0.123           3.03 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Cd1_deeper         90         511.         0.511           0.967</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> Cd1_upper          10          75.2        0.075<span style="text-decoration: underline;">2</span>          3.73 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> Cd1_upper          50         175.         0.175           2.51 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> Cd1_upper          90         432.         0.432           1.21 </span></span>
+<span><span class="co">#&gt;   sample_id percentile grain_size_um grain_size_mm grain_size_phi</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S01               10          40.9        0.040<span style="text-decoration: underline;">9</span>           4.61</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> S01               50         123.         0.123            3.02</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> S01               90         390.         0.390            1.36</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> S02               10          77.2        0.077<span style="text-decoration: underline;">2</span>           3.70</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> S02               50         175.         0.175            2.51</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> S02               90         412.         0.412            1.28</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 2 more variables: interpolation_scale &lt;chr&gt;, extrapolated &lt;lgl&gt;</span></span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/warning.html" class="external-link">suppressWarnings</a></span><span class="op">(</span><span class="fu"><a href="../reference/gs_d_spread.html">gs_d_spread</a></span><span class="op">(</span><span class="va">gs</span>, extrapolate <span class="op">=</span> <span class="st">"warn_linear"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 14</span></span></span>
-<span><span class="co">#&gt;   sample_id    D10   D25   D50   D75   D90 d_value_unit D90_D10_ratio</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Cd1_deeper  64.7  82.2  123.  264.  511. um                    7.91</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Cd1_upper   75.2 108.   175.  286.  432. um                    5.75</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Cd2_deeper  63.0  78.1  112.  215.  383. um                    6.08</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> Cd2_upper   81.6 130.   251.  358.  444. um                    5.45</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> Cd3_deeper  62.7  76.5  107.  210.  370. um                    5.90</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> Cd3_upper   86.2 142.   261.  365.  447. um                    5.18</span></span>
+<span><span class="co">#&gt;   sample_id   D10   D25   D50   D75   D90 d_value_unit D90_D10_ratio</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S01        40.9  76.5  123.  233.  390. um                    9.54</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> S02        77.2 114.   175.  267.  412. um                    5.33</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> S03        69.0  91.0  151.  278.  402. um                    5.83</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> S04        59.8  80.8  125.  258.  395. um                    6.61</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> S05        62.0  79.7  123.  270.  410. um                    6.62</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> S06        75.6 104.   216.  346.  439. um                    5.81</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 6 more variables: D90_minus_D10 &lt;dbl&gt;, D75_D25_ratio &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   D75_minus_D25 &lt;dbl&gt;, D90_D10_log_ratio &lt;dbl&gt;, D75_D25_log_ratio &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   any_extrapolated &lt;lgl&gt;</span></span></span></code></pre></div>
@@ -300,14 +298,14 @@ extrapolated; calls that need extrapolation use
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/gs_modes.html">gs_modes</a></span><span class="op">(</span><span class="va">gs</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 12</span></span></span>
-<span><span class="co">#&gt;   sample_id  sample_modality mode_rank mode_size_mm mode_size_um mode_phi</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Cd1_deeper bimodal                 1       0.088<span style="text-decoration: underline;">4</span>         88.4      3.5</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Cd1_deeper bimodal                 2       0.177         177.       2.5</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Cd1_deeper bimodal                 3       0.354         354.       1.5</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> Cd1_upper  unimodal                1       0.177         177.       2.5</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> Cd1_upper  unimodal                2       0.088<span style="text-decoration: underline;">4</span>         88.4      3.5</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> Cd1_upper  unimodal                3       0.354         354.       1.5</span></span>
+<span><span class="co">#&gt;   sample_id sample_modality  mode_rank mode_size_mm mode_size_um mode_phi</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S01       trimodal_or_more         1       0.088<span style="text-decoration: underline;">4</span>         88.4      3.5</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> S01       trimodal_or_more         2       0.177         177.       2.5</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> S01       trimodal_or_more         3       0.354         354.       1.5</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> S02       unimodal                 1       0.177         177.       2.5</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> S02       unimodal                 2       0.088<span style="text-decoration: underline;">4</span>         88.4      3.5</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> S02       unimodal                 3       0.354         354.       1.5</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 6 more variables: mode_class_lower_mm &lt;dbl&gt;, mode_class_upper_mm &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   mode_percent &lt;dbl&gt;, mode_class_label &lt;chr&gt;, is_open_interval &lt;lgl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   mode_status &lt;chr&gt;</span></span></span></code></pre></div>
@@ -318,30 +316,30 @@ extrapolated; calls that need extrapolation use
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/warning.html" class="external-link">suppressWarnings</a></span><span class="op">(</span><span class="fu"><a href="../reference/gs_describe_parameters.html">gs_describe_parameters</a></span><span class="op">(</span><span class="va">gs</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 19</span></span></span>
-<span><span class="co">#&gt;   sample_id  bin_id raw_size_um size_lower_um size_upper_um size_mid_um</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Cd1_deeper      1      <span style="text-decoration: underline;">2</span>000          <span style="text-decoration: underline;">2</span>000              <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Cd1_deeper      2      <span style="text-decoration: underline;">1</span>000          <span style="text-decoration: underline;">1</span>000            <span style="text-decoration: underline;">2</span>000      <span style="text-decoration: underline;">1</span>414. </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Cd1_deeper      3       500           500            <span style="text-decoration: underline;">1</span>000       707. </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> Cd1_deeper      4       250           250             500       354. </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> Cd1_deeper      5       125           125             250       177. </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> Cd1_deeper      6        62.5          62.5           125        88.4</span></span>
+<span><span class="co">#&gt;   sample_id bin_id raw_size_um size_lower_um size_upper_um size_mid_um</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S01            1      <span style="text-decoration: underline;">2</span>000          <span style="text-decoration: underline;">2</span>000              <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> S01            2      <span style="text-decoration: underline;">1</span>000          <span style="text-decoration: underline;">1</span>000            <span style="text-decoration: underline;">2</span>000      <span style="text-decoration: underline;">1</span>414. </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> S01            3       500           500            <span style="text-decoration: underline;">1</span>000       707. </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> S01            4       250           250             500       354. </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> S01            5       125           125             250       177. </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> S01            6        62.5          62.5           125        88.4</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 13 more variables: size_mid_phi &lt;dbl&gt;, retained_percent &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   cum_finer_percent &lt;dbl&gt;, cum_coarser_percent &lt;dbl&gt;, is_open_lower &lt;lgl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   is_open_upper &lt;lgl&gt;, measurement_method &lt;chr&gt;, mean_description &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   sorting_description &lt;chr&gt;, skewness_description &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   kurtosis_description &lt;chr&gt;, description_method &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   description_status &lt;chr&gt;</span></span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/gs_quality_flags.html">gs_quality_flags</a></span><span class="op">(</span><span class="va">gs</span>, sediment_loss_percent <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>WN1_upper <span class="op">=</span> <span class="fl">1.2</span>, WN2_upper <span class="op">=</span> <span class="fl">2.4</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/gs_quality_flags.html">gs_quality_flags</a></span><span class="op">(</span><span class="va">gs</span>, sediment_loss_percent <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>S01 <span class="op">=</span> <span class="fl">1.2</span>, S02 <span class="op">=</span> <span class="fl">2.4</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 6</span></span></span>
-<span><span class="co">#&gt;   sample_id  quality_flag      quality_status    quality_value quality_threshold</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Cd1_deeper sediment_loss     not_evaluated     <span style="color: #BB0000;">NA</span>            &gt; 2%             </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Cd1_deeper open_fine_tail    needs_additional… TRUE          reported explici…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Cd1_deeper fine_pan_fraction warning           7.8719146     1% info; 5% warn…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> Cd1_upper  sediment_loss     not_evaluated     <span style="color: #BB0000;">NA</span>            &gt; 2%             </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> Cd1_upper  open_fine_tail    needs_additional… TRUE          reported explici…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> Cd1_upper  fine_pan_fraction needs_additional… 2.3733818     1% info; 5% warn…</span></span>
+<span><span class="co">#&gt;   sample_id quality_flag      quality_status     quality_value quality_threshold</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S01       sediment_loss     ok                 1.2           &lt;= 2%            </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> S01       open_fine_tail    needs_additional_… TRUE          reported explici…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> S01       fine_pan_fraction needs_additional_… 2.9952675     1% info; 5% warn…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> S02       sediment_loss     warning            2.4           &gt; 2%             </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> S02       open_fine_tail    needs_additional_… TRUE          reported explici…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> S02       fine_pan_fraction needs_additional_… 1.9336191     1% info; 5% warn…</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 1 more variable: quality_message &lt;chr&gt;</span></span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -353,6 +351,7 @@ percentages. USDA sand-size modifier subclasses remain future work.</p>
 <code class="sourceCode R"><span><span class="va">usda_fractions</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/warning.html" class="external-link">suppressWarnings</a></span><span class="op">(</span><span class="fu"><a href="../reference/gs_fractions_wide.html">gs_fractions_wide</a></span><span class="op">(</span></span>
 <span>  <span class="va">gs</span>,</span>
 <span>  scheme <span class="op">=</span> <span class="st">"usda_tt"</span>,</span>
+<span>  normalize <span class="op">=</span> <span class="st">"fine_earth"</span>,</span>
 <span>  extrapolate <span class="op">=</span> <span class="st">"warn_linear"</span></span>
 <span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
@@ -370,11 +369,17 @@ percentages. USDA sand-size modifier subclasses remain future work.</p>
 <span><span class="op">]</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/classify_texture.html">classify_texture</a></span><span class="op">(</span><span class="va">usda_samples</span>, scheme <span class="op">=</span> <span class="st">"usda_tt"</span>, method <span class="op">=</span> <span class="st">"rules"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 0 × 11</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 11 variables: sample_id &lt;chr&gt;, sand &lt;dbl&gt;, silt &lt;dbl&gt;, clay &lt;dbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   texture_class_id &lt;chr&gt;, texture_class &lt;chr&gt;, classification_method &lt;chr&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   rule_status &lt;chr&gt;, all_rule_matches &lt;chr&gt;, rule_conflict &lt;lgl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   rule_gap &lt;lgl&gt;</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 11</span></span></span>
+<span><span class="co">#&gt;   sample_id  sand  silt  clay texture_class_id texture_class</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S01        87.5 12.5      0 sand             sand         </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> S02       100    0        0 sand             sand         </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> S03       100    0        0 sand             sand         </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> S04        90.9  9.13     0 sand             sand         </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> S05        92.2  7.76     0 sand             sand         </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> S06       100    0        0 sand             sand         </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 5 more variables: classification_method &lt;chr&gt;, rule_status &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   all_rule_matches &lt;chr&gt;, rule_conflict &lt;lgl&gt;, rule_gap &lt;lgl&gt;</span></span></span></code></pre></div>
 <p>GRADISTAT texture classification supports the gravel-sand-mud and
 sand-silt-clay no-gravel bases.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
@@ -412,14 +417,14 @@ sand-silt-clay no-gravel bases.</p>
 <span></span>
 <span><span class="va">gsm_classified</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 21</span></span></span>
-<span><span class="co">#&gt;   sample_id  gravel  sand   mud texture_class_id     texture_class ternary_basis</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Cd1_deeper  2.76   89.4  7.87 slightly_gravelly_s… slightly gra… gravel_sand_…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Cd1_upper   1.05   96.6  2.37 slightly_gravelly_s… slightly gra… gravel_sand_…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Cd2_deeper  1.09   89.5  9.42 slightly_gravelly_s… slightly gra… gravel_sand_…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> Cd2_upper   0.359  98.1  1.57 slightly_gravelly_s… slightly gra… gravel_sand_…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> Cd3_deeper  0.365  89.9  9.75 slightly_gravelly_s… slightly gra… gravel_sand_…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> Cd3_upper   0.411  98.4  1.22 slightly_gravelly_s… slightly gra… gravel_sand_…</span></span>
+<span><span class="co">#&gt;   sample_id gravel  sand    mud texture_class_id     texture_class ternary_basis</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S01        0.624  85.0 14.4   slightly_gravelly_m… slightly gra… gravel_sand_…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> S02        0.224  97.8  1.93  slightly_gravelly_s… slightly gra… gravel_sand_…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> S03        0.312  95.1  4.60  slightly_gravelly_s… slightly gra… gravel_sand_…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> S04        0.153  89.6 10.2   slightly_gravelly_m… slightly gra… gravel_sand_…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> S05        0.295  88.8 10.9   slightly_gravelly_m… slightly gra… gravel_sand_…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> S06        0.230  98.8  0.964 slightly_gravelly_s… slightly gra… gravel_sand_…</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 14 more variables: classification_method &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   classification_status &lt;chr&gt;, notes &lt;chr&gt;, sand_mud_ratio &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   textural_group_class_id &lt;chr&gt;, textural_group &lt;chr&gt;,</span></span></span>
@@ -443,14 +448,14 @@ sand-silt-clay no-gravel bases.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/gs_gradistat_sediment_name.html">gs_gradistat_sediment_name</a></span><span class="op">(</span><span class="va">gsm_classified</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 21</span></span></span>
-<span><span class="co">#&gt;   sample_id  gravel  sand   mud texture_class_id     texture_class ternary_basis</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Cd1_deeper  2.76   89.4  7.87 slightly_gravelly_s… slightly gra… gravel_sand_…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Cd1_upper   1.05   96.6  2.37 slightly_gravelly_s… slightly gra… gravel_sand_…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Cd2_deeper  1.09   89.5  9.42 slightly_gravelly_s… slightly gra… gravel_sand_…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> Cd2_upper   0.359  98.1  1.57 slightly_gravelly_s… slightly gra… gravel_sand_…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> Cd3_deeper  0.365  89.9  9.75 slightly_gravelly_s… slightly gra… gravel_sand_…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> Cd3_upper   0.411  98.4  1.22 slightly_gravelly_s… slightly gra… gravel_sand_…</span></span>
+<span><span class="co">#&gt;   sample_id gravel  sand    mud texture_class_id     texture_class ternary_basis</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S01        0.624  85.0 14.4   slightly_gravelly_m… slightly gra… gravel_sand_…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> S02        0.224  97.8  1.93  slightly_gravelly_s… slightly gra… gravel_sand_…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> S03        0.312  95.1  4.60  slightly_gravelly_s… slightly gra… gravel_sand_…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> S04        0.153  89.6 10.2   slightly_gravelly_m… slightly gra… gravel_sand_…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> S05        0.295  88.8 10.9   slightly_gravelly_m… slightly gra… gravel_sand_…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> S06        0.230  98.8  0.964 slightly_gravelly_s… slightly gra… gravel_sand_…</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 14 more variables: classification_method &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   classification_status &lt;chr&gt;, notes &lt;chr&gt;, sand_mud_ratio &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   textural_group_class_id &lt;chr&gt;, textural_group &lt;chr&gt;,</span></span></span>
@@ -471,12 +476,12 @@ arrange returned plots externally for multi-sample figures. Lower
 open-ended classes are displayed at 0.0015 mm, or 1.5 um, for plotting
 only; calculations are unchanged.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_distribution.html">plot_distribution</a></span><span class="op">(</span><span class="va">gs_wide</span>, sample_id <span class="op">=</span> <span class="st">"WN1_upper"</span>, cumulative <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_distribution.html">plot_distribution</a></span><span class="op">(</span><span class="va">gs_wide</span>, sample <span class="op">=</span> <span class="st">"S01"</span>, cumulative <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="replacing-gradistat-g2sd_files/figure-html/unnamed-chunk-10-1.png" class="r-plt" alt="" width="576"></p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/warning.html" class="external-link">suppressWarnings</a></span><span class="op">(</span><span class="fu"><a href="../reference/plot_cumulative.html">plot_cumulative</a></span><span class="op">(</span></span>
 <span>  <span class="va">gs_wide</span>,</span>
-<span>  sample_id <span class="op">=</span> <span class="st">"WN1_upper"</span>,</span>
+<span>  sample_id <span class="op">=</span> <span class="st">"S01"</span>,</span>
 <span>  show_percentiles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">50</span>, <span class="fl">90</span><span class="op">)</span>,</span>
 <span>  extrapolate <span class="op">=</span> <span class="st">"warn_linear"</span></span>
 <span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
@@ -485,7 +490,7 @@ only; calculations are unchanged.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_fractions.html">plot_fractions</a></span><span class="op">(</span></span>
 <span>  <span class="va">gs_wide</span>,</span>
 <span>  scheme <span class="op">=</span> <span class="st">"gravel_sand_mud"</span>,</span>
-<span>  sample_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"WN1_upper"</span>, <span class="st">"WN2_upper"</span><span class="op">)</span>,</span>
+<span>  sample_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"S01"</span>, <span class="st">"S02"</span><span class="op">)</span>,</span>
 <span>  fill_palette <span class="op">=</span> <span class="st">"YlOrBr"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p><img src="replacing-gradistat-g2sd_files/figure-html/unnamed-chunk-10-3.png" class="r-plt" alt="" width="576"></p>
