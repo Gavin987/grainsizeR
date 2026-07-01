@@ -2,7 +2,7 @@ test_that("classify_texture classifies resolvable samples", {
   gsd <- fine_texture_gsd()
   result <- classify_texture(gsd, test_texture_polygons(), scheme = "test_triangle")
 
-  expect_equal(result$class_name, c("All triangle", "All triangle"))
+  expect_equal(result$texture_class, c("All triangle", "All triangle"))
   expect_true(all(result$resolved))
   expect_false(any(result$ambiguous))
   expect_true(all(c("left", "right", "top", "x", "y") %in% names(result)))
@@ -19,8 +19,8 @@ test_that("classify_texture resolves closed fraction partitions for coarse sampl
   result <- classify_texture(gsd, test_texture_polygons(), scheme = "test_triangle")
 
   expect_true(result$resolved)
-  expect_equal(result$class_id, "all")
-  expect_equal(result$class_name, "All triangle")
+  expect_equal(result$texture_class_id, "all")
+  expect_equal(result$texture_class, "All triangle")
 })
 
 test_that("classify_texture marks ambiguous polygon matches", {
@@ -32,5 +32,5 @@ test_that("classify_texture marks ambiguous polygon matches", {
   result <- classify_texture(fine_texture_gsd(), polygons, scheme = "test_triangle")
 
   expect_true(all(result$ambiguous))
-  expect_equal(result$class_id, c("all", "all"))
+  expect_equal(result$texture_class_id, c("all", "all"))
 })

@@ -49,8 +49,8 @@ classify_one_sample <- function(sample_row, polygons_xy, scheme, normalize, inte
     return(tibble::tibble(
       sample_id = sample_row$sample_id,
       scheme = scheme,
-      class_id = NA_character_,
-      class_name = NA_character_,
+      texture_class_id = NA_character_,
+      texture_class = NA_character_,
       left = sample_row$left,
       right = sample_row$right,
       top = sample_row$top,
@@ -83,8 +83,8 @@ classify_one_sample <- function(sample_row, polygons_xy, scheme, normalize, inte
   tibble::tibble(
     sample_id = sample_row$sample_id,
     scheme = scheme,
-    class_id = class_id,
-    class_name = class_name,
+    texture_class_id = class_id,
+    texture_class = class_name,
     left = sample_row$left,
     right = sample_row$right,
     top = sample_row$top,
@@ -240,9 +240,10 @@ gradistat_texture_percentages <- function(x,
 #'
 #' `classify_texture()` classifies samples with either the validated internal
 #' USDA 12-class major texture rules or user-supplied texture polygon vertices.
-#' USDA rule classification is available with `scheme = "usda_tt"` and
-#' `method = "rules"` or `method = "auto"`. The USDA path uses sand, silt, and
-#' clay percentages and covers only the 12 major USDA texture ternary classes.
+#' USDA rule classification is available with `scheme = "usda"` or
+#' `scheme = "usda_tt"` and `method = "rules"` or `method = "auto"`. The USDA
+#' path uses sand, silt, and clay percentages and covers only the 12 major USDA
+#' texture ternary classes.
 #' GRADISTAT-style rule classification is available with `scheme = "gradistat"`
 #' and `method = "rules"` or `method = "auto"`. It supports
 #' `basis = "gravel_sand_mud"` for physical sediment textural groups and
@@ -274,17 +275,17 @@ gradistat_texture_percentages <- function(x,
 #'   `top = clay`. For polygon classification, `x` must be a `gsd_tbl`.
 #' @param polygons User-supplied texture polygon data. This legacy positional
 #'   argument is equivalent to `texture_polygons`.
-#' @param scheme Texture classification scheme. Use `"usda_tt"` with
-#'   `method = "rules"` or `method = "auto"` for USDA major texture rules.
+#' @param scheme Texture classification scheme. Use `"usda"` or `"usda_tt"`
+#'   with `method = "rules"` or `method = "auto"` for USDA major texture rules.
 #'   Use `"gradistat"` with `method = "rules"` or `method = "auto"` for
 #'   GRADISTAT-style rule classification. Other non-USDA schemes require
 #'   user-supplied polygons because no built-in texture polygon datasets are
 #'   bundled.
 #' @param method Classification method. `"auto"` uses USDA rules when
-#'   `scheme = "usda_tt"` or GRADISTAT rules when `scheme = "gradistat"` and no
-#'   polygons are supplied, and polygon classification when polygons are
-#'   supplied. `"rules"` selects a supported rule classifier. `"polygon"`
-#'   selects user-supplied polygon classification.
+#'   `scheme = "usda"` or `scheme = "usda_tt"`, or GRADISTAT rules when
+#'   `scheme = "gradistat"` and no polygons are supplied, and polygon
+#'   classification when polygons are supplied. `"rules"` selects a supported
+#'   rule classifier. `"polygon"` selects user-supplied polygon classification.
 #' @param texture_polygons User-supplied texture polygon data.
 #' @param basis Rule-classification basis. For `scheme = "gradistat"`, use
 #'   `"gravel_sand_mud"` with `gravel`, `sand`, and `mud` columns, or
@@ -314,8 +315,9 @@ gradistat_texture_percentages <- function(x,
 #'   `classification_method`, `classification_status`, `ternary_basis`, `notes`,
 #'   and a ratio audit column appended. If `include_sediment_name = TRUE`,
 #'   GRADISTAT outputs also include `sediment_name` and related sediment-name
-#'   audit columns. Polygon classification returns columns matching
-#'   `texture_polygon_template()`, including `class_id`, `class_name`, `left`,
+#'   audit columns. Polygon classification also uses `texture_class_id` and
+#'   `texture_class` for the public classification result, while retaining
+#'   polygon-specific component, coordinate, and status columns such as `left`,
 #'   `right`, `top`, `x`, `y`, `resolved`, and `ambiguous`.
 #'
 #' @examples
@@ -426,6 +428,10 @@ classify_texture <- function(x,
   if (is.null(scheme)) {
     stop("`scheme` must be supplied.", call. = FALSE)
   }
+  scheme <- as.character(scheme)[1]
+  if (!has_polygons) {
+    scheme <- .validate_texture_rule_scheme(scheme)
+  }
 
   if (method == "auto") {
     method <- if (has_polygons) {
@@ -438,6 +444,7 @@ classify_texture <- function(x,
   }
 
   if (method == "rules") {
+    scheme <- .validate_texture_rule_scheme(scheme)
     if (identical(scheme, "usda_tt")) {
       return(classify_usda_texture_rules(
         x = x,

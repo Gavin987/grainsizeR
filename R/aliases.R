@@ -81,19 +81,19 @@ gs_qc <- function(...) {
   gs_quality_flags(...)
 }
 
-#' Preferred alias for texture ternary plots
+#' Compatibility alias for texture ternary plots
 #'
-#' `plot_texture_ternary()` is the preferred terminology-correct name for
-#' [plot_texture_triangle()]. Both functions create texture ternary plots and
-#' return ggplot objects. Sample labels are hidden by default; use
+#' `plot_texture_triangle()` is retained as a compatibility alias for
+#' [plot_texture_ternary()]. Both functions create texture ternary plots and
+#' return ggplot objects with equivalent behavior. Sample labels are hidden by
+#' default; use
 #' `show_sample_labels = TRUE` to draw them. Point appearance can be adjusted
 #' with `point_size`, `point_color`, and `point_alpha`, or mapped to a
-#' summarized input column with `color_by`. `plot_texture_triangle()` remains
-#' available for API stability.
+#' summarized input column with `color_by`.
 #'
-#' @param ... Arguments forwarded to [plot_texture_triangle()].
-#' @return See [plot_texture_triangle()].
+#' @param ... Arguments forwarded to [plot_texture_ternary()].
+#' @return See [plot_texture_ternary()].
 #' @export
-plot_texture_ternary <- function(...) {
-  plot_texture_triangle(...)
+plot_texture_triangle <- function(...) {
+  plot_texture_ternary(...)
 }

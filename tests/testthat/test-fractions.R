@@ -168,6 +168,35 @@ test_that("gs_fractions can normalize fine-earth fractions", {
   expect_equal(as.numeric(totals), c(100, 100), tolerance = 1e-8)
 })
 
+test_that("gs_fractions rejects invalid schemes clearly", {
+  gsd <- as_gsd_tbl(
+    ragged_input_phase2,
+    sample_id,
+    size_mm,
+    retained_proportion
+  )
+
+  expect_error(
+    gs_fractions(gsd, scheme = "not_a_scheme"),
+    "`scheme` must be one of"
+  )
+})
+
+test_that("gs_fractions rejects fine-earth normalization without a gravel component", {
+  gsd <- as_gsd_tbl(
+    ragged_input_phase2,
+    sample_id,
+    size_mm,
+    retained_proportion
+  )
+
+  expect_error(
+    gs_fractions(gsd, scheme = "wentworth_detailed", normalize = "fine_earth"),
+    "requires a fraction scheme with a `gravel` component",
+    fixed = TRUE
+  )
+})
+
 test_that("gs_fractions_wide returns component percent columns", {
   gsd <- as_gsd_tbl(
     ragged_input_phase2,

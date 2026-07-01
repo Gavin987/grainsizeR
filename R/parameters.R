@@ -283,22 +283,10 @@ gs_parameters <- function(x,
   d_spread_scale <- match.arg(d_spread_scale, c("um", "mm"))
   moments_method <- match.arg(moments_method, c("logarithmic_phi", "arithmetic_um"))
   moments_open_end <- match.arg(moments_open_end, c("error", "extend_phi", "omit"))
-  fraction_scheme <- match.arg(
-    fraction_scheme,
-    c(
-      "wentworth_major",
-      "gradistat",
-      "usda_tt",
-      "isss",
-      "uk_ssew",
-      "hypres",
-      "germany_63",
-      "australia_20",
-      "sweden_60"
-    )
-  )
+  fraction_scheme <- .validate_fraction_scheme(fraction_scheme, arg = "fraction_scheme")
   fraction_normalize <- match.arg(fraction_normalize, c("none", "fine_earth"))
   fraction_unresolved <- match.arg(fraction_unresolved, c("warn_na", "error"))
+  .validate_fraction_normalize_scheme(fraction_scheme, fraction_normalize)
 
   if (!is.character(parameters) || anyNA(parameters)) {
     stop("`parameters` must be a character vector without missing values.", call. = FALSE)

@@ -28,6 +28,23 @@ test_that("plot_texture_triangle supports GRADISTAT gravel-sand-mud ternary plot
   expect_s3_class(plot, "ggplot")
 })
 
+test_that("plot_texture_triangle forwards to plot_texture_ternary", {
+  samples <- data.frame(
+    sample_id = c("A", "B", "C"),
+    gravel = c(0, 10, 40),
+    sand = c(95, 80, 40),
+    mud = c(5, 10, 20)
+  )
+
+  ternary <- plot_texture_ternary(samples, scheme = "gradistat", point_id = "sample_id")
+  triangle <- plot_texture_triangle(samples, scheme = "gradistat", point_id = "sample_id")
+
+  expect_s3_class(triangle, "ggplot")
+  expect_equal(length(triangle$layers), length(ternary$layers))
+  expect_equal(vapply(triangle$layers, function(layer) class(layer$geom)[1], character(1)),
+               vapply(ternary$layers, function(layer) class(layer$geom)[1], character(1)))
+})
+
 test_that("plot_texture_ternary accepts official GRADISTAT fraction outputs", {
   path <- system.file("extdata", "grain.wide.csv", package = "grainsizeR")
   if (!nzchar(path)) {
@@ -129,6 +146,20 @@ test_that("plot_texture_ternary rejects raw GRADISTAT gsd_tbl input with workflo
   expect_error(
     plot_texture_ternary(gsd, scheme = "gradistat"),
     "expects summarized ternary components"
+  )
+})
+
+test_that("plot_texture_ternary rejects unsupported diagram schemes early", {
+  ternary <- tibble::tibble(
+    sample_id = "A",
+    gravel = 10,
+    sand = 80,
+    mud = 10
+  )
+
+  expect_error(
+    plot_texture_ternary(ternary, scheme = "isss"),
+    "`scheme` must be one of"
   )
 })
 

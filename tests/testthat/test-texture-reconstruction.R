@@ -121,7 +121,7 @@ test_that("converted synthetic polygons classify and plot", {
     scheme = "synthetic_ternary"
   )
   expect_true(all(classified$resolved))
-  expect_equal(unique(classified$class_name), "Synthetic full ternary area")
+  expect_equal(unique(classified$texture_class), "Synthetic full ternary area")
 
   p <- plot_texture_triangle(
     fine_texture_gsd(),

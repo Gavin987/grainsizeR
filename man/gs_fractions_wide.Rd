@@ -6,8 +6,7 @@
 \usage{
 gs_fractions_wide(
   x,
-  scheme = c("wentworth_major", "gravel_sand_mud", "wentworth_detailed", "gradistat",
-    "usda_tt", "isss", "uk_ssew", "hypres", "germany_63", "australia_20", "sweden_60"),
+  scheme = "wentworth_major",
   normalize = c("none", "fine_earth"),
   interpolation_scale = "phi",
   unresolved = c("warn_na", "error"),
@@ -20,8 +19,9 @@ gs_fractions_wide(
 \item{scheme}{Built-in fraction scheme name.}
 
 \item{normalize}{Normalization mode. \code{"none"} returns whole-sample
-percentages. \code{"fine_earth"} excludes gravel rows and normalizes the
-remaining non-gravel fractions against the non-gravel total.}
+percentages. \code{"fine_earth"} requires a scheme with a \code{gravel} component,
+excludes gravel rows, and normalizes the remaining non-gravel fractions
+against the non-gravel total.}
 
 \item{interpolation_scale}{Interpolation scale passed to \code{gs_percent_finer()}.}
 

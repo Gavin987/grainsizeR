@@ -94,7 +94,7 @@ test_that("synthetic polygon examples validate and classify", {
 
   expect_s3_class(polygons, "texture_polygons")
   expect_s3_class(classified, "tbl_df")
-  expect_true(all(classified$class_id == "all"))
+  expect_true(all(classified$texture_class_id == "all"))
   expect_s3_class(
     plot_texture_triangle(
       synthetic_gs,

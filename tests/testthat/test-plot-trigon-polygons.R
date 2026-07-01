@@ -13,6 +13,20 @@ test_that("plot_trigon still supports point-only built-in plotting", {
   expect_s3_class(plot, "ggplot")
 })
 
+test_that("plot_trigon rejects unsupported built-in schemes early", {
+  gsd <- as_gsd_tbl(
+    ragged_input_phase2,
+    sample_id,
+    size_mm,
+    retained_proportion
+  )
+
+  expect_error(
+    plot_trigon(gsd, scheme = "hypres"),
+    "`scheme` must be one of"
+  )
+})
+
 test_that("plot_trigon draws user-supplied polygon overlays", {
   plot <- plot_trigon(
     fine_texture_gsd(),

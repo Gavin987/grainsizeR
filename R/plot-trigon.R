@@ -65,8 +65,10 @@ fine_resolution_ok <- function(x, sample_id, scheme) {
 
 #' Plot samples on a ternary diagram
 #'
-#' `plot_trigon()` is a compatibility plotting name for texture ternary plots.
-#' Prefer `plot_texture_ternary()` in new code and prose. Optional
+#' `plot_trigon()` is retained for legacy compatibility with earlier
+#' grainsizeR texture plotting workflows. Prefer `plot_texture_ternary()` in
+#' new code. Unlike `plot_texture_ternary()`, this function can still calculate
+#' ternary fractions from a raw `gsd_tbl` for legacy built-in schemes. Optional
 #' user-supplied polygons can be drawn as overlays. For USDA major texture
 #' classes, the function draws internal rule-derived class boundaries without
 #' depending on external texture plotting packages.
@@ -98,7 +100,7 @@ fine_resolution_ok <- function(x, sample_id, scheme) {
 #' @return A `ggplot` object.
 #' @export
 plot_trigon <- function(x,
-                        scheme = c("gradistat", "usda_tt", "isss", "uk_ssew"),
+                        scheme = "gradistat",
                         components = NULL,
                         normalize = "none",
                         sample_id = NULL,
@@ -119,7 +121,7 @@ plot_trigon <- function(x,
                         color_by = NULL) {
   validate_gsd_tbl(x)
   if (is.null(polygons)) {
-    scheme <- match.arg(scheme)
+    scheme <- .validate_legacy_trigon_scheme(scheme)
   } else {
     scheme <- as.character(scheme)[1]
     polygons <- validate_texture_polygons(polygons)
@@ -279,14 +281,13 @@ plot_trigon <- function(x,
 
 #' Plot samples on a texture ternary plot
 #'
-#' `plot_texture_triangle()` is retained as a stable compatibility function
-#' name, but it creates texture ternary plots. Prefer
-#' `plot_texture_ternary()` in new code and prose. Both functions plot
-#' summarized ternary component percentages and optional user-supplied texture
-#' polygons. A fraction scheme is the rule used by `gs_fractions()` to convert
-#' size-bin data into components, a ternary basis is the three-component set
-#' drawn on the diagram, and a texture system is the classification or diagram
-#' style selected by `scheme`.
+#' `plot_texture_ternary()` is the preferred texture ternary plotting function.
+#' `plot_texture_triangle()` is a compatibility alias with equivalent behavior.
+#' Both functions plot summarized ternary component percentages and optional
+#' user-supplied texture polygons. A fraction scheme is the rule used by
+#' `gs_fractions()` to convert size-bin data into components, a ternary basis
+#' is the three-component set drawn on the diagram, and a texture system is the
+#' classification or diagram style selected by `scheme`.
 #' The package draws the ternary diagram with ggplot2 and does not depend on
 #' external ternary plotting packages.
 #'
@@ -304,10 +305,14 @@ plot_trigon <- function(x,
 #'
 #' For `scheme = "usda_tt"` and data-frame inputs, the function accepts
 #' summarized `sand`, `silt`, and `clay` percentage columns and draws USDA
-#' major-class boundaries. The existing gsd_tbl and user-supplied polygon
-#' workflows for non-GRADISTAT texture plotting are preserved.
+#' major-class boundaries. Legacy raw-`gsd_tbl` plotting for older trigon
+#' schemes remains available through `plot_trigon()`.
 #'
 #' @inheritParams plot_trigon
+#' @param scheme Texture ternary plotting system. Use `"gradistat"` for
+#'   GRADISTAT ternary diagrams or `"usda"` / `"usda_tt"` for USDA major-class
+#'   ternary diagrams. Legacy raw-`gsd_tbl` schemes such as `"isss"` and
+#'   `"uk_ssew"` remain available through `plot_trigon()`.
 #' @param basis GRADISTAT ternary plotting basis. Supported values are
 #'   `"gravel_sand_mud"` and `"sand_silt_clay_no_gravel"`.
 #' @param point_id Optional column name used for point labels in GRADISTAT
@@ -360,8 +365,8 @@ plot_trigon <- function(x,
 #'   basis = "sand_silt_clay_no_gravel",
 #'   point_id = "sample_id"
 #' )
-plot_texture_triangle <- function(x,
-                                  scheme = c("gradistat", "usda_tt", "isss", "uk_ssew"),
+plot_texture_ternary <- function(x,
+                                 scheme = "gradistat",
                                   components = NULL,
                                   normalize = "none",
                                   sample_id = NULL,
@@ -387,7 +392,7 @@ plot_texture_triangle <- function(x,
   basis <- match.arg(basis)
   label_style <- match.arg(label_style)
   show_classes <- isTRUE(show_class_labels)
-  scheme_value <- if (is.null(polygons)) match.arg(scheme) else as.character(scheme)[1]
+  scheme_value <- if (is.null(polygons)) .validate_texture_ternary_scheme(scheme) else as.character(scheme)[1]
   if (identical(scheme_value, "usda_tt") && is.data.frame(x) && !is_gsd_tbl(x)) {
     return(plot_usda_texture_ternary(
       x = x,

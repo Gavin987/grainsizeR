@@ -1,9 +1,7 @@
 scheme_components <- function(scheme) {
+  scheme <- .validate_fraction_scheme(scheme)
   schemes <- gs_fraction_schemes()
   out <- schemes[schemes$scheme == scheme, ]
-  if (nrow(out) == 0) {
-    stop("Unknown fraction scheme: ", scheme, call. = FALSE)
-  }
   out
 }
 
@@ -199,8 +197,9 @@ fractions_one_sample <- function(sample_id, components, lookup, scheme, normaliz
 #' @param x A valid `gsd_tbl` object.
 #' @param scheme Built-in fraction scheme name.
 #' @param normalize Normalization mode. `"none"` returns whole-sample
-#'   percentages. `"fine_earth"` excludes gravel rows and normalizes the
-#'   remaining non-gravel fractions against the non-gravel total.
+#'   percentages. `"fine_earth"` requires a scheme with a `gravel` component,
+#'   excludes gravel rows, and normalizes the remaining non-gravel fractions
+#'   against the non-gravel total.
 #' @param interpolation_scale Interpolation scale passed to `gs_percent_finer()`.
 #' @param unresolved Behavior when required thresholds cannot be calculated.
 #'   `"warn_na"` warns and returns `NA` for affected components. `"error"`
@@ -212,30 +211,19 @@ fractions_one_sample <- function(sample_id, components, lookup, scheme, normaliz
 #' @return A tibble with one row per sample and scheme component.
 #' @export
 gs_fractions <- function(x,
-                         scheme = c(
-                           "wentworth_major",
-                           "gravel_sand_mud",
-                           "wentworth_detailed",
-                           "gradistat",
-                           "usda_tt",
-                           "isss",
-                           "uk_ssew",
-                           "hypres",
-                           "germany_63",
-                           "australia_20",
-                           "sweden_60"
-                         ),
+                         scheme = "wentworth_major",
                          normalize = c("none", "fine_earth"),
                          interpolation_scale = "phi",
                          unresolved = c("warn_na", "error"),
                          extrapolate = "error") {
   validate_gsd_tbl(x)
-  scheme <- match.arg(scheme)
+  scheme <- .validate_fraction_scheme(scheme)
   normalize <- match.arg(normalize)
   interpolation_scale <- match.arg(interpolation_scale, c("phi", "log_um", "linear_um"))
   unresolved <- match.arg(unresolved)
   extrapolate <- match.arg(extrapolate, c("error", "warn_linear"))
 
+  .validate_fraction_normalize_scheme(scheme, normalize)
   components <- scheme_components(scheme)
   thresholds <- required_fraction_thresholds(components)
   lookup <- percent_finer_lookup(
@@ -271,19 +259,7 @@ gs_fractions <- function(x,
 #' @return A tibble with one row per sample and component percentage columns.
 #' @export
 gs_fractions_wide <- function(x,
-                              scheme = c(
-                                "wentworth_major",
-                                "gravel_sand_mud",
-                                "wentworth_detailed",
-                                "gradistat",
-                                "usda_tt",
-                                "isss",
-                                "uk_ssew",
-                                "hypres",
-                                "germany_63",
-                                "australia_20",
-                                "sweden_60"
-                              ),
+                              scheme = "wentworth_major",
                               normalize = c("none", "fine_earth"),
                               interpolation_scale = "phi",
                               unresolved = c("warn_na", "error"),

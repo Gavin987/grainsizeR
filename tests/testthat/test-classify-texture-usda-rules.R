@@ -145,7 +145,7 @@ test_that("classify_texture rejects invalid USDA rule inputs clearly", {
 test_that("classify_texture reports missing non-USDA built-in polygons clearly", {
   expect_error(
     classify_texture(data.frame(sand = 40, silt = 40, clay = 20), scheme = "isss"),
-    "No built-in texture polygon dataset is bundled"
+    "`scheme` must be one of"
   )
 })
 
@@ -157,7 +157,8 @@ test_that("classify_texture keeps polygon classification available", {
     texture_polygons = test_texture_polygons()
   )
 
-  expect_equal(result$class_name, c("All triangle", "All triangle"))
+  expect_equal(result$texture_class, c("All triangle", "All triangle"))
+  expect_false("class_name" %in% names(result))
   expect_true(all(result$resolved))
   expect_false(any(result$ambiguous))
 })
@@ -197,8 +198,8 @@ test_that("classify_texture selects polygon classification when polygons are sup
     texture_polygons = test_texture_polygons()
   )
 
-  expect_equal(result$class_id, c("all", "all"))
-  expect_false("texture_class_id" %in% names(result))
+  expect_equal(result$texture_class_id, c("all", "all"))
+  expect_false("class_id" %in% names(result))
 })
 
 test_that("USDA public path does not export helpers or add runtime data", {

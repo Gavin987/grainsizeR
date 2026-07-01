@@ -42,6 +42,38 @@ test_that("USDA rule classification returns documented columns and preserves inp
   expect_equal(result$rule_status, rep("classified", nrow(samples)))
 })
 
+test_that("USDA scheme alias returns canonical texture class columns", {
+  samples <- data.frame(
+    sand = c(85, 40, 20),
+    silt = c(10, 40, 20),
+    clay = c(5, 20, 60)
+  )
+
+  result <- classify_texture(samples, scheme = "usda", method = "rules")
+
+  expect_true(all(c("texture_class_id", "texture_class") %in% names(result)))
+  expect_equal(result$classification_method, rep("usda_major_rules", nrow(samples)))
+})
+
+test_that("GRADISTAT rule classification returns canonical texture class columns", {
+  samples <- data.frame(
+    sample_id = c("A", "B", "C"),
+    gravel = c(0, 10, 40),
+    sand = c(95, 80, 40),
+    mud = c(5, 10, 20)
+  )
+
+  result <- classify_texture(
+    samples,
+    scheme = "gradistat",
+    method = "rules",
+    basis = "gravel_sand_mud"
+  )
+
+  expect_true(all(c("texture_class_id", "texture_class") %in% names(result)))
+  expect_false(any(is.na(result$texture_class_id)))
+})
+
 test_that("USDA class IDs and labels remain stable and readable", {
   samples <- data.frame(
     sand = c(90, 82, 60, 40, 20, 10, 55, 35, 10, 50, 10, 20),
@@ -91,7 +123,7 @@ test_that("method dispatch is explicit and stable", {
   expect_equal(auto$classification_method, rules$classification_method)
   expect_error(
     classify_texture(samples, scheme = "isss", method = "auto"),
-    "No built-in texture polygon dataset is bundled"
+    "`scheme` must be one of"
   )
   expect_error(
     classify_texture(samples, scheme = "usda_tt", method = "polygon"),
@@ -99,7 +131,7 @@ test_that("method dispatch is explicit and stable", {
   )
 })
 
-test_that("polygon method keeps generic polygon classification separate", {
+test_that("polygon method uses canonical texture class output names", {
   result <- classify_texture(
     fine_texture_gsd(),
     texture_polygons = test_texture_polygons(),
@@ -107,11 +139,13 @@ test_that("polygon method keeps generic polygon classification separate", {
     method = "polygon"
   )
 
-  expect_true("class_id" %in% names(result))
-  expect_true("class_name" %in% names(result))
-  expect_false("texture_class_id" %in% names(result))
+  expect_true("texture_class_id" %in% names(result))
+  expect_true("texture_class" %in% names(result))
+  expect_false("class_id" %in% names(result))
+  expect_false("class_name" %in% names(result))
   expect_false("classification_method" %in% names(result))
-  expect_equal(result$class_id, c("all", "all"))
+  expect_true(all(c("resolved", "ambiguous", "left", "right", "top", "x", "y") %in% names(result)))
+  expect_equal(result$texture_class_id, c("all", "all"))
 })
 
 test_that("USDA public API adds no runtime data object or soiltexture calls", {

@@ -125,6 +125,19 @@ test_that("USDA ternary plotting accepts sand-silt-clay data frames", {
   }, logical(1))))
 })
 
+test_that("USDA ternary plotting accepts usda as a scheme alias", {
+  samples <- data.frame(
+    sample_id = c("sand demo", "loam demo", "clay demo"),
+    sand = c(92, 42, 22),
+    silt = c(5, 38, 22),
+    clay = c(3, 20, 56)
+  )
+
+  plot <- plot_texture_ternary(samples, scheme = "usda")
+
+  expect_s3_class(plot, "ggplot")
+})
+
 test_that("USDA ternary plotting accepts point aesthetics and grouped colors", {
   samples <- data.frame(
     sample_id = c("sand demo", "loam demo", "clay demo"),

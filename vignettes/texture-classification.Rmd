@@ -206,8 +206,8 @@ texture ternary plots are R-native functional replacements, not Excel visual
 clones.
 
 `plot_texture_ternary()` is the preferred plotting name in new examples.
-`plot_texture_triangle()` remains available for compatibility with existing
-code.
+`plot_texture_triangle()` remains available as an equivalent compatibility
+alias, while `plot_trigon()` is retained for legacy raw-data ternary workflows.
 
 ## Output Columns
 
@@ -224,6 +224,11 @@ columns appended:
 
 For valid, clean USDA inputs, `classification_method` is
 `"usda_major_rules"` and `rule_status` is `"classified"`.
+
+Polygon classification also reports public class labels with
+`texture_class_id` and `texture_class`, while retaining polygon-specific
+component, coordinate, and status columns such as `left`, `right`, `top`, `x`,
+`y`, `resolved`, and `ambiguous`.
 
 ## User-Supplied Polygon Classification
 
