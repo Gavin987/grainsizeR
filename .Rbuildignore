@@ -5,7 +5,11 @@
 ^\.Rproj\.user$
 ^CLAUDE\.md$
 ^\.claude$
+^\.claude/
 ^AUDIT_LOG\.md$
+^RELEASE\.md$
+^dev-notes$
+^dev-notes/
 ^.*\.Rproj$
 ^_pkgdown\.yml$
 ^pkgdown$

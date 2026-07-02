@@ -64,6 +64,9 @@ test_that("release metadata files are present and version is valid", {
 
 test_that("release notes describe first GitHub push without extra release material", {
   root <- release_metadata_package_root()
+  if (!file.exists(file.path(root, "RELEASE.md"))) {
+    skip("Repository-only release notes are excluded from the package source tarball.")
+  }
   release <- paste(readLines(file.path(root, "RELEASE.md"), warn = FALSE), collapse = "\n")
 
   expect_true(grepl("First GitHub Push Checklist", release, fixed = TRUE))
