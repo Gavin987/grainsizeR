@@ -179,9 +179,13 @@ spelling, punctuation, or suffix variants are not interpreted. Raw
 `gsd_tbl` input is not plotted directly for GRADISTAT ternary diagrams.
 
 For `scheme = "usda"` and data-frame inputs, the function accepts
-summarized `sand`, `silt`, and `clay` percentage columns and draws USDA
-major-class boundaries. Legacy raw-`gsd_tbl` plotting for older trigon
-schemes remains available through
+summarized `sand`, `silt`, and `clay` percentage columns or official
+`gs_fractions_wide(..., scheme = "usda")` output and draws USDA
+major-class boundaries. For `scheme = "gradistat"`, official
+[`gs_fractions_wide()`](https://Gavin987.github.io/grainsizeR/reference/gs_fractions_wide.md)
+output from the `gradistat` and `gravel_sand_mud` schemes can be plotted
+directly. Legacy raw-`gsd_tbl` plotting for older trigon schemes remains
+available through
 [`plot_trigon()`](https://Gavin987.github.io/grainsizeR/reference/plot_trigon.md).
 
 ## Examples

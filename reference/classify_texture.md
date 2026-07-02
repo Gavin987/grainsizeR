@@ -43,11 +43,12 @@ classify_texture(
 - x:
 
   A valid `gsd_tbl` object, or for USDA rule classification a data frame
-  with numeric `sand`, `silt`, and `clay` percentage columns. Data
-  frames with ternary `left`, `right`, and `top` columns are also
-  accepted for USDA rules and are mapped as `left = sand`,
-  `right = silt`, and `top = clay`. For polygon classification, `x` must
-  be a `gsd_tbl`.
+  with numeric `sand`, `silt`, and `clay` percentage columns. Official
+  `gs_fractions_wide(..., scheme = "usda")` output with `sand_percent`,
+  `silt_percent`, and `clay_percent` columns is also accepted. Data
+  frames with ternary `left`, `right`, and `top` columns are accepted
+  for USDA rules and are mapped as `left = sand`, `right = silt`, and
+  `top = clay`. For polygon classification, `x` must be a `gsd_tbl`.
 
 - polygons:
 

@@ -23,7 +23,7 @@ external ternary plotting packages."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">grainsizeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -229,9 +229,12 @@ matching is case-insensitive, so <code>Sand</code> and <code>SAND</code> are tre
 arbitrary spelling, punctuation, or suffix variants are not interpreted.
 Raw <code>gsd_tbl</code> input is not plotted directly for GRADISTAT ternary diagrams.</p>
 <p>For <code>scheme = "usda"</code> and data-frame inputs, the function accepts
-summarized <code>sand</code>, <code>silt</code>, and <code>clay</code> percentage columns and draws USDA
-major-class boundaries. Legacy raw-<code>gsd_tbl</code> plotting for older trigon
-schemes remains available through <code><a href="plot_trigon.html">plot_trigon()</a></code>.</p>
+summarized <code>sand</code>, <code>silt</code>, and <code>clay</code> percentage columns or official
+<code>gs_fractions_wide(..., scheme = "usda")</code> output and draws USDA major-class
+boundaries. For <code>scheme = "gradistat"</code>, official <code><a href="gs_fractions_wide.html">gs_fractions_wide()</a></code>
+output from the <code>gradistat</code> and <code>gravel_sand_mud</code> schemes can be plotted
+directly. Legacy raw-<code>gsd_tbl</code> plotting for older trigon schemes remains
+available through <code><a href="plot_trigon.html">plot_trigon()</a></code>.</p>
     </div>
 
     <div class="section level2">

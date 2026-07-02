@@ -80,20 +80,14 @@ usda_fractions <- suppressWarnings(gs_fractions_wide(
   extrapolate = "warn_linear"
 ))
 
-usda_example <- data.frame(
-  sample_id = usda_fractions$sample_id,
-  sand = usda_fractions$sand_percent,
-  silt = usda_fractions$silt_percent,
-  clay = usda_fractions$clay_percent
-)
-usda_components <- c("sand", "silt", "clay")
-usda_example <- usda_example[
-  stats::complete.cases(usda_example[usda_components]) &
-    rowSums(usda_example[usda_components] >= 0 & usda_example[usda_components] <= 100) == 3 &
-    abs(rowSums(usda_example[usda_components]) - 100) < 1e-6,
+usda_components <- c("sand_percent", "silt_percent", "clay_percent")
+usda_fractions <- usda_fractions[
+  stats::complete.cases(usda_fractions[usda_components]) &
+    rowSums(usda_fractions[usda_components] >= 0 & usda_fractions[usda_components] <= 100) == 3 &
+    abs(rowSums(usda_fractions[usda_components]) - 100) < 1e-6,
 ]
 
-head(classify_texture(usda_example, scheme = "usda", method = "rules"))
+head(classify_texture(usda_fractions, scheme = "usda", method = "rules"))
 #> # A tibble: 6 × 11
 #>   sample_id  sand  silt  clay texture_class_id texture_class
 #>   <chr>     <dbl> <dbl> <dbl> <chr>            <chr>        
@@ -106,7 +100,7 @@ head(classify_texture(usda_example, scheme = "usda", method = "rules"))
 #> # ℹ 5 more variables: classification_method <chr>, rule_status <chr>,
 #> #   all_rule_matches <chr>, rule_conflict <lgl>, rule_gap <lgl>
 
-plot_texture_ternary(usda_example, scheme = "usda", labels = FALSE)
+plot_texture_ternary(usda_fractions, scheme = "usda", labels = FALSE)
 ```
 
 ![](texture-classification_files/figure-html/unnamed-chunk-4-1.png)
@@ -148,23 +142,20 @@ yet.
 ## GRADISTAT Texture Classification
 
 Use `scheme = "gradistat"` and `method = "rules"` for GRADISTAT-style
-texture classification. The `gravel_sand_mud` basis requires `gravel`,
-`sand`, and `mud` percentage columns. The bundled dry-sieve wide example
+texture classification. The `gravel_sand_mud` basis accepts `gravel`,
+`sand`, and `mud` percentage columns, official `gravel_sand_mud`
+fraction output, or official `gradistat` fraction output where `silt`
+and `clay` are aggregated to mud. The bundled dry-sieve wide example
 supports this GRADISTAT-style gravel-sand-mud workflow.
 
 ``` r
 wide_gradistat <- suppressWarnings(gs_fractions_wide(wide_gs, scheme = "gravel_sand_mud"))
-
-gsm <- data.frame(
-  sample_id = wide_gradistat$sample_id,
-  gravel = wide_gradistat$gravel_percent,
-  sand = wide_gradistat$sand_percent,
-  mud = wide_gradistat$mud_percent
-)
-gsm <- gsm[stats::complete.cases(gsm[c("gravel", "sand", "mud")]), ]
+wide_gradistat <- wide_gradistat[
+  stats::complete.cases(wide_gradistat[c("gravel_percent", "sand_percent", "mud_percent")]),
+]
 
 classify_texture(
-  head(gsm, 6),
+  head(wide_gradistat, 6),
   scheme = "gradistat",
   method = "rules",
   basis = "gravel_sand_mud",
@@ -240,7 +231,7 @@ labels remain at the vertices.
 
 ``` r
 plot_texture_ternary(
-  head(gsm, 6),
+  head(wide_gradistat, 6),
   scheme = "gradistat",
   basis = "gravel_sand_mud",
   point_id = "sample_id",

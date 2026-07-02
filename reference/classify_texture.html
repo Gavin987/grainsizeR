@@ -37,7 +37,7 @@ ternary plotting is available through plot_texture_ternary().'></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">grainsizeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -115,10 +115,12 @@ ternary plotting is available through <code><a href="plot_texture_ternary.html">
 
 <dl><dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
 <dd><p>A valid <code>gsd_tbl</code> object, or for USDA rule classification a data
-frame with numeric <code>sand</code>, <code>silt</code>, and <code>clay</code> percentage columns. Data
-frames with ternary <code>left</code>, <code>right</code>, and <code>top</code> columns are also accepted
-for USDA rules and are mapped as <code>left = sand</code>, <code>right = silt</code>, and
-<code>top = clay</code>. For polygon classification, <code>x</code> must be a <code>gsd_tbl</code>.</p></dd>
+frame with numeric <code>sand</code>, <code>silt</code>, and <code>clay</code> percentage columns. Official
+<code>gs_fractions_wide(..., scheme = "usda")</code> output with <code>sand_percent</code>,
+<code>silt_percent</code>, and <code>clay_percent</code> columns is also accepted. Data frames
+with ternary <code>left</code>, <code>right</code>, and <code>top</code> columns are accepted for USDA rules
+and are mapped as <code>left = sand</code>, <code>right = silt</code>, and <code>top = clay</code>. For
+polygon classification, <code>x</code> must be a <code>gsd_tbl</code>.</p></dd>
 
 
 <dt id="arg-polygons">polygons<a class="anchor" aria-label="anchor" href="#arg-polygons"></a></dt>

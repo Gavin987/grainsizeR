@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">grainsizeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -86,7 +86,7 @@
 <code class="sourceCode R"><span><span class="fu"><a href="reference/gs_diagnostics.html">gs_diagnostics</a></span><span class="op">(</span><span class="va">wide</span>, output <span class="op">=</span> <span class="st">"summary"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/gs_d_values.html">gs_d_values</a></span><span class="op">(</span><span class="va">long</span>, probs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">50</span>, <span class="fl">90</span><span class="op">)</span>, extrapolate <span class="op">=</span> <span class="st">"warn_linear"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/gs_folk_ward.html">gs_folk_ward</a></span><span class="op">(</span><span class="va">long</span>, extrapolate <span class="op">=</span> <span class="st">"warn_linear"</span><span class="op">)</span></span>
-<span><span class="va">gradistat_components</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/gs_fractions.html">gs_fractions</a></span><span class="op">(</span><span class="va">wide</span>, scheme <span class="op">=</span> <span class="st">"gravel_sand_mud"</span><span class="op">)</span></span>
+<span><span class="va">gradistat_components</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/gs_fractions_wide.html">gs_fractions_wide</a></span><span class="op">(</span><span class="va">wide</span>, scheme <span class="op">=</span> <span class="st">"gradistat"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/gs_fractions_wide.html">gs_fractions_wide</a></span><span class="op">(</span><span class="va">wide</span>, scheme <span class="op">=</span> <span class="st">"gravel_sand_mud"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -106,8 +106,7 @@
 <span><span class="va">plots</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">samples</span>, <span class="kw">function</span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="reference/plot_distribution.html">plot_distribution</a></span><span class="op">(</span><span class="va">wide</span>, sample <span class="op">=</span> <span class="va">id</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/readme-wide-distribution.png" width="48%"></p>
-<p><img src="reference/figures/readme-wide-cumulative.png" width="48%"></p>
+<p><img src="reference/figures/readme-wide-distribution.png" width="48%" style="display: block; margin: auto;"><img src="reference/figures/readme-wide-cumulative.png" width="48%" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level2">
 <h2 id="fraction-summaries">Fraction Summaries<a class="anchor" aria-label="anchor" href="#fraction-summaries"></a>
@@ -125,14 +124,14 @@
 <div class="section level2">
 <h2 id="texture-ternary-plots">Texture Ternary Plots<a class="anchor" aria-label="anchor" href="#texture-ternary-plots"></a>
 </h2>
-<p>Fraction schemes convert grain-size data into particle-size components; ternary bases are the three components drawn on a plot; texture systems are the classification or diagram style. For GRADISTAT-style ternary plots, first summarize to the <code>gravel_sand_mud</code> fraction scheme, then plot those summarized <code>gravel</code>, <code>sand</code>, and <code>mud</code> components. Canonical component names are lowercase snake_case; simple case variants such as <code>Sand</code> or <code>SAND</code> are normalized internally. USDA ternary plots use summarized <code>sand</code>, <code>silt</code>, and <code>clay</code> components and the 12 major USDA texture classes.</p>
+<p>Fraction schemes convert grain-size data into particle-size components; ternary bases are the three components drawn on a plot; texture systems are the classification or diagram style. GRADISTAT-style ternary plots accept official <code><a href="reference/gs_fractions_wide.html">gs_fractions_wide()</a></code> outputs from the <code>gradistat</code> or <code>gravel_sand_mud</code> schemes. USDA ternary plots accept official USDA fraction output and draw the 12 major USDA texture classes. Canonical component names are lowercase snake_case; simple case variants such as <code>Sand</code> or <code>SAND</code> are normalized internally.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">gradistat_components</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/gs_fractions.html">gs_fractions</a></span><span class="op">(</span><span class="va">wide</span>, scheme <span class="op">=</span> <span class="st">"gravel_sand_mud"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">gradistat_components</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/gs_fractions_wide.html">gs_fractions_wide</a></span><span class="op">(</span><span class="va">wide</span>, scheme <span class="op">=</span> <span class="st">"gradistat"</span><span class="op">)</span></span>
 <span><span class="va">usda_components</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/gs_fractions_wide.html">gs_fractions_wide</a></span><span class="op">(</span><span class="va">long</span>, scheme <span class="op">=</span> <span class="st">"usda"</span>, normalize <span class="op">=</span> <span class="st">"fine_earth"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="reference/plot_texture_ternary.html">plot_texture_ternary</a></span><span class="op">(</span><span class="va">gradistat_components</span>, scheme <span class="op">=</span> <span class="st">"gradistat"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/plot_texture_ternary.html">plot_texture_ternary</a></span><span class="op">(</span><span class="va">usda_components</span>, scheme <span class="op">=</span> <span class="st">"usda"</span>, show_sample_labels <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/readme-gradistat-ternary.png" width="49%"><img src="reference/figures/readme-usda-ternary.png" width="46%"></p>
+<p><img src="reference/figures/readme-gradistat-ternary.png" width="48%"><img src="reference/figures/readme-usda-ternary.png" width="48%"></p>
 </div>
 <div class="section level2">
 <h2 id="parameter-summaries">Parameter Summaries<a class="anchor" aria-label="anchor" href="#parameter-summaries"></a>
