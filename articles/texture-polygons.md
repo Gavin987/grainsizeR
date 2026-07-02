@@ -19,7 +19,7 @@ texture_polygon_sources()
 #> # A tibble: 11 × 9
 #>    scheme       scheme_name  particle_size_system left_component right_component
 #>    <chr>        <chr>        <chr>                <chr>          <chr>          
-#>  1 usda_tt      USDA textur… usda_tt              sand           silt           
+#>  1 usda         USDA textur… usda                 sand           silt           
 #>  2 hypres       HYPRES text… hypres               sand           silt           
 #>  3 isss         Internation… isss                 sand           silt           
 #>  4 uk_ssew      UK SSEW tex… uk_ssew              sand           silt           
@@ -47,7 +47,7 @@ samples <- data.frame(
   clay = c(5, 20, 60)
 )
 
-classify_texture(samples, scheme = "usda_tt", method = "rules")
+classify_texture(samples, scheme = "usda", method = "rules")
 #> # A tibble: 3 × 11
 #>   sample_id  sand  silt  clay texture_class_id texture_class
 #>   <chr>     <dbl> <dbl> <dbl> <chr>            <chr>        
@@ -130,11 +130,11 @@ classify_texture(
   scheme = "synthetic_ternary"
 )
 #> # A tibble: 2 × 13
-#>   sample_id scheme    class_id class_name  left right   top     x     y resolved
-#>   <chr>     <chr>     <chr>    <chr>      <dbl> <dbl> <dbl> <dbl> <dbl> <lgl>   
-#> 1 A         syntheti… all      Synthetic…    40    30    20 0.444 0.192 TRUE    
-#> 2 B         syntheti… all      Synthetic…    20    35    40 0.579 0.365 TRUE    
-#> # ℹ 3 more variables: ambiguous <lgl>, normalize <chr>,
+#>   sample_id scheme  texture_class_id texture_class  left right   top     x     y
+#>   <chr>     <chr>   <chr>            <chr>         <dbl> <dbl> <dbl> <dbl> <dbl>
+#> 1 A         synthe… all              Synthetic fu…    40    30    20 0.444 0.192
+#> 2 B         synthe… all              Synthetic fu…    20    35    40 0.579 0.365
+#> # ℹ 4 more variables: resolved <lgl>, ambiguous <lgl>, normalize <chr>,
 #> #   interpolation_scale <chr>
 ```
 

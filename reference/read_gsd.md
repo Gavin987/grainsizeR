@@ -68,4 +68,7 @@ read_gsd(
 
 ## Value
 
-A `gsd_tbl`.
+A `gsd_tbl` tibble with canonical columns including `sample_id`,
+`bin_id`, `raw_size_um`, `size_lower_um`, `size_upper_um`,
+`retained_percent`, `cum_finer_percent`, `cum_coarser_percent`,
+`is_open_lower`, `is_open_upper`, and `measurement_method`.

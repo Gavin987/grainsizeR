@@ -203,7 +203,7 @@ USDA sand-size modifier subclasses remain future work.
 ``` r
 usda_fractions <- suppressWarnings(gs_fractions_wide(
   gs,
-  scheme = "usda_tt",
+  scheme = "usda",
   normalize = "fine_earth",
   extrapolate = "warn_linear"
 ))
@@ -221,7 +221,7 @@ usda_samples <- usda_samples[
     abs(rowSums(usda_samples[usda_components]) - 100) < 1e-6,
 ]
 
-head(classify_texture(usda_samples, scheme = "usda_tt", method = "rules"))
+head(classify_texture(usda_samples, scheme = "usda", method = "rules"))
 #> # A tibble: 6 × 11
 #>   sample_id  sand  silt  clay texture_class_id texture_class
 #>   <chr>     <dbl> <dbl> <dbl> <chr>            <chr>        

@@ -84,9 +84,10 @@ plot_cumulative(
 
 - facet_by_sample:
 
-  Deprecated. Cumulative plots are single-sample displays; use
-  `sample_id` to select one sample, loop over samples, or arrange
-  returned plots externally with another plotting package.
+  Ignored compatibility argument. Cumulative plots are single-sample
+  displays; use `sample` or `sample_id` to select one sample, loop over
+  samples, or arrange returned plots externally with another plotting
+  package.
 
 ## Value
 

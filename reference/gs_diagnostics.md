@@ -12,7 +12,7 @@ gs_diagnostics(
   x,
   d_values = c(5, 10, 16, 25, 50, 75, 84, 90, 95),
   thresholds_um = c(2, 20, 50, 60, 62.5, 63, 2000),
-  fraction_schemes = c("wentworth_major", "gradistat", "usda_tt", "isss", "uk_ssew"),
+  fraction_schemes = c("wentworth_major", "gradistat", "usda", "isss", "uk_ssew"),
   retained_tolerance = 1e-06,
   fine_boundary_um = 63,
   hydrometer_trigger_percent = 10,

@@ -35,7 +35,7 @@ wide_gs <- read_gsd(wide_file, format = "wide")
 
 ## USDA Major Texture Classification
 
-Use `scheme = "usda_tt"` and `method = "rules"` for the validated USDA
+Use `scheme = "usda"` and `method = "rules"` for the validated USDA
 major-class workflow.
 
 ``` r
@@ -46,7 +46,7 @@ samples <- data.frame(
   clay = c(5, 20, 60)
 )
 
-classify_texture(samples, scheme = "usda_tt", method = "rules")
+classify_texture(samples, scheme = "usda", method = "rules")
 #> # A tibble: 3 × 11
 #>   sample_id  sand  silt  clay texture_class_id texture_class
 #>   <chr>     <dbl> <dbl> <dbl> <chr>            <chr>        
@@ -75,7 +75,7 @@ sides.
 ``` r
 usda_fractions <- suppressWarnings(gs_fractions_wide(
   long_gs,
-  scheme = "usda_tt",
+  scheme = "usda",
   normalize = "fine_earth",
   extrapolate = "warn_linear"
 ))
@@ -93,7 +93,7 @@ usda_example <- usda_example[
     abs(rowSums(usda_example[usda_components]) - 100) < 1e-6,
 ]
 
-head(classify_texture(usda_example, scheme = "usda_tt", method = "rules"))
+head(classify_texture(usda_example, scheme = "usda", method = "rules"))
 #> # A tibble: 6 × 11
 #>   sample_id  sand  silt  clay texture_class_id texture_class
 #>   <chr>     <dbl> <dbl> <dbl> <chr>            <chr>        
@@ -106,7 +106,7 @@ head(classify_texture(usda_example, scheme = "usda_tt", method = "rules"))
 #> # ℹ 5 more variables: classification_method <chr>, rule_status <chr>,
 #> #   all_rule_matches <chr>, rule_conflict <lgl>, rule_gap <lgl>
 
-plot_texture_ternary(usda_example, scheme = "usda_tt", labels = FALSE)
+plot_texture_ternary(usda_example, scheme = "usda", labels = FALSE)
 ```
 
 ![](texture-classification_files/figure-html/unnamed-chunk-4-1.png)
@@ -122,12 +122,12 @@ accepted for USDA rules. They are interpreted as `left = sand`,
 
 ## Method Selection
 
-`method = "auto"` chooses the USDA rule path when `scheme = "usda_tt"`
-and no texture polygons are supplied. It also chooses GRADISTAT rules
-when `scheme = "gradistat"` and no texture polygons are supplied.
+`method = "auto"` chooses the USDA rule path when `scheme = "usda"` and
+no texture polygons are supplied. It also chooses GRADISTAT rules when
+`scheme = "gradistat"` and no texture polygons are supplied.
 
 ``` r
-classify_texture(samples, scheme = "usda_tt", method = "auto")
+classify_texture(samples, scheme = "usda", method = "auto")
 #> # A tibble: 3 × 11
 #>   sample_id  sand  silt  clay texture_class_id texture_class
 #>   <chr>     <dbl> <dbl> <dbl> <chr>            <chr>        
@@ -138,7 +138,7 @@ classify_texture(samples, scheme = "usda_tt", method = "auto")
 #> #   all_rule_matches <chr>, rule_conflict <lgl>, rule_gap <lgl>
 ```
 
-`method = "rules"` supports `scheme = "usda_tt"` and
+`method = "rules"` supports `scheme = "usda"` and
 `scheme = "gradistat"`. Other schemes require user-supplied polygons
 because grainsizeR does not bundle built-in texture polygon datasets
 yet.
@@ -269,7 +269,9 @@ visual clones.
 [`plot_texture_ternary()`](https://Gavin987.github.io/grainsizeR/reference/plot_texture_ternary.md)
 is the preferred plotting name in new examples.
 [`plot_texture_triangle()`](https://Gavin987.github.io/grainsizeR/reference/plot_texture_triangle.md)
-remains available for compatibility with existing code.
+remains available as an equivalent compatibility alias, while
+[`plot_trigon()`](https://Gavin987.github.io/grainsizeR/reference/plot_trigon.md)
+is retained for legacy raw-data ternary workflows.
 
 ## Output Columns
 
@@ -286,6 +288,11 @@ classification columns appended:
 
 For valid, clean USDA inputs, `classification_method` is
 `"usda_major_rules"` and `rule_status` is `"classified"`.
+
+Polygon classification also reports public class labels with
+`texture_class_id` and `texture_class`, while retaining polygon-specific
+component, coordinate, and status columns such as `left`, `right`,
+`top`, `x`, `y`, `resolved`, and `ambiguous`.
 
 ## User-Supplied Polygon Classification
 
@@ -334,10 +341,10 @@ classify_texture(
   method = "polygon"
 )
 #> # A tibble: 1 × 13
-#>   sample_id scheme    class_id class_name  left right   top     x     y resolved
-#>   <chr>     <chr>     <chr>    <chr>      <dbl> <dbl> <dbl> <dbl> <dbl> <lgl>   
-#> 1 A         syntheti… all      Synthetic…    40    30    20 0.444 0.192 TRUE    
-#> # ℹ 3 more variables: ambiguous <lgl>, normalize <chr>,
+#>   sample_id scheme  texture_class_id texture_class  left right   top     x     y
+#>   <chr>     <chr>   <chr>            <chr>         <dbl> <dbl> <dbl> <dbl> <dbl>
+#> 1 A         synthe… all              Synthetic fu…    40    30    20 0.444 0.192
+#> # ℹ 4 more variables: resolved <lgl>, ambiguous <lgl>, normalize <chr>,
 #> #   interpolation_scale <chr>
 ```
 

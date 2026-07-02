@@ -74,8 +74,9 @@ with deterministic tie ordering by the original coarse-to-fine class order.</p>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A tibble with up to <code>n_modes</code> rows per sample and modal class
-descriptors.</p>
+    <p>A tibble with exactly <code>n_modes</code> rows per sample and modal class
+descriptors. Samples with fewer observed modal classes are padded with
+<code>NA</code> descriptor fields and <code>mode_status = "unresolved"</code>.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>

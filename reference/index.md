@@ -136,9 +136,9 @@
 - [`plot_gradistat_summary()`](https://Gavin987.github.io/grainsizeR/reference/plot_gradistat_summary.md)
   : Plot a GRADISTAT-inspired grain-size summary
 - [`plot_texture_triangle()`](https://Gavin987.github.io/grainsizeR/reference/plot_texture_triangle.md)
-  : Plot samples on a texture ternary plot
+  : Compatibility alias for texture ternary plots
 - [`plot_texture_ternary()`](https://Gavin987.github.io/grainsizeR/reference/plot_texture_ternary.md)
-  : Preferred alias for texture ternary plots
+  : Plot samples on a texture ternary plot
 
 ## Compatibility aliases
 

@@ -106,8 +106,8 @@
 <span><span class="va">plots</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">samples</span>, <span class="kw">function</span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="reference/plot_distribution.html">plot_distribution</a></span><span class="op">(</span><span class="va">wide</span>, sample <span class="op">=</span> <span class="va">id</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/readme-wide-distribution.png" width="49%"></p>
-<p><img src="reference/figures/readme-wide-cumulative.png" width="49%"></p>
+<p><img src="reference/figures/readme-wide-distribution.png" width="45%"></p>
+<p><img src="reference/figures/readme-wide-cumulative.png" width="45%"></p>
 </div>
 <div class="section level2">
 <h2 id="fraction-summaries">Fraction Summaries<a class="anchor" aria-label="anchor" href="#fraction-summaries"></a>
@@ -128,10 +128,10 @@
 <p>Fraction schemes convert grain-size data into particle-size components; ternary bases are the three components drawn on a plot; texture systems are the classification or diagram style. For GRADISTAT-style ternary plots, first summarize to the <code>gravel_sand_mud</code> fraction scheme, then plot those summarized <code>gravel</code>, <code>sand</code>, and <code>mud</code> components. Canonical component names are lowercase snake_case; simple case variants such as <code>Sand</code> or <code>SAND</code> are normalized internally. USDA ternary plots use summarized <code>sand</code>, <code>silt</code>, and <code>clay</code> components and the 12 major USDA texture classes.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">gradistat_components</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/gs_fractions.html">gs_fractions</a></span><span class="op">(</span><span class="va">wide</span>, scheme <span class="op">=</span> <span class="st">"gravel_sand_mud"</span><span class="op">)</span></span>
-<span><span class="va">usda_components</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/gs_fractions_wide.html">gs_fractions_wide</a></span><span class="op">(</span><span class="va">long</span>, scheme <span class="op">=</span> <span class="st">"usda_tt"</span>, normalize <span class="op">=</span> <span class="st">"fine_earth"</span><span class="op">)</span></span>
+<span><span class="va">usda_components</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/gs_fractions_wide.html">gs_fractions_wide</a></span><span class="op">(</span><span class="va">long</span>, scheme <span class="op">=</span> <span class="st">"usda"</span>, normalize <span class="op">=</span> <span class="st">"fine_earth"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="reference/plot_texture_ternary.html">plot_texture_ternary</a></span><span class="op">(</span><span class="va">gradistat_components</span>, scheme <span class="op">=</span> <span class="st">"gradistat"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/plot_texture_ternary.html">plot_texture_ternary</a></span><span class="op">(</span><span class="va">usda_components</span>, scheme <span class="op">=</span> <span class="st">"usda_tt"</span>, show_sample_labels <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="reference/plot_texture_ternary.html">plot_texture_ternary</a></span><span class="op">(</span><span class="va">usda_components</span>, scheme <span class="op">=</span> <span class="st">"usda"</span>, show_sample_labels <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/readme-gradistat-ternary.png" width="47%"><img src="reference/figures/readme-usda-ternary.png" width="51%"></p>
 </div>
 <div class="section level2">
@@ -166,9 +166,9 @@
 <span><span class="fu"><a href="reference/plot_distribution.html">plot_distribution</a></span><span class="op">(</span><span class="va">long</span>, sample <span class="op">=</span> <span class="st">"S01"</span>, cumulative <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/plot_cumulative.html">plot_cumulative</a></span><span class="op">(</span><span class="va">long</span>, sample <span class="op">=</span> <span class="st">"S01"</span>, extrapolate <span class="op">=</span> <span class="st">"warn_linear"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/plot_fractions.html">plot_fractions</a></span><span class="op">(</span><span class="va">long</span>, scheme <span class="op">=</span> <span class="st">"wentworth_major"</span><span class="op">)</span></span>
-<span><span class="va">usda_components</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/gs_fractions_wide.html">gs_fractions_wide</a></span><span class="op">(</span><span class="va">long</span>, scheme <span class="op">=</span> <span class="st">"usda_tt"</span>, normalize <span class="op">=</span> <span class="st">"fine_earth"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/plot_texture_ternary.html">plot_texture_ternary</a></span><span class="op">(</span><span class="va">usda_components</span>, scheme <span class="op">=</span> <span class="st">"usda_tt"</span><span class="op">)</span></span></code></pre></div>
-<p><code><a href="reference/plot_texture_triangle.html">plot_texture_triangle()</a></code> remains available as a stable compatibility name for texture ternary plots; <code><a href="reference/plot_texture_ternary.html">plot_texture_ternary()</a></code> is preferred in new code.</p>
+<span><span class="va">usda_components</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/gs_fractions_wide.html">gs_fractions_wide</a></span><span class="op">(</span><span class="va">long</span>, scheme <span class="op">=</span> <span class="st">"usda"</span>, normalize <span class="op">=</span> <span class="st">"fine_earth"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/plot_texture_ternary.html">plot_texture_ternary</a></span><span class="op">(</span><span class="va">usda_components</span>, scheme <span class="op">=</span> <span class="st">"usda"</span><span class="op">)</span></span></code></pre></div>
+<p><code><a href="reference/plot_texture_ternary.html">plot_texture_ternary()</a></code> is preferred in new code; <code><a href="reference/plot_texture_triangle.html">plot_texture_triangle()</a></code> remains available as an equivalent compatibility alias. Legacy raw-data ternary workflows remain available through <code><a href="reference/plot_trigon.html">plot_trigon()</a></code>.</p>
 </div>
 <div class="section level2">
 <h2 id="further-reading">Further Reading<a class="anchor" aria-label="anchor" href="#further-reading"></a>
@@ -176,9 +176,15 @@
 <p>Use the vignettes for full workflows and methodological detail:</p>
 <ul>
 <li>
+<code><a href="articles/basic-workflow.html">vignette("basic-workflow")</a></code>: a compact first-pass import, summary, and plot workflow.</li>
+<li>
 <code><a href="articles/grain-size-workflow.html">vignette("grain-size-workflow")</a></code>: import, diagnostics, summaries, and plots.</li>
 <li>
+<code><a href="articles/table-layouts-and-measurement-workflows.html">vignette("table-layouts-and-measurement-workflows")</a></code>: long and wide table layouts for common measurement workflows.</li>
+<li>
 <code><a href="articles/texture-classification.html">vignette("texture-classification")</a></code>: USDA and GRADISTAT-style texture classification and ternary plots.</li>
+<li>
+<code><a href="articles/texture-polygons.html">vignette("texture-polygons")</a></code>: user-supplied polygon templates and polygon classification workflows.</li>
 <li>
 <code><a href="articles/replacing-gradistat-g2sd.html">vignette("replacing-gradistat-g2sd")</a></code>: R-native workflows for tasks commonly handled with GRADISTAT or G2Sd-style analysis.</li>
 <li>

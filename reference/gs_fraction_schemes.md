@@ -11,6 +11,9 @@ inclusive for interpretation, and upper bounds define the cumulative
 threshold used to calculate each fraction. `gravel_sand_mud` is an
 explicit public alias of `wentworth_major`; both schemes use gravel,
 sand, and mud components with boundaries at 2000 and 62.5 micrometres.
+GRADISTAT ternary examples use `scheme = "gravel_sand_mud"` because it
+makes the required ternary components explicit, while `wentworth_major`
+remains available for users who prefer the Wentworth naming.
 
 ## Usage
 

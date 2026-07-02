@@ -174,7 +174,7 @@ D-values. Unresolved D5 or D95 values should be reported rather than
 hidden.
 
 ``` r
-head(suppressWarnings(gs_fractions_wide(gs_long, scheme = "usda_tt")))
+head(suppressWarnings(gs_fractions_wide(gs_long, scheme = "usda")))
 #> # A tibble: 6 × 5
 #>   sample_id gravel_percent sand_percent silt_percent clay_percent
 #>   <chr>              <dbl>        <dbl>        <dbl>        <dbl>
@@ -215,7 +215,7 @@ sample_id <- "S01"
 head(gs_diagnostics(
   gs_long,
   d_values = c(5, 10, 50, 90, 95),
-  fraction_schemes = c("wentworth_major", "usda_tt", "uk_ssew")
+  fraction_schemes = c("wentworth_major", "usda", "uk_ssew")
 ))
 #> # A tibble: 6 × 9
 #>   sample_id check               status severity value expected parameter message
@@ -253,7 +253,7 @@ Texture-fraction workflows require sufficient fine-resolution data to
 resolve the relevant boundaries.
 
 ``` r
-head(suppressWarnings(gs_fractions_wide(gs_long, scheme = "usda_tt")))
+head(suppressWarnings(gs_fractions_wide(gs_long, scheme = "usda")))
 #> # A tibble: 6 × 5
 #>   sample_id gravel_percent sand_percent silt_percent clay_percent
 #>   <chr>              <dbl>        <dbl>        <dbl>        <dbl>

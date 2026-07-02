@@ -101,10 +101,10 @@ texture classes.
 
 ``` r
 gradistat_components <- gs_fractions(wide, scheme = "gravel_sand_mud")
-usda_components <- gs_fractions_wide(long, scheme = "usda_tt", normalize = "fine_earth")
+usda_components <- gs_fractions_wide(long, scheme = "usda", normalize = "fine_earth")
 
 plot_texture_ternary(gradistat_components, scheme = "gradistat")
-plot_texture_ternary(usda_components, scheme = "usda_tt", show_sample_labels = TRUE)
+plot_texture_ternary(usda_components, scheme = "usda", show_sample_labels = TRUE)
 ```
 
 ![](reference/figures/readme-gradistat-ternary.png)![](reference/figures/readme-usda-ternary.png)
@@ -146,24 +146,31 @@ gs_parameters(
 plot_distribution(long, sample = "S01", cumulative = TRUE)
 plot_cumulative(long, sample = "S01", extrapolate = "warn_linear")
 plot_fractions(long, scheme = "wentworth_major")
-usda_components <- gs_fractions_wide(long, scheme = "usda_tt", normalize = "fine_earth")
-plot_texture_ternary(usda_components, scheme = "usda_tt")
+usda_components <- gs_fractions_wide(long, scheme = "usda", normalize = "fine_earth")
+plot_texture_ternary(usda_components, scheme = "usda")
 ```
 
-[`plot_texture_triangle()`](https://Gavin987.github.io/grainsizeR/reference/plot_texture_triangle.md)
-remains available as a stable compatibility name for texture ternary
-plots;
 [`plot_texture_ternary()`](https://Gavin987.github.io/grainsizeR/reference/plot_texture_ternary.md)
-is preferred in new code.
+is preferred in new code;
+[`plot_texture_triangle()`](https://Gavin987.github.io/grainsizeR/reference/plot_texture_triangle.md)
+remains available as an equivalent compatibility alias. Legacy raw-data
+ternary workflows remain available through
+[`plot_trigon()`](https://Gavin987.github.io/grainsizeR/reference/plot_trigon.md).
 
 ## Further Reading
 
 Use the vignettes for full workflows and methodological detail:
 
+- [`vignette("basic-workflow")`](https://Gavin987.github.io/grainsizeR/articles/basic-workflow.md):
+  a compact first-pass import, summary, and plot workflow.
 - [`vignette("grain-size-workflow")`](https://Gavin987.github.io/grainsizeR/articles/grain-size-workflow.md):
   import, diagnostics, summaries, and plots.
+- [`vignette("table-layouts-and-measurement-workflows")`](https://Gavin987.github.io/grainsizeR/articles/table-layouts-and-measurement-workflows.md):
+  long and wide table layouts for common measurement workflows.
 - [`vignette("texture-classification")`](https://Gavin987.github.io/grainsizeR/articles/texture-classification.md):
   USDA and GRADISTAT-style texture classification and ternary plots.
+- [`vignette("texture-polygons")`](https://Gavin987.github.io/grainsizeR/articles/texture-polygons.md):
+  user-supplied polygon templates and polygon classification workflows.
 - [`vignette("replacing-gradistat-g2sd")`](https://Gavin987.github.io/grainsizeR/articles/replacing-gradistat-g2sd.md):
   R-native workflows for tasks commonly handled with GRADISTAT or
   G2Sd-style analysis.

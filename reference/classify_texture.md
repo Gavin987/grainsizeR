@@ -3,10 +3,10 @@
 `classify_texture()` classifies samples with either the validated
 internal USDA 12-class major texture rules or user-supplied texture
 polygon vertices. USDA rule classification is available with
-`scheme = "usda_tt"` and `method = "rules"` or `method = "auto"`. The
-USDA path uses sand, silt, and clay percentages and covers only the 12
-major USDA texture ternary classes. GRADISTAT-style rule classification
-is available with `scheme = "gradistat"` and `method = "rules"` or
+`scheme = "usda"` and `method = "rules"` or `method = "auto"`. The USDA
+path uses sand, silt, and clay percentages and covers only the 12 major
+USDA texture ternary classes. GRADISTAT-style rule classification is
+available with `scheme = "gradistat"` and `method = "rules"` or
 `method = "auto"`. It supports `basis = "gravel_sand_mud"` for physical
 sediment textural groups and `basis = "sand_silt_clay_no_gravel"` for
 no-gravel sand-silt-clay mini texture classes. When `x` is a `gsd_tbl`,
@@ -56,19 +56,19 @@ classify_texture(
 
 - scheme:
 
-  Texture classification scheme. Use `"usda_tt"` with `method = "rules"`
-  or `method = "auto"` for USDA major texture rules. Use `"gradistat"`
-  with `method = "rules"` or `method = "auto"` for GRADISTAT-style rule
+  Texture classification scheme. Use `"usda"` with `method = "rules"` or
+  `method = "auto"` for USDA major texture rules. Use `"gradistat"` with
+  `method = "rules"` or `method = "auto"` for GRADISTAT-style rule
   classification. Other non-USDA schemes require user-supplied polygons
   because no built-in texture polygon datasets are bundled.
 
 - method:
 
   Classification method. `"auto"` uses USDA rules when
-  `scheme = "usda_tt"` or GRADISTAT rules when `scheme = "gradistat"`
-  and no polygons are supplied, and polygon classification when polygons
-  are supplied. `"rules"` selects a supported rule classifier.
-  `"polygon"` selects user-supplied polygon classification.
+  `scheme = "usda"`, or GRADISTAT rules when `scheme = "gradistat"` and
+  no polygons are supplied, and polygon classification when polygons are
+  supplied. `"rules"` selects a supported rule classifier. `"polygon"`
+  selects user-supplied polygon classification.
 
 - texture_polygons:
 
@@ -127,19 +127,20 @@ the input rows with `texture_class_id`, `texture_class`,
 `classification_method`, `classification_status`, `ternary_basis`,
 `notes`, and a ratio audit column appended. If
 `include_sediment_name = TRUE`, GRADISTAT outputs also include
-`sediment_name` and related sediment-name audit columns.
+`sediment_name` and related sediment-name audit columns. Polygon
+classification also uses `texture_class_id` and `texture_class` for the
+public classification result, while retaining polygon-specific
+component, coordinate, and status columns such as `left`, `right`,
+`top`, `x`, `y`, `resolved`, and `ambiguous`.
 
 ## Details
 
 For rule-based paths, input percentages must be numeric, finite, between
 0 and 100, and sum to approximately 100; the function does not silently
-normalize invalid sums. Input percentages must be numeric, finite,
-between 0 and 100, and sum to approximately 100; the function does not
-silently normalize invalid sums. It does not implement sand-size
-modifier subclasses such as coarse sand, fine sand, very fine sand,
-coarse sandy loam, fine sandy loam, or very fine sandy loam. Those may
-be added later as qualitative descriptor columns for D50 or
-particle-size summaries.
+normalize invalid sums. It does not implement sand-size modifier
+subclasses such as coarse sand, fine sand, very fine sand, coarse sandy
+loam, fine sandy loam, or very fine sandy loam. Those may be added later
+as qualitative descriptor columns for D50 or particle-size summaries.
 
 Generic polygon classification remains available by supplying
 `texture_polygons` or the legacy positional `polygons` argument. No
@@ -155,7 +156,7 @@ samples <- data.frame(
   clay = c(5, 20, 60)
 )
 
-classify_texture(samples, scheme = "usda_tt", method = "rules")
+classify_texture(samples, scheme = "usda", method = "rules")
 #> # A tibble: 3 × 11
 #>   sample_id  sand  silt  clay texture_class_id texture_class
 #>   <chr>     <dbl> <dbl> <dbl> <chr>            <chr>        
@@ -164,7 +165,7 @@ classify_texture(samples, scheme = "usda_tt", method = "rules")
 #> 3 C            20    20    60 clay             clay         
 #> # ℹ 5 more variables: classification_method <chr>, rule_status <chr>,
 #> #   all_rule_matches <chr>, rule_conflict <lgl>, rule_gap <lgl>
-classify_texture(samples, scheme = "usda_tt", method = "auto")
+classify_texture(samples, scheme = "usda", method = "auto")
 #> # A tibble: 3 × 11
 #>   sample_id  sand  silt  clay texture_class_id texture_class
 #>   <chr>     <dbl> <dbl> <dbl> <chr>            <chr>        
@@ -259,9 +260,9 @@ classify_texture(
   method = "polygon"
 )
 #> # A tibble: 1 × 13
-#>   sample_id scheme    class_id class_name  left right   top     x     y resolved
-#>   <chr>     <chr>     <chr>    <chr>      <dbl> <dbl> <dbl> <dbl> <dbl> <lgl>   
-#> 1 A         syntheti… all      Synthetic…    40    30    20 0.444 0.192 TRUE    
-#> # ℹ 3 more variables: ambiguous <lgl>, normalize <chr>,
+#>   sample_id scheme  texture_class_id texture_class  left right   top     x     y
+#>   <chr>     <chr>   <chr>            <chr>         <dbl> <dbl> <dbl> <dbl> <dbl>
+#> 1 A         synthe… all              Synthetic fu…    40    30    20 0.444 0.192
+#> # ℹ 4 more variables: resolved <lgl>, ambiguous <lgl>, normalize <chr>,
 #> #   interpolation_scale <chr>
 ```

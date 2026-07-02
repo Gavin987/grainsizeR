@@ -1,19 +1,22 @@
 # Plot samples on a ternary diagram
 
-`plot_trigon()` is a compatibility plotting name for texture ternary
-plots. Prefer
+`plot_trigon()` is retained for legacy compatibility with earlier
+grainsizeR texture plotting workflows. Prefer
 [`plot_texture_ternary()`](https://Gavin987.github.io/grainsizeR/reference/plot_texture_ternary.md)
-in new code and prose. Optional user-supplied polygons can be drawn as
-overlays. For USDA major texture classes, the function draws internal
-rule-derived class boundaries without depending on external texture
-plotting packages.
+in new code. Unlike
+[`plot_texture_ternary()`](https://Gavin987.github.io/grainsizeR/reference/plot_texture_ternary.md),
+this function can still calculate ternary fractions from a raw `gsd_tbl`
+for legacy built-in schemes. Optional user-supplied polygons can be
+drawn as overlays. For USDA major texture classes, the function draws
+internal rule-derived class boundaries without depending on external
+texture plotting packages.
 
 ## Usage
 
 ``` r
 plot_trigon(
   x,
-  scheme = c("gradistat", "usda_tt", "isss", "uk_ssew"),
+  scheme = "gradistat",
   components = NULL,
   normalize = "none",
   sample_id = NULL,

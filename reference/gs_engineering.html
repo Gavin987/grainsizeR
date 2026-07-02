@@ -57,34 +57,15 @@ AASHTO or USCS.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">gs_engineering</span><span class="op">(</span></span>
-<span>  <span class="va">x</span>,</span>
-<span>  fine_threshold_um <span class="op">=</span> <span class="fl">62.5</span>,</span>
-<span>  interpolation_scale <span class="op">=</span> <span class="st">"phi"</span>,</span>
-<span>  extrapolate <span class="op">=</span> <span class="st">"error"</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">gs_engineering</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
 
 
-<dl><dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
-<dd><p>A valid <code>gsd_tbl</code> object.</p></dd>
-
-
-<dt id="arg-fine-threshold-um">fine_threshold_um<a class="anchor" aria-label="anchor" href="#arg-fine-threshold-um"></a></dt>
-<dd><p>Fine-content threshold in micrometers.</p></dd>
-
-
-<dt id="arg-interpolation-scale">interpolation_scale<a class="anchor" aria-label="anchor" href="#arg-interpolation-scale"></a></dt>
-<dd><p>Interpolation scale passed to <code><a href="gs_d_values.html">gs_d_values()</a></code>
-and <code><a href="gs_percent_finer.html">gs_percent_finer()</a></code>.</p></dd>
-
-
-<dt id="arg-extrapolate">extrapolate<a class="anchor" aria-label="anchor" href="#arg-extrapolate"></a></dt>
-<dd><p>Extrapolation behavior passed to <code><a href="gs_d_values.html">gs_d_values()</a></code> and
-<code><a href="gs_percent_finer.html">gs_percent_finer()</a></code>.</p></dd>
+<dl><dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
+<dd><p>Arguments forwarded to <code><a href="gs_grain_size_indices.html">gs_grain_size_indices()</a></code>.</p></dd>
 
 </dl></div>
     <div class="section level2">

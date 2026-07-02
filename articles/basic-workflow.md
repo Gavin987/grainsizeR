@@ -115,7 +115,7 @@ head(gs_diagnostics(gs_wide, output = "summary"))
 head(gs_diagnostics(
   gs,
   d_values = c(5, 10, 50, 90, 95),
-  fraction_schemes = c("wentworth_major", "usda_tt", "uk_ssew")
+  fraction_schemes = c("wentworth_major", "usda", "uk_ssew")
 ))
 #> # A tibble: 6 × 9
 #>   sample_id check               status severity value expected parameter message
@@ -274,7 +274,7 @@ particle_size_systems()
 #>   <chr>         <chr>       <chr>             <chr>          <dbl>         <dbl>
 #> 1 wentworth_ma… Wentworth … International     sedim…            NA            NA
 #> 2 gradistat     GRADISTAT … International     sedim…             4            63
-#> 3 usda_tt       USDA textu… United States     soil …             2            50
+#> 3 usda          USDA textu… United States     soil …             2            50
 #> 4 isss          Internatio… International     soil …             2            20
 #> 5 uk_ssew       UK SSEW pa… United Kingdom    soil …             2            60
 #> 6 hypres        HYPRES par… Europe            soil …             2            50
