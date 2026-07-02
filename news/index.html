@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">grainsizeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -42,28 +42,20 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.0.0.9000" id="grainsizer-0009000">grainsizeR 0.0.0.9000<a class="anchor" aria-label="anchor" href="#grainsizer-0009000"></a></h2>
-<div class="section level3">
-<h3 id="development-version-0-0-0-9000">Development version<a class="anchor" aria-label="anchor" href="#development-version-0-0-0-9000"></a></h3>
-<ul><li>Added long and wide retained grain-size import, validated <code>gsd_tbl</code> objects, diagnostics, D-values, percent-finer interpolation, grain-size indices, Folk and Ward statistics, moment statistics, modes, D-spread descriptors, parameter descriptions, quality flags, and summary-table workflows.</li>
-<li>Added particle-size fraction schemes, wide fraction summaries, and plotting helpers for retained distributions, cumulative curves, fractions, GRADISTAT- inspired summaries, and texture ternary plots.</li>
-<li>Added GRADISTAT-style texture classification, sediment-name composition, and gravel-sand-mud and sand-silt-clay no-gravel ternary plots.</li>
-<li>Added USDA 12-class major texture classification through <code>classify_texture(..., scheme = "usda", method = "rules")</code> and USDA ternary plotting without depending on external texture plotting packages.</li>
-<li>Added user-supplied texture polygon validation and classification workflows; built-in official texture polygon datasets are not bundled yet.</li>
-<li>Added workflow vignettes for grain-size analysis, texture classification, replacing GRADISTAT/G2Sd-style workflows, table layouts and measurement workflows, method validation, and user-supplied texture polygons.</li>
-<li>Added convenience aliases for common workflows, including <code><a href="../reference/plot_texture_ternary.html">plot_texture_ternary()</a></code> as the preferred texture ternary plotting name while retaining compatibility aliases.</li>
-<li>Improved log-scaled distribution and cumulative plots with single-sample behavior, <code>particle_unit</code> controls, centered distribution bars, plain tick labels, and plotting-only lower open-tail display positions.</li>
-<li>Improved plotting ergonomics with numeric sample selection, clearer cumulative percentile markers, and texture ternary point controls for labels, constant aesthetics, and grouped color mapping.</li>
-<li>Updated bundled long and wide example CSV data and regenerated README examples and figures from those bundled files.</li>
-<li>Aligned pre-release texture APIs by using <code>texture_class_id</code> and <code>texture_class</code> for all <code><a href="../reference/classify_texture.html">classify_texture()</a></code> methods, clarifying <code><a href="../reference/plot_texture_ternary.html">plot_texture_ternary()</a></code> / <code><a href="../reference/plot_texture_triangle.html">plot_texture_triangle()</a></code> alias roles, and making scheme validation errors more consistent.</li>
-<li>Renamed USDA texture triangle workflows to the single public scheme name <code>usda</code>; the pre-release <code>usda_tt</code> name has been removed before v0.1.0, and related documentation follow-ups were corrected.</li>
-<li>Refined GRADISTAT and USDA ternary plot guides, labels, boundaries, and README showcase figures; README PNG outputs are standardized to 1000 px wide.</li>
-<li>Prepared GitHub pre-release documentation and repository templates, including contribution guidance, issue templates, citation metadata, security notes, and check workflows.</li>
-<li>Added MIT licensing and public provenance policy for future official texture polygon datasets.</li>
+<h2 class="pkg-version" data-toc-text="0.1.0" id="grainsizer-010">grainsizeR 0.1.0<a class="anchor" aria-label="anchor" href="#grainsizer-010"></a></h2>
+<ul><li>Initial public release of grainsizeR.</li>
+<li>Added long and wide grain-size CSV import workflows.</li>
+<li>Added <code>gsd_tbl</code> validation and unit-normalized grain-size representation.</li>
+<li>Added D-values, Folk and Ward statistics, moment statistics, modes, descriptors, diagnostics, and quality flags.</li>
+<li>Added fraction schemes including Wentworth major/detailed, USDA, GRADISTAT, and regional soil texture schemes.</li>
+<li>Added GRADISTAT and USDA ternary plotting workflows.</li>
+<li>Added distribution, cumulative, fraction, and ternary plotting functions.</li>
+<li>Added bundled example CSV files for reproducible README and vignette workflows.</li>
+<li>Standardized texture classification output names as <code>texture_class_id</code> and <code>texture_class</code>.</li>
+<li>Standardized USDA texture workflows under the public scheme name <code>usda</code>.</li>
+<li>Prepared GitHub pre-release documentation and repository templates.</li>
 </ul></div>
-</div>
-  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
-    </nav></aside></div>
+  </main></div>
 
 
     <footer><div class="pkgdown-footer-left">

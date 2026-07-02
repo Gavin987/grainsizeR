@@ -35,7 +35,7 @@ plot_texture_ternary(
   show_class_labels = show_classes,
   show_sample_labels = labels,
   sample_label_size = 3,
-  class_label_size = 2.5,
+  class_label_size = 3,
   point_size = 1.8,
   point_color = "black",
   point_alpha = 0.8,
