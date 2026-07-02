@@ -40,7 +40,7 @@ Once imported, use the same object with summary and plotting functions:
 gs_diagnostics(wide, output = "summary")
 gs_d_values(long, probs = c(10, 50, 90), extrapolate = "warn_linear")
 gs_folk_ward(long, extrapolate = "warn_linear")
-gradistat_components <- gs_fractions(wide, scheme = "gravel_sand_mud")
+gradistat_components <- gs_fractions_wide(wide, scheme = "gradistat")
 gs_fractions_wide(wide, scheme = "gravel_sand_mud")
 ```
 
@@ -67,9 +67,7 @@ plots <- lapply(samples, function(id) {
 })
 ```
 
-<img src="man/figures/readme-wide-distribution.png" width="48%" />
-
-<img src="man/figures/readme-wide-cumulative.png" width="48%" />
+<img src="man/figures/readme-wide-distribution.png" width="48%" style="display: block; margin: auto;" /><img src="man/figures/readme-wide-cumulative.png" width="48%" style="display: block; margin: auto;" />
 
 ## Fraction Summaries
 
@@ -92,23 +90,22 @@ plot_fractions(
 
 Fraction schemes convert grain-size data into particle-size components;
 ternary bases are the three components drawn on a plot; texture systems
-are the classification or diagram style. For GRADISTAT-style ternary
-plots, first summarize to the `gravel_sand_mud` fraction scheme, then
-plot those summarized `gravel`, `sand`, and `mud` components. Canonical
+are the classification or diagram style. GRADISTAT-style ternary plots
+accept official `gs_fractions_wide()` outputs from the `gradistat` or
+`gravel_sand_mud` schemes. USDA ternary plots accept official USDA
+fraction output and draw the 12 major USDA texture classes. Canonical
 component names are lowercase snake_case; simple case variants such as
-`Sand` or `SAND` are normalized internally. USDA ternary plots use
-summarized `sand`, `silt`, and `clay` components and the 12 major USDA
-texture classes.
+`Sand` or `SAND` are normalized internally.
 
 ``` r
-gradistat_components <- gs_fractions(wide, scheme = "gravel_sand_mud")
+gradistat_components <- gs_fractions_wide(wide, scheme = "gradistat")
 usda_components <- gs_fractions_wide(long, scheme = "usda", normalize = "fine_earth")
 
 plot_texture_ternary(gradistat_components, scheme = "gradistat")
 plot_texture_ternary(usda_components, scheme = "usda", show_sample_labels = TRUE)
 ```
 
-<img src="man/figures/readme-gradistat-ternary.png" width="49%" /><img src="man/figures/readme-usda-ternary.png" width="46%" />
+<img src="man/figures/readme-gradistat-ternary.png" width="48%" /><img src="man/figures/readme-usda-ternary.png" width="48%" />
 
 ## Parameter Summaries
 

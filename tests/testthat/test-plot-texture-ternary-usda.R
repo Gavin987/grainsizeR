@@ -138,6 +138,21 @@ test_that("USDA ternary plotting accepts usda as the public scheme", {
   expect_s3_class(plot, "ggplot")
 })
 
+test_that("USDA ternary plotting accepts official wide fraction output", {
+  path <- system.file("extdata", "grain.wide.csv", package = "grainsizeR")
+  if (!nzchar(path)) {
+    path <- file.path("..", "..", "inst", "extdata", "grain.wide.csv")
+  }
+  wide <- read_gsd(path, format = "wide")
+  fractions <- gs_fractions_wide(wide, scheme = "usda", normalize = "fine_earth")
+
+  ternary <- plot_texture_ternary(fractions, scheme = "usda")
+  triangle <- plot_texture_triangle(fractions, scheme = "usda")
+
+  expect_s3_class(ternary, "ggplot")
+  expect_s3_class(triangle, "ggplot")
+})
+
 test_that("USDA ternary plotting rejects pre-release scheme name", {
   samples <- data.frame(
     sample_id = "sand demo",

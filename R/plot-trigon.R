@@ -304,9 +304,12 @@ plot_trigon <- function(x,
 #' Raw `gsd_tbl` input is not plotted directly for GRADISTAT ternary diagrams.
 #'
 #' For `scheme = "usda"` and data-frame inputs, the function accepts
-#' summarized `sand`, `silt`, and `clay` percentage columns and draws USDA
-#' major-class boundaries. Legacy raw-`gsd_tbl` plotting for older trigon
-#' schemes remains available through `plot_trigon()`.
+#' summarized `sand`, `silt`, and `clay` percentage columns or official
+#' `gs_fractions_wide(..., scheme = "usda")` output and draws USDA major-class
+#' boundaries. For `scheme = "gradistat"`, official `gs_fractions_wide()`
+#' output from the `gradistat` and `gravel_sand_mud` schemes can be plotted
+#' directly. Legacy raw-`gsd_tbl` plotting for older trigon schemes remains
+#' available through `plot_trigon()`.
 #'
 #' @inheritParams plot_trigon
 #' @param scheme Texture ternary plotting system. Use `"gradistat"` for

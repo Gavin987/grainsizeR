@@ -130,20 +130,14 @@ usda_fractions <- suppressWarnings(gs_fractions_wide(
   extrapolate = "warn_linear"
 ))
 
-usda_samples <- data.frame(
-  sample_id = usda_fractions$sample_id,
-  sand = usda_fractions$sand_percent,
-  silt = usda_fractions$silt_percent,
-  clay = usda_fractions$clay_percent
-)
-usda_components <- c("sand", "silt", "clay")
-usda_samples <- usda_samples[
-  stats::complete.cases(usda_samples[usda_components]) &
-    rowSums(usda_samples[usda_components] >= 0 & usda_samples[usda_components] <= 100) == 3 &
-    abs(rowSums(usda_samples[usda_components]) - 100) < 1e-6,
+usda_components <- c("sand_percent", "silt_percent", "clay_percent")
+usda_fractions <- usda_fractions[
+  stats::complete.cases(usda_fractions[usda_components]) &
+    rowSums(usda_fractions[usda_components] >= 0 & usda_fractions[usda_components] <= 100) == 3 &
+    abs(rowSums(usda_fractions[usda_components]) - 100) < 1e-6,
 ]
 
-head(classify_texture(usda_samples, scheme = "usda", method = "rules"))
+head(classify_texture(usda_fractions, scheme = "usda", method = "rules"))
 ```
 
 GRADISTAT texture classification supports the gravel-sand-mud and sand-silt-clay
@@ -151,14 +145,9 @@ no-gravel bases.
 
 ```{r}
 gradistat_fractions <- suppressWarnings(gs_fractions_wide(gs_wide, scheme = "gravel_sand_mud"))
-
-gsm <- data.frame(
-  sample_id = gradistat_fractions$sample_id,
-  gravel = gradistat_fractions$gravel_percent,
-  sand = gradistat_fractions$sand_percent,
-  mud = gradistat_fractions$mud_percent
-)
-gsm <- gsm[stats::complete.cases(gsm[c("gravel", "sand", "mud")]), ]
+gradistat_fractions <- gradistat_fractions[
+  stats::complete.cases(gradistat_fractions[c("gravel_percent", "sand_percent", "mud_percent")]),
+]
 
 ssc <- data.frame(
   sample_id = c("A", "B", "C"),
@@ -168,7 +157,7 @@ ssc <- data.frame(
 )
 
 gsm_classified <- classify_texture(
-  head(gsm, 6),
+  head(gradistat_fractions, 6),
   scheme = "gradistat",
   method = "rules",
   basis = "gravel_sand_mud",

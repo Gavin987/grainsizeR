@@ -21,10 +21,12 @@ classify_texture(
 }
 \arguments{
 \item{x}{A valid \code{gsd_tbl} object, or for USDA rule classification a data
-frame with numeric \code{sand}, \code{silt}, and \code{clay} percentage columns. Data
-frames with ternary \code{left}, \code{right}, and \code{top} columns are also accepted
-for USDA rules and are mapped as \code{left = sand}, \code{right = silt}, and
-\code{top = clay}. For polygon classification, \code{x} must be a \code{gsd_tbl}.}
+frame with numeric \code{sand}, \code{silt}, and \code{clay} percentage columns. Official
+\code{gs_fractions_wide(..., scheme = "usda")} output with \code{sand_percent},
+\code{silt_percent}, and \code{clay_percent} columns is also accepted. Data frames
+with ternary \code{left}, \code{right}, and \code{top} columns are accepted for USDA rules
+and are mapped as \code{left = sand}, \code{right = silt}, and \code{top = clay}. For
+polygon classification, \code{x} must be a \code{gsd_tbl}.}
 
 \item{polygons}{User-supplied texture polygon data. This legacy positional
 argument is equivalent to \code{texture_polygons}.}

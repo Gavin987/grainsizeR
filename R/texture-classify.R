@@ -168,19 +168,17 @@ usda_texture_percentages <- function(x,
     ))
   }
 
-  if (!is.data.frame(x)) {
-    stop("`x` must be a gsd_tbl or a data frame with sand, silt, and clay percentages.", call. = FALSE)
-  }
-
-  if (all(c("sand", "silt", "clay") %in% names(x))) {
-    out <- x
-  } else if (all(c("left", "right", "top") %in% names(x))) {
+  if (is.data.frame(x) && all(c("left", "right", "top") %in% names(x))) {
     out <- x
     out$sand <- out$left
     out$silt <- out$right
     out$clay <- out$top
   } else {
-    stop("USDA rule classification requires sand, silt, and clay columns.", call. = FALSE)
+    out <- .canonical_ternary_component_table(
+      x,
+      component_set = "sand_silt_clay",
+      texture_system = "usda"
+    )
   }
 
   if (!is.numeric(out$sand) || !is.numeric(out$silt) || !is.numeric(out$clay)) {
@@ -268,10 +266,12 @@ gradistat_texture_percentages <- function(x,
 #' USDA polygon dataset is bundled.
 #'
 #' @param x A valid `gsd_tbl` object, or for USDA rule classification a data
-#'   frame with numeric `sand`, `silt`, and `clay` percentage columns. Data
-#'   frames with ternary `left`, `right`, and `top` columns are also accepted
-#'   for USDA rules and are mapped as `left = sand`, `right = silt`, and
-#'   `top = clay`. For polygon classification, `x` must be a `gsd_tbl`.
+#'   frame with numeric `sand`, `silt`, and `clay` percentage columns. Official
+#'   `gs_fractions_wide(..., scheme = "usda")` output with `sand_percent`,
+#'   `silt_percent`, and `clay_percent` columns is also accepted. Data frames
+#'   with ternary `left`, `right`, and `top` columns are accepted for USDA rules
+#'   and are mapped as `left = sand`, `right = silt`, and `top = clay`. For
+#'   polygon classification, `x` must be a `gsd_tbl`.
 #' @param polygons User-supplied texture polygon data. This legacy positional
 #'   argument is equivalent to `texture_polygons`.
 #' @param scheme Texture classification scheme. Use `"usda"` with

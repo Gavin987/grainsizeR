@@ -142,7 +142,7 @@ test_that("classify_texture rejects invalid GRADISTAT public inputs clearly", {
       method = "rules",
       basis = "sand_silt_clay_no_gravel"
     ),
-    "requires columns"
+    "must include columns"
   )
 })
 

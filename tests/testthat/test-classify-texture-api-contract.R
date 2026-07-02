@@ -55,6 +55,25 @@ test_that("USDA public scheme returns canonical texture class columns", {
   expect_equal(result$classification_method, rep("usda_major_rules", nrow(samples)))
 })
 
+test_that("USDA classification accepts official wide fraction output", {
+  path <- system.file("extdata", "grain.wide.csv", package = "grainsizeR")
+  if (!nzchar(path)) {
+    path <- file.path("..", "..", "inst", "extdata", "grain.wide.csv")
+  }
+  wide <- read_gsd(path, format = "wide")
+  fractions <- gs_fractions_wide(wide, scheme = "usda", normalize = "fine_earth")
+
+  result <- classify_texture(fractions, scheme = "usda")
+
+  expect_true(all(c("texture_class_id", "texture_class") %in% names(result)))
+  expect_false("class_id" %in% names(result))
+  expect_false("class_name" %in% names(result))
+  expect_equal(result$sample_id, fractions$sample_id)
+  expect_equal(result$sand, fractions$sand_percent)
+  expect_equal(result$silt, fractions$silt_percent)
+  expect_equal(result$clay, fractions$clay_percent)
+})
+
 test_that("USDA texture classification rejects pre-release scheme name", {
   samples <- data.frame(
     sand = 85,

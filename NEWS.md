@@ -3,6 +3,8 @@
 - Started post-v0.1.0 development.
 - Added a hardening roadmap for performance, workflow validation, naming
   consistency, documentation polish, and pre-Zenodo review.
+- Improved texture workflow interoperability so official wide fraction outputs
+  can feed USDA classification and USDA/GRADISTAT ternary plotting directly.
 
 # grainsizeR 0.1.0
 

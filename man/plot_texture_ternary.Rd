@@ -119,9 +119,12 @@ arbitrary spelling, punctuation, or suffix variants are not interpreted.
 Raw \code{gsd_tbl} input is not plotted directly for GRADISTAT ternary diagrams.
 
 For \code{scheme = "usda"} and data-frame inputs, the function accepts
-summarized \code{sand}, \code{silt}, and \code{clay} percentage columns and draws USDA
-major-class boundaries. Legacy raw-\code{gsd_tbl} plotting for older trigon
-schemes remains available through \code{plot_trigon()}.
+summarized \code{sand}, \code{silt}, and \code{clay} percentage columns or official
+\code{gs_fractions_wide(..., scheme = "usda")} output and draws USDA major-class
+boundaries. For \code{scheme = "gradistat"}, official \code{gs_fractions_wide()}
+output from the \code{gradistat} and \code{gravel_sand_mud} schemes can be plotted
+directly. Legacy raw-\code{gsd_tbl} plotting for older trigon schemes remains
+available through \code{plot_trigon()}.
 }
 \examples{
 gsm <- data.frame(

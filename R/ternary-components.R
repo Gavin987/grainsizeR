@@ -12,16 +12,85 @@
   )
 }
 
-.match_component_columns <- function(x, required) {
+.match_component_columns <- function(x, required, suffix = "") {
   canonical_names <- .canonical_component_name(names(x))
   stats::setNames(vapply(required, function(component) {
-    hits <- which(canonical_names == component)
+    hits <- which(canonical_names == paste0(component, suffix))
     if (length(hits) == 0) {
       NA_character_
     } else {
       names(x)[hits[1]]
     }
   }, character(1)), required)
+}
+
+.ternary_component_error <- function(component_set, required) {
+  if (identical(component_set, "sand_silt_clay") || identical(component_set, "sand_silt_clay_no_gravel")) {
+    return(paste0(
+      "Ternary components must include columns `sand`, `silt`, and `clay`, ",
+      "or official fraction columns `sand_percent`, `silt_percent`, and `clay_percent`."
+    ))
+  }
+  if (identical(component_set, "gravel_sand_mud")) {
+    return(paste0(
+      "GRADISTAT ternary components must include columns `gravel`, `sand`, and `mud`; ",
+      "official fraction columns `gravel_percent`, `sand_percent`, and `mud_percent`; ",
+      "or official GRADISTAT fraction columns `gravel_percent`, `sand_percent`, ",
+      "`silt_percent`, and `clay_percent` that can be aggregated to mud. ",
+      "You can also use `gs_fractions_wide(x, scheme = \"gravel_sand_mud\")`."
+    ))
+  }
+  paste("Ternary plotting requires columns:", paste(required, collapse = ", "))
+}
+
+.copy_component_columns <- function(x, component_cols, required) {
+  out <- tibble::as_tibble(x)
+  for (component in required) {
+    if (!identical(component_cols[[component]], component)) {
+      out[[component]] <- out[[component_cols[[component]]]]
+    }
+  }
+  out
+}
+
+.copy_percent_component_columns <- function(x, percent_cols, required) {
+  keep_cols <- setdiff(names(x), unname(percent_cols))
+  if (length(keep_cols) > 0) {
+    out <- tibble::as_tibble(x[keep_cols])
+  } else {
+    out <- tibble::tibble(.rows = nrow(x))
+  }
+  for (component in required) {
+    out[[component]] <- x[[percent_cols[[component]]]]
+  }
+  out
+}
+
+.aggregate_gradistat_mud_components <- function(x) {
+  direct_cols <- .match_component_columns(x, c("gravel", "sand", "silt", "clay"))
+  if (all(!is.na(direct_cols))) {
+    out <- tibble::as_tibble(x)
+    out$gravel <- x[[direct_cols[["gravel"]]]]
+    out$sand <- x[[direct_cols[["sand"]]]]
+    out$mud <- x[[direct_cols[["silt"]]]] + x[[direct_cols[["clay"]]]]
+    return(out)
+  }
+
+  percent_cols <- .match_component_columns(x, c("gravel", "sand", "silt", "clay"), suffix = "_percent")
+  if (all(!is.na(percent_cols))) {
+    keep_cols <- setdiff(names(x), unname(percent_cols))
+    if (length(keep_cols) > 0) {
+      out <- tibble::as_tibble(x[keep_cols])
+    } else {
+      out <- tibble::tibble(.rows = nrow(x))
+    }
+    out$gravel <- x[[percent_cols[["gravel"]]]]
+    out$sand <- x[[percent_cols[["sand"]]]]
+    out$mud <- x[[percent_cols[["silt"]]]] + x[[percent_cols[["clay"]]]]
+    return(out)
+  }
+
+  NULL
 }
 
 .canonical_ternary_component_table <- function(x,
@@ -87,36 +156,28 @@
   if (is.null(out)) {
     direct_cols <- .match_component_columns(x, required)
     if (all(!is.na(direct_cols))) {
-      out <- tibble::as_tibble(x)
-      for (component in required) {
-        if (!identical(direct_cols[[component]], component)) {
-          out[[component]] <- out[[direct_cols[[component]]]]
-        }
-      }
+      out <- .copy_component_columns(x, direct_cols, required)
     }
   }
 
   if (is.null(out)) {
-    percent_cols <- paste0(required, "_percent")
-    if (all(percent_cols %in% names(x))) {
-      keep_cols <- setdiff(names(x), percent_cols)
-      if (length(keep_cols) > 0) {
-        out <- tibble::as_tibble(x[keep_cols])
-      } else {
-        out <- tibble::tibble(.rows = nrow(x))
-      }
-      for (component in required) {
-        out[[component]] <- x[[paste0(component, "_percent")]]
-      }
+    percent_cols <- .match_component_columns(x, required, suffix = "_percent")
+    if (all(!is.na(percent_cols))) {
+      out <- .copy_percent_component_columns(x, percent_cols, required)
     }
   }
 
+  if (is.null(out) && identical(component_set, "gravel_sand_mud")) {
+    out <- .aggregate_gradistat_mud_components(x)
+  }
+
   if (is.null(out)) {
-    stop(
-      "Ternary plotting requires columns: ",
-      paste(required, collapse = ", "),
-      call. = FALSE
-    )
+    stop(.ternary_component_error(component_set, required), call. = FALSE)
+  }
+
+  missing_components <- setdiff(required, names(out))
+  if (length(missing_components) > 0) {
+    stop(.ternary_component_error(component_set, required), call. = FALSE)
   }
 
   if (!is.null(point_id)) {

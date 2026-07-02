@@ -61,6 +61,11 @@ test_that("plot_texture_ternary accepts official GRADISTAT fraction outputs", {
 
   frac_wide <- suppressWarnings(gs_fractions_wide(wide, scheme = "gravel_sand_mud"))
   expect_no_error(plot_texture_ternary(frac_wide, scheme = "gradistat"))
+
+  gradistat_wide <- suppressWarnings(gs_fractions_wide(wide, scheme = "gradistat"))
+  expect_no_error(plot_texture_ternary(gradistat_wide, scheme = "gradistat"))
+  expect_no_error(plot_texture_triangle(gradistat_wide, scheme = "gradistat"))
+  expect_no_error(plot_texture_triangle(frac_wide, scheme = "gradistat"))
 })
 
 test_that("plot_texture_ternary accepts case-only component name variants", {
@@ -249,7 +254,7 @@ test_that("GRADISTAT ternary plot validation cases plot or fail as expected", {
 test_that("GRADISTAT ternary plotting validates required columns and point labels", {
   expect_error(
     plot_texture_triangle(data.frame(sand = 95, mud = 5), scheme = "gradistat", basis = "gravel_sand_mud"),
-    "requires columns"
+    "must include columns"
   )
   expect_error(
     plot_texture_triangle(
