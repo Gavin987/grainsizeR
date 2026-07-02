@@ -67,9 +67,9 @@ plots <- lapply(samples, function(id) {
 })
 ```
 
-<img src="man/figures/readme-wide-distribution.png" width="45%" />
+<img src="man/figures/readme-wide-distribution.png" width="48%" />
 
-<img src="man/figures/readme-wide-cumulative.png" width="45%" />
+<img src="man/figures/readme-wide-cumulative.png" width="48%" />
 
 ## Fraction Summaries
 
@@ -108,7 +108,7 @@ plot_texture_ternary(gradistat_components, scheme = "gradistat")
 plot_texture_ternary(usda_components, scheme = "usda", show_sample_labels = TRUE)
 ```
 
-<img src="man/figures/readme-gradistat-ternary.png" width="47%" /><img src="man/figures/readme-usda-ternary.png" width="51%" />
+<img src="man/figures/readme-gradistat-ternary.png" width="49%" /><img src="man/figures/readme-usda-ternary.png" width="46%" />
 
 ## Parameter Summaries
 

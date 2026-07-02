@@ -20,7 +20,7 @@ plot_trigon(
   show_classes = TRUE,
   show_class_labels = show_classes,
   sample_label_size = 3,
-  class_label_size = 2.5,
+  class_label_size = 4,
   point_size = 1.8,
   point_color = "black",
   point_alpha = 0.8,

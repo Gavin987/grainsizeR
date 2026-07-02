@@ -78,11 +78,11 @@ plots <- lapply(samples, function(id) {
 })
 ```
 
-```{r readme-wide-distribution, echo=FALSE, out.width="45%"}
+```{r readme-wide-distribution, echo=FALSE, out.width="48%"}
 knitr::include_graphics("man/figures/readme-wide-distribution.png")
 ```
 
-```{r readme-wide-cumulative, echo=FALSE, out.width="45%"}
+```{r readme-wide-cumulative, echo=FALSE, out.width="48%"}
 knitr::include_graphics("man/figures/readme-wide-cumulative.png")
 ```
 
@@ -124,7 +124,7 @@ plot_texture_ternary(gradistat_components, scheme = "gradistat")
 plot_texture_ternary(usda_components, scheme = "usda", show_sample_labels = TRUE)
 ```
 
-```{r readme-ternary-plots, echo=FALSE, out.width=c("47%", "51%"), fig.show="hold"}
+```{r readme-ternary-plots, echo=FALSE, out.width=c("49%", "46%"), fig.show="hold"}
 knitr::include_graphics(c(
   "man/figures/readme-gradistat-ternary.png",
   "man/figures/readme-usda-ternary.png"
