@@ -35,9 +35,9 @@ plot_texture_ternary(
 \item{x}{A valid \code{gsd_tbl} object.}
 
 \item{scheme}{Texture ternary plotting system. Use \code{"gradistat"} for
-GRADISTAT ternary diagrams or \code{"usda"} / \code{"usda_tt"} for USDA major-class
-ternary diagrams. Legacy raw-\code{gsd_tbl} schemes such as \code{"isss"} and
-\code{"uk_ssew"} remain available through \code{plot_trigon()}.}
+GRADISTAT ternary diagrams or \code{"usda"} for USDA major-class ternary
+diagrams. Legacy raw-\code{gsd_tbl} schemes such as \code{"isss"} and \code{"uk_ssew"}
+remain available through \code{plot_trigon()}.}
 
 \item{components}{Optional character vector of three component names in
 left, right, top order.}
@@ -118,7 +118,7 @@ matching is case-insensitive, so \code{Sand} and \code{SAND} are treated as \cod
 arbitrary spelling, punctuation, or suffix variants are not interpreted.
 Raw \code{gsd_tbl} input is not plotted directly for GRADISTAT ternary diagrams.
 
-For \code{scheme = "usda_tt"} and data-frame inputs, the function accepts
+For \code{scheme = "usda"} and data-frame inputs, the function accepts
 summarized \code{sand}, \code{silt}, and \code{clay} percentage columns and draws USDA
 major-class boundaries. Legacy raw-\code{gsd_tbl} plotting for older trigon
 schemes remains available through \code{plot_trigon()}.

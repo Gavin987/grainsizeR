@@ -5,6 +5,7 @@
 ^\.Rproj\.user$
 ^CLAUDE\.md$
 ^\.claude$
+^AUDIT_LOG\.md$
 ^.*\.Rproj$
 ^_pkgdown\.yml$
 ^pkgdown$

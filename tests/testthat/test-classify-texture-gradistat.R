@@ -111,12 +111,12 @@ test_that("classify_texture returns partial GRADISTAT sediment names without sub
 test_that("include_sediment_name does not change USDA rule output", {
   base <- classify_texture(
     data.frame(sand = 90, silt = 5, clay = 5),
-    scheme = "usda_tt",
+    scheme = "usda",
     method = "rules"
   )
   with_arg <- classify_texture(
     data.frame(sand = 90, silt = 5, clay = 5),
-    scheme = "usda_tt",
+    scheme = "usda",
     method = "rules",
     include_sediment_name = TRUE
   )

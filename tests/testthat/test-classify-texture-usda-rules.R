@@ -36,7 +36,7 @@ test_that("classify_texture exposes USDA major rules for sand, silt, and clay da
     stringsAsFactors = FALSE
   )
 
-  result <- classify_texture(samples, scheme = "usda_tt", method = "rules")
+  result <- classify_texture(samples, scheme = "usda", method = "rules")
 
   expect_equal(result$sample_id, samples$sample_id)
   expect_equal(result$texture_class_id, c("sand", "loam", "clay"))
@@ -58,7 +58,7 @@ test_that("classify_texture auto-selects USDA rules when no polygons are supplie
     stringsAsFactors = FALSE
   )
 
-  result <- classify_texture(samples, scheme = "usda_tt")
+  result <- classify_texture(samples, scheme = "usda")
 
   expect_equal(result$texture_class_id, c("loamy_sand", "silt"))
   expect_equal(result$classification_method, rep("usda_major_rules", 2))
@@ -73,7 +73,7 @@ test_that("classify_texture supports ternary columns for USDA rules with documen
     stringsAsFactors = FALSE
   )
 
-  result <- classify_texture(samples, scheme = "usda_tt", method = "rules")
+  result <- classify_texture(samples, scheme = "usda", method = "rules")
 
   expect_equal(result$sand, samples$left)
   expect_equal(result$silt, samples$right)
@@ -90,7 +90,7 @@ test_that("classify_texture classifies representative points for all USDA major 
     stringsAsFactors = FALSE
   )
 
-  result <- classify_texture(points, scheme = "usda_tt", method = "rules")
+  result <- classify_texture(points, scheme = "usda", method = "rules")
 
   expect_equal(result$texture_class_id, points$class_id)
   expect_equal(result$all_rule_matches, points$class_id)
@@ -114,7 +114,7 @@ test_that("classify_texture preserves validated USDA boundary decisions", {
     stringsAsFactors = FALSE
   )
 
-  result <- classify_texture(points, scheme = "usda_tt", method = "rules")
+  result <- classify_texture(points, scheme = "usda", method = "rules")
 
   expect_equal(result$case_id, points$case_id)
   expect_equal(result$texture_class_id, points$expected_class_id)
@@ -127,7 +127,7 @@ test_that("classify_texture rejects invalid USDA rule inputs clearly", {
   expect_error(
     classify_texture(
       data.frame(sand = 50, silt = 20, clay = 20),
-      scheme = "usda_tt",
+      scheme = "usda",
       method = "rules"
     ),
     "sum to approximately 100"
@@ -135,7 +135,7 @@ test_that("classify_texture rejects invalid USDA rule inputs clearly", {
   expect_error(
     classify_texture(
       data.frame(sand = 101, silt = -1, clay = 0),
-      scheme = "usda_tt",
+      scheme = "usda",
       method = "rules"
     ),
     "between 0 and 100"
@@ -181,8 +181,8 @@ test_that("USDA rule classification derives equivalent fractions from mm and um 
   gsd_mm <- as_gsd_tbl(x_mm, sample_id, size_mm, retained)
   gsd_um <- as_gsd_tbl(x_um, sample_id, size_um, retained, size_unit = "um")
 
-  from_mm <- classify_texture(gsd_mm, scheme = "usda_tt", method = "rules", normalize = "fine_earth")
-  from_um <- classify_texture(gsd_um, scheme = "usda_tt", method = "rules", normalize = "fine_earth")
+  from_mm <- classify_texture(gsd_mm, scheme = "usda", method = "rules", normalize = "fine_earth")
+  from_um <- classify_texture(gsd_um, scheme = "usda", method = "rules", normalize = "fine_earth")
 
   expect_equal(from_um$sand, from_mm$sand, tolerance = 1e-8)
   expect_equal(from_um$silt, from_mm$silt, tolerance = 1e-8)
@@ -237,7 +237,7 @@ test_that("USDA public path does not call soiltexture or return modifier subclas
 
   result <- classify_texture(
     data.frame(sand = c(90, 82, 60), silt = c(5, 8, 30), clay = c(5, 10, 10)),
-    scheme = "usda_tt",
+    scheme = "usda",
     method = "rules"
   )
   deferred <- c(

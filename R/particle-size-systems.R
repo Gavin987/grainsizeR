@@ -23,7 +23,7 @@ particle_size_systems <- function() {
   system_id <- c(
     "wentworth_major",
     "gradistat",
-    "usda_tt",
+    "usda",
     "isss",
     "uk_ssew",
     "hypres",

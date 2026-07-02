@@ -78,8 +78,8 @@ test_that("plot_texture_ternary matches texture ternary plotting behavior", {
   )
 
   expect_same_plot_contract(
-    suppressWarnings(plot_texture_ternary(usda_gs, scheme = "usda_tt")),
-    suppressWarnings(plot_texture_triangle(usda_gs, scheme = "usda_tt"))
+    suppressWarnings(plot_texture_ternary(usda_gs, scheme = "usda")),
+    suppressWarnings(plot_texture_triangle(usda_gs, scheme = "usda"))
   )
 
   expect_same_plot_contract(
@@ -94,5 +94,5 @@ test_that("existing compatibility aliases still work", {
 
   expect_equal(gs_percentile(gsd, probs = c(10, 50)), gs_d_values(gsd, probs = c(10, 50)))
   expect_equal(gs_folkward(wn2), gs_folk_ward(wn2))
-  expect_s3_class(suppressWarnings(plot_trigon(alias_test_fine_gsd(), scheme = "usda_tt")), "ggplot")
+  expect_s3_class(suppressWarnings(plot_trigon(alias_test_fine_gsd(), scheme = "usda")), "ggplot")
 })

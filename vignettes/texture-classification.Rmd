@@ -44,7 +44,7 @@ wide_gs <- read_gsd(wide_file, format = "wide")
 
 ## USDA Major Texture Classification
 
-Use `scheme = "usda_tt"` and `method = "rules"` for the validated USDA
+Use `scheme = "usda"` and `method = "rules"` for the validated USDA
 major-class workflow.
 
 ```{r}
@@ -55,7 +55,7 @@ samples <- data.frame(
   clay = c(5, 20, 60)
 )
 
-classify_texture(samples, scheme = "usda_tt", method = "rules")
+classify_texture(samples, scheme = "usda", method = "rules")
 ```
 
 USDA texture ternary plotting is available through `plot_texture_ternary()`.
@@ -72,7 +72,7 @@ the corresponding triangle sides.
 ```{r}
 usda_fractions <- suppressWarnings(gs_fractions_wide(
   long_gs,
-  scheme = "usda_tt",
+  scheme = "usda",
   normalize = "fine_earth",
   extrapolate = "warn_linear"
 ))
@@ -90,9 +90,9 @@ usda_example <- usda_example[
     abs(rowSums(usda_example[usda_components]) - 100) < 1e-6,
 ]
 
-head(classify_texture(usda_example, scheme = "usda_tt", method = "rules"))
+head(classify_texture(usda_example, scheme = "usda", method = "rules"))
 
-plot_texture_ternary(usda_example, scheme = "usda_tt", labels = FALSE)
+plot_texture_ternary(usda_example, scheme = "usda", labels = FALSE)
 ```
 
 Input percentages must be numeric, finite, between 0 and 100, and sum to
@@ -105,15 +105,15 @@ for USDA rules. They are interpreted as `left = sand`, `right = silt`, and
 
 ## Method Selection
 
-`method = "auto"` chooses the USDA rule path when `scheme = "usda_tt"` and no
+`method = "auto"` chooses the USDA rule path when `scheme = "usda"` and no
 texture polygons are supplied. It also chooses GRADISTAT rules when
 `scheme = "gradistat"` and no texture polygons are supplied.
 
 ```{r}
-classify_texture(samples, scheme = "usda_tt", method = "auto")
+classify_texture(samples, scheme = "usda", method = "auto")
 ```
 
-`method = "rules"` supports `scheme = "usda_tt"` and `scheme = "gradistat"`.
+`method = "rules"` supports `scheme = "usda"` and `scheme = "gradistat"`.
 Other schemes require user-supplied polygons because grainsizeR does not bundle
 built-in texture polygon datasets yet.
 

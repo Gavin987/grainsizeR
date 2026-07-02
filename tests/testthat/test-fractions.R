@@ -6,7 +6,7 @@ test_that("gs_fraction_schemes lists built-in schemes and components", {
     "gravel_sand_mud",
     "wentworth_detailed",
     "gradistat",
-    "usda_tt",
+    "usda",
     "isss",
     "uk_ssew",
     "hypres",
@@ -52,7 +52,7 @@ test_that("gs_fraction_schemes lists built-in schemes and components", {
     )
   )
 
-  soil_schemes <- c("usda_tt", "isss", "uk_ssew", "hypres", "germany_63", "australia_20", "sweden_60")
+  soil_schemes <- c("usda", "isss", "uk_ssew", "hypres", "germany_63", "australia_20", "sweden_60")
   for (scheme in soil_schemes) {
     expect_equal(
       schemes$component[schemes$scheme == scheme],
@@ -182,6 +182,26 @@ test_that("gs_fractions rejects invalid schemes clearly", {
   )
 })
 
+test_that("gs_fractions rejects pre-release USDA texture triangle scheme name", {
+  gsd <- as_gsd_tbl(
+    ragged_input_phase2,
+    sample_id,
+    size_mm,
+    retained_proportion
+  )
+
+  expect_error(
+    gs_fractions(gsd, scheme = "usda_tt"),
+    'scheme = "usda_tt"',
+    fixed = TRUE
+  )
+  expect_error(
+    gs_fractions_wide(gsd, scheme = "usda_tt"),
+    'scheme = "usda_tt"',
+    fixed = TRUE
+  )
+})
+
 test_that("gs_fractions rejects fine-earth normalization without a gravel component", {
   gsd <- as_gsd_tbl(
     ragged_input_phase2,
@@ -225,7 +245,7 @@ test_that("gs_fractions supports new schemes on real example data", {
     value_type = "proportion"
   )
 
-  usda <- suppressWarnings(gs_fractions(gsd, scheme = "usda_tt"))
+  usda <- suppressWarnings(gs_fractions(gsd, scheme = "usda"))
   hypres <- suppressWarnings(gs_fractions(gsd, scheme = "hypres"))
   expect_equal(hypres$component, usda$component)
   expect_equal(hypres$lower_um, usda$lower_um)
@@ -254,7 +274,7 @@ test_that("gs_fractions uses normalized units for G2Sd-style micrometre input", 
   gsd_um <- as_gsd_tbl(long_um, sample_id, size, retained_percent, size_unit = "auto", value_type = "percent")
   gsd_mm <- as_gsd_tbl(long_mm, sample_id, size, retained_percent, size_unit = "auto", value_type = "percent")
 
-  for (scheme in c("gravel_sand_mud", "wentworth_major", "wentworth_detailed", "gradistat", "usda_tt", "isss", "uk_ssew")) {
+  for (scheme in c("gravel_sand_mud", "wentworth_major", "wentworth_detailed", "gradistat", "usda", "isss", "uk_ssew")) {
     um_fractions <- suppressWarnings(gs_fractions(gsd_um, scheme = scheme))
     mm_fractions <- suppressWarnings(gs_fractions(gsd_mm, scheme = scheme))
 

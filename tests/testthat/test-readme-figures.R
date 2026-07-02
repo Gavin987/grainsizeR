@@ -103,7 +103,7 @@ test_that("bundled examples support README ternary plot workflows", {
   long <- read_gsd(readme_example_path("grain.long.csv"))
 
   gsm <- suppressWarnings(gs_fractions(wide, scheme = "gravel_sand_mud"))
-  usda <- suppressWarnings(gs_fractions_wide(long, scheme = "usda_tt", normalize = "fine_earth", extrapolate = "warn_linear"))
+  usda <- suppressWarnings(gs_fractions_wide(long, scheme = "usda", normalize = "fine_earth", extrapolate = "warn_linear"))
 
   expect_s3_class(
     plot_texture_ternary(
@@ -115,7 +115,7 @@ test_that("bundled examples support README ternary plot workflows", {
     ),
     "ggplot"
   )
-  expect_s3_class(plot_texture_ternary(usda, scheme = "usda_tt", labels = FALSE), "ggplot")
+  expect_s3_class(plot_texture_ternary(usda, scheme = "usda", labels = FALSE), "ggplot")
 })
 
 test_that("README examples do not call gs_fw57 on open-tail long data by default", {

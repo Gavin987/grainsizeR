@@ -47,7 +47,7 @@ wide_gsm <- suppressWarnings(gs_fractions(wide, scheme = "gravel_sand_mud"))
 
 long_usda_fractions <- suppressWarnings(gs_fractions_wide(
   long,
-  scheme = "usda_tt",
+  scheme = "usda",
   normalize = "fine_earth",
   unresolved = "warn_na",
   extrapolate = "warn_linear"
@@ -98,7 +98,7 @@ save_readme_plot(
 save_readme_plot(
   plot_texture_ternary(
     usda_points,
-    scheme = "usda_tt",
+    scheme = "usda",
     point_id = "sample_id",
     show_sample_labels = FALSE,
     class_label_size = 2.1

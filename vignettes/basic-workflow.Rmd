@@ -90,7 +90,7 @@ head(gs_diagnostics(gs_wide, output = "summary"))
 head(gs_diagnostics(
   gs,
   d_values = c(5, 10, 50, 90, 95),
-  fraction_schemes = c("wentworth_major", "usda_tt", "uk_ssew")
+  fraction_schemes = c("wentworth_major", "usda", "uk_ssew")
 ))
 ```
 

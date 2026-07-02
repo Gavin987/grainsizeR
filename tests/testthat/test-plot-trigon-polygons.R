@@ -25,6 +25,11 @@ test_that("plot_trigon rejects unsupported built-in schemes early", {
     plot_trigon(gsd, scheme = "hypres"),
     "`scheme` must be one of"
   )
+  expect_error(
+    plot_trigon(gsd, scheme = "usda_tt"),
+    'scheme = "usda_tt"',
+    fixed = TRUE
+  )
 })
 
 test_that("plot_trigon draws user-supplied polygon overlays", {

@@ -35,7 +35,7 @@ gs_fraction_schemes <- function() {
       component_type = rep("detailed", 15)
     ),
     fraction_rows_from_system(systems, "gradistat"),
-    fraction_rows_from_system(systems, "usda_tt"),
+    fraction_rows_from_system(systems, "usda"),
     fraction_rows_from_system(systems, "isss"),
     fraction_rows_from_system(systems, "uk_ssew"),
     fraction_rows_from_system(systems, "hypres"),
@@ -119,7 +119,7 @@ fraction_scheme_label <- function(scheme) {
     gravel_sand_mud = "Gravel-sand-mud",
     wentworth_detailed = "Wentworth detailed",
     gradistat = "GRADISTAT",
-    usda_tt = "USDA texture triangle",
+    usda = "USDA texture triangle",
     isss = "International Society of Soil Science",
     uk_ssew = "UK SSEW",
     hypres = "HYPRES",

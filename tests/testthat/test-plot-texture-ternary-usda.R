@@ -23,7 +23,7 @@ usda_plot_gsd <- function() {
 }
 
 test_that("USDA ternary plotting draws internal boundaries and class labels", {
-  plot <- suppressWarnings(plot_texture_ternary(usda_plot_gsd(), scheme = "usda_tt", labels = FALSE))
+  plot <- suppressWarnings(plot_texture_ternary(usda_plot_gsd(), scheme = "usda", labels = FALSE))
 
   boundary_rows <- sum(vapply(plot$layers, function(layer) {
     data <- layer$data
@@ -67,7 +67,7 @@ test_that("USDA ternary plotting draws ternary axis labels without Cartesian axe
 
   plot <- plot_texture_ternary(
     samples,
-    scheme = "usda_tt",
+    scheme = "usda",
     point_id = "sample_id",
     show_sample_labels = FALSE
   )
@@ -113,7 +113,7 @@ test_that("USDA ternary plotting accepts sand-silt-clay data frames", {
 
   plot <- plot_texture_ternary(
     samples,
-    scheme = "usda_tt",
+    scheme = "usda",
     point_id = "sample_id",
     show_sample_labels = FALSE
   )
@@ -125,7 +125,7 @@ test_that("USDA ternary plotting accepts sand-silt-clay data frames", {
   }, logical(1))))
 })
 
-test_that("USDA ternary plotting accepts usda as a scheme alias", {
+test_that("USDA ternary plotting accepts usda as the public scheme", {
   samples <- data.frame(
     sample_id = c("sand demo", "loam demo", "clay demo"),
     sand = c(92, 42, 22),
@@ -136,6 +136,26 @@ test_that("USDA ternary plotting accepts usda as a scheme alias", {
   plot <- plot_texture_ternary(samples, scheme = "usda")
 
   expect_s3_class(plot, "ggplot")
+})
+
+test_that("USDA ternary plotting rejects pre-release scheme name", {
+  samples <- data.frame(
+    sample_id = "sand demo",
+    sand = 92,
+    silt = 5,
+    clay = 3
+  )
+
+  expect_error(
+    plot_texture_ternary(samples, scheme = "usda_tt"),
+    'scheme = "usda_tt"',
+    fixed = TRUE
+  )
+  expect_error(
+    plot_texture_triangle(samples, scheme = "usda_tt"),
+    'scheme = "usda_tt"',
+    fixed = TRUE
+  )
 })
 
 test_that("USDA ternary plotting accepts point aesthetics and grouped colors", {
@@ -149,7 +169,7 @@ test_that("USDA ternary plotting accepts point aesthetics and grouped colors", {
 
   plot <- plot_texture_ternary(
     samples,
-    scheme = "usda_tt",
+    scheme = "usda",
     point_size = 2,
     point_color = "black",
     point_alpha = 0.8
@@ -161,13 +181,13 @@ test_that("USDA ternary plotting accepts point aesthetics and grouped colors", {
   expect_equal(point_layer$aes_params$size, 2)
   expect_equal(point_layer$aes_params$alpha, 0.8)
 
-  grouped <- plot_texture_ternary(samples, scheme = "usda_tt", color_by = "season")
+  grouped <- plot_texture_ternary(samples, scheme = "usda", color_by = "season")
   grouped_point <- grouped$layers[[tail(which(vapply(grouped$layers, function(layer) {
     inherits(layer$geom, "GeomPoint") && is.data.frame(layer$data) && "season" %in% names(layer$data)
   }, logical(1))), 1)]]
   expect_true("colour" %in% names(grouped_point$mapping))
   expect_error(
-    plot_texture_ternary(samples, scheme = "usda_tt", color_by = "missing"),
+    plot_texture_ternary(samples, scheme = "usda", color_by = "missing"),
     "`color_by`"
   )
 })

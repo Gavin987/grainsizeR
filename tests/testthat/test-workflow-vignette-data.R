@@ -95,7 +95,7 @@ test_that("documented fraction workflows run", {
   gs_long <- workflow_read_long()
 
   wide_fractions <- gs_fractions_wide(gs_wide, scheme = "wentworth_major")
-  long_fractions <- suppressWarnings(gs_fractions_wide(gs_long, scheme = "usda_tt"))
+  long_fractions <- suppressWarnings(gs_fractions_wide(gs_long, scheme = "usda"))
 
   expect_s3_class(wide_fractions, "data.frame")
   expect_s3_class(long_fractions, "data.frame")
@@ -132,7 +132,7 @@ test_that("workflow examples do not create files", {
   invisible(gs_diagnostics(gs_wide, output = "summary"))
   invisible(gs_diagnostics(gs_long, output = "summary"))
   invisible(gs_fractions_wide(gs_wide, scheme = "wentworth_major"))
-  invisible(suppressWarnings(gs_fractions_wide(gs_long, scheme = "usda_tt")))
+  invisible(suppressWarnings(gs_fractions_wide(gs_long, scheme = "usda")))
 
   after <- list.files(tempdir(), all.files = TRUE, no.. = TRUE)
   expect_setequal(before, after)
@@ -190,8 +190,8 @@ test_that("synthetic pipette-like and laser-like wide retained-bin tables can be
     value_type = "percent"
   )
 
-  pipette_diag <- gs_diagnostics(pipette, thresholds_um = c(2, 20, 50, 63), fraction_schemes = "usda_tt")
-  laser_diag <- gs_diagnostics(laser, thresholds_um = c(2, 20, 50, 63), fraction_schemes = "usda_tt")
+  pipette_diag <- gs_diagnostics(pipette, thresholds_um = c(2, 20, 50, 63), fraction_schemes = "usda")
+  laser_diag <- gs_diagnostics(laser, thresholds_um = c(2, 20, 50, 63), fraction_schemes = "usda")
 
   expect_true(is_gsd_tbl(pipette))
   expect_true(is_gsd_tbl(laser))

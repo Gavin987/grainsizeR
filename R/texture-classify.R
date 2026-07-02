@@ -1,11 +1,11 @@
 built_in_fraction_scheme <- function(scheme, components) {
-  built_in <- c("gradistat", "usda_tt", "isss", "uk_ssew", "wentworth_major")
+  built_in <- c("gradistat", "usda", "isss", "uk_ssew", "wentworth_major")
   if (scheme %in% built_in) {
     return(scheme)
   }
 
   if (setequal(components, c("sand", "silt", "clay"))) {
-    return("usda_tt")
+    return("usda")
   }
 
   stop(
@@ -149,7 +149,7 @@ usda_texture_percentages <- function(x,
   if (is_gsd_tbl(x)) {
     fractions <- gs_fractions_wide(
       x,
-      scheme = "usda_tt",
+      scheme = "usda",
       normalize = normalize,
       interpolation_scale = interpolation_scale,
       unresolved = unresolved,
@@ -240,10 +240,9 @@ gradistat_texture_percentages <- function(x,
 #'
 #' `classify_texture()` classifies samples with either the validated internal
 #' USDA 12-class major texture rules or user-supplied texture polygon vertices.
-#' USDA rule classification is available with `scheme = "usda"` or
-#' `scheme = "usda_tt"` and `method = "rules"` or `method = "auto"`. The USDA
-#' path uses sand, silt, and clay percentages and covers only the 12 major USDA
-#' texture ternary classes.
+#' USDA rule classification is available with `scheme = "usda"` and
+#' `method = "rules"` or `method = "auto"`. The USDA path uses sand, silt, and
+#' clay percentages and covers only the 12 major USDA texture ternary classes.
 #' GRADISTAT-style rule classification is available with `scheme = "gradistat"`
 #' and `method = "rules"` or `method = "auto"`. It supports
 #' `basis = "gravel_sand_mud"` for physical sediment textural groups and
@@ -275,17 +274,17 @@ gradistat_texture_percentages <- function(x,
 #'   `top = clay`. For polygon classification, `x` must be a `gsd_tbl`.
 #' @param polygons User-supplied texture polygon data. This legacy positional
 #'   argument is equivalent to `texture_polygons`.
-#' @param scheme Texture classification scheme. Use `"usda"` or `"usda_tt"`
-#'   with `method = "rules"` or `method = "auto"` for USDA major texture rules.
+#' @param scheme Texture classification scheme. Use `"usda"` with
+#'   `method = "rules"` or `method = "auto"` for USDA major texture rules.
 #'   Use `"gradistat"` with `method = "rules"` or `method = "auto"` for
 #'   GRADISTAT-style rule classification. Other non-USDA schemes require
 #'   user-supplied polygons because no built-in texture polygon datasets are
 #'   bundled.
 #' @param method Classification method. `"auto"` uses USDA rules when
-#'   `scheme = "usda"` or `scheme = "usda_tt"`, or GRADISTAT rules when
-#'   `scheme = "gradistat"` and no polygons are supplied, and polygon
-#'   classification when polygons are supplied. `"rules"` selects a supported
-#'   rule classifier. `"polygon"` selects user-supplied polygon classification.
+#'   `scheme = "usda"`, or GRADISTAT rules when `scheme = "gradistat"` and no
+#'   polygons are supplied, and polygon classification when polygons are
+#'   supplied. `"rules"` selects a supported rule classifier. `"polygon"`
+#'   selects user-supplied polygon classification.
 #' @param texture_polygons User-supplied texture polygon data.
 #' @param basis Rule-classification basis. For `scheme = "gradistat"`, use
 #'   `"gravel_sand_mud"` with `gravel`, `sand`, and `mud` columns, or
@@ -328,8 +327,8 @@ gradistat_texture_percentages <- function(x,
 #'   clay = c(5, 20, 60)
 #' )
 #'
-#' classify_texture(samples, scheme = "usda_tt", method = "rules")
-#' classify_texture(samples, scheme = "usda_tt", method = "auto")
+#' classify_texture(samples, scheme = "usda", method = "rules")
+#' classify_texture(samples, scheme = "usda", method = "auto")
 #'
 #' gsm <- data.frame(
 #'   sample_id = c("A", "B", "C"),
@@ -436,7 +435,7 @@ classify_texture <- function(x,
   if (method == "auto") {
     method <- if (has_polygons) {
       "polygon"
-    } else if (identical(scheme, "usda_tt") || identical(scheme, "gradistat")) {
+    } else if (identical(scheme, "usda") || identical(scheme, "gradistat")) {
       "rules"
     } else {
       "polygon"
@@ -445,7 +444,7 @@ classify_texture <- function(x,
 
   if (method == "rules") {
     scheme <- .validate_texture_rule_scheme(scheme)
-    if (identical(scheme, "usda_tt")) {
+    if (identical(scheme, "usda")) {
       return(classify_usda_texture_rules(
         x = x,
         normalize = normalize,
@@ -472,13 +471,13 @@ classify_texture <- function(x,
       }
       return(result)
     }
-    stop("Rule-based texture classification is currently available only for schemes `usda_tt` and `gradistat`.", call. = FALSE)
+    stop("Rule-based texture classification is currently available only for schemes `usda` and `gradistat`.", call. = FALSE)
   }
 
   if (!has_polygons) {
     stop(
       "No built-in texture polygon dataset is bundled for scheme `", scheme,
-      "`. Supply `texture_polygons` or use `scheme = \"usda_tt\"` or `scheme = \"gradistat\"` with `method = \"rules\"`.",
+      "`. Supply `texture_polygons` or use `scheme = \"usda\"` or `scheme = \"gradistat\"` with `method = \"rules\"`.",
       call. = FALSE
     )
   }

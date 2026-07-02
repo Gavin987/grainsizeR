@@ -139,7 +139,7 @@ modes_one_sample <- function(sample_data, n_modes) {
 #'
 #' @return A tibble with exactly `n_modes` rows per sample and modal class
 #'   descriptors. Samples with fewer observed modal classes are padded with
-#'   `NA` descriptor fields and `mode_status = "not_observed"`.
+#'   `NA` descriptor fields and `mode_status = "unresolved"`.
 #' @export
 #'
 #' @examples

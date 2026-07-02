@@ -27,7 +27,7 @@ test_that("USDA rule classification returns documented columns and preserves inp
     stringsAsFactors = FALSE
   )
 
-  result <- classify_texture(samples, scheme = "usda_tt", method = "rules")
+  result <- classify_texture(samples, scheme = "usda", method = "rules")
 
   expect_equal(result$sample_id, samples$sample_id)
   expect_equal(result$site, samples$site)
@@ -42,7 +42,7 @@ test_that("USDA rule classification returns documented columns and preserves inp
   expect_equal(result$rule_status, rep("classified", nrow(samples)))
 })
 
-test_that("USDA scheme alias returns canonical texture class columns", {
+test_that("USDA public scheme returns canonical texture class columns", {
   samples <- data.frame(
     sand = c(85, 40, 20),
     silt = c(10, 40, 20),
@@ -53,6 +53,20 @@ test_that("USDA scheme alias returns canonical texture class columns", {
 
   expect_true(all(c("texture_class_id", "texture_class") %in% names(result)))
   expect_equal(result$classification_method, rep("usda_major_rules", nrow(samples)))
+})
+
+test_that("USDA texture classification rejects pre-release scheme name", {
+  samples <- data.frame(
+    sand = 85,
+    silt = 10,
+    clay = 5
+  )
+
+  expect_error(
+    classify_texture(samples, scheme = "usda_tt", method = "rules"),
+    'scheme = "usda_tt"',
+    fixed = TRUE
+  )
 })
 
 test_that("GRADISTAT rule classification returns canonical texture class columns", {
@@ -91,7 +105,7 @@ test_that("USDA class IDs and labels remain stable and readable", {
     "sandy clay", "silty clay", "clay"
   )
 
-  result <- classify_texture(samples, scheme = "usda_tt", method = "rules")
+  result <- classify_texture(samples, scheme = "usda", method = "rules")
 
   expect_equal(result$texture_class_id, expected_ids)
   expect_equal(result$texture_class, expected_labels)
@@ -102,7 +116,7 @@ test_that("USDA rules reject invalid sums without silent normalization", {
   expect_error(
     classify_texture(
       data.frame(sand = 85, silt = 10, clay = 4),
-      scheme = "usda_tt",
+      scheme = "usda",
       method = "rules"
     ),
     "sum to approximately 100"
@@ -116,8 +130,8 @@ test_that("method dispatch is explicit and stable", {
     clay = c(5, 20, 60)
   )
 
-  rules <- classify_texture(samples, scheme = "usda_tt", method = "rules")
-  auto <- classify_texture(samples, scheme = "usda_tt", method = "auto")
+  rules <- classify_texture(samples, scheme = "usda", method = "rules")
+  auto <- classify_texture(samples, scheme = "usda", method = "auto")
 
   expect_equal(auto$texture_class_id, rules$texture_class_id)
   expect_equal(auto$classification_method, rules$classification_method)
@@ -126,7 +140,7 @@ test_that("method dispatch is explicit and stable", {
     "`scheme` must be one of"
   )
   expect_error(
-    classify_texture(samples, scheme = "usda_tt", method = "polygon"),
+    classify_texture(samples, scheme = "usda", method = "polygon"),
     "No built-in texture polygon dataset is bundled"
   )
 })
@@ -179,7 +193,7 @@ test_that("USDA public API adds no runtime data object or soiltexture calls", {
 test_that("USDA rule output does not include sand-size modifier subclasses", {
   result <- classify_texture(
     data.frame(sand = c(85, 60), silt = c(10, 30), clay = c(5, 10)),
-    scheme = "usda_tt",
+    scheme = "usda",
     method = "rules"
   )
   deferred <- c(

@@ -125,7 +125,7 @@ sand-size modifier subclasses remain future work.
 ```{r}
 usda_fractions <- suppressWarnings(gs_fractions_wide(
   gs,
-  scheme = "usda_tt",
+  scheme = "usda",
   normalize = "fine_earth",
   extrapolate = "warn_linear"
 ))
@@ -143,7 +143,7 @@ usda_samples <- usda_samples[
     abs(rowSums(usda_samples[usda_components]) - 100) < 1e-6,
 ]
 
-head(classify_texture(usda_samples, scheme = "usda_tt", method = "rules"))
+head(classify_texture(usda_samples, scheme = "usda", method = "rules"))
 ```
 
 GRADISTAT texture classification supports the gravel-sand-mud and sand-silt-clay

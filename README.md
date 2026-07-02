@@ -67,9 +67,9 @@ plots <- lapply(samples, function(id) {
 })
 ```
 
-<img src="man/figures/readme-wide-distribution.png" width="49%" />
+<img src="man/figures/readme-wide-distribution.png" width="45%" />
 
-<img src="man/figures/readme-wide-cumulative.png" width="49%" />
+<img src="man/figures/readme-wide-cumulative.png" width="45%" />
 
 ## Fraction Summaries
 
@@ -102,10 +102,10 @@ texture classes.
 
 ``` r
 gradistat_components <- gs_fractions(wide, scheme = "gravel_sand_mud")
-usda_components <- gs_fractions_wide(long, scheme = "usda_tt", normalize = "fine_earth")
+usda_components <- gs_fractions_wide(long, scheme = "usda", normalize = "fine_earth")
 
 plot_texture_ternary(gradistat_components, scheme = "gradistat")
-plot_texture_ternary(usda_components, scheme = "usda_tt", show_sample_labels = TRUE)
+plot_texture_ternary(usda_components, scheme = "usda", show_sample_labels = TRUE)
 ```
 
 <img src="man/figures/readme-gradistat-ternary.png" width="47%" /><img src="man/figures/readme-usda-ternary.png" width="51%" />
@@ -146,8 +146,8 @@ gs_parameters(
 plot_distribution(long, sample = "S01", cumulative = TRUE)
 plot_cumulative(long, sample = "S01", extrapolate = "warn_linear")
 plot_fractions(long, scheme = "wentworth_major")
-usda_components <- gs_fractions_wide(long, scheme = "usda_tt", normalize = "fine_earth")
-plot_texture_ternary(usda_components, scheme = "usda_tt")
+usda_components <- gs_fractions_wide(long, scheme = "usda", normalize = "fine_earth")
+plot_texture_ternary(usda_components, scheme = "usda")
 ```
 
 `plot_texture_ternary()` is preferred in new code;

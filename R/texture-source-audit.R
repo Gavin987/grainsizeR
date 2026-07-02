@@ -1,7 +1,7 @@
 texture_source_audit_rows <- function() {
   tibble::tibble(
     scheme = c(
-      "usda_tt",
+      "usda",
       "hypres",
       "isss",
       "uk_ssew",
@@ -61,7 +61,7 @@ texture_source_audit_rows <- function() {
       "field_soil_description"
     ),
     particle_size_system = c(
-      "usda_tt",
+      "usda",
       "hypres",
       "isss",
       "uk_ssew",

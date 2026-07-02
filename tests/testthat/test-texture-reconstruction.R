@@ -50,7 +50,7 @@ test_that("texture_polygon_reconstruction_template returns empty detailed schema
   expect_equal(nrow(template), 0)
   expect_true(all(c("left", "right", "top") %in% names(template)))
   expect_true(all(c("source_id", "implementation_status", "validation_status") %in% names(template)))
-  expect_false(any(c("usda_tt", "hypres", "isss", "uk_ssew") %in% template$scheme))
+  expect_false(any(c("usda", "hypres", "isss", "uk_ssew") %in% template$scheme))
 })
 
 test_that("empty reconstruction table converts to empty compact polygon table", {

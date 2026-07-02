@@ -103,20 +103,20 @@ test_that("open fine tails and unresolved fine-end calculations are reported", {
     dry,
     d_values = c(5, 50),
     thresholds_um = c(2, 63),
-    fraction_schemes = c("wentworth_major", "usda_tt")
+    fraction_schemes = c("wentworth_major", "usda")
   )
 
   expect_true(any(diag$check == "open_fine_tail" & diag$status == "info"))
   expect_true(any(diag$check == "d_value_resolvable" & diag$parameter == "D5" & diag$status == "warning"))
   expect_true(any(diag$check == "threshold_resolvable" & diag$parameter == "2 um" & diag$status == "warning"))
-  expect_true(any(diag$check == "fraction_scheme_resolvable" & diag$parameter == "usda_tt" & diag$status == "ok"))
+  expect_true(any(diag$check == "fraction_scheme_resolvable" & diag$parameter == "usda" & diag$status == "ok"))
 })
 
 test_that("diagnostics do not silently extrapolate by default", {
   dry <- diagnostics_dry_sieve()
 
-  diag_error <- gs_diagnostics(dry, d_values = 5, thresholds_um = 2, fraction_schemes = "usda_tt")
-  diag_warn <- gs_diagnostics(dry, d_values = 5, thresholds_um = 2, fraction_schemes = "usda_tt", extrapolate = "warn_linear")
+  diag_error <- gs_diagnostics(dry, d_values = 5, thresholds_um = 2, fraction_schemes = "usda")
+  diag_warn <- gs_diagnostics(dry, d_values = 5, thresholds_um = 2, fraction_schemes = "usda", extrapolate = "warn_linear")
 
   expect_true(any(diag_error$status == "warning"))
   expect_true(any(diag_warn$check == "threshold_resolvable" & diag_warn$status == "warning" & diag_warn$severity == "low"))

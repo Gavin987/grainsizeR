@@ -12,7 +12,7 @@
 - Added GRADISTAT-style texture classification, sediment-name composition, and
   gravel-sand-mud and sand-silt-clay no-gravel ternary plots.
 - Added USDA 12-class major texture classification through
-  `classify_texture(..., scheme = "usda_tt", method = "rules")` and USDA
+  `classify_texture(..., scheme = "usda", method = "rules")` and USDA
   ternary plotting without depending on external texture plotting packages.
 - Added user-supplied texture polygon validation and classification workflows;
   built-in official texture polygon datasets are not bundled yet.
@@ -34,6 +34,9 @@
   `texture_class` for all `classify_texture()` methods, clarifying
   `plot_texture_ternary()` / `plot_texture_triangle()` alias roles, and making
   scheme validation errors more consistent.
+- Renamed USDA texture triangle workflows to the single public scheme name
+  `usda`; the pre-release `usda_tt` name has been removed before v0.1.0, and
+  related documentation follow-ups were corrected.
 - Refined GRADISTAT and USDA ternary plot guides, labels, boundaries, and README
   showcase figures; README PNG outputs are standardized to 1000 px wide.
 - Prepared GitHub pre-release documentation and repository templates, including

@@ -9,7 +9,7 @@ trigon_components <- function(scheme, components) {
   switch(
     scheme,
     gradistat = c("sand", "silt", "clay"),
-    usda_tt = c("sand", "silt", "clay"),
+    usda = c("sand", "silt", "clay"),
     isss = c("sand", "silt", "clay"),
     uk_ssew = c("sand", "silt", "clay")
   )
@@ -195,7 +195,7 @@ plot_trigon <- function(x,
     stop("No samples have fully resolved ternary components to plot.", call. = FALSE)
   }
 
-  guides <- if (identical(scheme, "usda_tt")) {
+  guides <- if (identical(scheme, "usda")) {
     .usda_ternary_axis_guides()
   } else {
     .ternary_axis_guides(
@@ -206,7 +206,7 @@ plot_trigon <- function(x,
   }
   p <- .ternary_base_plot(guides)
 
-  if (is.null(polygons) && identical(scheme, "usda_tt")) {
+  if (is.null(polygons) && identical(scheme, "usda")) {
     if (show_boundaries) {
       p <- p + ggplot2::geom_segment(
         data = usda_ternary_boundary_segments(),
@@ -303,16 +303,16 @@ plot_trigon <- function(x,
 #' arbitrary spelling, punctuation, or suffix variants are not interpreted.
 #' Raw `gsd_tbl` input is not plotted directly for GRADISTAT ternary diagrams.
 #'
-#' For `scheme = "usda_tt"` and data-frame inputs, the function accepts
+#' For `scheme = "usda"` and data-frame inputs, the function accepts
 #' summarized `sand`, `silt`, and `clay` percentage columns and draws USDA
 #' major-class boundaries. Legacy raw-`gsd_tbl` plotting for older trigon
 #' schemes remains available through `plot_trigon()`.
 #'
 #' @inheritParams plot_trigon
 #' @param scheme Texture ternary plotting system. Use `"gradistat"` for
-#'   GRADISTAT ternary diagrams or `"usda"` / `"usda_tt"` for USDA major-class
-#'   ternary diagrams. Legacy raw-`gsd_tbl` schemes such as `"isss"` and
-#'   `"uk_ssew"` remain available through `plot_trigon()`.
+#'   GRADISTAT ternary diagrams or `"usda"` for USDA major-class ternary
+#'   diagrams. Legacy raw-`gsd_tbl` schemes such as `"isss"` and `"uk_ssew"`
+#'   remain available through `plot_trigon()`.
 #' @param basis GRADISTAT ternary plotting basis. Supported values are
 #'   `"gravel_sand_mud"` and `"sand_silt_clay_no_gravel"`.
 #' @param point_id Optional column name used for point labels in GRADISTAT
@@ -367,33 +367,33 @@ plot_trigon <- function(x,
 #' )
 plot_texture_ternary <- function(x,
                                  scheme = "gradistat",
-                                  components = NULL,
-                                  normalize = "none",
-                                  sample_id = NULL,
-                                  labels = FALSE,
-                                  polygons = NULL,
-                                  show_polygons = TRUE,
-                                  show_polygon_labels = TRUE,
-                                  polygon_alpha = 0.15,
-                                  classify = FALSE,
-                                  basis = c("gravel_sand_mud", "sand_silt_clay_no_gravel"),
-                                  point_id = NULL,
-                                  show_boundaries = TRUE,
-                                  show_classes = TRUE,
-                                  show_class_labels = show_classes,
-                                  show_sample_labels = labels,
-                                  sample_label_size = 3,
-                                  class_label_size = 2.5,
-                                  point_size = 1.8,
-                                  point_color = "black",
-                                  point_alpha = 0.8,
-                                  color_by = NULL,
-                                  label_style = c("inside", "callout", "none")) {
+                                 components = NULL,
+                                 normalize = "none",
+                                 sample_id = NULL,
+                                 labels = FALSE,
+                                 polygons = NULL,
+                                 show_polygons = TRUE,
+                                 show_polygon_labels = TRUE,
+                                 polygon_alpha = 0.15,
+                                 classify = FALSE,
+                                 basis = c("gravel_sand_mud", "sand_silt_clay_no_gravel"),
+                                 point_id = NULL,
+                                 show_boundaries = TRUE,
+                                 show_classes = TRUE,
+                                 show_class_labels = show_classes,
+                                 show_sample_labels = labels,
+                                 sample_label_size = 3,
+                                 class_label_size = 2.5,
+                                 point_size = 1.8,
+                                 point_color = "black",
+                                 point_alpha = 0.8,
+                                 color_by = NULL,
+                                 label_style = c("inside", "callout", "none")) {
   basis <- match.arg(basis)
   label_style <- match.arg(label_style)
   show_classes <- isTRUE(show_class_labels)
   scheme_value <- if (is.null(polygons)) .validate_texture_ternary_scheme(scheme) else as.character(scheme)[1]
-  if (identical(scheme_value, "usda_tt") && is.data.frame(x) && !is_gsd_tbl(x)) {
+  if (identical(scheme_value, "usda") && is.data.frame(x) && !is_gsd_tbl(x)) {
     return(plot_usda_texture_ternary(
       x = x,
       point_id = point_id,

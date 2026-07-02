@@ -3,6 +3,10 @@
 }
 
 .validate_choice <- function(value, choices, arg) {
+  if (identical(value, "usda_tt") && "usda" %in% choices) {
+    stop('`', arg, ' = "usda_tt"` has been replaced by `', arg, ' = "usda"` before v0.1.0.', call. = FALSE)
+  }
+
   if (!is.character(value) || length(value) != 1 || is.na(value) || !value %in% choices) {
     stop(
       "`", arg, "` must be one of: ",
@@ -23,7 +27,7 @@
 }
 
 .legacy_trigon_scheme_choices <- function() {
-  c("gradistat", "usda_tt", "isss", "uk_ssew")
+  c("gradistat", "usda", "isss", "uk_ssew")
 }
 
 .validate_legacy_trigon_scheme <- function(scheme, arg = "scheme") {
@@ -31,21 +35,19 @@
 }
 
 .texture_rule_scheme_choices <- function() {
-  c("usda", "usda_tt", "gradistat")
+  c("usda", "gradistat")
 }
 
 .validate_texture_rule_scheme <- function(scheme, arg = "scheme") {
-  scheme <- .validate_choice(scheme, .texture_rule_scheme_choices(), arg)
-  if (identical(scheme, "usda")) "usda_tt" else scheme
+  .validate_choice(scheme, .texture_rule_scheme_choices(), arg)
 }
 
 .texture_ternary_scheme_choices <- function() {
-  c("gradistat", "usda", "usda_tt")
+  c("gradistat", "usda")
 }
 
 .validate_texture_ternary_scheme <- function(scheme, arg = "scheme") {
-  scheme <- .validate_choice(scheme, .texture_ternary_scheme_choices(), arg)
-  if (identical(scheme, "usda")) "usda_tt" else scheme
+  .validate_choice(scheme, .texture_ternary_scheme_choices(), arg)
 }
 
 .validate_fraction_normalize_scheme <- function(scheme, normalize) {

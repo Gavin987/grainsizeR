@@ -119,8 +119,8 @@ test_that("full workflow runs on wide example data", {
 
 test_that("updated long example data support USDA ternary plotting", {
   gsd <- read_gsd(example_gsd_path("grain.long.csv"), format = "long")
-  usda <- suppressWarnings(gs_fractions_wide(gsd, scheme = "usda_tt", normalize = "fine_earth"))
+  usda <- suppressWarnings(gs_fractions_wide(gsd, scheme = "usda", normalize = "fine_earth"))
 
   expect_true(all(c("sand_percent", "silt_percent", "clay_percent") %in% names(usda)))
-  expect_s3_class(plot_texture_ternary(usda, scheme = "usda_tt"), "ggplot")
+  expect_s3_class(plot_texture_ternary(usda, scheme = "usda"), "ggplot")
 })

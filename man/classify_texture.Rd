@@ -29,18 +29,18 @@ for USDA rules and are mapped as \code{left = sand}, \code{right = silt}, and
 \item{polygons}{User-supplied texture polygon data. This legacy positional
 argument is equivalent to \code{texture_polygons}.}
 
-\item{scheme}{Texture classification scheme. Use \code{"usda"} or \code{"usda_tt"}
-with \code{method = "rules"} or \code{method = "auto"} for USDA major texture rules.
+\item{scheme}{Texture classification scheme. Use \code{"usda"} with
+\code{method = "rules"} or \code{method = "auto"} for USDA major texture rules.
 Use \code{"gradistat"} with \code{method = "rules"} or \code{method = "auto"} for
 GRADISTAT-style rule classification. Other non-USDA schemes require
 user-supplied polygons because no built-in texture polygon datasets are
 bundled.}
 
 \item{method}{Classification method. \code{"auto"} uses USDA rules when
-\code{scheme = "usda"} or \code{scheme = "usda_tt"}, or GRADISTAT rules when
-\code{scheme = "gradistat"} and no polygons are supplied, and polygon
-classification when polygons are supplied. \code{"rules"} selects a supported
-rule classifier. \code{"polygon"} selects user-supplied polygon classification.}
+\code{scheme = "usda"}, or GRADISTAT rules when \code{scheme = "gradistat"} and no
+polygons are supplied, and polygon classification when polygons are
+supplied. \code{"rules"} selects a supported rule classifier. \code{"polygon"}
+selects user-supplied polygon classification.}
 
 \item{texture_polygons}{User-supplied texture polygon data.}
 
@@ -87,10 +87,9 @@ polygon-specific component, coordinate, and status columns such as \code{left},
 \description{
 \code{classify_texture()} classifies samples with either the validated internal
 USDA 12-class major texture rules or user-supplied texture polygon vertices.
-USDA rule classification is available with \code{scheme = "usda"} or
-\code{scheme = "usda_tt"} and \code{method = "rules"} or \code{method = "auto"}. The USDA
-path uses sand, silt, and clay percentages and covers only the 12 major USDA
-texture ternary classes.
+USDA rule classification is available with \code{scheme = "usda"} and
+\code{method = "rules"} or \code{method = "auto"}. The USDA path uses sand, silt, and
+clay percentages and covers only the 12 major USDA texture ternary classes.
 GRADISTAT-style rule classification is available with \code{scheme = "gradistat"}
 and \code{method = "rules"} or \code{method = "auto"}. It supports
 \code{basis = "gravel_sand_mud"} for physical sediment textural groups and
@@ -124,8 +123,8 @@ samples <- data.frame(
   clay = c(5, 20, 60)
 )
 
-classify_texture(samples, scheme = "usda_tt", method = "rules")
-classify_texture(samples, scheme = "usda_tt", method = "auto")
+classify_texture(samples, scheme = "usda", method = "rules")
+classify_texture(samples, scheme = "usda", method = "auto")
 
 gsm <- data.frame(
   sample_id = c("A", "B", "C"),

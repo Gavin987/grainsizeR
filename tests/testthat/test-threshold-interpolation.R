@@ -64,7 +64,7 @@ test_that("gs_fractions interpolates scheme boundaries when bracketed", {
   sample_a <- gsd[gsd$sample_id == "A", ]
 
   uk <- gs_fractions(sample_a, scheme = "uk_ssew")
-  usda <- gs_fractions(sample_a, scheme = "usda_tt")
+  usda <- gs_fractions(sample_a, scheme = "usda")
   isss <- gs_fractions(sample_a, scheme = "isss")
 
   for (result in list(uk, usda, isss)) {
@@ -84,13 +84,13 @@ test_that("gs_fractions closes open fine tail thresholds without extrapolation",
   )
   sample_b <- gsd[gsd$sample_id == "B", ]
 
-  result <- gs_fractions(sample_b, scheme = "usda_tt", unresolved = "warn_na")
+  result <- gs_fractions(sample_b, scheme = "usda", unresolved = "warn_na")
   expect_equal(result$percent[result$component == "clay"], 0)
   expect_false(is.na(result$percent[result$component == "silt"]))
   expect_false(is.na(result$percent[result$component == "sand"]))
   expect_equal(sum(result$percent), 100, tolerance = 1e-8)
 
-  expect_s3_class(gs_fractions(sample_b, scheme = "usda_tt", unresolved = "error"), "tbl_df")
+  expect_s3_class(gs_fractions(sample_b, scheme = "usda", unresolved = "error"), "tbl_df")
 })
 
 test_that("real example data resolves available arbitrary thresholds and closes fractions", {
@@ -122,7 +122,7 @@ test_that("real example data resolves available arbitrary thresholds and closes 
       !any(result$extrapolated)
   }, logical(1))))
 
-  fractions <- gs_fractions(gsd, scheme = "usda_tt", unresolved = "warn_na")
+  fractions <- gs_fractions(gsd, scheme = "usda", unresolved = "warn_na")
   expect_false(any(is.na(fractions$percent)))
   expect_equal(as.numeric(rowsum(fractions$percent, fractions$sample_id)), rep(100, length(unique(fractions$sample_id))), tolerance = 1e-8)
 

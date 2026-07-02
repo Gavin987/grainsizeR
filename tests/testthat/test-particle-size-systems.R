@@ -23,7 +23,7 @@ test_that("particle_size_systems returns required particle-size metadata", {
   expect_true(all(c(
     "wentworth_major",
     "gradistat",
-    "usda_tt",
+    "usda",
     "isss",
     "uk_ssew",
     "hypres",
@@ -33,7 +33,7 @@ test_that("particle_size_systems returns required particle-size metadata", {
   ) %in% systems$system_id))
   expect_false(any(c("aashto", "uscs") %in% systems$system_id))
 
-  usda <- systems[systems$system_id == "usda_tt", ]
+  usda <- systems[systems$system_id == "usda", ]
   expect_equal(usda$clay_upper_um, 2)
   expect_equal(usda$silt_upper_um, 50)
 
@@ -58,7 +58,7 @@ test_that("texture_polygon_sources lists planned sources without coordinates", {
 
   expect_s3_class(sources, "tbl_df")
   expect_true(all(required_columns %in% names(sources)))
-  expect_true(all(c("usda_tt", "hypres", "isss", "uk_ssew", "gradistat") %in% sources$scheme))
+  expect_true(all(c("usda", "hypres", "isss", "uk_ssew", "gradistat") %in% sources$scheme))
   expect_false(any(c("aashto", "uscs") %in% sources$scheme))
   expect_false(any(c("class_id", "class_name", "vertex_id", "left", "right", "top") %in% names(sources)))
   expect_true(all(sources$polygon_status == "planned"))

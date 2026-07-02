@@ -90,7 +90,7 @@ test_that("exported plotting functions use theme_bw-compatible defaults", {
     plot_cumulative(gsd, sample_id = "A"),
     suppressWarnings(plot_fractions(gsd, scheme = "gravel_sand_mud")),
     plot_texture_triangle(gsm, scheme = "gradistat", basis = "gravel_sand_mud", point_id = "sample_id"),
-    suppressWarnings(plot_trigon(plot_contract_fine_gsd(), scheme = "usda_tt"))
+    suppressWarnings(plot_trigon(plot_contract_fine_gsd(), scheme = "usda"))
   )
 
   for (plot in plots) {
@@ -117,7 +117,7 @@ test_that("fraction plots and texture ternary plots return ggplot objects", {
     "ggplot"
   )
   expect_s3_class(
-    suppressWarnings(plot_texture_triangle(plot_contract_fine_gsd(), scheme = "usda_tt")),
+    suppressWarnings(plot_texture_triangle(plot_contract_fine_gsd(), scheme = "usda")),
     "ggplot"
   )
 })
