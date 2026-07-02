@@ -125,6 +125,31 @@ usda_project_to_triangle <- function(x) {
   x / total * 100
 }
 
+.usda_class_label_text <- function(class_id) {
+  names <- unname(.usda_major_texture_class_names()[class_id])
+  
+  labels <- gsub(" ", "\n", names, fixed = TRUE)
+  
+  one_line_ids <- c(
+    "sandy_loam",
+    "silt_loam",
+    "clay_loam"
+  )
+  
+  one_line <- class_id %in% one_line_ids
+  labels[one_line] <- names[one_line]
+  
+  label_overrides <- c(
+    sandy_clay_loam = "sandy\nclay loam",
+    silty_clay_loam = "silty\nclay loam"
+  )
+  
+  override <- class_id %in% names(label_overrides)
+  labels[override] <- unname(label_overrides[class_id[override]])
+  
+  labels
+}
+
 usda_ternary_label_data <- function() {
   points <- data.frame(
     class_id = c(
@@ -132,16 +157,17 @@ usda_ternary_label_data <- function() {
       "sandy_clay_loam", "clay_loam", "silty_clay_loam",
       "sandy_clay", "silty_clay", "clay"
     ),
-    sand = c(92, 78, 62, 42, 22, 8, 58, 34, 10, 52, 8, 22),
-    silt = c(5, 15, 25, 38, 65, 88, 13, 34, 55, 7, 48, 22),
-    clay = c(3, 7, 13, 20, 13, 4, 29, 32, 35, 41, 44, 56),
+    sand = c(92, 80, 62, 40, 22, 8, 70, 28, 10, 52, 8, 18),
+    silt = c(5, 13, 23, 38, 65, 88, 12, 28, 64, 7, 54, 18),
+    clay = c(3, 5, 11, 18, 11, 4, 32, 28, 38, 41, 54, 65),
     stringsAsFactors = FALSE
   )
+  
   xy <- ternary_to_xy(points$sand, points$silt, points$clay)
-  names <- .usda_major_texture_class_names()
+  
   data.frame(
     class_id = points$class_id,
-    class_label = gsub(" ", "\n", unname(names[points$class_id]), fixed = TRUE),
+    class_label = .usda_class_label_text(points$class_id),
     x = xy$x,
     y = xy$y,
     stringsAsFactors = FALSE
