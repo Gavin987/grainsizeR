@@ -39,11 +39,8 @@ polygon_label_data <- function(poly_data) {
   tibble::as_tibble(out)
 }
 
-fine_resolution_ok <- function(x, sample_id, scheme) {
-  sample_x <- x[x$sample_id == sample_id, ]
+fine_resolution_ok <- function(sample_x, sand_lower) {
   finite_boundaries <- .gsd_size_mm(sample_x)[!sample_x$is_open_lower]
-  components <- scheme_components(scheme)
-  sand_lower <- components$lower_mm[components$component == "sand"][1]
   sum(finite_boundaries < sand_lower) >= 2
 }
 
@@ -165,7 +162,12 @@ plot_trigon <- function(x,
 
     keep <- stats::complete.cases(fractions[required_cols])
     if (is.null(polygons)) {
-      keep <- keep & vapply(fractions$sample_id, fine_resolution_ok, logical(1), x = plot_x, scheme = scheme)
+      plot_x_groups <- split(plot_x, plot_x$sample_id, drop = TRUE)
+      scheme_comp <- scheme_components(scheme)
+      sand_lower <- scheme_comp$lower_mm[scheme_comp$component == "sand"][1]
+      keep <- keep & vapply(fractions$sample_id, function(sample_id) {
+        fine_resolution_ok(plot_x_groups[[sample_id]], sand_lower)
+      }, logical(1))
     }
     fractions <- fractions[keep, ]
     if (nrow(fractions) > 0) {

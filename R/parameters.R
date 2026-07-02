@@ -165,8 +165,9 @@ quality_for_parameters <- function(x,
   }
 
   status_rank <- c(ok = 1L, not_evaluated = 2L, needs_additional_analysis = 3L, warning = 4L)
+  flag_groups <- split(flags, flags$sample_id, drop = TRUE)
   out$quality_overall_status <- vapply(sample_ids, function(sample_id) {
-    one <- flags[flags$sample_id == sample_id, ]
+    one <- flag_groups[[sample_id]]
     one$quality_status[which.max(status_rank[one$quality_status])]
   }, character(1))
 

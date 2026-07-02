@@ -1,5 +1,5 @@
 folkward_one_sample <- function(sample_id, percentiles, interpolation_scale, include_descriptions) {
-  p <- percentiles[percentiles$sample_id == sample_id, ]
+  p <- percentiles[[sample_id]]
   d_um <- stats::setNames(p$grain_size_um, paste0("D", p$percentile, "_um"))
   d_phi <- stats::setNames(p$grain_size_phi, paste0("D", p$percentile, "_phi"))
 
@@ -85,10 +85,11 @@ gs_folk_ward <- function(x,
   )
 
   sample_ids <- unique(percentiles$sample_id)
+  percentile_groups <- split(percentiles, percentiles$sample_id, drop = TRUE)
   out <- lapply(
     sample_ids,
     folkward_one_sample,
-    percentiles = percentiles,
+    percentiles = percentile_groups,
     interpolation_scale = interpolation_scale,
     include_descriptions = include_descriptions
   )

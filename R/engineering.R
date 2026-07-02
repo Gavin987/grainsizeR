@@ -1,7 +1,7 @@
 engineering_one_sample <- function(sample_id, percentiles, fine_content, interpolation_scale, fine_threshold_um) {
-  p <- percentiles[percentiles$sample_id == sample_id, ]
+  p <- percentiles[[sample_id]]
   d <- stats::setNames(p$grain_size_um, paste0("D", p$percentile, "_um"))
-  fine <- fine_content$percent_finer[fine_content$sample_id == sample_id]
+  fine <- fine_content[[sample_id]]$percent_finer
 
   D10 <- d[["D10_um"]]
   D25 <- d[["D25_um"]]
@@ -69,11 +69,13 @@ gs_grain_size_indices <- function(x,
   )
 
   sample_ids <- unique(percentiles$sample_id)
+  percentile_groups <- split(percentiles, percentiles$sample_id, drop = TRUE)
+  fine_content_groups <- split(fine_content, fine_content$sample_id, drop = TRUE)
   out <- lapply(
     sample_ids,
     engineering_one_sample,
-    percentiles = percentiles,
-    fine_content = fine_content,
+    percentiles = percentile_groups,
+    fine_content = fine_content_groups,
     interpolation_scale = interpolation_scale,
     fine_threshold_um = fine_threshold_um
   )

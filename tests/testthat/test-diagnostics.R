@@ -169,3 +169,80 @@ test_that("diagnostics do not create files", {
 
   expect_setequal(before, after)
 })
+
+test_that("batched D-value and threshold diagnostics match one-at-a-time results", {
+  # diagnostics_dry_sieve() has coarse-only resolution, so some requested
+  # D-values/thresholds are resolvable from finite boundaries and others are
+  # not; calling gs_diagnostics() once with the full vector must produce the
+  # same per-value rows as calling it once per value and stacking the results.
+  x <- diagnostics_dry_sieve()
+  d_values <- c(5, 16, 50, 84, 95)
+  thresholds_um <- c(2, 20, 63, 2000)
+
+  batched <- gs_diagnostics(x, d_values = d_values, thresholds_um = thresholds_um, fraction_schemes = "wentworth_major")
+
+  one_at_a_time_d <- do.call(rbind, lapply(d_values, function(d) {
+    gs_diagnostics(x, d_values = d, thresholds_um = numeric(0), fraction_schemes = "wentworth_major")
+  }))
+  one_at_a_time_threshold <- do.call(rbind, lapply(thresholds_um, function(t) {
+    gs_diagnostics(x, d_values = numeric(0), thresholds_um = t, fraction_schemes = "wentworth_major")
+  }))
+
+  batched_d <- batched[batched$check == "d_value_resolvable", ]
+  batched_threshold <- batched[batched$check == "threshold_resolvable", ]
+  expected_d <- one_at_a_time_d[one_at_a_time_d$check == "d_value_resolvable", ]
+  expected_threshold <- one_at_a_time_threshold[one_at_a_time_threshold$check == "threshold_resolvable", ]
+
+  # At least one resolvable and one unresolved value must be present for this
+  # to be a meaningful mixed-outcome equivalence check, not a trivial one.
+  expect_true(any(batched_d$status == "ok"))
+  expect_true(any(batched_d$status == "warning"))
+  expect_true(any(batched_threshold$status == "ok"))
+  expect_true(any(batched_threshold$status == "warning"))
+
+  expect_equal(as.data.frame(batched_d), as.data.frame(expected_d), ignore_attr = TRUE)
+  expect_equal(as.data.frame(batched_threshold), as.data.frame(expected_threshold), ignore_attr = TRUE)
+})
+
+test_that("batched diagnostics under warn_linear match one-at-a-time extrapolated results", {
+  x <- diagnostics_dry_sieve()
+  d_values <- c(5, 50, 95)
+  thresholds_um <- c(2, 63, 2000)
+
+  batched <- gs_diagnostics(
+    x,
+    d_values = d_values,
+    thresholds_um = thresholds_um,
+    fraction_schemes = "wentworth_major",
+    extrapolate = "warn_linear"
+  )
+  one_at_a_time_d <- do.call(rbind, lapply(d_values, function(d) {
+    gs_diagnostics(
+      x,
+      d_values = d,
+      thresholds_um = numeric(0),
+      fraction_schemes = "wentworth_major",
+      extrapolate = "warn_linear"
+    )
+  }))
+  one_at_a_time_threshold <- do.call(rbind, lapply(thresholds_um, function(t) {
+    gs_diagnostics(
+      x,
+      d_values = numeric(0),
+      thresholds_um = t,
+      fraction_schemes = "wentworth_major",
+      extrapolate = "warn_linear"
+    )
+  }))
+
+  batched_d <- batched[batched$check == "d_value_resolvable", ]
+  batched_threshold <- batched[batched$check == "threshold_resolvable", ]
+  expected_d <- one_at_a_time_d[one_at_a_time_d$check == "d_value_resolvable", ]
+  expected_threshold <- one_at_a_time_threshold[one_at_a_time_threshold$check == "threshold_resolvable", ]
+
+  expect_true(any(batched_d$status == "warning" & batched_d$severity == "low"))
+  expect_true(any(batched_threshold$status == "warning" & batched_threshold$severity == "low"))
+
+  expect_equal(as.data.frame(batched_d), as.data.frame(expected_d), ignore_attr = TRUE)
+  expect_equal(as.data.frame(batched_threshold), as.data.frame(expected_threshold), ignore_attr = TRUE)
+})

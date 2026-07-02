@@ -26,15 +26,36 @@ percent_finer_lookup <- function(x, thresholds_mm, interpolation_scale, extrapol
     ))
   }
 
+  split_x <- split(normalized_x, normalized_x$sample_id, drop = TRUE)
+
   rows <- list()
   row_id <- 1
   unresolved_seen <- FALSE
   for (sample_id in sample_ids) {
-    sample_x <- normalized_x[normalized_x$sample_id == sample_id, ]
+    sample_x <- split_x[[sample_id]]
     curve <- gs_cumulative(sample_x)
     finite_mm <- curve$boundary_mm
     min_mm <- min(finite_mm)
     max_mm <- max(finite_mm)
+
+    in_range <- thresholds_mm >= min_mm & thresholds_mm <= max_mm
+    resolved_lookup <- NULL
+    if (any(in_range)) {
+      # One batched call per sample for every in-range threshold, instead of
+      # one call per threshold: `gs_percent_finer()` already vectorizes over
+      # `sizes` and only needs to rebuild the cumulative curve once.
+      resolved_lookup <- tryCatch(
+        gs_percent_finer(
+          sample_x,
+          sizes = thresholds_mm[in_range],
+          size_unit = "mm",
+          interpolation_scale = interpolation_scale,
+          extrapolate = extrapolate
+        ),
+        error = function(err) NULL
+      )
+    }
+
     for (threshold in thresholds_mm) {
       if (threshold < min_mm) {
         rows[[row_id]] <- tibble::tibble(
@@ -52,38 +73,27 @@ percent_finer_lookup <- function(x, thresholds_mm, interpolation_scale, extrapol
           percent_finer = 100,
           resolved = TRUE
         )
-      } else {
-        one <- tryCatch(
-          gs_percent_finer(
-            sample_x,
-            sizes = threshold,
-            size_unit = "mm",
-            interpolation_scale = interpolation_scale,
-            extrapolate = extrapolate
-          ),
-          error = function(err) NULL
-        )
-        if (is.null(one)) {
-          unresolved_seen <- TRUE
-          if (unresolved == "error") {
-            stop("Required fraction thresholds could not be resolved.", call. = FALSE)
-          }
-          rows[[row_id]] <- tibble::tibble(
-            sample_id = sample_id,
-            threshold_mm = threshold,
-            threshold_um = mm_to_um(threshold),
-            percent_finer = NA_real_,
-            resolved = FALSE
-          )
-        } else {
-          rows[[row_id]] <- tibble::tibble(
-            sample_id = sample_id,
-            threshold_mm = one$threshold_mm,
-            threshold_um = one$threshold_um,
-            percent_finer = one$percent_finer,
-            resolved = TRUE
-          )
+      } else if (is.null(resolved_lookup)) {
+        unresolved_seen <- TRUE
+        if (unresolved == "error") {
+          stop("Required fraction thresholds could not be resolved.", call. = FALSE)
         }
+        rows[[row_id]] <- tibble::tibble(
+          sample_id = sample_id,
+          threshold_mm = threshold,
+          threshold_um = mm_to_um(threshold),
+          percent_finer = NA_real_,
+          resolved = FALSE
+        )
+      } else {
+        match_idx <- which(resolved_lookup$threshold_mm == threshold)[1]
+        rows[[row_id]] <- tibble::tibble(
+          sample_id = sample_id,
+          threshold_mm = resolved_lookup$threshold_mm[match_idx],
+          threshold_um = resolved_lookup$threshold_um[match_idx],
+          percent_finer = resolved_lookup$percent_finer[match_idx],
+          resolved = TRUE
+        )
       }
       row_id <- row_id + 1
     }
@@ -101,12 +111,20 @@ percent_finer_lookup <- function(x, thresholds_mm, interpolation_scale, extrapol
   tibble::as_tibble(out)
 }
 
-lookup_threshold <- function(lookup, sample_id, threshold) {
-  row <- lookup[lookup$sample_id == sample_id & lookup$threshold_mm == threshold, ]
-  if (nrow(row) == 0) {
+lookup_by_sample <- function(lookup) {
+  split(lookup, lookup$sample_id, drop = TRUE)
+}
+
+lookup_threshold <- function(lookup_groups, sample_id, threshold) {
+  group <- lookup_groups[[sample_id]]
+  if (is.null(group)) {
     return(list(value = NA_real_, resolved = FALSE))
   }
-  list(value = row$percent_finer[1], resolved = row$resolved[1])
+  match_idx <- which(group$threshold_mm == threshold)[1]
+  if (is.na(match_idx)) {
+    return(list(value = NA_real_, resolved = FALSE))
+  }
+  list(value = group$percent_finer[match_idx], resolved = group$resolved[match_idx])
 }
 
 component_percent <- function(component, lookup, sample_id) {
@@ -235,11 +253,12 @@ gs_fractions <- function(x,
   )
 
   sample_ids <- unique(as.character(x$sample_id))
+  lookup_groups <- lookup_by_sample(lookup)
   out <- lapply(
     sample_ids,
     fractions_one_sample,
     components = components,
-    lookup = lookup,
+    lookup = lookup_groups,
     scheme = scheme,
     normalize = normalize,
     interpolation_scale = interpolation_scale

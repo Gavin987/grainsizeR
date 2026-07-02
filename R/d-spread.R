@@ -1,7 +1,8 @@
 d_spread_values <- function(percentiles, scale) {
   sample_ids <- unique(percentiles$sample_id)
+  percentile_groups <- split(percentiles, percentiles$sample_id, drop = TRUE)
   rows <- lapply(sample_ids, function(sample_id) {
-    one <- percentiles[percentiles$sample_id == sample_id, ]
+    one <- percentile_groups[[sample_id]]
     values <- if (scale == "um") one$grain_size_um else one$grain_size_mm
     names(values) <- paste0("D", one$percentile)
     um_values <- one$grain_size_um

@@ -290,21 +290,27 @@ diagnostic_sample_rows <- function(sample_data, retained_tolerance, fine_boundar
 
 diagnostic_d_value_rows <- function(sample_data, d_values, interpolation_scale, extrapolate) {
   sample_id <- sample_data$sample_id[1]
-  rows <- vector("list", length(d_values))
 
+  # One batched call for every requested D-value instead of one call each.
+  # `extrapolate = "warn_linear"` never throws, so the per-value resolvable
+  # vs. extrapolated vs. unresolved decision below is reconstructed from the
+  # `extrapolated` flag rather than from a caught error; the interpolated
+  # values themselves are identical to calling with `extrapolate = "error"`
+  # for every value that would not have thrown.
+  result <- tryCatch(
+    suppressWarnings(gs_d_values(
+      sample_data,
+      probs = d_values,
+      interpolation_scale = interpolation_scale,
+      extrapolate = "warn_linear"
+    )),
+    error = function(err) err
+  )
+
+  rows <- vector("list", length(d_values))
   for (i in seq_along(d_values)) {
     prob <- d_values[i]
-    result <- tryCatch(
-      suppressWarnings(gs_d_values(
-        sample_data,
-        probs = prob,
-        interpolation_scale = interpolation_scale,
-        extrapolate = extrapolate
-      )),
-      error = function(err) err
-    )
-
-    if (inherits(result, "error")) {
+    if (inherits(result, "error") || (extrapolate == "error" && isTRUE(result$extrapolated[i]))) {
       rows[[i]] <- diagnostic_row(
         sample_id,
         "d_value_resolvable",
@@ -316,13 +322,13 @@ diagnostic_d_value_rows <- function(sample_data, d_values, interpolation_scale, 
         message = "The requested D-value is unresolved under the selected open-tail policy.",
         recommendation = "Provide finer or coarser measurements, or explicitly use extrapolation when it is appropriate and documented."
       )
-    } else if (isTRUE(result$extrapolated[1])) {
+    } else if (isTRUE(result$extrapolated[i])) {
       rows[[i]] <- diagnostic_row(
         sample_id,
         "d_value_resolvable",
         "warning",
         "low",
-        value = result$grain_size_um[1],
+        value = result$grain_size_um[i],
         expected = "finite-boundary interpolation",
         parameter = paste0("D", prob),
         message = "The requested D-value required explicit extrapolation.",
@@ -334,7 +340,7 @@ diagnostic_d_value_rows <- function(sample_data, d_values, interpolation_scale, 
         "d_value_resolvable",
         "ok",
         "none",
-        value = result$grain_size_um[1],
+        value = result$grain_size_um[i],
         expected = "finite-boundary interpolation",
         parameter = paste0("D", prob),
         message = "The requested D-value is resolvable from finite boundaries.",
@@ -348,23 +354,26 @@ diagnostic_d_value_rows <- function(sample_data, d_values, interpolation_scale, 
 
 diagnostic_threshold_rows <- function(sample_data, thresholds_um, interpolation_scale, extrapolate) {
   sample_id <- sample_data$sample_id[1]
-  rows <- vector("list", length(thresholds_um))
 
+  # One batched call for every requested threshold instead of one call each;
+  # see `diagnostic_d_value_rows()` for why `extrapolate = "warn_linear"` here
+  # preserves the per-value resolvable/extrapolated/unresolved outcome.
+  result <- tryCatch(
+    suppressWarnings(gs_percent_finer(
+      sample_data,
+      sizes = thresholds_um,
+      size_unit = "um",
+      interpolation_scale = interpolation_scale,
+      extrapolate = "warn_linear"
+    )),
+    error = function(err) err
+  )
+
+  rows <- vector("list", length(thresholds_um))
   for (i in seq_along(thresholds_um)) {
     threshold <- thresholds_um[i]
-    result <- tryCatch(
-      suppressWarnings(gs_percent_finer(
-        sample_data,
-        sizes = threshold,
-        size_unit = "um",
-        interpolation_scale = interpolation_scale,
-        extrapolate = extrapolate
-      )),
-      error = function(err) err
-    )
-
     parameter <- paste0(threshold, " um")
-    if (inherits(result, "error")) {
+    if (inherits(result, "error") || (extrapolate == "error" && isTRUE(result$extrapolated[i]))) {
       rows[[i]] <- diagnostic_row(
         sample_id,
         "threshold_resolvable",
@@ -376,13 +385,13 @@ diagnostic_threshold_rows <- function(sample_data, thresholds_um, interpolation_
         message = "The requested threshold is not resolvable under the selected open-tail policy.",
         recommendation = "Use finer/coarser measurements for this threshold or explicitly document extrapolation."
       )
-    } else if (isTRUE(result$extrapolated[1])) {
+    } else if (isTRUE(result$extrapolated[i])) {
       rows[[i]] <- diagnostic_row(
         sample_id,
         "threshold_resolvable",
         "warning",
         "low",
-        value = result$percent_finer[1],
+        value = result$percent_finer[i],
         expected = "threshold bracketed by finite boundaries",
         parameter = parameter,
         message = "The requested threshold required explicit extrapolation.",
@@ -394,7 +403,7 @@ diagnostic_threshold_rows <- function(sample_data, thresholds_um, interpolation_
         "threshold_resolvable",
         "ok",
         "none",
-        value = result$percent_finer[1],
+        value = result$percent_finer[i],
         expected = "threshold bracketed by finite boundaries",
         parameter = parameter,
         message = "The requested threshold is resolvable from finite boundaries.",
@@ -535,8 +544,9 @@ diagnostic_hydrometer_row <- function(sample_data,
 
 diagnostic_summary_output <- function(long) {
   sample_ids <- unique(long$sample_id)
+  split_data <- split(long, long$sample_id, drop = TRUE)
   rows <- lapply(sample_ids, function(sample_id) {
-    x <- long[long$sample_id == sample_id, ]
+    x <- split_data[[sample_id]]
     n_error <- sum(x$status == "error")
     n_warning <- sum(x$status == "warning")
     n_info <- sum(x$status == "info")
@@ -570,15 +580,19 @@ diagnostic_wide_output <- function(long) {
   summary <- diagnostic_summary_output(long)
   checks <- sort(unique(long$check))
 
+  # Group once by (sample_id, check) instead of re-scanning the full `long`
+  # table for every sample/check combination.
+  status_order <- match(long$status, diagnostic_status_levels)
+  group_key <- paste(long$sample_id, long$check, sep = "\r")
+  groups <- split(seq_len(nrow(long)), group_key)
+  worst_status <- vapply(groups, function(idx) {
+    long$status[idx[which.min(status_order[idx])]]
+  }, character(1))
+
   for (check in checks) {
-    values <- vapply(summary$sample_id, function(sample_id) {
-      x <- long[long$sample_id == sample_id & long$check == check, ]
-      if (nrow(x) == 0) {
-        return("not_applicable")
-      }
-      status_order <- match(x$status, diagnostic_status_levels)
-      x$status[which.min(status_order)]
-    }, character(1))
+    lookup_key <- paste(summary$sample_id, check, sep = "\r")
+    values <- unname(worst_status[lookup_key])
+    values[is.na(values)] <- "not_applicable"
     summary[[paste0(check, "_status")]] <- values
   }
 

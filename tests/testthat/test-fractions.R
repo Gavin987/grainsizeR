@@ -338,3 +338,72 @@ test_that("all fraction schemes close to 100 on a spanning synthetic sample", {
     expect_false(any(duplicated(result$component)), info = scheme)
   }
 })
+
+test_that("percent_finer_lookup batches per-sample thresholds identically to one-at-a-time lookups", {
+  # Multiple samples with different finite ranges, and thresholds that fall
+  # below, above, and inside each sample's observed range, so the batched
+  # in-range gs_percent_finer() call and the below/above shortcuts are all
+  # exercised together across more than one sample.
+  x <- data.frame(
+    sample_id = rep(c("wide_range", "narrow_range"), each = 5),
+    size_mm = rep(c(2000, 62.5, 2, 0.063, 0.002), 2),
+    retained = c(5, 20, 30, 30, 15, 10, 40, 30, 15, 5)
+  )
+  gsd <- as_gsd_tbl(x, sample_id, size_mm, retained, value_type = "percent")
+  normalized <- .gsd_tbl_with_normalized_mm_sizes(gsd)
+
+  # Chosen relative to this sample's actual finite boundary range (roughly
+  # 0.000063-2 mm after normalization): comfortably below, inside, and above.
+  thresholds_mm <- sort(unique(c(0.00001, 0.0005, 0.001, 1, 3000)))
+
+  batched <- percent_finer_lookup(
+    gsd,
+    thresholds_mm = thresholds_mm,
+    interpolation_scale = "phi",
+    extrapolate = "error",
+    unresolved = "warn_na"
+  )
+
+  reference_rows <- list()
+  row_id <- 1
+  for (sample_id in unique(as.character(gsd$sample_id))) {
+    sample_x <- normalized[normalized$sample_id == sample_id, ]
+    curve <- gs_cumulative(sample_x)
+    min_mm <- min(curve$boundary_mm)
+    max_mm <- max(curve$boundary_mm)
+    for (threshold in thresholds_mm) {
+      if (threshold < min_mm) {
+        reference_rows[[row_id]] <- tibble::tibble(
+          sample_id = sample_id, threshold_mm = threshold, threshold_um = mm_to_um(threshold),
+          percent_finer = 0, resolved = TRUE
+        )
+      } else if (threshold > max_mm) {
+        reference_rows[[row_id]] <- tibble::tibble(
+          sample_id = sample_id, threshold_mm = threshold, threshold_um = mm_to_um(threshold),
+          percent_finer = 100, resolved = TRUE
+        )
+      } else {
+        one <- gs_percent_finer(sample_x, sizes = threshold, size_unit = "mm", interpolation_scale = "phi", extrapolate = "error")
+        reference_rows[[row_id]] <- tibble::tibble(
+          sample_id = sample_id, threshold_mm = one$threshold_mm, threshold_um = one$threshold_um,
+          percent_finer = one$percent_finer, resolved = TRUE
+        )
+      }
+      row_id <- row_id + 1
+    }
+  }
+  reference <- do.call(rbind, reference_rows)
+  rownames(reference) <- NULL
+
+  # At least one below-range, one above-range, and one in-range threshold per
+  # sample must actually be exercised for this to be a meaningful check.
+  expect_true(any(reference$percent_finer == 0))
+  expect_true(any(reference$percent_finer == 100))
+  expect_true(any(reference$percent_finer > 0 & reference$percent_finer < 100))
+
+  expect_equal(
+    as.data.frame(batched[order(batched$sample_id, batched$threshold_mm), ]),
+    as.data.frame(reference[order(reference$sample_id, reference$threshold_mm), ]),
+    ignore_attr = TRUE
+  )
+})

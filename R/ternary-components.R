@@ -36,7 +36,9 @@
       "GRADISTAT ternary components must include columns `gravel`, `sand`, and `mud`; ",
       "official fraction columns `gravel_percent`, `sand_percent`, and `mud_percent`; ",
       "or official GRADISTAT fraction columns `gravel_percent`, `sand_percent`, ",
-      "`silt_percent`, and `clay_percent` that can be aggregated to mud. ",
+      "`silt_percent`, and `clay_percent`, where `silt_percent + clay_percent` ",
+      "approximates mud (GRADISTAT's 63 um sand/silt boundary differs slightly from ",
+      "the exact 62.5 um Wentworth sand/mud boundary used by `gravel_sand_mud`). ",
       "You can also use `gs_fractions_wide(x, scheme = \"gravel_sand_mud\")`."
     ))
   }
@@ -67,27 +69,20 @@
 }
 
 .aggregate_gradistat_mud_components <- function(x) {
-  direct_cols <- .match_component_columns(x, c("gravel", "sand", "silt", "clay"))
+  base <- c("gravel", "sand", "silt", "clay")
+
+  direct_cols <- .match_component_columns(x, base)
   if (all(!is.na(direct_cols))) {
-    out <- tibble::as_tibble(x)
-    out$gravel <- x[[direct_cols[["gravel"]]]]
-    out$sand <- x[[direct_cols[["sand"]]]]
-    out$mud <- x[[direct_cols[["silt"]]]] + x[[direct_cols[["clay"]]]]
+    out <- .copy_component_columns(x, direct_cols, base)
+    out$mud <- out$silt + out$clay
     return(out)
   }
 
-  percent_cols <- .match_component_columns(x, c("gravel", "sand", "silt", "clay"), suffix = "_percent")
+  percent_cols <- .match_component_columns(x, base, suffix = "_percent")
   if (all(!is.na(percent_cols))) {
-    keep_cols <- setdiff(names(x), unname(percent_cols))
-    if (length(keep_cols) > 0) {
-      out <- tibble::as_tibble(x[keep_cols])
-    } else {
-      out <- tibble::tibble(.rows = nrow(x))
-    }
-    out$gravel <- x[[percent_cols[["gravel"]]]]
-    out$sand <- x[[percent_cols[["sand"]]]]
-    out$mud <- x[[percent_cols[["silt"]]]] + x[[percent_cols[["clay"]]]]
-    return(out)
+    out <- .copy_percent_component_columns(x, percent_cols, base)
+    out$mud <- out$silt + out$clay
+    return(out[setdiff(names(out), c("silt", "clay"))])
   }
 
   NULL
@@ -137,18 +132,21 @@
       out[[component]] <- unname(values[out$sample_id])
     }
     extra_cols <- setdiff(names(long), c(sample_id_col, component_col, percent_col, ".component_name"))
-    for (column in extra_cols) {
-      values <- vapply(sample_ids, function(sample_id) {
-        sample_values <- unique(long[[column]][as.character(long[[sample_id_col]]) == sample_id])
-        sample_values <- sample_values[!is.na(sample_values)]
-        if (length(sample_values) == 1) {
-          as.character(sample_values)
-        } else {
-          NA_character_
+    if (length(extra_cols) > 0) {
+      long_groups <- split(long, as.character(long[[sample_id_col]]), drop = TRUE)
+      for (column in extra_cols) {
+        values <- vapply(sample_ids, function(sample_id) {
+          sample_values <- unique(long_groups[[sample_id]][[column]])
+          sample_values <- sample_values[!is.na(sample_values)]
+          if (length(sample_values) == 1) {
+            as.character(sample_values)
+          } else {
+            NA_character_
+          }
+        }, character(1))
+        if (!all(is.na(values)) && !column %in% names(out)) {
+          out[[column]] <- values
         }
-      }, character(1))
-      if (!all(is.na(values)) && !column %in% names(out)) {
-        out[[column]] <- values
       }
     }
   }
