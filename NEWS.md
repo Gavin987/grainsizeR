@@ -1,20 +1,45 @@
-# grainsizeR (development version)
+# grainsizeR 0.2.0
 
-- Started post-v0.1.0 development.
-- Added a hardening roadmap for performance, workflow validation, naming
-  consistency, documentation polish, and pre-Zenodo review.
-- Improved texture workflow interoperability so official wide fraction outputs
-  can feed USDA classification and USDA/GRADISTAT ternary plotting directly.
-- `gravel_sand_mud` is now an independent GRADISTAT-compatible scheme using a
-  63 um sand/mud boundary, rather than an alias of `wentworth_major`.
-  `wentworth_major` remains a strict Wentworth / phi-scale scheme using the
-  62.5 um sand/silt boundary.
-- Updated bundled example grain-size CSV files to use 0.063 mm for the
-  relevant fine boundary.
-- Improved the performance of internal per-sample lookups used by
-  `gs_fractions()`, `gs_fractions_wide()`, `gs_diagnostics()`, `gs_folk_ward()`,
+## Breaking changes
+
+- `gravel_sand_mud` is no longer an alias of `wentworth_major`. It is now an
+  independently defined, GRADISTAT-compatible fraction scheme using a 63 um
+  sand/mud boundary (Blott & Pye rounding convention), so its `mud_percent`
+  now matches the `gradistat` scheme's `silt_percent + clay_percent` exactly.
+  `wentworth_major`/`wentworth_detailed` are unchanged and keep the strict
+  Udden-Wentworth phi-scale boundary (62.5 um = 1/16 mm). If your code
+  assumed `gravel_sand_mud` and `wentworth_major` returned identical
+  fractions, pick the scheme matching the boundary convention you intend.
+- Bundled example files `inst/extdata/grain.wide.csv` and `grain.long.csv`
+  now use a 0.063 mm (previously 0.0625 mm) fine-boundary value, consistent
+  with the `gravel_sand_mud` change above. Sample IDs and all other values
+  are unchanged.
+
+## New features
+
+- GRADISTAT and USDA official `gs_fractions_wide()` output can now be fed
+  directly into `classify_texture()` and both ternary plot functions
+  (`plot_texture_ternary()`/`plot_texture_triangle()`) without manual
+  reshaping.
+
+## Performance
+
+- Optimized internal per-sample lookups used by `gs_fractions()`,
+  `gs_fractions_wide()`, `gs_diagnostics()`, `gs_folk_ward()`,
   `gs_grain_size_indices()`, `gs_d_spread()`, `gs_parameters()`, and
-  `plot_trigon()` for inputs with many samples. Output is unchanged.
+  `plot_trigon()` for inputs with many samples (measured ~15-40% faster on
+  realistic sample counts). Output values are unchanged.
+
+## Documentation and internal changes
+
+- Clarified `README`/vignette documentation of the `gravel_sand_mud` vs.
+  `wentworth_major` boundary conventions and reduced repetitive phrasing in
+  several vignettes.
+- Removed an unused internal helper (`fraction_scheme_alias()`) with no
+  remaining callers.
+- Added an automated test (`tests/testthat/test-readme-examples.R`) that runs
+  README's example code and checks it still works, since README's code
+  chunks are not evaluated when the page is rendered.
 
 # grainsizeR 0.1.0
 

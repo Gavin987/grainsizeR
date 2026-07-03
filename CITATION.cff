@@ -7,4 +7,5 @@ authors:
     email: "cschang.bt10@nycu.edu.tw"
 repository-code: "https://github.com/Gavin987/grainsizeR"
 license: "MIT"
-version: "0.0.0.9000"
+version: "0.2.0"
+date-released: "2026-07-03"
