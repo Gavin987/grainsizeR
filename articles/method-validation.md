@@ -7,7 +7,7 @@ explains how the package validates them with synthetic examples and
 package example data. It is a method-audit document, not a new
 scientific method.
 
-Detailed interpretation of table layouts versus measurement workflows is
+Detailed interpretation of table layouts versus measurement setups is
 covered in the table layouts and measurement workflows vignette.
 
 ``` r
@@ -128,11 +128,12 @@ suppressWarnings(gs_percent_finer(
 ## Open-Ended Terminal Classes
 
 Terminal open-ended classes are not silently treated as bounded
-intervals. For example, a final class such as `<0.0625 mm` is not
-treated as `[0, 62.5]`. When a requested D-value or threshold falls
-inside an open-ended class, `extrapolate = "error"` reports the
-unresolved value. Users can explicitly set `extrapolate = "warn_linear"`
-when extrapolation is acceptable for their workflow.
+intervals. For example, a final class such as `<0.0625 mm` in a strict
+Wentworth-style input is not treated as `[0, 62.5]`. When a requested
+D-value or threshold falls inside an open-ended class,
+`extrapolate = "error"` reports the unresolved value. Users can
+explicitly set `extrapolate = "warn_linear"` when extrapolation is
+acceptable for their workflow.
 
 [`gs_diagnostics()`](https://Gavin987.github.io/grainsizeR/reference/gs_diagnostics.md)
 can be used before summary calculations to identify samples with

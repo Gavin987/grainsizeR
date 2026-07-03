@@ -103,10 +103,11 @@ single string is recycled to all rows.</p></dd>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>Numeric size labels such as <code>"2"</code> and <code>"0.0625"</code> are interpreted as class
-thresholds. Terminal fine labels such as <code>"&lt;0.0625"</code> are parsed as the
-numeric threshold while still producing an open-ended fine class in the
-returned <code>gsd_tbl</code>. A size label of <code>"0"</code> is treated as a pan or lower
-open-ended row and imported with the package's 1 um lower-tail marker.</p>
+thresholds. Terminal fine labels such as <code>"&lt;0.0625"</code> in a strict
+Wentworth-style example are parsed as the numeric threshold while still
+producing an open-ended fine class in the returned <code>gsd_tbl</code>. A size label
+of <code>"0"</code> is treated as a pan or lower open-ended row and imported with the
+package's 1 um lower-tail marker.</p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

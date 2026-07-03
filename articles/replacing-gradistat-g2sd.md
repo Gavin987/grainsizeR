@@ -2,10 +2,10 @@
 
 ## Purpose
 
-This vignette shows how grainsizeR can be used as an R-native functional
-replacement workflow for many GRADISTAT and G2Sd-style grain-size
-analysis tasks. It is not an Excel visual clone and does not claim
-byte-for-byte parity with workbook printouts.
+This vignette shows how grainsizeR can serve as an R-native functional
+replacement for many GRADISTAT and G2Sd-style grain-size analysis tasks.
+It is not an Excel visual clone and does not claim byte-for-byte parity
+with workbook printouts.
 
 ``` r
 library(grainsizeR)
@@ -390,8 +390,8 @@ printout layouts.
 
 This vignette does not claim full Excel visual parity, byte-for-byte
 output identity, complete modified Udden-Wentworth subclass parity, or a
-CRAN release claim. It demonstrates a functional replacement workflow
-for the implemented package scope.
+CRAN release claim. It demonstrates a functional replacement for the
+implemented package scope.
 
 ## Remaining Future Work
 
@@ -402,7 +402,7 @@ classifications if they are scoped later.
 
 ## Reproducibility Advantages in R
 
-An R-native workflow keeps import choices, extrapolation assumptions,
-classification settings, plots, and output tables in a script. That
-makes the analysis easier to rerun, review, and version-control than a
-manual spreadsheet workflow.
+An R-native script keeps import choices, extrapolation assumptions,
+classification settings, plots, and output tables together. That makes
+the analysis easier to rerun, review, and version-control than a manual
+spreadsheet process.

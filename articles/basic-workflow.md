@@ -2,12 +2,12 @@
 
 ## Introduction
 
-This vignette shows a complete sediment grain-size workflow with
+This vignette walks through a complete sediment grain-size analysis with
 grainsizeR. The examples use package data stored in `inst/extdata`.
 
-For a more detailed discussion of table layouts versus measurement
-workflows, including the dry-sieve and sieve + hydrometer example files,
-see the table layouts and measurement workflows vignette.
+For more detail on table layouts versus measurement setups, including
+the dry-sieve and sieve + hydrometer example files, see the table
+layouts and measurement workflows vignette.
 
 ``` r
 library(grainsizeR)
@@ -48,11 +48,11 @@ head(gs)
 ## Reading Wide-Format Data
 
 Wide input stores size classes in rows and samples in columns. Terminal
-fine rows such as `<0.0625` are supported and become open-ended fine
-classes. G2Sd-style wide tables often store particle sizes in row names
-and samples in columns. Convert row names to a size column and use
-`size_unit = "auto"` or `size_unit = "um"` when importing
-micrometre-scale labels.
+fine rows such as `<0.0625` in a strict Wentworth-style example are
+supported and become open-ended fine classes. G2Sd-style wide tables
+often store particle sizes in row names and samples in columns. Convert
+row names to a size column and use `size_unit = "auto"` or
+`size_unit = "um"` when importing micrometre-scale labels.
 
 ``` r
 wide_file <- system.file("extdata", "grain.wide.csv", package = "grainsizeR")

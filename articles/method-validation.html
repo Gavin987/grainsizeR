@@ -77,8 +77,8 @@
 explains how the package validates them with synthetic examples and
 package example data. It is a method-audit document, not a new
 scientific method.</p>
-<p>Detailed interpretation of table layouts versus measurement workflows
-is covered in the table layouts and measurement workflows vignette.</p>
+<p>Detailed interpretation of table layouts versus measurement setups is
+covered in the table layouts and measurement workflows vignette.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://Gavin987.github.io/grainsizeR/">grainsizeR</a></span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -193,11 +193,12 @@ they are bracketed by finite class boundaries.</p>
 </h2>
 <p>Terminal open-ended classes are not silently treated as bounded
 intervals. For example, a final class such as <code>&lt;0.0625 mm</code>
-is not treated as <code>[0, 62.5]</code>. When a requested D-value or
-threshold falls inside an open-ended class,
-<code>extrapolate = "error"</code> reports the unresolved value. Users
-can explicitly set <code>extrapolate = "warn_linear"</code> when
-extrapolation is acceptable for their workflow.</p>
+in a strict Wentworth-style input is not treated as
+<code>[0, 62.5]</code>. When a requested D-value or threshold falls
+inside an open-ended class, <code>extrapolate = "error"</code> reports
+the unresolved value. Users can explicitly set
+<code>extrapolate = "warn_linear"</code> when extrapolation is
+acceptable for their workflow.</p>
 <p><code><a href="../reference/gs_diagnostics.html">gs_diagnostics()</a></code> can be used before summary calculations
 to identify samples with unresolved D-values, unresolved clay/silt
 thresholds, open-ended terminal classes, or fraction schemes that

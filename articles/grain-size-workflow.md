@@ -2,15 +2,15 @@
 
 ## Overview
 
-This vignette shows a compact end-to-end grain-size workflow with
-grainsizeR. It uses the example files installed with the package and
-keeps each step as an ordinary R object so results can be checked,
+This vignette walks through a compact, end-to-end grain-size analysis
+with grainsizeR. It uses the example files installed with the package
+and keeps each step as an ordinary R object so results can be checked,
 joined, plotted, and exported with standard R tools.
 
-This vignette uses preferred public functions in the main workflow.
-Short aliases are available for interactive use, but the full function
-names are easier to read in scripts and reports. CRAN readiness is not
-claimed here.
+This vignette calls the primary public functions directly. Short aliases
+are available for interactive use, but the full function names are
+easier to read in scripts and reports. CRAN readiness is not claimed
+here.
 
 ``` r
 library(grainsizeR)

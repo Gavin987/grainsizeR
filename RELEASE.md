@@ -11,13 +11,25 @@
 
 Before Zenodo archiving, complete:
 
-1.  Performance and complexity review.
-2.  Full workflow verification from bundled examples.
-3.  Variable and argument naming review.
-4.  User-facing error-message review.
-5.  Documentation and vignette polish.
-6.  Review for overly AI-like code or documentation patterns.
-7.  Final package checks and GitHub Actions verification.
+1.  Performance and complexity review. **Done** — see the Performance
+    Phase Round 1 entry in `dev-notes/AUDIT_LOG.md`.
+2.  Full workflow verification from bundled examples. In progress — ad
+    hoc verification passes done so far; no single dedicated pass has
+    covered every function in `dev-notes/HARDENING_ROADMAP.md`’s Phase 2
+    list.
+3.  Variable and argument naming review. Partially done — the
+    `gravel_sand_mud`/`wentworth_major` boundary split and a
+    um/micrometre consistency audit are complete; a full pass has not
+    been done.
+4.  User-facing error-message review. Partially done via the
+    um/micrometre audit; not a dedicated pass.
+5.  Documentation and vignette polish. In progress — a light editorial
+    pass for repetitive phrasing has been done; not exhaustive.
+6.  Review for overly AI-like code or documentation patterns. In
+    progress, same pass as item 5.
+7.  Final package checks and GitHub Actions verification. Not done —
+    local `R CMD check` has been run repeatedly, but GitHub Actions has
+    not been independently confirmed from this environment.
 
 ## Guardrails
 

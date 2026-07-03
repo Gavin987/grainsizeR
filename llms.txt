@@ -71,8 +71,12 @@ plots <- lapply(samples, function(id) {
 ## Fraction Summaries
 
 The dry-sieve wide example demonstrates the GRADISTAT-style
-`Gravel`/`Sand`/`Mud` workflow. More detailed Wentworth-style fractions
-are available when the input resolves the required class boundaries.
+`Gravel`/`Sand`/`Mud` breakdown. More detailed Wentworth-style fractions
+are available when the input resolves the required class boundaries. The
+bundled dry-sieve example uses the GRADISTAT-compatible
+`gravel_sand_mud` basis with a 63 um sand/mud boundary. This differs
+intentionally from the strict Wentworth `wentworth_major` scheme, which
+uses the 62.5 um sand/silt boundary.
 
 ``` r
 plot_fractions(
@@ -126,9 +130,9 @@ write.csv(summary, "grain_size_summary.csv", row.names = FALSE)
 
 ## End-to-End Workflow
 
-The full vignettes show complete workflows. A compact analysis usually
-reads data, checks resolvability, calculates statistics, then creates
-figures:
+The full vignettes walk through complete analyses. A compact pass
+usually reads data, checks resolvability, calculates statistics, then
+creates figures:
 
 ``` r
 long <- read_gsd(long_path)
@@ -152,25 +156,25 @@ plot_texture_ternary(usda_components, scheme = "usda")
 is preferred in new code;
 [`plot_texture_triangle()`](https://Gavin987.github.io/grainsizeR/reference/plot_texture_triangle.md)
 remains available as an equivalent compatibility alias. Legacy raw-data
-ternary workflows remain available through
+ternary plotting remains available through
 [`plot_trigon()`](https://Gavin987.github.io/grainsizeR/reference/plot_trigon.md).
 
 ## Further Reading
 
-Use the vignettes for full workflows and methodological detail:
+Use the vignettes for complete examples and methodological detail:
 
 - [`vignette("basic-workflow")`](https://Gavin987.github.io/grainsizeR/articles/basic-workflow.md):
-  a compact first-pass import, summary, and plot workflow.
+  a compact first-pass import, summary, and plot walkthrough.
 - [`vignette("grain-size-workflow")`](https://Gavin987.github.io/grainsizeR/articles/grain-size-workflow.md):
   import, diagnostics, summaries, and plots.
 - [`vignette("table-layouts-and-measurement-workflows")`](https://Gavin987.github.io/grainsizeR/articles/table-layouts-and-measurement-workflows.md):
-  long and wide table layouts for common measurement workflows.
+  long and wide table layouts for common measurement setups.
 - [`vignette("texture-classification")`](https://Gavin987.github.io/grainsizeR/articles/texture-classification.md):
   USDA and GRADISTAT-style texture classification and ternary plots.
 - [`vignette("texture-polygons")`](https://Gavin987.github.io/grainsizeR/articles/texture-polygons.md):
-  user-supplied polygon templates and polygon classification workflows.
+  user-supplied polygon templates and polygon classification steps.
 - [`vignette("replacing-gradistat-g2sd")`](https://Gavin987.github.io/grainsizeR/articles/replacing-gradistat-g2sd.md):
-  R-native workflows for tasks commonly handled with GRADISTAT or
+  R-native approaches to tasks commonly handled with GRADISTAT or
   G2Sd-style analysis.
 - [`vignette("method-validation")`](https://Gavin987.github.io/grainsizeR/articles/method-validation.md):
   interpolation conventions, open-tail behavior, and numerical

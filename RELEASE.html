@@ -53,13 +53,13 @@
 <div class="section level2">
 <h2 id="post-v010-hardening">Post-v0.1.0 hardening<a class="anchor" aria-label="anchor" href="#post-v010-hardening"></a></h2>
 <p>Before Zenodo archiving, complete:</p>
-<ol style="list-style-type: decimal"><li>Performance and complexity review.</li>
-<li>Full workflow verification from bundled examples.</li>
-<li>Variable and argument naming review.</li>
-<li>User-facing error-message review.</li>
-<li>Documentation and vignette polish.</li>
-<li>Review for overly AI-like code or documentation patterns.</li>
-<li>Final package checks and GitHub Actions verification.</li>
+<ol style="list-style-type: decimal"><li>Performance and complexity review. <strong>Done</strong> — see the Performance Phase Round 1 entry in <code>dev-notes/AUDIT_LOG.md</code>.</li>
+<li>Full workflow verification from bundled examples. In progress — ad hoc verification passes done so far; no single dedicated pass has covered every function in <code>dev-notes/HARDENING_ROADMAP.md</code>’s Phase 2 list.</li>
+<li>Variable and argument naming review. Partially done — the <code>gravel_sand_mud</code>/<code>wentworth_major</code> boundary split and a um/micrometre consistency audit are complete; a full pass has not been done.</li>
+<li>User-facing error-message review. Partially done via the um/micrometre audit; not a dedicated pass.</li>
+<li>Documentation and vignette polish. In progress — a light editorial pass for repetitive phrasing has been done; not exhaustive.</li>
+<li>Review for overly AI-like code or documentation patterns. In progress, same pass as item 5.</li>
+<li>Final package checks and GitHub Actions verification. Not done — local <code>R CMD check</code> has been run repeatedly, but GitHub Actions has not been independently confirmed from this environment.</li>
 </ol></div>
 <div class="section level2">
 <h2 id="guardrails">Guardrails<a class="anchor" aria-label="anchor" href="#guardrails"></a></h2>

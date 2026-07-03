@@ -49,6 +49,7 @@
 <li>
 <code>gravel_sand_mud</code> is now an independent GRADISTAT-compatible scheme using a 63 um sand/mud boundary, rather than an alias of <code>wentworth_major</code>. <code>wentworth_major</code> remains a strict Wentworth / phi-scale scheme using the 62.5 um sand/silt boundary.</li>
 <li>Updated bundled example grain-size CSV files to use 0.063 mm for the relevant fine boundary.</li>
+<li>Improved the performance of internal per-sample lookups used by <code><a href="../reference/gs_fractions.html">gs_fractions()</a></code>, <code><a href="../reference/gs_fractions_wide.html">gs_fractions_wide()</a></code>, <code><a href="../reference/gs_diagnostics.html">gs_diagnostics()</a></code>, <code><a href="../reference/gs_folk_ward.html">gs_folk_ward()</a></code>, <code><a href="../reference/gs_grain_size_indices.html">gs_grain_size_indices()</a></code>, <code><a href="../reference/gs_d_spread.html">gs_d_spread()</a></code>, <code><a href="../reference/gs_parameters.html">gs_parameters()</a></code>, and <code><a href="../reference/plot_trigon.html">plot_trigon()</a></code> for inputs with many samples. Output is unchanged.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.0" id="grainsizer-010">grainsizeR 0.1.0<a class="anchor" aria-label="anchor" href="#grainsizer-010"></a></h2>

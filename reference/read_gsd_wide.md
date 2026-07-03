@@ -54,8 +54,8 @@ A `gsd_tbl` tibble with canonical columns including `sample_id`,
 ## Details
 
 Numeric size labels such as `"2"` and `"0.0625"` are interpreted as
-class thresholds. Terminal fine labels such as `"<0.0625"` are parsed as
-the numeric threshold while still producing an open-ended fine class in
-the returned `gsd_tbl`. A size label of `"0"` is treated as a pan or
-lower open-ended row and imported with the package's 1 um lower-tail
-marker.
+class thresholds. Terminal fine labels such as `"<0.0625"` in a strict
+Wentworth-style example are parsed as the numeric threshold while still
+producing an open-ended fine class in the returned `gsd_tbl`. A size
+label of `"0"` is treated as a pan or lower open-ended row and imported
+with the package's 1 um lower-tail marker.

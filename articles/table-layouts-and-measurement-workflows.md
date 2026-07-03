@@ -4,8 +4,8 @@
 
 This vignette separates three concepts that are easy to mix up:
 
-1.  Measurement workflow, such as dry sieve, sieve + hydrometer,
-    pipette, laser diffraction, or another particle-size workflow.
+1.  Measurement method, such as dry sieve, sieve + hydrometer, pipette,
+    laser diffraction, or another particle-size technique.
 2.  Table layout, such as a single-sample table, a multi-sample wide
     table, or a tidy long table.
 3.  Data type, such as retained percent by class, cumulative percent
@@ -97,28 +97,31 @@ head(gs_diagnostics(gs_wide, output = "summary"))
 #> 6 S06          21         6       0      4 FALSE     TRUE        warning
 ```
 
-This example is appropriate for coarse gravel/sand/mud or sand/mud
-summaries when relevant thresholds are resolved. Clay and silt
-thresholds such as 2, 20, 50, or 60 um may not be resolvable from data
-with only a terminal open fine class. Open fine tails should not be
-silently treated as bounded intervals.
+This example is appropriate for the GRADISTAT-compatible
+`gravel_sand_mud` summary because the bundled dry-sieve files use a
+0.063 mm terminal fine boundary. Clay and silt thresholds such as 2, 20,
+50, or 60 um may not be resolvable from data with only a terminal open
+fine class. Open fine tails should not be silently treated as bounded
+intervals. `wentworth_major` remains available as a strict Wentworth /
+phi-scale alternative with the 62.5 um sand/mud boundary; it is not an
+alias of `gravel_sand_mud`.
 
 ``` r
-head(gs_fractions_wide(gs_wide, scheme = "wentworth_major"))
+head(gs_fractions_wide(gs_wide, scheme = "gravel_sand_mud"))
 #> # A tibble: 6 × 4
 #>   sample_id gravel_percent sand_percent mud_percent
 #>   <chr>              <dbl>        <dbl>       <dbl>
-#> 1 S01                0.624         99.4           0
-#> 2 S02                0.224         99.8           0
-#> 3 S03                0.312         99.7           0
-#> 4 S04                0.153         99.8           0
-#> 5 S05                0.295         99.7           0
-#> 6 S06                0.230         99.8           0
+#> 1 S01                0.624         85.0      14.4  
+#> 2 S02                0.224         97.8       1.93 
+#> 3 S03                0.312         95.1       4.60 
+#> 4 S04                0.153         89.6      10.2  
+#> 5 S05                0.295         88.8      10.9  
+#> 6 S06                0.230         98.8       0.964
 
 head(suppressWarnings(gs_parameters(
   gs_wide,
   parameters = c("d_values", "indices", "folk_ward", "fractions"),
-  fraction_scheme = "wentworth_major",
+  fraction_scheme = "gravel_sand_mud",
   extrapolate = "warn_linear"
 )))
 #> # A tibble: 6 × 40
@@ -231,20 +234,22 @@ head(gs_diagnostics(
 
 ## Coarse Fractions From the Dry-Sieve Example
 
-For the dry-sieve example, coarse fraction summaries such as Wentworth
-gravel, sand, and mud are usually the first summary to inspect.
+For the dry-sieve example, `gravel_sand_mud` is usually the first coarse
+fraction summary to inspect. It uses the GRADISTAT-compatible 63 um
+sand/mud boundary. Use `wentworth_major` when a strict Wentworth /
+phi-scale 62.5 um boundary is required.
 
 ``` r
-head(gs_fractions_wide(gs_wide, scheme = "wentworth_major"))
+head(gs_fractions_wide(gs_wide, scheme = "gravel_sand_mud"))
 #> # A tibble: 6 × 4
 #>   sample_id gravel_percent sand_percent mud_percent
 #>   <chr>              <dbl>        <dbl>       <dbl>
-#> 1 S01                0.624         99.4           0
-#> 2 S02                0.224         99.8           0
-#> 3 S03                0.312         99.7           0
-#> 4 S04                0.153         99.8           0
-#> 5 S05                0.295         99.7           0
-#> 6 S06                0.230         99.8           0
+#> 1 S01                0.624         85.0      14.4  
+#> 2 S02                0.224         97.8       1.93 
+#> 3 S03                0.312         95.1       4.60 
+#> 4 S04                0.153         89.6      10.2  
+#> 5 S05                0.295         88.8      10.9  
+#> 6 S06                0.230         98.8       0.964
 ```
 
 ## Clay/Silt/Sand Fractions From Finer-Resolution Data
