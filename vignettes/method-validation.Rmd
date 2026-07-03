@@ -17,7 +17,7 @@ This vignette documents numerical conventions used by grainsizeR and explains
 how the package validates them with synthetic examples and package example
 data. It is a method-audit document, not a new scientific method.
 
-Detailed interpretation of table layouts versus measurement workflows is
+Detailed interpretation of table layouts versus measurement setups is
 covered in the table layouts and measurement workflows vignette.
 
 ```{r}

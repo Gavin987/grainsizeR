@@ -11,6 +11,10 @@
   62.5 um sand/silt boundary.
 - Updated bundled example grain-size CSV files to use 0.063 mm for the
   relevant fine boundary.
+- Improved the performance of internal per-sample lookups used by
+  `gs_fractions()`, `gs_fractions_wide()`, `gs_diagnostics()`, `gs_folk_ward()`,
+  `gs_grain_size_indices()`, `gs_d_spread()`, `gs_parameters()`, and
+  `plot_trigon()` for inputs with many samples. Output is unchanged.
 
 # grainsizeR 0.1.0
 

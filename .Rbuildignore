@@ -20,8 +20,6 @@
 ^CITATION\.cff$
 ^.*\.tar\.gz$
 ^.*\.Rcheck$
-^grain\.long\.csv$
-^grain\.wide\.csv$
 ^_local_audit$
 ^tmp$
 ^temp$

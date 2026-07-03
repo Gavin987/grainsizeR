@@ -88,7 +88,7 @@ knitr::include_graphics(c(
 ## Fraction Summaries
 
 The dry-sieve wide example demonstrates the GRADISTAT-style
-`Gravel`/`Sand`/`Mud` workflow. More detailed Wentworth-style fractions are
+`Gravel`/`Sand`/`Mud` breakdown. More detailed Wentworth-style fractions are
 available when the input resolves the required class boundaries.
 The bundled dry-sieve example uses the GRADISTAT-compatible
 `gravel_sand_mud` basis with a 63 um sand/mud boundary. This differs
@@ -152,8 +152,8 @@ write.csv(summary, "grain_size_summary.csv", row.names = FALSE)
 
 ## End-to-End Workflow
 
-The full vignettes show complete workflows. A compact analysis usually reads
-data, checks resolvability, calculates statistics, then creates figures:
+The full vignettes walk through complete analyses. A compact pass usually
+reads data, checks resolvability, calculates statistics, then creates figures:
 
 ```{r end-to-end-workflow, eval=FALSE}
 long <- read_gsd(long_path)
@@ -175,22 +175,22 @@ plot_texture_ternary(usda_components, scheme = "usda")
 
 `plot_texture_ternary()` is preferred in new code; `plot_texture_triangle()`
 remains available as an equivalent compatibility alias. Legacy raw-data ternary
-workflows remain available through `plot_trigon()`.
+plotting remains available through `plot_trigon()`.
 
 ## Further Reading
 
-Use the vignettes for full workflows and methodological detail:
+Use the vignettes for complete examples and methodological detail:
 
 - `vignette("basic-workflow")`: a compact first-pass import, summary, and plot
-  workflow.
+  walkthrough.
 - `vignette("grain-size-workflow")`: import, diagnostics, summaries, and plots.
 - `vignette("table-layouts-and-measurement-workflows")`: long and wide table
-  layouts for common measurement workflows.
+  layouts for common measurement setups.
 - `vignette("texture-classification")`: USDA and GRADISTAT-style texture
   classification and ternary plots.
 - `vignette("texture-polygons")`: user-supplied polygon templates and polygon
-  classification workflows.
-- `vignette("replacing-gradistat-g2sd")`: R-native workflows for tasks commonly
+  classification steps.
+- `vignette("replacing-gradistat-g2sd")`: R-native approaches to tasks commonly
   handled with GRADISTAT or G2Sd-style analysis.
 - `vignette("method-validation")`: interpolation conventions, open-tail
   behavior, and numerical validation examples.

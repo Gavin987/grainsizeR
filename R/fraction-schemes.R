@@ -49,13 +49,6 @@ gs_fraction_schemes <- function() {
   tibble::as_tibble(out)
 }
 
-fraction_scheme_alias <- function(template, scheme) {
-  out <- template
-  out$scheme <- scheme
-  out$description <- paste(fraction_scheme_label(scheme), out$component, "fraction")
-  out
-}
-
 fraction_rows <- function(scheme, component, lower_um, upper_um, component_type = NULL) {
   if (is.null(component_type)) {
     component_type <- rep("major", length(component))

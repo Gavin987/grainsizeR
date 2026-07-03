@@ -13,12 +13,12 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 
 ## Introduction
 
-This vignette shows a complete sediment grain-size workflow with grainsizeR.
-The examples use package data stored in `inst/extdata`.
+This vignette walks through a complete sediment grain-size analysis with
+grainsizeR. The examples use package data stored in `inst/extdata`.
 
-For a more detailed discussion of table layouts versus measurement workflows,
-including the dry-sieve and sieve + hydrometer example files, see the table
-layouts and measurement workflows vignette.
+For more detail on table layouts versus measurement setups, including the
+dry-sieve and sieve + hydrometer example files, see the table layouts and
+measurement workflows vignette.
 
 ```{r}
 library(grainsizeR)

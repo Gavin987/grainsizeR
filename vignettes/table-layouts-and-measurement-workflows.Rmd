@@ -15,8 +15,8 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 
 This vignette separates three concepts that are easy to mix up:
 
-1. Measurement workflow, such as dry sieve, sieve + hydrometer, pipette, laser
-   diffraction, or another particle-size workflow.
+1. Measurement method, such as dry sieve, sieve + hydrometer, pipette, laser
+   diffraction, or another particle-size technique.
 2. Table layout, such as a single-sample table, a multi-sample wide table, or a
    tidy long table.
 3. Data type, such as retained percent by class, cumulative percent finer,
