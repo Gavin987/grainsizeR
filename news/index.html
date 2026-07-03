@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">grainsizeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -42,15 +42,28 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="development version" id="grainsizer-development-version">grainsizeR (development version)<a class="anchor" aria-label="anchor" href="#grainsizer-development-version"></a></h2>
-<ul><li>Started post-v0.1.0 development.</li>
-<li>Added a hardening roadmap for performance, workflow validation, naming consistency, documentation polish, and pre-Zenodo review.</li>
-<li>Improved texture workflow interoperability so official wide fraction outputs can feed USDA classification and USDA/GRADISTAT ternary plotting directly.</li>
-<li>
-<code>gravel_sand_mud</code> is now an independent GRADISTAT-compatible scheme using a 63 um sand/mud boundary, rather than an alias of <code>wentworth_major</code>. <code>wentworth_major</code> remains a strict Wentworth / phi-scale scheme using the 62.5 um sand/silt boundary.</li>
-<li>Updated bundled example grain-size CSV files to use 0.063 mm for the relevant fine boundary.</li>
-<li>Improved the performance of internal per-sample lookups used by <code><a href="../reference/gs_fractions.html">gs_fractions()</a></code>, <code><a href="../reference/gs_fractions_wide.html">gs_fractions_wide()</a></code>, <code><a href="../reference/gs_diagnostics.html">gs_diagnostics()</a></code>, <code><a href="../reference/gs_folk_ward.html">gs_folk_ward()</a></code>, <code><a href="../reference/gs_grain_size_indices.html">gs_grain_size_indices()</a></code>, <code><a href="../reference/gs_d_spread.html">gs_d_spread()</a></code>, <code><a href="../reference/gs_parameters.html">gs_parameters()</a></code>, and <code><a href="../reference/plot_trigon.html">plot_trigon()</a></code> for inputs with many samples. Output is unchanged.</li>
+<h2 class="pkg-version" data-toc-text="0.2.0" id="grainsizer-020">grainsizeR 0.2.0<a class="anchor" aria-label="anchor" href="#grainsizer-020"></a></h2>
+<div class="section level3">
+<h3 id="breaking-changes-0-2-0">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-0-2-0"></a></h3>
+<ul><li>
+<code>gravel_sand_mud</code> is no longer an alias of <code>wentworth_major</code>. It is now an independently defined, GRADISTAT-compatible fraction scheme using a 63 um sand/mud boundary (Blott &amp; Pye rounding convention), so its <code>mud_percent</code> now matches the <code>gradistat</code> scheme’s <code>silt_percent + clay_percent</code> exactly. <code>wentworth_major</code>/<code>wentworth_detailed</code> are unchanged and keep the strict Udden-Wentworth phi-scale boundary (62.5 um = 1/16 mm). If your code assumed <code>gravel_sand_mud</code> and <code>wentworth_major</code> returned identical fractions, pick the scheme matching the boundary convention you intend.</li>
+<li>Bundled example files <code>inst/extdata/grain.wide.csv</code> and <code>grain.long.csv</code> now use a 0.063 mm (previously 0.0625 mm) fine-boundary value, consistent with the <code>gravel_sand_mud</code> change above. Sample IDs and all other values are unchanged.</li>
 </ul></div>
+<div class="section level3">
+<h3 id="new-features-0-2-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-2-0"></a></h3>
+<ul><li>GRADISTAT and USDA official <code><a href="../reference/gs_fractions_wide.html">gs_fractions_wide()</a></code> output can now be fed directly into <code><a href="../reference/classify_texture.html">classify_texture()</a></code> and both ternary plot functions (<code><a href="../reference/plot_texture_ternary.html">plot_texture_ternary()</a></code>/<code><a href="../reference/plot_texture_triangle.html">plot_texture_triangle()</a></code>) without manual reshaping.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="performance-0-2-0">Performance<a class="anchor" aria-label="anchor" href="#performance-0-2-0"></a></h3>
+<ul><li>Optimized internal per-sample lookups used by <code><a href="../reference/gs_fractions.html">gs_fractions()</a></code>, <code><a href="../reference/gs_fractions_wide.html">gs_fractions_wide()</a></code>, <code><a href="../reference/gs_diagnostics.html">gs_diagnostics()</a></code>, <code><a href="../reference/gs_folk_ward.html">gs_folk_ward()</a></code>, <code><a href="../reference/gs_grain_size_indices.html">gs_grain_size_indices()</a></code>, <code><a href="../reference/gs_d_spread.html">gs_d_spread()</a></code>, <code><a href="../reference/gs_parameters.html">gs_parameters()</a></code>, and <code><a href="../reference/plot_trigon.html">plot_trigon()</a></code> for inputs with many samples (measured ~15-40% faster on realistic sample counts). Output values are unchanged.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="documentation-and-internal-changes-0-2-0">Documentation and internal changes<a class="anchor" aria-label="anchor" href="#documentation-and-internal-changes-0-2-0"></a></h3>
+<ul><li>Clarified <code>README</code>/vignette documentation of the <code>gravel_sand_mud</code> vs. <code>wentworth_major</code> boundary conventions and reduced repetitive phrasing in several vignettes.</li>
+<li>Removed an unused internal helper (<code>fraction_scheme_alias()</code>) with no remaining callers.</li>
+<li>Added an automated test (<code>tests/testthat/test-readme-examples.R</code>) that runs README’s example code and checks it still works, since README’s code chunks are not evaluated when the page is rendered.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.0" id="grainsizer-010">grainsizeR 0.1.0<a class="anchor" aria-label="anchor" href="#grainsizer-010"></a></h2>
 <ul><li>Initial public release of grainsizeR.</li>

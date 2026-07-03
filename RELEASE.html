@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="index.html">grainsizeR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -45,27 +45,21 @@
 
 <div class="section level2">
 <h2 id="current-status">Current status<a class="anchor" aria-label="anchor" href="#current-status"></a></h2>
-<ul><li>Latest GitHub release: v0.1.0</li>
-<li>Current development version: 0.1.0.9000</li>
-<li>Zenodo DOI: deferred</li>
+<ul><li>Current package version: 0.2.0</li>
+<li>Pending GitHub release: v0.2.0</li>
+<li>Previous GitHub release: v0.1.0</li>
+<li>Zenodo DOI: pending GitHub Release and Zenodo archive</li>
 <li>CRAN submission: deferred</li>
 </ul></div>
 <div class="section level2">
 <h2 id="post-v010-hardening">Post-v0.1.0 hardening<a class="anchor" aria-label="anchor" href="#post-v010-hardening"></a></h2>
-<p>Before Zenodo archiving, complete:</p>
-<ol style="list-style-type: decimal"><li>Performance and complexity review. <strong>Done</strong> — see the Performance Phase Round 1 entry in <code>dev-notes/AUDIT_LOG.md</code>.</li>
-<li>Full workflow verification from bundled examples. In progress — ad hoc verification passes done so far; no single dedicated pass has covered every function in <code>dev-notes/HARDENING_ROADMAP.md</code>’s Phase 2 list.</li>
-<li>Variable and argument naming review. Partially done — the <code>gravel_sand_mud</code>/<code>wentworth_major</code> boundary split and a um/micrometre consistency audit are complete; a full pass has not been done.</li>
-<li>User-facing error-message review. Partially done via the um/micrometre audit; not a dedicated pass.</li>
-<li>Documentation and vignette polish. In progress — a light editorial pass for repetitive phrasing has been done; not exhaustive.</li>
-<li>Review for overly AI-like code or documentation patterns. In progress, same pass as item 5.</li>
-<li>Final package checks and GitHub Actions verification. Not done — local <code>R CMD check</code> has been run repeatedly, but GitHub Actions has not been independently confirmed from this environment.</li>
-</ol></div>
+<p>Post-v0.1.0 hardening is complete for the v0.2.0 release readiness pass. The v0.2.0 GitHub Release and Zenodo archive are still pending. CRAN is deferred.</p>
+</div>
 <div class="section level2">
 <h2 id="guardrails">Guardrails<a class="anchor" aria-label="anchor" href="#guardrails"></a></h2>
 <ul><li>Do not retag v0.1.0.</li>
 <li>Do not force-push release tags.</li>
-<li>Do not create Zenodo DOI until the hardening phase is complete.</li>
+<li>Do not create Zenodo DOI until the v0.2.0 GitHub Release is published and archived.</li>
 <li>Do not prepare CRAN submission material until CRAN submission is planned.</li>
 </ul></div>
 <div class="section level2">
