@@ -1,5 +1,7 @@
 # grainsizeR
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21169393.svg)](https://doi.org/10.5281/zenodo.21169393)
+
 grainsizeR provides R tools for sediment grain-size analysis. It reads
 retained grain-size distributions, validates them as `gsd_tbl` objects,
 calculates D-values and common summary statistics, builds particle-size
@@ -196,6 +198,13 @@ reconstruction, validation, tests, and documentation.
 
 The public provenance notes document source boundaries before any future
 built-in texture polygon dataset is considered.
+
+## Citation
+
+If you use grainsizeR, please cite:
+
+Chang, C.-S. G. (2026). grainsizeR: Sediment Grain-Size Analysis Tools
+(v0.2.0). Zenodo. <https://doi.org/10.5281/zenodo.21169394>
 
 # Package index
 

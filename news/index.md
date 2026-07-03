@@ -1,5 +1,11 @@
 # Changelog
 
+## grainsizeR 0.2.0.9000
+
+### Development version
+
+- Started post-0.2.0 development.
+
 ## grainsizeR 0.2.0
 
 ### Breaking changes
