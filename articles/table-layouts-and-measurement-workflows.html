@@ -158,12 +158,12 @@ long.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 8</span></span></span>
 <span><span class="co">#&gt;   sample_id  n_ok n_warning n_error n_info has_error has_warning overall_status</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S01          22         7       0      2 FALSE     TRUE        warning       </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> S02          24         5       0      2 FALSE     TRUE        warning       </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> S03          24         5       0      2 FALSE     TRUE        warning       </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> S04          22         7       0      2 FALSE     TRUE        warning       </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> S05          22         7       0      2 FALSE     TRUE        warning       </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> S06          24         5       0      2 FALSE     TRUE        warning</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S01          19         9       0      3 FALSE     TRUE        warning       </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> S02          21         6       0      4 FALSE     TRUE        warning       </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> S03          21         6       0      4 FALSE     TRUE        warning       </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> S04          19         9       0      3 FALSE     TRUE        warning       </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> S05          19         9       0      3 FALSE     TRUE        warning       </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> S06          21         6       0      4 FALSE     TRUE        warning</span></span></code></pre></div>
 <p>This example is appropriate for coarse gravel/sand/mud or sand/mud
 summaries when relevant thresholds are resolved. Clay and silt
 thresholds such as 2, 20, 50, or 60 um may not be resolvable from data
@@ -174,12 +174,12 @@ silently treated as bounded intervals.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 4</span></span></span>
 <span><span class="co">#&gt;   sample_id gravel_percent sand_percent mud_percent</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S01                0.624         85.0      14.4  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> S02                0.224         97.8       1.93 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> S03                0.312         95.1       4.60 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> S04                0.153         89.6      10.2  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> S05                0.295         88.8      10.9  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> S06                0.230         98.8       0.964</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S01                0.624         99.4           0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> S02                0.224         99.8           0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> S03                0.312         99.7           0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> S04                0.153         99.8           0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> S05                0.295         99.7           0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> S06                0.230         99.8           0</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/warning.html" class="external-link">suppressWarnings</a></span><span class="op">(</span><span class="fu"><a href="../reference/gs_parameters.html">gs_parameters</a></span><span class="op">(</span></span>
 <span>  <span class="va">gs_wide</span>,</span>
@@ -190,12 +190,12 @@ silently treated as bounded intervals.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 40</span></span></span>
 <span><span class="co">#&gt;   sample_id D5_um D10_um D16_um D25_um D50_um D75_um D84_um D90_um D95_um D30_um</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S01        52.3   57.5   64.5   76.5   123.   233.   314.   390.   468.   84.1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> S02        67.7   77.2   90.3  114.    175.   267.   346.   412.   476.  128. </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> S03        63.0   69.0   77.1   91.0   151.   278.   347.   402.   455.   99.8</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> S04        57.1   62.3   69.1   80.8   125.   258.   333.   395.   456.   88.2</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> S05        56.5   61.5   68.2   79.7   123.   270.   347.   410.   472.   86.8</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> S06        68.1   75.6   85.8  104.    216.   346.   399.   439.   475.  115. </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S01        52.8   58.0   64.9   76.9   123.   233.   314.   390.   468.   84.5</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> S02        68.2   77.6   90.7  114.    175.   267.   346.   412.   476.  128. </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> S03        63.5   69.5   77.5   91.3   151.   278.   347.   402.   455.  100. </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> S04        57.6   62.8   69.6   81.2   125.   258.   333.   395.   456.   88.5</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> S05        57.0   62.1   68.7   80.1   123.   270.   347.   410.   472.   87.2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> S06        68.5   76.1   86.2  104.    216.   346.   399.   439.   475.  115. </span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 29 more variables: D60_um &lt;dbl&gt;, Cu &lt;dbl&gt;, Cc &lt;dbl&gt;, So_trask &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   Sk_trask &lt;dbl&gt;, fine_content_percent &lt;dbl&gt;, fine_threshold_um &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   fine_equivalent &lt;dbl&gt;, interpolation_scale &lt;chr&gt;, D5_phi &lt;dbl&gt;,</span></span></span>
@@ -225,11 +225,11 @@ silently treated as bounded intervals.</p>
 <span><span class="co">#&gt;   sample_id  n_ok n_warning n_error n_info has_error has_warning overall_status</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S01          28         1       0      2 FALSE     TRUE        warning       </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> S02          25         4       0      2 FALSE     TRUE        warning       </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> S03          25         4       0      2 FALSE     TRUE        warning       </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> S02          22         5       0      4 FALSE     TRUE        warning       </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> S03          22         5       0      4 FALSE     TRUE        warning       </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> S04          28         1       0      2 FALSE     TRUE        warning       </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> S05          28         1       0      2 FALSE     TRUE        warning       </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> S06          25         4       0      2 FALSE     TRUE        warning</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> S06          22         5       0      4 FALSE     TRUE        warning</span></span></code></pre></div>
 <p>Sieve + hydrometer measurements are often preferred for
 clay/silt/sand texture fractions because they can provide finite
 boundaries in the fine tail. In this example, hydrometer was only added
@@ -244,17 +244,17 @@ reported rather than hidden.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S01                0.624         86.9        12.5             0</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> S02                0.224         99.8         0               0</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> S03                0.312         99.7         0               0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> S04                0.153         90.7         9.11            0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> S04                0.153         90.7         9.10            0</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> S05                0.295         92.0         7.74            0</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> S06                0.230         99.8         0               0</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/warning.html" class="external-link">suppressWarnings</a></span><span class="op">(</span><span class="fu"><a href="../reference/gs_fractions_wide.html">gs_fractions_wide</a></span><span class="op">(</span><span class="va">gs_long</span>, scheme <span class="op">=</span> <span class="st">"uk_ssew"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 5</span></span></span>
 <span><span class="co">#&gt;   sample_id gravel_percent sand_percent silt_percent clay_percent</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S01                0.624         85.3        14.0             0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S01                0.624         85.4        14.0             0</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> S02                0.224         99.8         0               0</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> S03                0.312         99.7         0               0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> S04                0.153         89.8        10.0             0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> S04                0.153         89.9         9.98            0</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> S05                0.295         90.5         9.19            0</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> S06                0.230         99.8         0               0</span></span></code></pre></div>
 </div>
@@ -302,12 +302,12 @@ inspect.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 4</span></span></span>
 <span><span class="co">#&gt;   sample_id gravel_percent sand_percent mud_percent</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S01                0.624         85.0      14.4  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> S02                0.224         97.8       1.93 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> S03                0.312         95.1       4.60 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> S04                0.153         89.6      10.2  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> S05                0.295         88.8      10.9  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> S06                0.230         98.8       0.964</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S01                0.624         99.4           0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> S02                0.224         99.8           0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> S03                0.312         99.7           0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> S04                0.153         99.8           0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> S05                0.295         99.7           0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> S06                0.230         99.8           0</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="claysiltsand-fractions-from-finer-resolution-data">Clay/Silt/Sand Fractions From Finer-Resolution Data<a class="anchor" aria-label="anchor" href="#claysiltsand-fractions-from-finer-resolution-data"></a>
@@ -322,17 +322,17 @@ resolve the relevant boundaries.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S01                0.624         86.9        12.5             0</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> S02                0.224         99.8         0               0</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> S03                0.312         99.7         0               0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> S04                0.153         90.7         9.11            0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> S04                0.153         90.7         9.10            0</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> S05                0.295         92.0         7.74            0</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> S06                0.230         99.8         0               0</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/warning.html" class="external-link">suppressWarnings</a></span><span class="op">(</span><span class="fu"><a href="../reference/gs_fractions_wide.html">gs_fractions_wide</a></span><span class="op">(</span><span class="va">gs_long</span>, scheme <span class="op">=</span> <span class="st">"uk_ssew"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 5</span></span></span>
 <span><span class="co">#&gt;   sample_id gravel_percent sand_percent silt_percent clay_percent</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S01                0.624         85.3        14.0             0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S01                0.624         85.4        14.0             0</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> S02                0.224         99.8         0               0</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> S03                0.312         99.7         0               0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> S04                0.153         89.8        10.0             0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> S04                0.153         89.9         9.98            0</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> S05                0.295         90.5         9.19            0</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> S06                0.230         99.8         0               0</span></span></code></pre></div>
 </div>
@@ -351,7 +351,7 @@ lower-level functions.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 41</span></span></span>
 <span><span class="co">#&gt;   sample_id D5_um D10_um D16_um D25_um D50_um D75_um D84_um D90_um D95_um D30_um</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S01        25.1   40.9   64.5   76.5   123.   233.   314.   390.   468.   84.1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S01        25.1   40.9   64.9   76.9   123.   233.   314.   390.   468.   84.5</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 30 more variables: D60_um &lt;dbl&gt;, Cu &lt;dbl&gt;, Cc &lt;dbl&gt;, So_trask &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   Sk_trask &lt;dbl&gt;, fine_content_percent &lt;dbl&gt;, fine_threshold_um &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   fine_equivalent &lt;dbl&gt;, interpolation_scale &lt;chr&gt;, D5_phi &lt;dbl&gt;,</span></span></span>
@@ -373,7 +373,7 @@ blockers.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 14</span></span></span>
 <span><span class="co">#&gt;   sample_id   D10   D25   D50   D75   D90 d_value_unit D90_D10_ratio</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S01        40.9  76.5  123.  233.  390. um                    9.54</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S01        40.9  76.9  123.  233.  390. um                    9.54</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 6 more variables: D90_minus_D10 &lt;dbl&gt;, D75_D25_ratio &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   D75_minus_D25 &lt;dbl&gt;, D90_D10_log_ratio &lt;dbl&gt;, D75_D25_log_ratio &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   any_extrapolated &lt;lgl&gt;</span></span></span>
@@ -382,9 +382,9 @@ blockers.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 12</span></span></span>
 <span><span class="co">#&gt;   sample_id sample_modality  mode_rank mode_size_mm mode_size_um mode_phi</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S01       trimodal_or_more         1       0.088<span style="text-decoration: underline;">4</span>         88.4      3.5</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> S01       trimodal_or_more         2       0.177         177.       2.5</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> S01       trimodal_or_more         3       0.354         354.       1.5</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S01       trimodal_or_more         1       0.088<span style="text-decoration: underline;">7</span>         88.7     3.49</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> S01       trimodal_or_more         2       0.177         177.      2.5 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> S01       trimodal_or_more         3       0.354         354.      1.5 </span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 6 more variables: mode_class_lower_mm &lt;dbl&gt;, mode_class_upper_mm &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   mode_percent &lt;dbl&gt;, mode_class_label &lt;chr&gt;, is_open_interval &lt;lgl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   mode_status &lt;chr&gt;</span></span></span>
@@ -397,7 +397,7 @@ blockers.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 55</span></span></span>
 <span><span class="co">#&gt;   sample_id   D10   D25   D50   D75   D90 d_value_unit D90_D10_ratio</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S01        40.9  76.5  123.  233.  390. um                    9.54</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S01        40.9  76.9  123.  233.  390. um                    9.54</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 47 more variables: D90_minus_D10 &lt;dbl&gt;, D75_D25_ratio &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   D75_minus_D25 &lt;dbl&gt;, D90_D10_log_ratio &lt;dbl&gt;, D75_D25_log_ratio &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   any_extrapolated &lt;lgl&gt;, mean_description &lt;chr&gt;, sorting_description &lt;chr&gt;,</span></span></span>

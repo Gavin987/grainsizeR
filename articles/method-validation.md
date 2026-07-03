@@ -57,12 +57,14 @@ for interpolation.
 ## Long Versus Wide Example Data
 
 The long and wide examples contain the same sample IDs. Here, the file
-names describe table layout, not measurement method. Coarse
-Wentworth-style gravel, sand, and mud summaries agree between the two
-files because both represent the same aggregate behavior at 62.5 um.
-Clay/silt-level schemes such as USDA, ISSS, and UK SSEW require
-thresholds such as 2, 20, 50, 60, or 63 um; these are better resolved
-when finite measured boundaries bracket those thresholds.
+names describe table layout, not measurement method. Strict Wentworth
+major summaries use the phi-scale 62.5 um sand/mud boundary. The
+`gravel_sand_mud` scheme uses the GRADISTAT-compatible 63 um boundary,
+so it is not guaranteed to match `wentworth_major` exactly for samples
+with material near that boundary. Clay/silt-level schemes such as USDA,
+ISSS, and UK SSEW require thresholds such as 2, 20, 50, 60, or 63 um;
+these are better resolved when finite measured boundaries bracket those
+thresholds.
 
 Instrument outputs such as laser cumulative percent-finer curves may
 require preprocessing before import.
@@ -118,7 +120,7 @@ suppressWarnings(gs_percent_finer(
 #> 1 S01                 20        0.02           5.64          3.90
 #> 2 S01                 50        0.05           4.32         12.5 
 #> 3 S01                 60        0.06           4.06         14.0 
-#> 4 S01                 63        0.063          3.99         14.8 
+#> 4 S01                 63        0.063          3.99         14.4 
 #> # ℹ 3 more variables: percent_coarser <dbl>, interpolation_scale <chr>,
 #> #   extrapolated <lgl>
 ```
@@ -142,7 +144,7 @@ gs_diagnostics(subset(gs_wide, sample_id == "S01"), output = "summary")
 #> # A tibble: 1 × 8
 #>   sample_id  n_ok n_warning n_error n_info has_error has_warning overall_status
 #>   <chr>     <int>     <int>   <int>  <int> <lgl>     <lgl>       <chr>         
-#> 1 S01          22         7       0      2 FALSE     TRUE        warning
+#> 1 S01          19         9       0      3 FALSE     TRUE        warning
 ```
 
 ## Fraction Schemes
@@ -160,22 +162,22 @@ head(gs_fractions_wide(gs_long, scheme = "wentworth_major"))
 #> # A tibble: 6 × 4
 #>   sample_id gravel_percent sand_percent mud_percent
 #>   <chr>              <dbl>        <dbl>       <dbl>
-#> 1 S01                0.624         85.0      14.4  
-#> 2 S02                0.224         97.8       1.93 
-#> 3 S03                0.312         95.1       4.60 
-#> 4 S04                0.153         89.6      10.2  
-#> 5 S05                0.295         88.8      10.9  
-#> 6 S06                0.230         98.8       0.964
+#> 1 S01                0.624         85.1        14.3
+#> 2 S02                0.224         99.8         0  
+#> 3 S03                0.312         99.7         0  
+#> 4 S04                0.153         89.7        10.2
+#> 5 S05                0.295         89.4        10.4
+#> 6 S06                0.230         99.8         0
 head(gs_fractions_wide(gs_wide, scheme = "wentworth_major"))
 #> # A tibble: 6 × 4
 #>   sample_id gravel_percent sand_percent mud_percent
 #>   <chr>              <dbl>        <dbl>       <dbl>
-#> 1 S01                0.624         85.0      14.4  
-#> 2 S02                0.224         97.8       1.93 
-#> 3 S03                0.312         95.1       4.60 
-#> 4 S04                0.153         89.6      10.2  
-#> 5 S05                0.295         88.8      10.9  
-#> 6 S06                0.230         98.8       0.964
+#> 1 S01                0.624         99.4           0
+#> 2 S02                0.224         99.8           0
+#> 3 S03                0.312         99.7           0
+#> 4 S04                0.153         99.8           0
+#> 5 S05                0.295         99.7           0
+#> 6 S06                0.230         99.8           0
 ```
 
 ## Folk and Ward Statistics
@@ -192,7 +194,7 @@ suppressWarnings(gs_folk_ward(
 #> # A tibble: 1 × 26
 #>   sample_id D5_um D16_um D25_um D50_um D75_um D84_um D95_um D5_phi D16_phi
 #>   <chr>     <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>   <dbl>
-#> 1 S01        25.1   64.5   76.5   123.   233.   314.   468.   5.31    3.96
+#> 1 S01        25.1   64.9   76.9   123.   233.   314.   468.   5.31    3.94
 #> # ℹ 16 more variables: D25_phi <dbl>, D50_phi <dbl>, D75_phi <dbl>,
 #> #   D84_phi <dbl>, D95_phi <dbl>, mean_fw_phi <dbl>, mean_fw_um <dbl>,
 #> #   sorting_fw_phi <dbl>, skewness_fw <dbl>, kurtosis_fw <dbl>,
@@ -216,7 +218,7 @@ suppressWarnings(gs_moments(
 #> # A tibble: 1 × 14
 #>   sample_id moment_method   mean_moment mean_moment_unit mean_moment_um
 #>   <chr>     <chr>                 <dbl> <chr>                     <dbl>
-#> 1 S01       logarithmic_phi        2.98 phi                        127.
+#> 1 S01       logarithmic_phi        2.97 phi                        127.
 #> # ℹ 9 more variables: mean_moment_phi <dbl>, sd_moment <dbl>,
 #> #   sd_moment_unit <chr>, skewness_moment <dbl>, kurtosis_moment <dbl>,
 #> #   retained_percent_used <dbl>, open_end <chr>, open_end_estimated <lgl>,
@@ -246,16 +248,16 @@ summary
 #> # A tibble: 30 × 41
 #>    sample_id D5_um D10_um D16_um D25_um D50_um D75_um D84_um D90_um D95_um
 #>    <chr>     <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>
-#>  1 S01        25.1   40.9   64.5   76.5   123.   233.   314.   390.   468.
-#>  2 S02        67.7   77.2   90.3  114.    175.   267.   346.   412.   476.
-#>  3 S03        63.0   69.0   77.1   91.0   151.   278.   347.   402.   455.
-#>  4 S04        32.3   59.8   69.1   80.8   125.   258.   333.   395.   456.
-#>  5 S05        35.3   62.0   68.2   79.7   123.   270.   347.   410.   472.
-#>  6 S06        68.1   75.6   85.8  104.    216.   346.   399.   439.   475.
-#>  7 S07        66.6   75.2   87.0  108.    175.   286.   366.   432.   496.
-#>  8 S08        69.6   81.6   98.6  130.    251.   358.   408.   444.   477.
-#>  9 S09        71.8   86.2  107.   142.    261.   365.   412.   447.   478.
-#> 10 S10        66.5   77.2   92.4  121.    227.   350.   404.   444.   481.
+#>  1 S01        25.1   40.9   64.9   76.9   123.   233.   314.   390.   468.
+#>  2 S02        68.2   77.6   90.7  114.    175.   267.   346.   412.   476.
+#>  3 S03        63.5   69.5   77.5   91.3   151.   278.   347.   402.   455.
+#>  4 S04        32.3   60.2   69.6   81.2   125.   258.   333.   395.   456.
+#>  5 S05        35.3   62.2   68.7   80.1   123.   270.   347.   410.   472.
+#>  6 S06        68.5   76.1   86.2  104.    216.   346.   399.   439.   475.
+#>  7 S07        67.1   75.6   87.3  108.    175.   286.   366.   432.   496.
+#>  8 S08        70.1   82.0   98.8  130.    251.   358.   408.   444.   477.
+#>  9 S09        72.2   86.6  108.   142.    261.   365.   412.   447.   478.
+#> 10 S10        67.0   77.6   92.7  121.    227.   350.   404.   444.   481.
 #> # ℹ 20 more rows
 #> # ℹ 31 more variables: D30_um <dbl>, D60_um <dbl>, Cu <dbl>, Cc <dbl>,
 #> #   So_trask <dbl>, Sk_trask <dbl>, fine_content_percent <dbl>,

@@ -9,11 +9,11 @@ from their internal micrometre storage. Each scheme is represented as a
 complete, non-overlapping particle-size partition. Lower bounds are
 inclusive for interpretation, and upper bounds define the cumulative
 threshold used to calculate each fraction. `gravel_sand_mud` is an
-explicit public alias of `wentworth_major`; both schemes use gravel,
-sand, and mud components with boundaries at 2000 and 62.5 micrometres.
-GRADISTAT ternary examples use `scheme = "gravel_sand_mud"` because it
-makes the required ternary components explicit, while `wentworth_major`
-remains available for users who prefer the Wentworth naming.
+independent GRADISTAT-compatible gravel/sand/mud scheme with boundaries
+at 2000 and 63 micrometres. `wentworth_major` is a strict Wentworth /
+phi-scale major scheme with boundaries at 2000 and 62.5 micrometres, so
+`gravel_sand_mud` and `wentworth_major` are not guaranteed to produce
+identical output.
 
 ## Usage
 

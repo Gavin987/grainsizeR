@@ -94,7 +94,7 @@ head(classify_texture(usda_fractions, scheme = "usda", method = "rules"))
 #> 1 S01        87.5 12.5      0 sand             sand         
 #> 2 S02       100    0        0 sand             sand         
 #> 3 S03       100    0        0 sand             sand         
-#> 4 S04        90.9  9.13     0 sand             sand         
+#> 4 S04        90.9  9.12     0 sand             sand         
 #> 5 S05        92.2  7.76     0 sand             sand         
 #> 6 S06       100    0        0 sand             sand         
 #> # ℹ 5 more variables: classification_method <chr>, rule_status <chr>,

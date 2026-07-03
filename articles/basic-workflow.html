@@ -103,12 +103,12 @@ see the table layouts and measurement workflows vignette.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 13</span></span></span>
 <span><span class="co">#&gt;   sample_id bin_id raw_size_um size_lower_um size_upper_um size_mid_um</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S01            1      <span style="text-decoration: underline;">2</span>000          <span style="text-decoration: underline;">2</span>000              <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> S01            2      <span style="text-decoration: underline;">1</span>000          <span style="text-decoration: underline;">1</span>000            <span style="text-decoration: underline;">2</span>000      <span style="text-decoration: underline;">1</span>414. </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> S01            3       500           500            <span style="text-decoration: underline;">1</span>000       707. </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> S01            4       250           250             500       354. </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> S01            5       125           125             250       177. </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> S01            6        62.5          62.5           125        88.4</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S01            1        <span style="text-decoration: underline;">2</span>000          <span style="text-decoration: underline;">2</span>000            <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> S01            2        <span style="text-decoration: underline;">1</span>000          <span style="text-decoration: underline;">1</span>000          <span style="text-decoration: underline;">2</span>000      <span style="text-decoration: underline;">1</span>414. </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> S01            3         500           500          <span style="text-decoration: underline;">1</span>000       707. </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> S01            4         250           250           500       354. </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> S01            5         125           125           250       177. </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> S01            6          63            63           125        88.7</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 7 more variables: size_mid_phi &lt;dbl&gt;, retained_percent &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   cum_finer_percent &lt;dbl&gt;, cum_coarser_percent &lt;dbl&gt;, is_open_lower &lt;lgl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   is_open_upper &lt;lgl&gt;, measurement_method &lt;chr&gt;</span></span></span></code></pre></div>
@@ -138,12 +138,12 @@ labels.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 13</span></span></span>
 <span><span class="co">#&gt;   sample_id bin_id raw_size_um size_lower_um size_upper_um size_mid_um</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S01            1      <span style="text-decoration: underline;">2</span>000          <span style="text-decoration: underline;">2</span>000              <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> S01            2      <span style="text-decoration: underline;">1</span>000          <span style="text-decoration: underline;">1</span>000            <span style="text-decoration: underline;">2</span>000      <span style="text-decoration: underline;">1</span>414. </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> S01            3       500           500            <span style="text-decoration: underline;">1</span>000       707. </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> S01            4       250           250             500       354. </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> S01            5       125           125             250       177. </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> S01            6        62.5          62.5           125        88.4</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S01            1        <span style="text-decoration: underline;">2</span>000          <span style="text-decoration: underline;">2</span>000            <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> S01            2        <span style="text-decoration: underline;">1</span>000          <span style="text-decoration: underline;">1</span>000          <span style="text-decoration: underline;">2</span>000      <span style="text-decoration: underline;">1</span>414. </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> S01            3         500           500          <span style="text-decoration: underline;">1</span>000       707. </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> S01            4         250           250           500       354. </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> S01            5         125           125           250       177. </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> S01            6          63            63           125        88.7</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 7 more variables: size_mid_phi &lt;dbl&gt;, retained_percent &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   cum_finer_percent &lt;dbl&gt;, cum_coarser_percent &lt;dbl&gt;, is_open_lower &lt;lgl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   is_open_upper &lt;lgl&gt;, measurement_method &lt;chr&gt;</span></span></span></code></pre></div>
@@ -174,12 +174,12 @@ supplied.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 8</span></span></span>
 <span><span class="co">#&gt;   sample_id  n_ok n_warning n_error n_info has_error has_warning overall_status</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S01          22         7       0      2 FALSE     TRUE        warning       </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> S02          24         5       0      2 FALSE     TRUE        warning       </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> S03          24         5       0      2 FALSE     TRUE        warning       </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> S04          22         7       0      2 FALSE     TRUE        warning       </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> S05          22         7       0      2 FALSE     TRUE        warning       </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> S06          24         5       0      2 FALSE     TRUE        warning</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S01          19         9       0      3 FALSE     TRUE        warning       </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> S02          21         6       0      4 FALSE     TRUE        warning       </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> S03          21         6       0      4 FALSE     TRUE        warning       </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> S04          19         9       0      3 FALSE     TRUE        warning       </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> S05          19         9       0      3 FALSE     TRUE        warning       </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> S06          21         6       0      4 FALSE     TRUE        warning</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/gs_diagnostics.html">gs_diagnostics</a></span><span class="op">(</span></span>
 <span>  <span class="va">gs</span>,</span>
 <span>  d_values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">10</span>, <span class="fl">50</span>, <span class="fl">90</span>, <span class="fl">95</span><span class="op">)</span>,</span>
@@ -206,12 +206,12 @@ the sample is finer.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 7</span></span></span>
 <span><span class="co">#&gt;   sample_id boundary_id boundary_um boundary_mm boundary_phi percent_finer</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S01                 1      <span style="text-decoration: underline;">2</span>000        2                -<span style="color: #BB0000;">1</span>          99.4</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> S01                 2      <span style="text-decoration: underline;">1</span>000        1                 0          98.4</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> S01                 3       500        0.5               1          96.8</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> S01                 4       250        0.25              2          77.7</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> S01                 5       125        0.125             3          50.9</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> S01                 6        62.5      0.062<span style="text-decoration: underline;">5</span>            4          14.4</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S01                 1        <span style="text-decoration: underline;">2</span>000       2            -<span style="color: #BB0000;">1</span>             99.4</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> S01                 2        <span style="text-decoration: underline;">1</span>000       1             0             98.4</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> S01                 3         500       0.5           1             96.8</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> S01                 4         250       0.25          2             77.7</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> S01                 5         125       0.125         3             50.9</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> S01                 6          63       0.063         3.99          14.4</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 1 more variable: percent_coarser &lt;dbl&gt;</span></span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/gs_d_values.html">gs_d_values</a></span><span class="op">(</span><span class="va">gs</span>, probs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">50</span>, <span class="fl">90</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 7</span></span></span>
@@ -220,7 +220,7 @@ the sample is finer.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S01               10          40.9        0.040<span style="text-decoration: underline;">9</span>           4.61</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> S01               50         123.         0.123            3.02</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> S01               90         390.         0.390            1.36</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> S02               10          77.2        0.077<span style="text-decoration: underline;">2</span>           3.70</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> S02               10          77.6        0.077<span style="text-decoration: underline;">6</span>           3.69</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> S02               50         175.         0.175            2.51</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> S02               90         412.         0.412            1.28</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 2 more variables: interpolation_scale &lt;chr&gt;, extrapolated &lt;lgl&gt;</span></span></span></code></pre></div>
@@ -247,8 +247,8 @@ handling.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> S01                 20        0.02           5.64          3.90</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> S01                 50        0.05           4.32         12.5 </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> S01                 60        0.06           4.06         14.0 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> S01                 63        0.063          3.99         14.8 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> S02                  2        0.002          8.97       -<span style="color: #BB0000;">129.</span>  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> S01                 63        0.063          3.99         14.4 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> S02                  2        0.002          8.97       -<span style="color: #BB0000;">131.</span>  </span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 3 more variables: percent_coarser &lt;dbl&gt;, interpolation_scale &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   extrapolated &lt;lgl&gt;</span></span></span></code></pre></div>
 </div>
@@ -263,12 +263,12 @@ handling.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 15</span></span></span>
 <span><span class="co">#&gt;   sample_id D10_um D25_um D30_um D50_um D60_um D75_um    Cu    Cc So_trask</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S01         40.9   76.5   84.1   123.   158.   233.  3.87 1.09      1.75</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> S02         77.2  114.   128.    175.   205.   267.  2.65 1.04      1.53</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> S03         69.0   91.0   99.8   151.   193.   278.  2.79 0.749     1.75</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> S04         59.8   80.8   88.2   125.   167.   258.  2.79 0.779     1.79</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> S05         62.0   79.7   86.8   123.   167.   270.  2.70 0.728     1.84</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> S06         75.6  104.   115.    216.   273.   346.  3.61 0.644     1.83</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S01         40.9   76.9   84.5   123.   158.   233.  3.87 1.10      1.74</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> S02         77.6  114.   128.    175.   205.   267.  2.64 1.03      1.53</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> S03         69.5   91.3  100.    151.   193.   278.  2.77 0.748     1.74</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> S04         60.2   81.2   88.5   125.   167.   258.  2.77 0.780     1.78</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> S05         62.2   80.1   87.2   123.   167.   270.  2.69 0.731     1.84</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> S06         76.1  104.   115.    216.   273.   346.  3.59 0.641     1.82</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 5 more variables: Sk_trask &lt;dbl&gt;, fine_content_percent &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   fine_threshold_um &lt;dbl&gt;, fine_equivalent &lt;dbl&gt;, interpolation_scale &lt;chr&gt;</span></span></span></code></pre></div>
 </div>
@@ -283,12 +283,12 @@ handling.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 26</span></span></span>
 <span><span class="co">#&gt;   sample_id D5_um D16_um D25_um D50_um D75_um D84_um D95_um D5_phi D16_phi</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S01        25.1   64.5   76.5   123.   233.   314.   468.   5.31    3.96</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> S02        67.7   90.3  114.    175.   267.   346.   476.   3.88    3.47</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> S03        63.0   77.1   91.0   151.   278.   347.   455.   3.99    3.70</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> S04        32.3   69.1   80.8   125.   258.   333.   456.   4.95    3.85</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> S05        35.3   68.2   79.7   123.   270.   347.   472.   4.82    3.87</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> S06        68.1   85.8  104.    216.   346.   399.   475.   3.88    3.54</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S01        25.1   64.9   76.9   123.   233.   314.   468.   5.31    3.94</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> S02        68.2   90.7  114.    175.   267.   346.   476.   3.87    3.46</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> S03        63.5   77.5   91.3   151.   278.   347.   455.   3.98    3.69</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> S04        32.3   69.6   81.2   125.   258.   333.   456.   4.95    3.85</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> S05        35.3   68.7   80.1   123.   270.   347.   472.   4.82    3.86</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> S06        68.5   86.2  104.    216.   346.   399.   475.   3.87    3.54</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 16 more variables: D25_phi &lt;dbl&gt;, D50_phi &lt;dbl&gt;, D75_phi &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   D84_phi &lt;dbl&gt;, D95_phi &lt;dbl&gt;, mean_fw_phi &lt;dbl&gt;, mean_fw_um &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   sorting_fw_phi &lt;dbl&gt;, skewness_fw &lt;dbl&gt;, kurtosis_fw &lt;dbl&gt;,</span></span></span>
@@ -309,11 +309,11 @@ extending adjacent intervals in phi space.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 14</span></span></span>
 <span><span class="co">#&gt;   sample_id moment_method   mean_moment mean_moment_unit mean_moment_um</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S01       logarithmic_phi        2.98 phi                        127.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> S02       logarithmic_phi        2.49 phi                        178.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> S03       logarithmic_phi        2.66 phi                        159.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S01       logarithmic_phi        2.97 phi                        127.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> S02       logarithmic_phi        2.49 phi                        179.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> S03       logarithmic_phi        2.65 phi                        159.</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> S04       logarithmic_phi        2.90 phi                        134.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> S05       logarithmic_phi        2.85 phi                        138.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> S05       logarithmic_phi        2.85 phi                        139.</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> S06       logarithmic_phi        2.36 phi                        194.</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 9 more variables: mean_moment_phi &lt;dbl&gt;, sd_moment &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   sd_moment_unit &lt;chr&gt;, skewness_moment &lt;dbl&gt;, kurtosis_moment &lt;dbl&gt;,</span></span></span>
@@ -328,12 +328,12 @@ extending adjacent intervals in phi space.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 4</span></span></span>
 <span><span class="co">#&gt;   sample_id gravel_percent sand_percent mud_percent</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S01                0.624         85.0      14.4  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> S02                0.224         97.8       1.93 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> S03                0.312         95.1       4.60 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> S04                0.153         89.6      10.2  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> S05                0.295         88.8      10.9  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> S06                0.230         98.8       0.964</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S01                0.624         85.1        14.3</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> S02                0.224         99.8         0  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> S03                0.312         99.7         0  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> S04                0.153         89.7        10.2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> S05                0.295         89.4        10.4</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> S06                0.230         99.8         0</span></span>
 <span><span class="fu"><a href="../reference/particle_size_systems.html">particle_size_systems</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 9 × 15</span></span></span>
 <span><span class="co">#&gt;   system_id     system_name country_or_region domain clay_upper_um silt_upper_um</span></span>
@@ -370,12 +370,12 @@ fractions in one row per sample.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 41</span></span></span>
 <span><span class="co">#&gt;   sample_id D5_um D10_um D16_um D25_um D50_um D75_um D84_um D90_um D95_um D30_um</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S01        25.1   40.9   64.5   76.5   123.   233.   314.   390.   468.   84.1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> S02        67.7   77.2   90.3  114.    175.   267.   346.   412.   476.  128. </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> S03        63.0   69.0   77.1   91.0   151.   278.   347.   402.   455.   99.8</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> S04        32.3   59.8   69.1   80.8   125.   258.   333.   395.   456.   88.2</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> S05        35.3   62.0   68.2   79.7   123.   270.   347.   410.   472.   86.8</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> S06        68.1   75.6   85.8  104.    216.   346.   399.   439.   475.  115. </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S01        25.1   40.9   64.9   76.9   123.   233.   314.   390.   468.   84.5</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> S02        68.2   77.6   90.7  114.    175.   267.   346.   412.   476.  128. </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> S03        63.5   69.5   77.5   91.3   151.   278.   347.   402.   455.  100. </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> S04        32.3   60.2   69.6   81.2   125.   258.   333.   395.   456.   88.5</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> S05        35.3   62.2   68.7   80.1   123.   270.   347.   410.   472.   87.2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> S06        68.5   76.1   86.2  104.    216.   346.   399.   439.   475.  115. </span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 30 more variables: D60_um &lt;dbl&gt;, Cu &lt;dbl&gt;, Cc &lt;dbl&gt;, So_trask &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   Sk_trask &lt;dbl&gt;, fine_content_percent &lt;dbl&gt;, fine_threshold_um &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   fine_equivalent &lt;dbl&gt;, interpolation_scale &lt;chr&gt;, D5_phi &lt;dbl&gt;,</span></span></span>

@@ -46,12 +46,12 @@ head(gs)
 #> # A tibble: 6 × 13
 #>   sample_id bin_id raw_size_um size_lower_um size_upper_um size_mid_um
 #>   <chr>      <int>       <dbl>         <dbl>         <dbl>       <dbl>
-#> 1 S01            1      2000          2000              NA        NA  
-#> 2 S01            2      1000          1000            2000      1414. 
-#> 3 S01            3       500           500            1000       707. 
-#> 4 S01            4       250           250             500       354. 
-#> 5 S01            5       125           125             250       177. 
-#> 6 S01            6        62.5          62.5           125        88.4
+#> 1 S01            1        2000          2000            NA        NA  
+#> 2 S01            2        1000          1000          2000      1414. 
+#> 3 S01            3         500           500          1000       707. 
+#> 4 S01            4         250           250           500       354. 
+#> 5 S01            5         125           125           250       177. 
+#> 6 S01            6          63            63           125        88.7
 #> # ℹ 7 more variables: size_mid_phi <dbl>, retained_percent <dbl>,
 #> #   cum_finer_percent <dbl>, cum_coarser_percent <dbl>, is_open_lower <lgl>,
 #> #   is_open_upper <lgl>, measurement_method <chr>
@@ -73,11 +73,11 @@ head(gs_diagnostics(gs, output = "summary"))
 #>   sample_id  n_ok n_warning n_error n_info has_error has_warning overall_status
 #>   <chr>     <int>     <int>   <int>  <int> <lgl>     <lgl>       <chr>         
 #> 1 S01          28         1       0      2 FALSE     TRUE        warning       
-#> 2 S02          25         4       0      2 FALSE     TRUE        warning       
-#> 3 S03          25         4       0      2 FALSE     TRUE        warning       
+#> 2 S02          22         5       0      4 FALSE     TRUE        warning       
+#> 3 S03          22         5       0      4 FALSE     TRUE        warning       
 #> 4 S04          28         1       0      2 FALSE     TRUE        warning       
 #> 5 S05          28         1       0      2 FALSE     TRUE        warning       
-#> 6 S06          25         4       0      2 FALSE     TRUE        warning
+#> 6 S06          22         5       0      4 FALSE     TRUE        warning
 ```
 
 ## Cumulative Percentages
@@ -90,12 +90,12 @@ head(gs_cumulative(gs))
 #> # A tibble: 6 × 7
 #>   sample_id boundary_id boundary_um boundary_mm boundary_phi percent_finer
 #>   <chr>           <int>       <dbl>       <dbl>        <dbl>         <dbl>
-#> 1 S01                 1      2000        2                -1          99.4
-#> 2 S01                 2      1000        1                 0          98.4
-#> 3 S01                 3       500        0.5               1          96.8
-#> 4 S01                 4       250        0.25              2          77.7
-#> 5 S01                 5       125        0.125             3          50.9
-#> 6 S01                 6        62.5      0.0625            4          14.4
+#> 1 S01                 1        2000       2            -1             99.4
+#> 2 S01                 2        1000       1             0             98.4
+#> 3 S01                 3         500       0.5           1             96.8
+#> 4 S01                 4         250       0.25          2             77.7
+#> 5 S01                 5         125       0.125         3             50.9
+#> 6 S01                 6          63       0.063         3.99          14.4
 #> # ℹ 1 more variable: percent_coarser <dbl>
 ```
 
@@ -121,7 +121,7 @@ head(suppressWarnings(gs_d_values(
 #> 1 S01               10          40.9        0.0409           4.61
 #> 2 S01               50         123.         0.123            3.02
 #> 3 S01               90         390.         0.390            1.36
-#> 4 S02               10          77.2        0.0772           3.70
+#> 4 S02               10          77.6        0.0776           3.69
 #> 5 S02               50         175.         0.175            2.51
 #> 6 S02               90         412.         0.412            1.28
 #> # ℹ 2 more variables: interpolation_scale <chr>, extrapolated <lgl>
@@ -133,12 +133,12 @@ head(suppressWarnings(gs_d_spread(
 #> # A tibble: 6 × 14
 #>   sample_id   D10   D25   D50   D75   D90 d_value_unit D90_D10_ratio
 #>   <chr>     <dbl> <dbl> <dbl> <dbl> <dbl> <chr>                <dbl>
-#> 1 S01        40.9  76.5  123.  233.  390. um                    9.54
-#> 2 S02        77.2 114.   175.  267.  412. um                    5.33
-#> 3 S03        69.0  91.0  151.  278.  402. um                    5.83
-#> 4 S04        59.8  80.8  125.  258.  395. um                    6.61
-#> 5 S05        62.0  79.7  123.  270.  410. um                    6.62
-#> 6 S06        75.6 104.   216.  346.  439. um                    5.81
+#> 1 S01        40.9  76.9  123.  233.  390. um                    9.54
+#> 2 S02        77.6 114.   175.  267.  412. um                    5.30
+#> 3 S03        69.5  91.3  151.  278.  402. um                    5.79
+#> 4 S04        60.2  81.2  125.  258.  395. um                    6.56
+#> 5 S05        62.2  80.1  123.  270.  410. um                    6.60
+#> 6 S06        76.1 104.   216.  346.  439. um                    5.77
 #> # ℹ 6 more variables: D90_minus_D10 <dbl>, D75_D25_ratio <dbl>,
 #> #   D75_minus_D25 <dbl>, D90_D10_log_ratio <dbl>, D75_D25_log_ratio <dbl>,
 #> #   any_extrapolated <lgl>
@@ -157,12 +157,12 @@ head(suppressWarnings(gs_folk_ward(
 #> # A tibble: 6 × 26
 #>   sample_id D5_um D16_um D25_um D50_um D75_um D84_um D95_um D5_phi D16_phi
 #>   <chr>     <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>   <dbl>
-#> 1 S01        25.1   64.5   76.5   123.   233.   314.   468.   5.31    3.96
-#> 2 S02        67.7   90.3  114.    175.   267.   346.   476.   3.88    3.47
-#> 3 S03        63.0   77.1   91.0   151.   278.   347.   455.   3.99    3.70
-#> 4 S04        32.3   69.1   80.8   125.   258.   333.   456.   4.95    3.85
-#> 5 S05        35.3   68.2   79.7   123.   270.   347.   472.   4.82    3.87
-#> 6 S06        68.1   85.8  104.    216.   346.   399.   475.   3.88    3.54
+#> 1 S01        25.1   64.9   76.9   123.   233.   314.   468.   5.31    3.94
+#> 2 S02        68.2   90.7  114.    175.   267.   346.   476.   3.87    3.46
+#> 3 S03        63.5   77.5   91.3   151.   278.   347.   455.   3.98    3.69
+#> 4 S04        32.3   69.6   81.2   125.   258.   333.   456.   4.95    3.85
+#> 5 S05        35.3   68.7   80.1   123.   270.   347.   472.   4.82    3.86
+#> 6 S06        68.5   86.2  104.    216.   346.   399.   475.   3.87    3.54
 #> # ℹ 16 more variables: D25_phi <dbl>, D50_phi <dbl>, D75_phi <dbl>,
 #> #   D84_phi <dbl>, D95_phi <dbl>, mean_fw_phi <dbl>, mean_fw_um <dbl>,
 #> #   sorting_fw_phi <dbl>, skewness_fw <dbl>, kurtosis_fw <dbl>,
@@ -183,11 +183,11 @@ head(suppressWarnings(gs_moments(
 #> # A tibble: 6 × 14
 #>   sample_id moment_method   mean_moment mean_moment_unit mean_moment_um
 #>   <chr>     <chr>                 <dbl> <chr>                     <dbl>
-#> 1 S01       logarithmic_phi        2.98 phi                        127.
-#> 2 S02       logarithmic_phi        2.49 phi                        178.
-#> 3 S03       logarithmic_phi        2.66 phi                        159.
+#> 1 S01       logarithmic_phi        2.97 phi                        127.
+#> 2 S02       logarithmic_phi        2.49 phi                        179.
+#> 3 S03       logarithmic_phi        2.65 phi                        159.
 #> 4 S04       logarithmic_phi        2.90 phi                        134.
-#> 5 S05       logarithmic_phi        2.85 phi                        138.
+#> 5 S05       logarithmic_phi        2.85 phi                        139.
 #> 6 S06       logarithmic_phi        2.36 phi                        194.
 #> # ℹ 9 more variables: mean_moment_phi <dbl>, sd_moment <dbl>,
 #> #   sd_moment_unit <chr>, skewness_moment <dbl>, kurtosis_moment <dbl>,
@@ -205,12 +205,12 @@ head(gs_modes(gs))
 #> # A tibble: 6 × 12
 #>   sample_id sample_modality  mode_rank mode_size_mm mode_size_um mode_phi
 #>   <chr>     <chr>                <int>        <dbl>        <dbl>    <dbl>
-#> 1 S01       trimodal_or_more         1       0.0884         88.4      3.5
-#> 2 S01       trimodal_or_more         2       0.177         177.       2.5
-#> 3 S01       trimodal_or_more         3       0.354         354.       1.5
-#> 4 S02       unimodal                 1       0.177         177.       2.5
-#> 5 S02       unimodal                 2       0.0884         88.4      3.5
-#> 6 S02       unimodal                 3       0.354         354.       1.5
+#> 1 S01       trimodal_or_more         1       0.0887         88.7     3.49
+#> 2 S01       trimodal_or_more         2       0.177         177.      2.5 
+#> 3 S01       trimodal_or_more         3       0.354         354.      1.5 
+#> 4 S02       unimodal                 1       0.177         177.      2.5 
+#> 5 S02       unimodal                 2       0.0887         88.7     3.49
+#> 6 S02       unimodal                 3       0.354         354.      1.5 
 #> # ℹ 6 more variables: mode_class_lower_mm <dbl>, mode_class_upper_mm <dbl>,
 #> #   mode_percent <dbl>, mode_class_label <chr>, is_open_interval <lgl>,
 #> #   mode_status <chr>
@@ -230,33 +230,33 @@ head(gs_fractions(gs, scheme = "wentworth_major"))
 #>   sample_id scheme         component lower_mm upper_mm lower_um upper_um percent
 #>   <chr>     <chr>          <chr>        <dbl>    <dbl>    <dbl>    <dbl>   <dbl>
 #> 1 S01       wentworth_maj… gravel      2      Inf        2000      Inf     0.624
-#> 2 S01       wentworth_maj… sand        0.0625   2          62.5   2000    85.0  
-#> 3 S01       wentworth_maj… mud         0        0.0625      0       62.5  14.4  
+#> 2 S01       wentworth_maj… sand        0.0625   2          62.5   2000    85.1  
+#> 3 S01       wentworth_maj… mud         0        0.0625      0       62.5  14.3  
 #> 4 S02       wentworth_maj… gravel      2      Inf        2000      Inf     0.224
-#> 5 S02       wentworth_maj… sand        0.0625   2          62.5   2000    97.8  
-#> 6 S02       wentworth_maj… mud         0        0.0625      0       62.5   1.93 
+#> 5 S02       wentworth_maj… sand        0.0625   2          62.5   2000    99.8  
+#> 6 S02       wentworth_maj… mud         0        0.0625      0       62.5   0    
 #> # ℹ 3 more variables: normalize <chr>, interpolation_scale <chr>,
 #> #   resolved <lgl>
 head(gs_fractions_wide(gs, scheme = "wentworth_major"))
 #> # A tibble: 6 × 4
 #>   sample_id gravel_percent sand_percent mud_percent
 #>   <chr>              <dbl>        <dbl>       <dbl>
-#> 1 S01                0.624         85.0      14.4  
-#> 2 S02                0.224         97.8       1.93 
-#> 3 S03                0.312         95.1       4.60 
-#> 4 S04                0.153         89.6      10.2  
-#> 5 S05                0.295         88.8      10.9  
-#> 6 S06                0.230         98.8       0.964
+#> 1 S01                0.624         85.1        14.3
+#> 2 S02                0.224         99.8         0  
+#> 3 S03                0.312         99.7         0  
+#> 4 S04                0.153         89.7        10.2
+#> 5 S05                0.295         89.4        10.4
+#> 6 S06                0.230         99.8         0
 head(gs_fractions_wide(gs_wide, scheme = "gradistat"))
 #> # A tibble: 6 × 5
 #>   sample_id gravel_percent sand_percent silt_percent clay_percent
 #>   <chr>              <dbl>        <dbl>        <dbl>        <dbl>
-#> 1 S01                0.624         84.6        14.8             0
-#> 2 S02                0.224         97.5         2.24            0
-#> 3 S03                0.312         94.7         5.03            0
-#> 4 S04                0.153         89.2        10.7             0
-#> 5 S05                0.295         88.4        11.4             0
-#> 6 S06                0.230         98.4         1.34            0
+#> 1 S01                0.624         85.0       14.4              0
+#> 2 S02                0.224         97.8        1.93             0
+#> 3 S03                0.312         95.1        4.60             0
+#> 4 S04                0.153         89.6       10.2              0
+#> 5 S05                0.295         88.8       10.9              0
+#> 6 S06                0.230         98.8        0.964            0
 ```
 
 ## Descriptive Terms
@@ -270,12 +270,12 @@ head(suppressWarnings(gs_describe_parameters(gs)))
 #> # A tibble: 6 × 19
 #>   sample_id bin_id raw_size_um size_lower_um size_upper_um size_mid_um
 #>   <chr>      <int>       <dbl>         <dbl>         <dbl>       <dbl>
-#> 1 S01            1      2000          2000              NA        NA  
-#> 2 S01            2      1000          1000            2000      1414. 
-#> 3 S01            3       500           500            1000       707. 
-#> 4 S01            4       250           250             500       354. 
-#> 5 S01            5       125           125             250       177. 
-#> 6 S01            6        62.5          62.5           125        88.4
+#> 1 S01            1        2000          2000            NA        NA  
+#> 2 S01            2        1000          1000          2000      1414. 
+#> 3 S01            3         500           500          1000       707. 
+#> 4 S01            4         250           250           500       354. 
+#> 5 S01            5         125           125           250       177. 
+#> 6 S01            6          63            63           125        88.7
 #> # ℹ 13 more variables: size_mid_phi <dbl>, retained_percent <dbl>,
 #> #   cum_finer_percent <dbl>, cum_coarser_percent <dbl>, is_open_lower <lgl>,
 #> #   is_open_upper <lgl>, measurement_method <chr>, mean_description <chr>,
@@ -397,12 +397,12 @@ head(combined)
 #> # A tibble: 6 × 81
 #>   sample_id D10_um D50_um D90_um   D10   D25   D50   D75   D90 d_value_unit
 #>   <chr>      <dbl>  <dbl>  <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <chr>       
-#> 1 S01         40.9   123.   390.  40.9  76.5  123.  233.  390. um          
-#> 2 S02         77.2   175.   412.  77.2 114.   175.  267.  412. um          
-#> 3 S03         69.0   151.   402.  69.0  91.0  151.  278.  402. um          
-#> 4 S04         59.8   125.   395.  59.8  80.8  125.  258.  395. um          
-#> 5 S05         62.0   123.   410.  62.0  79.7  123.  270.  410. um          
-#> 6 S06         75.6   216.   439.  75.6 104.   216.  346.  439. um          
+#> 1 S01         40.9   123.   390.  40.9  76.9  123.  233.  390. um          
+#> 2 S02         77.6   175.   412.  77.6 114.   175.  267.  412. um          
+#> 3 S03         69.5   151.   402.  69.5  91.3  151.  278.  402. um          
+#> 4 S04         60.2   125.   395.  60.2  81.2  125.  258.  395. um          
+#> 5 S05         62.2   123.   410.  62.2  80.1  123.  270.  410. um          
+#> 6 S06         76.1   216.   439.  76.1 104.   216.  346.  439. um          
 #> # ℹ 71 more variables: D90_D10_ratio <dbl>, D90_minus_D10 <dbl>,
 #> #   D75_D25_ratio <dbl>, D75_minus_D25 <dbl>, D90_D10_log_ratio <dbl>,
 #> #   D75_D25_log_ratio <dbl>, any_extrapolated <lgl>, D5_um <dbl>, D16_um <dbl>,
