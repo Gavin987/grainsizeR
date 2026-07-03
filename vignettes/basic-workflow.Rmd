@@ -47,7 +47,8 @@ head(gs)
 ## Reading Wide-Format Data
 
 Wide input stores size classes in rows and samples in columns. Terminal fine
-rows such as `<0.0625` are supported and become open-ended fine classes.
+rows such as `<0.0625` in a strict Wentworth-style example are supported and
+become open-ended fine classes.
 G2Sd-style wide tables often store particle sizes in row names and samples in
 columns. Convert row names to a size column and use `size_unit = "auto"` or
 `size_unit = "um"` when importing micrometre-scale labels.

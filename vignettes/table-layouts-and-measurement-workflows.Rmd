@@ -93,18 +93,21 @@ gs_wide <- read_gsd(
 head(gs_diagnostics(gs_wide, output = "summary"))
 ```
 
-This example is appropriate for coarse gravel/sand/mud or sand/mud summaries
-when relevant thresholds are resolved. Clay and silt thresholds such as 2, 20,
-50, or 60 um may not be resolvable from data with only a terminal open fine
-class. Open fine tails should not be silently treated as bounded intervals.
+This example is appropriate for the GRADISTAT-compatible `gravel_sand_mud`
+summary because the bundled dry-sieve files use a 0.063 mm terminal fine
+boundary. Clay and silt thresholds such as 2, 20, 50, or 60 um may not be
+resolvable from data with only a terminal open fine class. Open fine tails
+should not be silently treated as bounded intervals. `wentworth_major` remains
+available as a strict Wentworth / phi-scale alternative with the 62.5 um
+sand/mud boundary; it is not an alias of `gravel_sand_mud`.
 
 ```{r}
-head(gs_fractions_wide(gs_wide, scheme = "wentworth_major"))
+head(gs_fractions_wide(gs_wide, scheme = "gravel_sand_mud"))
 
 head(suppressWarnings(gs_parameters(
   gs_wide,
   parameters = c("d_values", "indices", "folk_ward", "fractions"),
-  fraction_scheme = "wentworth_major",
+  fraction_scheme = "gravel_sand_mud",
   extrapolate = "warn_linear"
 )))
 ```
@@ -163,11 +166,13 @@ head(gs_diagnostics(
 
 ## Coarse Fractions From the Dry-Sieve Example
 
-For the dry-sieve example, coarse fraction summaries such as Wentworth gravel,
-sand, and mud are usually the first summary to inspect.
+For the dry-sieve example, `gravel_sand_mud` is usually the first coarse
+fraction summary to inspect. It uses the GRADISTAT-compatible 63 um sand/mud
+boundary. Use `wentworth_major` when a strict Wentworth / phi-scale 62.5 um
+boundary is required.
 
 ```{r}
-head(gs_fractions_wide(gs_wide, scheme = "wentworth_major"))
+head(gs_fractions_wide(gs_wide, scheme = "gravel_sand_mud"))
 ```
 
 ## Clay/Silt/Sand Fractions From Finer-Resolution Data

@@ -90,6 +90,10 @@ knitr::include_graphics(c(
 The dry-sieve wide example demonstrates the GRADISTAT-style
 `Gravel`/`Sand`/`Mud` workflow. More detailed Wentworth-style fractions are
 available when the input resolves the required class boundaries.
+The bundled dry-sieve example uses the GRADISTAT-compatible
+`gravel_sand_mud` basis with a 63 um sand/mud boundary. This differs
+intentionally from the strict Wentworth `wentworth_major` scheme, which uses
+the 62.5 um sand/silt boundary.
 
 ```{r fractions-example, eval=FALSE}
 plot_fractions(
