@@ -58,19 +58,19 @@ test_that("long example has finer resolution and wide example has open fine tail
 
   final_bins <- ex$wide[ave(ex$wide$bin_id, ex$wide$sample_id, FUN = max) == ex$wide$bin_id, ]
   expect_true(all(final_bins$is_open_lower))
-  expect_equal(final_bins$raw_size_um, rep(62.5, nrow(final_bins)))
+  expect_equal(final_bins$raw_size_um, rep(63, nrow(final_bins)))
 })
 
-test_that("coarse long and wide summaries agree for Wentworth major scheme", {
+test_that("coarse long and wide summaries agree for GRADISTAT-compatible gravel sand mud scheme", {
   ex <- read_real_examples_for_regression()
 
-  finer_long <- gs_percent_finer(ex$long, sizes = 62.5, size_unit = "um")
-  finer_wide <- gs_percent_finer(ex$wide, sizes = 62.5, size_unit = "um")
+  finer_long <- gs_percent_finer(ex$long, sizes = 63, size_unit = "um")
+  finer_wide <- gs_percent_finer(ex$wide, sizes = 63, size_unit = "um")
   idx <- match(finer_wide$sample_id, finer_long$sample_id)
   expect_equal(finer_wide$percent_finer, finer_long$percent_finer[idx], tolerance = 1e-5)
 
-  frac_long <- gs_fractions_wide(ex$long, scheme = "wentworth_major")
-  frac_wide <- gs_fractions_wide(ex$wide, scheme = "wentworth_major")
+  frac_long <- gs_fractions_wide(ex$long, scheme = "gravel_sand_mud")
+  frac_wide <- gs_fractions_wide(ex$wide, scheme = "gravel_sand_mud")
   idx <- match(frac_wide$sample_id, frac_long$sample_id)
   for (col in c("gravel_percent", "sand_percent", "mud_percent")) {
     expect_equal(frac_wide[[col]], frac_long[[col]][idx], tolerance = 1e-5)
@@ -97,7 +97,7 @@ test_that("selected real sample returns stable regression outputs", {
 
   d50 <- suppressWarnings(gs_d_values(one, probs = 50, extrapolate = "warn_linear"))
   expect_true(is.finite(d50$grain_size_um))
-  expect_equal(round(d50$grain_size_um, 1), 122.9)
+  expect_equal(round(d50$grain_size_um, 1), 123.0)
 
   finer <- suppressWarnings(gs_percent_finer(
     one,

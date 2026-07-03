@@ -66,11 +66,13 @@ boundary is not silently replaced by zero or infinity for interpolation.
 ## Long Versus Wide Example Data
 
 The long and wide examples contain the same sample IDs. Here, the file names
-describe table layout, not measurement method. Coarse Wentworth-style gravel,
-sand, and mud summaries agree between the two files because both represent the
-same aggregate behavior at 62.5 um. Clay/silt-level schemes such as USDA, ISSS,
-and UK SSEW require thresholds such as 2, 20, 50, 60, or 63 um; these are
-better resolved when finite measured boundaries bracket those thresholds.
+describe table layout, not measurement method. Strict Wentworth major summaries
+use the phi-scale 62.5 um sand/mud boundary. The `gravel_sand_mud` scheme uses
+the GRADISTAT-compatible 63 um boundary, so it is not guaranteed to match
+`wentworth_major` exactly for samples with material near that boundary.
+Clay/silt-level schemes such as USDA, ISSS, and UK SSEW require thresholds such
+as 2, 20, 50, 60, or 63 um; these are better resolved when finite measured
+boundaries bracket those thresholds.
 
 Instrument outputs such as laser cumulative percent-finer curves may require
 preprocessing before import. `read_gsd()` expects retained proportions or

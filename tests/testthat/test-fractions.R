@@ -24,6 +24,10 @@ test_that("gs_fraction_schemes lists built-in schemes and components", {
     c(2, 0.0625, 0)
   )
   expect_equal(
+    schemes$lower_mm[schemes$scheme == "gravel_sand_mud"],
+    c(2, 0.063, 0)
+  )
+  expect_equal(
     schemes$component[schemes$scheme == "gravel_sand_mud"],
     c("gravel", "sand", "mud")
   )
@@ -61,16 +65,41 @@ test_that("gs_fraction_schemes lists built-in schemes and components", {
   }
 })
 
-test_that("gravel_sand_mud is an explicit alias of wentworth_major", {
+test_that("gravel_sand_mud is independent from strict Wentworth major", {
   schemes <- gs_fraction_schemes()
   wentworth <- schemes[schemes$scheme == "wentworth_major", ]
   gsm <- schemes[schemes$scheme == "gravel_sand_mud", ]
 
   expect_equal(gsm$component, wentworth$component)
-  expect_equal(gsm$lower_um, wentworth$lower_um)
-  expect_equal(gsm$upper_um, wentworth$upper_um)
-  expect_equal(gsm$lower_mm, wentworth$lower_mm)
-  expect_equal(gsm$upper_mm, wentworth$upper_mm)
+  expect_equal(wentworth$lower_um, c(2000, 62.5, 0))
+  expect_equal(wentworth$upper_um, c(Inf, 2000, 62.5))
+  expect_equal(gsm$lower_um, c(2000, 63, 0))
+  expect_equal(gsm$upper_um, c(Inf, 2000, 63))
+})
+
+test_that("gravel_sand_mud uses the GRADISTAT-compatible 63 um mud boundary", {
+  x <- data.frame(
+    sample_id = "boundary",
+    size_mm = c(2, 0.063, 0.0625, 0.004, 0.001),
+    retained = c(5, 45, 10, 20, 20)
+  )
+  gsd <- as_gsd_tbl(x, sample_id, size_mm, retained, value_type = "percent")
+
+  gsm <- gs_fractions_wide(gsd, scheme = "gravel_sand_mud")
+  gradistat <- gs_fractions_wide(gsd, scheme = "gradistat")
+  wentworth <- gs_fractions_wide(gsd, scheme = "wentworth_major")
+  detailed <- gs_fractions(gsd, scheme = "wentworth_detailed")
+
+  expect_equal(gsm$mud_percent, gradistat$silt_percent + gradistat$clay_percent, tolerance = 1e-10)
+  expect_gt(abs(wentworth$mud_percent - gsm$mud_percent), 0)
+  expect_equal(
+    detailed$lower_um[detailed$component == "very_fine_sand"],
+    62.5
+  )
+  expect_equal(
+    detailed$upper_um[detailed$component == "very_coarse_silt"],
+    62.5
+  )
 })
 
 test_that("gs_fraction_schemes includes new source-aware boundary schemes", {

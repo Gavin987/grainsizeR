@@ -5,6 +5,12 @@
   consistency, documentation polish, and pre-Zenodo review.
 - Improved texture workflow interoperability so official wide fraction outputs
   can feed USDA classification and USDA/GRADISTAT ternary plotting directly.
+- `gravel_sand_mud` is now an independent GRADISTAT-compatible scheme using a
+  63 um sand/mud boundary, rather than an alias of `wentworth_major`.
+  `wentworth_major` remains a strict Wentworth / phi-scale scheme using the
+  62.5 um sand/silt boundary.
+- Updated bundled example grain-size CSV files to use 0.063 mm for the
+  relevant fine boundary.
 
 # grainsizeR 0.1.0
 

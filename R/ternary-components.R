@@ -36,9 +36,8 @@
       "GRADISTAT ternary components must include columns `gravel`, `sand`, and `mud`; ",
       "official fraction columns `gravel_percent`, `sand_percent`, and `mud_percent`; ",
       "or official GRADISTAT fraction columns `gravel_percent`, `sand_percent`, ",
-      "`silt_percent`, and `clay_percent`, where `silt_percent + clay_percent` ",
-      "approximates mud (GRADISTAT's 63 um sand/silt boundary differs slightly from ",
-      "the exact 62.5 um Wentworth sand/mud boundary used by `gravel_sand_mud`). ",
+      "`silt_percent`, and `clay_percent`, where `silt_percent + clay_percent` gives ",
+      "the GRADISTAT-compatible mud basis used by `gravel_sand_mud`. ",
       "You can also use `gs_fractions_wide(x, scheme = \"gravel_sand_mud\")`."
     ))
   }

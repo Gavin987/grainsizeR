@@ -46,11 +46,11 @@ test_that("wide example input returns seven bins per sample with terminal mud bi
   final_bins <- gsd[gsd$bin_id == 7, ]
   expect_true(all(final_bins$is_open_lower))
   expect_true(all(is.na(final_bins$size_lower_um)))
-  expect_equal(final_bins$size_upper_um, rep(62.5, 30))
-  expect_equal(final_bins$raw_size_um, rep(62.5, 30))
+  expect_equal(final_bins$size_upper_um, rep(63, 30))
+  expect_equal(final_bins$raw_size_um, rep(63, 30))
 })
 
-test_that("long and wide example inputs agree for aggregate fractions", {
+test_that("long and wide example inputs agree for GRADISTAT-compatible aggregate fractions", {
   long <- read_gsd(
     example_gsd_path("grain.long.csv"),
     sample_col = "sample",
@@ -61,8 +61,8 @@ test_that("long and wide example inputs agree for aggregate fractions", {
   )
   wide <- read_gsd_wide(example_gsd_path("grain.wide.csv"), value_type = "percent")
 
-  long_fractions <- gs_fractions_wide(long, scheme = "wentworth_major")
-  wide_fractions <- gs_fractions_wide(wide, scheme = "wentworth_major")
+  long_fractions <- gs_fractions_wide(long, scheme = "gravel_sand_mud")
+  wide_fractions <- gs_fractions_wide(wide, scheme = "gravel_sand_mud")
   long_fractions <- long_fractions[order(long_fractions$sample_id), ]
   wide_fractions <- wide_fractions[order(wide_fractions$sample_id), ]
 
@@ -71,8 +71,8 @@ test_that("long and wide example inputs agree for aggregate fractions", {
   expect_equal(long_fractions$sand_percent, wide_fractions$sand_percent, tolerance = 1e-5)
   expect_equal(long_fractions$mud_percent, wide_fractions$mud_percent, tolerance = 1e-5)
 
-  long_finer <- gs_percent_finer(long, sizes = 62.5, size_unit = "um")
-  wide_finer <- gs_percent_finer(wide, sizes = 62.5, size_unit = "um")
+  long_finer <- gs_percent_finer(long, sizes = 63, size_unit = "um")
+  wide_finer <- gs_percent_finer(wide, sizes = 63, size_unit = "um")
   long_finer <- long_finer[order(long_finer$sample_id), ]
   wide_finer <- wide_finer[order(wide_finer$sample_id), ]
 
