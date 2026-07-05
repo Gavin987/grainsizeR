@@ -122,6 +122,11 @@ coarse classes are not silently treated as bounded intervals. Thresholds
 that fall inside an open-ended terminal class are unresolved with
 <code>extrapolate = "error"</code> and are linearly extrapolated with a warning only
 when <code>extrapolate = "warn_linear"</code>.</p>
+<p>Unlike <code><a href="gs_d_values.html">gs_d_values()</a></code>, <code>gs_percent_finer()</code> interpolates using requested
+size thresholds as the independent variable, and finite class boundaries
+are always distinct sizes - so the tied-cumulative-value scenario that
+<code><a href="gs_d_values.html">gs_d_values()</a></code> resolves deterministically (see its documentation) cannot
+occur here.</p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

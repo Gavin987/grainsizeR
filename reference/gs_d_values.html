@@ -101,6 +101,20 @@ observed finite boundary curve. <code>"error"</code> throws an error, and
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A tibble with one row per sample and requested percentile.</p>
     </div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>Some samples contain a run of consecutive classes with zero retained
+mass (e.g. several sieve apertures with nothing caught between them),
+which produces an exact tie in cumulative percent finer across those
+boundaries. When a requested percentile falls between such a tied
+plateau and an adjacent distinct value, <code>gs_d_values()</code> resolves the tie
+deterministically: it brackets against the member of the tied plateau
+nearest the real transition (the finest boundary of a plateau being
+approached from below, or the coarsest boundary of a plateau being
+approached from above), rather than depending on incidental input row
+order. This is a fixed, documented rule, not an implementation detail
+that may vary between calls or package versions.</p>
+    </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>

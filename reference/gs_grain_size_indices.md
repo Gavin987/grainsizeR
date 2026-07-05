@@ -44,3 +44,14 @@ gs_grain_size_indices(
 ## Value
 
 A tibble with one row per sample and grain-size indices.
+
+## Details
+
+D10/D25/D30/D50/D60/D75 are computed by
+[`gs_d_values()`](https://Gavin987.github.io/grainsizeR/reference/gs_d_values.md),
+including its deterministic tie-breaking rule for percentiles that fall
+on a plateau caused by consecutive zero-retained classes (see
+[`gs_d_values()`](https://Gavin987.github.io/grainsizeR/reference/gs_d_values.md)
+for details); `fine_content_percent` is computed by
+[`gs_percent_finer()`](https://Gavin987.github.io/grainsizeR/reference/gs_percent_finer.md),
+which is not affected by that tie-breaking rule (see its documentation).

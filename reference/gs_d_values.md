@@ -53,3 +53,17 @@ gs_d_values(
 ## Value
 
 A tibble with one row per sample and requested percentile.
+
+## Details
+
+Some samples contain a run of consecutive classes with zero retained
+mass (e.g. several sieve apertures with nothing caught between them),
+which produces an exact tie in cumulative percent finer across those
+boundaries. When a requested percentile falls between such a tied
+plateau and an adjacent distinct value, `gs_d_values()` resolves the tie
+deterministically: it brackets against the member of the tied plateau
+nearest the real transition (the finest boundary of a plateau being
+approached from below, or the coarsest boundary of a plateau being
+approached from above), rather than depending on incidental input row
+order. This is a fixed, documented rule, not an implementation detail
+that may vary between calls or package versions.

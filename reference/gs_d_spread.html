@@ -100,7 +100,9 @@ ratio columns are calculated from positive metric D-values.</p>
 <p>Open-tail behavior follows <code><a href="gs_d_values.html">gs_d_values()</a></code>: by default unresolved requested
 percentiles throw an error, and <code>extrapolate = "warn_linear"</code> explicitly
 allows linear extrapolation and marks affected samples with
-<code>any_extrapolated = TRUE</code>.</p>
+<code>any_extrapolated = TRUE</code>. D-values falling on a tied cumulative plateau
+(from consecutive zero-retained classes) are also resolved via
+<code><a href="gs_d_values.html">gs_d_values()</a></code>'s deterministic tie-breaking rule.</p>
     </div>
 
     <div class="section level2">

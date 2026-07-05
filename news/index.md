@@ -5,6 +5,24 @@
 ### Development version
 
 - Started post-0.2.0 development.
+- Fixed a correctness issue in percentile interpolation: when a sample
+  has a run of consecutive classes with zero retained mass (e.g. several
+  sieve apertures with nothing caught between them), cumulative percent
+  finer ties exactly across those classes. Requested percentiles (or
+  percent-finer thresholds) falling on such a tied plateau are now
+  resolved by an explicit, deterministic tie-breaking rule instead of
+  depending on incidental input row order. Affects
+  [`gs_d_values()`](https://Gavin987.github.io/grainsizeR/reference/gs_d_values.md),
+  [`gs_percentile()`](https://Gavin987.github.io/grainsizeR/reference/gs_percentile.md),
+  and everything built on them
+  ([`gs_folk_ward()`](https://Gavin987.github.io/grainsizeR/reference/gs_folk_ward.md),
+  [`gs_d_spread()`](https://Gavin987.github.io/grainsizeR/reference/gs_d_spread.md),
+  [`gs_grain_size_indices()`](https://Gavin987.github.io/grainsizeR/reference/gs_grain_size_indices.md),
+  [`gs_parameters()`](https://Gavin987.github.io/grainsizeR/reference/gs_parameters.md),
+  [`gs_diagnostics()`](https://Gavin987.github.io/grainsizeR/reference/gs_diagnostics.md),
+  [`plot_cumulative()`](https://Gavin987.github.io/grainsizeR/reference/plot_cumulative.md),
+  [`plot_gradistat_summary()`](https://Gavin987.github.io/grainsizeR/reference/plot_gradistat_summary.md)).
+  Results for samples without tied cumulative values are unchanged.
 
 ## grainsizeR 0.2.0
 

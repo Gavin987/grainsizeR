@@ -79,7 +79,10 @@ workflows.</p>
 
 
 <dt id="arg-d-values">d_values<a class="anchor" aria-label="anchor" href="#arg-d-values"></a></dt>
-<dd><p>Numeric D-value percentiles to check.</p></dd>
+<dd><p>Numeric D-value percentiles to check. Resolvability is
+determined via <code><a href="gs_d_values.html">gs_d_values()</a></code>, including its deterministic
+tie-breaking rule for percentiles that fall on a plateau caused by
+consecutive zero-retained classes (see <code><a href="gs_d_values.html">gs_d_values()</a></code> for details).</p></dd>
 
 
 <dt id="arg-thresholds-um">thresholds_um<a class="anchor" aria-label="anchor" href="#arg-thresholds-um"></a></dt>

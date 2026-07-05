@@ -99,7 +99,10 @@ and summary percentages.</p></dd>
 
 
 <dt id="arg-d-values">d_values<a class="anchor" aria-label="anchor" href="#arg-d-values"></a></dt>
-<dd><p>Numeric vector of D-value percentiles to mark.</p></dd>
+<dd><p>Numeric vector of D-value percentiles to mark. Marked
+D-values falling on a plateau caused by consecutive zero-retained
+classes are placed using <code><a href="gs_d_values.html">gs_d_values()</a></code>'s deterministic tie-breaking
+rule (see its documentation).</p></dd>
 
 
 <dt id="arg-show-distribution">show_distribution<a class="anchor" aria-label="anchor" href="#arg-show-distribution"></a></dt>

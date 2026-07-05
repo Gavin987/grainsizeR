@@ -65,3 +65,11 @@ Terminal open-ended fine or coarse classes are not silently treated as
 bounded intervals. Thresholds that fall inside an open-ended terminal
 class are unresolved with `extrapolate = "error"` and are linearly
 extrapolated with a warning only when `extrapolate = "warn_linear"`.
+
+Unlike
+[`gs_d_values()`](https://Gavin987.github.io/grainsizeR/reference/gs_d_values.md),
+`gs_percent_finer()` interpolates using requested size thresholds as the
+independent variable, and finite class boundaries are always distinct
+sizes - so the tied-cumulative-value scenario that
+[`gs_d_values()`](https://Gavin987.github.io/grainsizeR/reference/gs_d_values.md)
+resolves deterministically (see its documentation) cannot occur here.

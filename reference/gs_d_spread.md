@@ -55,7 +55,11 @@ Open-tail behavior follows
 [`gs_d_values()`](https://Gavin987.github.io/grainsizeR/reference/gs_d_values.md):
 by default unresolved requested percentiles throw an error, and
 `extrapolate = "warn_linear"` explicitly allows linear extrapolation and
-marks affected samples with `any_extrapolated = TRUE`.
+marks affected samples with `any_extrapolated = TRUE`. D-values falling
+on a tied cumulative plateau (from consecutive zero-retained classes)
+are also resolved via
+[`gs_d_values()`](https://Gavin987.github.io/grainsizeR/reference/gs_d_values.md)'s
+deterministic tie-breaking rule.
 
 ## Examples
 

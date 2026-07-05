@@ -46,6 +46,7 @@
 <div class="section level3">
 <h3 id="development-version-0-2-0-9000">Development version<a class="anchor" aria-label="anchor" href="#development-version-0-2-0-9000"></a></h3>
 <ul><li>Started post-0.2.0 development.</li>
+<li>Fixed a correctness issue in percentile interpolation: when a sample has a run of consecutive classes with zero retained mass (e.g. several sieve apertures with nothing caught between them), cumulative percent finer ties exactly across those classes. Requested percentiles (or percent-finer thresholds) falling on such a tied plateau are now resolved by an explicit, deterministic tie-breaking rule instead of depending on incidental input row order. Affects <code><a href="../reference/gs_d_values.html">gs_d_values()</a></code>, <code><a href="../reference/gs_percentile.html">gs_percentile()</a></code>, and everything built on them (<code><a href="../reference/gs_folk_ward.html">gs_folk_ward()</a></code>, <code><a href="../reference/gs_d_spread.html">gs_d_spread()</a></code>, <code><a href="../reference/gs_grain_size_indices.html">gs_grain_size_indices()</a></code>, <code><a href="../reference/gs_parameters.html">gs_parameters()</a></code>, <code><a href="../reference/gs_diagnostics.html">gs_diagnostics()</a></code>, <code><a href="../reference/plot_cumulative.html">plot_cumulative()</a></code>, <code><a href="../reference/plot_gradistat_summary.html">plot_gradistat_summary()</a></code>). Results for samples without tied cumulative values are unchanged.</li>
 </ul></div>
 </div>
     <div class="section level2">

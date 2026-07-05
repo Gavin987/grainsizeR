@@ -147,3 +147,10 @@ reports. It returns ordinary tabular output, so file export is
 intentionally left to standard R workflows such as
 [`write.csv()`](https://rdrr.io/r/utils/write.table.html) or
 [`saveRDS()`](https://rdrr.io/r/base/readRDS.html).
+
+Any D-value tokens are ultimately computed by
+[`gs_d_values()`](https://Gavin987.github.io/grainsizeR/reference/gs_d_values.md),
+including its deterministic tie-breaking rule for percentiles that fall
+on a plateau caused by consecutive zero-retained classes (see
+[`gs_d_values()`](https://Gavin987.github.io/grainsizeR/reference/gs_d_values.md)
+for details).

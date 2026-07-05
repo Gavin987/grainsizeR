@@ -91,6 +91,14 @@ and <code><a href="gs_percent_finer.html">gs_percent_finer()</a></code>.</p></dd
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A tibble with one row per sample and grain-size indices.</p>
     </div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>D10/D25/D30/D50/D60/D75 are computed by <code><a href="gs_d_values.html">gs_d_values()</a></code>, including its
+deterministic tie-breaking rule for percentiles that fall on a plateau
+caused by consecutive zero-retained classes (see <code><a href="gs_d_values.html">gs_d_values()</a></code> for
+details); <code>fine_content_percent</code> is computed by <code><a href="gs_percent_finer.html">gs_percent_finer()</a></code>,
+which is not affected by that tie-breaking rule (see its documentation).</p>
+    </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>

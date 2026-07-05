@@ -75,3 +75,9 @@ percent for samples whose retained percentages sum to 100. `NA` is
 reserved for thresholds that are genuinely unresolved inside the finite
 observed size range. Fraction schemes do not extrapolate unless
 `extrapolate = "warn_linear"` is passed explicitly.
+
+Fraction thresholds interpolate using
+[`gs_percent_finer()`](https://Gavin987.github.io/grainsizeR/reference/gs_percent_finer.md)'s
+size-as-`x` direction, so the tied-cumulative-value scenario that
+[`gs_d_values()`](https://Gavin987.github.io/grainsizeR/reference/gs_d_values.md)
+resolves deterministically (see its documentation) cannot occur here.

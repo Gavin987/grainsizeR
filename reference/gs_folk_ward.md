@@ -39,3 +39,12 @@ gs_folk_ward(
 ## Value
 
 A tibble with one row per sample and Folk and Ward graphical statistics.
+
+## Details
+
+The underlying `D_p` percentiles are computed by
+[`gs_d_values()`](https://Gavin987.github.io/grainsizeR/reference/gs_d_values.md),
+including its deterministic tie-breaking rule for percentiles that fall
+on a plateau caused by consecutive zero-retained classes (see
+[`gs_d_values()`](https://Gavin987.github.io/grainsizeR/reference/gs_d_values.md)
+for details).

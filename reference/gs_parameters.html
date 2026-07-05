@@ -191,6 +191,10 @@ to <code><a href="gs_quality_flags.html">gs_quality_flags()</a></code>.</p></dd>
     <p>The function is useful for generating compact summary tables for reports.
 It returns ordinary tabular output, so file export is intentionally left to
 standard R workflows such as <code><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.csv()</a></code> or <code><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS()</a></code>.</p>
+<p>Any D-value tokens are ultimately computed by <code><a href="gs_d_values.html">gs_d_values()</a></code>, including
+its deterministic tie-breaking rule for percentiles that fall on a
+plateau caused by consecutive zero-retained classes (see <code><a href="gs_d_values.html">gs_d_values()</a></code>
+for details).</p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

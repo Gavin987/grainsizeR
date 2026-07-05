@@ -124,6 +124,9 @@ than <code>NA</code>, so complete schemes close to 100 percent for samples whose
 retained percentages sum to 100. <code>NA</code> is reserved for thresholds that are
 genuinely unresolved inside the finite observed size range. Fraction schemes
 do not extrapolate unless <code>extrapolate = "warn_linear"</code> is passed explicitly.</p>
+<p>Fraction thresholds interpolate using <code><a href="gs_percent_finer.html">gs_percent_finer()</a></code>'s size-as-<code>x</code>
+direction, so the tied-cumulative-value scenario that <code><a href="gs_d_values.html">gs_d_values()</a></code>
+resolves deterministically (see its documentation) cannot occur here.</p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

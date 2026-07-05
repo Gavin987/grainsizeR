@@ -112,7 +112,10 @@ percentiles to mark on the plot. <code>TRUE</code> marks D10, D50, and D90.</p><
 <code>show_percentiles</code> is supplied. With the default <code>"error"</code>,
 <code>plot_cumulative()</code> retries marker placement with <code>"warn_linear"</code> if a
 requested percentile falls just outside the finite boundary curve; this
-affects only the plotted marker layer.</p></dd>
+affects only the plotted marker layer. Percentile markers falling on a
+plateau caused by consecutive zero-retained classes are placed using
+<code><a href="gs_d_values.html">gs_d_values()</a></code>'s deterministic tie-breaking rule (see its
+documentation).</p></dd>
 
 
 <dt id="arg-percentile-color">percentile_color<a class="anchor" aria-label="anchor" href="#arg-percentile-color"></a></dt>
