@@ -66,7 +66,10 @@ percentile_x_values <- function(x, x_scale, particle_unit = "mm") {
 #'   `show_percentiles` is supplied. With the default `"error"`,
 #'   `plot_cumulative()` retries marker placement with `"warn_linear"` if a
 #'   requested percentile falls just outside the finite boundary curve; this
-#'   affects only the plotted marker layer.
+#'   affects only the plotted marker layer. Percentile markers falling on a
+#'   plateau caused by consecutive zero-retained classes are placed using
+#'   `gs_d_values()`'s deterministic tie-breaking rule (see its
+#'   documentation).
 #' @param percentile_color Color for percentile marker crosses.
 #' @param percentile_size Size for percentile marker crosses.
 #' @param percentile_stroke Stroke width for percentile marker crosses.

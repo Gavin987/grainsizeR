@@ -31,3 +31,10 @@ boundary-based D-value interpolation and a fine-content threshold. Returned
 indices include coefficient of uniformity (\code{Cu}), coefficient of curvature
 (\code{Cc}), Trask sorting, Trask skewness, fine content, and fine equivalent.
 }
+\details{
+D10/D25/D30/D50/D60/D75 are computed by \code{gs_d_values()}, including its
+deterministic tie-breaking rule for percentiles that fall on a plateau
+caused by consecutive zero-retained classes (see \code{gs_d_values()} for
+details); \code{fine_content_percent} is computed by \code{gs_percent_finer()},
+which is not affected by that tie-breaking rule (see its documentation).
+}

@@ -16,8 +16,50 @@ scale_values_to_um <- function(value, scale) {
   )
 }
 
-linear_interpolate <- function(x, y, xout, extrapolate) {
-  ord <- order(x)
+#' Linearly interpolate a cumulative curve, breaking ties deterministically
+#'
+#' Grain-size cumulative curves can contain runs of classes with zero
+#' retained mass (e.g. several consecutive sieve apertures with nothing
+#' caught between them), which produce exact ties in `x` (multiple distinct
+#' boundaries sharing the same cumulative value). Ordering by `x` alone
+#' leaves the relative order of tied rows undefined (dependent on
+#' incidental input row order), so a target that falls between two tied
+#' plateaus can bracket against either edge of each plateau depending on
+#' that incidental order.
+#'
+#' `tie_break_um` resolves this deterministically: within any run of tied
+#' `x` values, rows are additionally sorted by ascending physical size
+#' (`tie_break_um`, always finite/finest-first regardless of which scale
+#' `x`/`y` are expressed on). This places the *finest* member of a tied
+#' plateau first (available as the bracket partner for a target
+#' approaching from a smaller `x`) and the *coarsest* member last
+#' (available as the bracket partner for a target approaching from a
+#' larger `x`) - i.e. every interpolation uses the narrowest possible
+#' bracket immediately adjacent to the plateau boundary where the
+#' cumulative curve actually changes value, rather than an arbitrary edge
+#' of a multi-row plateau.
+#'
+#' This mirrors the effect (not the code) of G2Sd::granstat()'s internal
+#' `.percentile()`, which resolves the same situation with an explicit
+#' filter chain that keeps, among tied rows, the one nearest each side's
+#' transition (`filter(phi == max(phi))` / `filter(phi == min(phi))` after
+#' filtering to the candidate side) - see `G2Sd:::.percentile` for its
+#' independent implementation. This is an independent, from-scratch
+#' implementation for grainsizeR, not a translation of G2Sd's code.
+#'
+#' @param x,y Numeric vectors giving the coordinates of the points to
+#'   interpolate.
+#' @param xout Numeric vector of values at which to interpolate.
+#' @param extrapolate Behavior outside the observed range of `x`. `"error"`
+#'   is enforced by callers before reaching this function; `"warn_linear"`
+#'   linearly extrapolates using the two nearest points on the relevant
+#'   side.
+#' @param tie_break_um Physical size in micrometers for each `(x, y)` pair,
+#'   used only to break ties in `x`. Has no effect when `x` has no
+#'   duplicated values.
+#' @noRd
+linear_interpolate <- function(x, y, xout, extrapolate, tie_break_um) {
+  ord <- order(x, tie_break_um)
   x <- x[ord]
   y <- y[ord]
 
@@ -50,6 +92,8 @@ linear_interpolate <- function(x, y, xout, extrapolate) {
   interpolated
 }
 
+# Ties in `curve$percent_finer` (from consecutive zero-retained classes)
+# are broken deterministically via `tie_break_um`; see linear_interpolate().
 percentile_one_sample <- function(curve, probs, scale, extrapolate) {
   sample_id <- curve$sample_id[1]
   scale_value <- percentile_scale_values(curve, scale)
@@ -83,7 +127,8 @@ percentile_one_sample <- function(curve, probs, scale, extrapolate) {
     x = curve$percent_finer,
     y = scale_value,
     xout = probs,
-    extrapolate = extrapolate
+    extrapolate = extrapolate,
+    tie_break_um = curve$boundary_um
   )
 
   grain_size_um <- scale_values_to_um(interpolated_scale, scale)
@@ -104,6 +149,18 @@ percentile_one_sample <- function(curve, probs, scale, extrapolate) {
 #' `gs_d_values()` estimates `D_p`, the grain size at which `p` percent of a
 #' sample is finer. Interpolation is based on finite class boundaries from
 #' `gs_cumulative()`, not class midpoints.
+#'
+#' Some samples contain a run of consecutive classes with zero retained
+#' mass (e.g. several sieve apertures with nothing caught between them),
+#' which produces an exact tie in cumulative percent finer across those
+#' boundaries. When a requested percentile falls between such a tied
+#' plateau and an adjacent distinct value, `gs_d_values()` resolves the tie
+#' deterministically: it brackets against the member of the tied plateau
+#' nearest the real transition (the finest boundary of a plateau being
+#' approached from below, or the coarsest boundary of a plateau being
+#' approached from above), rather than depending on incidental input row
+#' order. This is a fixed, documented rule, not an implementation detail
+#' that may vary between calls or package versions.
 #'
 #' @param x A valid `gsd_tbl` object.
 #' @param probs Numeric vector of percentiles on the 0-100 scale.
@@ -182,7 +239,9 @@ gs_d_values <- function(x,
 
 #' Calculate grain-size percentiles
 #'
-#' `gs_percentile()` is a compatibility alias for `gs_d_values()`.
+#' `gs_percentile()` is a compatibility alias for `gs_d_values()`, including
+#' its deterministic handling of ties from zero-retained classes (see
+#' `gs_d_values()` for details).
 #'
 #' @inheritParams gs_d_values
 #'

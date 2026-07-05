@@ -40,7 +40,9 @@ ratio columns are calculated from positive metric D-values.
 Open-tail behavior follows \code{gs_d_values()}: by default unresolved requested
 percentiles throw an error, and \code{extrapolate = "warn_linear"} explicitly
 allows linear extrapolation and marks affected samples with
-\code{any_extrapolated = TRUE}.
+\code{any_extrapolated = TRUE}. D-values falling on a tied cumulative plateau
+(from consecutive zero-retained classes) are also resolved via
+\code{gs_d_values()}'s deterministic tie-breaking rule.
 }
 \examples{
 gsd <- as_gsd_tbl(

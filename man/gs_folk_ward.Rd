@@ -31,3 +31,9 @@ boundary-interpolated grain-size percentiles. Percentiles follow the package
 convention where \code{D_p} is the grain size at which \code{p} percent of the sample
 is finer.
 }
+\details{
+The underlying \code{D_p} percentiles are computed by \code{gs_d_values()},
+including its deterministic tie-breaking rule for percentiles that fall
+on a plateau caused by consecutive zero-retained classes (see
+\code{gs_d_values()} for details).
+}

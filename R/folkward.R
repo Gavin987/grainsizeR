@@ -59,6 +59,11 @@ folkward_one_sample <- function(sample_id, percentiles, interpolation_scale, inc
 #' convention where `D_p` is the grain size at which `p` percent of the sample
 #' is finer.
 #'
+#' The underlying `D_p` percentiles are computed by `gs_d_values()`,
+#' including its deterministic tie-breaking rule for percentiles that fall
+#' on a plateau caused by consecutive zero-retained classes (see
+#' `gs_d_values()` for details).
+#'
 #' @param x A valid `gsd_tbl` object.
 #' @param interpolation_scale Interpolation scale passed to `gs_d_values()`.
 #' @param extrapolate Extrapolation behavior passed to `gs_d_values()`.

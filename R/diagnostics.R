@@ -612,7 +612,10 @@ diagnostic_wide_output <- function(long) {
 #' as bounded intervals.
 #'
 #' @param x A valid `gsd_tbl` object.
-#' @param d_values Numeric D-value percentiles to check.
+#' @param d_values Numeric D-value percentiles to check. Resolvability is
+#'   determined via `gs_d_values()`, including its deterministic
+#'   tie-breaking rule for percentiles that fall on a plateau caused by
+#'   consecutive zero-retained classes (see `gs_d_values()` for details).
 #' @param thresholds_um Numeric grain-size thresholds, in micrometers, to check
 #'   with the package percent-finer convention.
 #' @param fraction_schemes Built-in fraction schemes to check for threshold

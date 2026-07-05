@@ -19,7 +19,10 @@ gs_diagnostics(
 \arguments{
 \item{x}{A valid \code{gsd_tbl} object.}
 
-\item{d_values}{Numeric D-value percentiles to check.}
+\item{d_values}{Numeric D-value percentiles to check. Resolvability is
+determined via \code{gs_d_values()}, including its deterministic
+tie-breaking rule for percentiles that fall on a plateau caused by
+consecutive zero-retained classes (see \code{gs_d_values()} for details).}
 
 \item{thresholds_um}{Numeric grain-size thresholds, in micrometers, to check
 with the package percent-finer convention.}

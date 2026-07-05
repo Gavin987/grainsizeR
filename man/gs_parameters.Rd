@@ -94,4 +94,9 @@ add GRADISTAT-style printout terms and advisory quality flags.
 The function is useful for generating compact summary tables for reports.
 It returns ordinary tabular output, so file export is intentionally left to
 standard R workflows such as \code{write.csv()} or \code{saveRDS()}.
+
+Any D-value tokens are ultimately computed by \code{gs_d_values()}, including
+its deterministic tie-breaking rule for percentiles that fall on a
+plateau caused by consecutive zero-retained classes (see \code{gs_d_values()}
+for details).
 }

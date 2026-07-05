@@ -36,6 +36,12 @@ engineering_one_sample <- function(sample_id, percentiles, fine_content, interpo
 #' indices include coefficient of uniformity (`Cu`), coefficient of curvature
 #' (`Cc`), Trask sorting, Trask skewness, fine content, and fine equivalent.
 #'
+#' D10/D25/D30/D50/D60/D75 are computed by `gs_d_values()`, including its
+#' deterministic tie-breaking rule for percentiles that fall on a plateau
+#' caused by consecutive zero-retained classes (see `gs_d_values()` for
+#' details); `fine_content_percent` is computed by `gs_percent_finer()`,
+#' which is not affected by that tie-breaking rule (see its documentation).
+#'
 #' @param x A valid `gsd_tbl` object.
 #' @param fine_threshold_um Fine-content threshold in micrometers.
 #' @param interpolation_scale Interpolation scale passed to `gs_d_values()`

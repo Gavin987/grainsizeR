@@ -212,6 +212,10 @@ fractions_one_sample <- function(sample_id, components, lookup, scheme, normaliz
 #' genuinely unresolved inside the finite observed size range. Fraction schemes
 #' do not extrapolate unless `extrapolate = "warn_linear"` is passed explicitly.
 #'
+#' Fraction thresholds interpolate using `gs_percent_finer()`'s size-as-`x`
+#' direction, so the tied-cumulative-value scenario that `gs_d_values()`
+#' resolves deterministically (see its documentation) cannot occur here.
+#'
 #' @param x A valid `gsd_tbl` object.
 #' @param scheme Built-in fraction scheme name.
 #' @param normalize Normalization mode. `"none"` returns whole-sample

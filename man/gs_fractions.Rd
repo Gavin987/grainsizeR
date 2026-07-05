@@ -57,4 +57,8 @@ than \code{NA}, so complete schemes close to 100 percent for samples whose
 retained percentages sum to 100. \code{NA} is reserved for thresholds that are
 genuinely unresolved inside the finite observed size range. Fraction schemes
 do not extrapolate unless \code{extrapolate = "warn_linear"} is passed explicitly.
+
+Fraction thresholds interpolate using \code{gs_percent_finer()}'s size-as-\code{x}
+direction, so the tied-cumulative-value scenario that \code{gs_d_values()}
+resolves deterministically (see its documentation) cannot occur here.
 }

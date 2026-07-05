@@ -33,7 +33,10 @@ uses a log10 micrometer axis. \code{"linear_um"} uses a linear micrometer axis.}
 \item{fraction_scheme}{Built-in fraction scheme used for fraction boundaries
 and summary percentages.}
 
-\item{d_values}{Numeric vector of D-value percentiles to mark.}
+\item{d_values}{Numeric vector of D-value percentiles to mark. Marked
+D-values falling on a plateau caused by consecutive zero-retained
+classes are placed using \code{gs_d_values()}'s deterministic tie-breaking
+rule (see its documentation).}
 
 \item{show_distribution}{Should retained distribution bars be drawn?}
 

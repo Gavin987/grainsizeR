@@ -223,6 +223,11 @@ parameters_to_long <- function(wide) {
 #' It returns ordinary tabular output, so file export is intentionally left to
 #' standard R workflows such as `write.csv()` or `saveRDS()`.
 #'
+#' Any D-value tokens are ultimately computed by `gs_d_values()`, including
+#' its deterministic tie-breaking rule for percentiles that fall on a
+#' plateau caused by consecutive zero-retained classes (see `gs_d_values()`
+#' for details).
+#'
 #' @param x A valid `gsd_tbl` object.
 #' @param parameters Character vector of parameters. Supported values are
 #'   `"d_values"`, D-value tokens such as `"D10"`, `"D30"`, and `"D90"`,

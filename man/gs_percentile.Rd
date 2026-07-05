@@ -35,5 +35,7 @@ observed finite boundary curve. \code{"error"} throws an error, and
 A tibble with one row per sample and requested percentile.
 }
 \description{
-\code{gs_percentile()} is a compatibility alias for \code{gs_d_values()}.
+\code{gs_percentile()} is a compatibility alias for \code{gs_d_values()}, including
+its deterministic handling of ties from zero-retained classes (see
+\code{gs_d_values()} for details).
 }

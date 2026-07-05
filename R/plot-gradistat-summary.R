@@ -215,7 +215,10 @@ gradistat_summary_data_internal <- function(x,
 #'   uses a log10 micrometer axis. `"linear_um"` uses a linear micrometer axis.
 #' @param fraction_scheme Built-in fraction scheme used for fraction boundaries
 #'   and summary percentages.
-#' @param d_values Numeric vector of D-value percentiles to mark.
+#' @param d_values Numeric vector of D-value percentiles to mark. Marked
+#'   D-values falling on a plateau caused by consecutive zero-retained
+#'   classes are placed using `gs_d_values()`'s deterministic tie-breaking
+#'   rule (see its documentation).
 #' @param show_distribution Should retained distribution bars be drawn?
 #' @param show_cumulative Should the cumulative percent-finer curve be drawn?
 #' @param show_d_values Should selected D-values be marked when resolvable?

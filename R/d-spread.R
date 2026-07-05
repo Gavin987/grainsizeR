@@ -50,7 +50,9 @@ d_spread_values <- function(percentiles, scale) {
 #' Open-tail behavior follows `gs_d_values()`: by default unresolved requested
 #' percentiles throw an error, and `extrapolate = "warn_linear"` explicitly
 #' allows linear extrapolation and marks affected samples with
-#' `any_extrapolated = TRUE`.
+#' `any_extrapolated = TRUE`. D-values falling on a tied cumulative plateau
+#' (from consecutive zero-retained classes) are also resolved via
+#' `gs_d_values()`'s deterministic tie-breaking rule.
 #'
 #' @param x A valid `gsd_tbl` object.
 #' @param scale Metric reporting scale for D-values and differences. Supported

@@ -36,6 +36,11 @@ threshold_scale_values <- function(threshold_um, scale) {
   )
 }
 
+# `x` here is a size-scale value (unique per finite boundary), so ties never
+# arise in this direction; `tie_break_um` is passed to linear_interpolate()
+# only for signature consistency and has no effect. Ties are only possible
+# when interpolating in the opposite direction (percent_finer as `x`), i.e.
+# in percentile_one_sample() - see linear_interpolate().
 percent_finer_one_sample <- function(curve, threshold_um, scale, extrapolate) {
   sample_id <- curve$sample_id[1]
   curve_scale <- percent_finer_scale_values(curve, scale)
@@ -67,7 +72,8 @@ percent_finer_one_sample <- function(curve, threshold_um, scale, extrapolate) {
     x = curve_scale,
     y = curve$percent_finer,
     xout = threshold_scale,
-    extrapolate = extrapolate
+    extrapolate = extrapolate,
+    tie_break_um = curve$boundary_um
   )
 
   matches <- match(threshold_um, curve$boundary_um)
@@ -101,6 +107,12 @@ percent_finer_one_sample <- function(curve, threshold_um, scale, extrapolate) {
 #' that fall inside an open-ended terminal class are unresolved with
 #' `extrapolate = "error"` and are linearly extrapolated with a warning only
 #' when `extrapolate = "warn_linear"`.
+#'
+#' Unlike `gs_d_values()`, `gs_percent_finer()` interpolates using requested
+#' size thresholds as the independent variable, and finite class boundaries
+#' are always distinct sizes - so the tied-cumulative-value scenario that
+#' `gs_d_values()` resolves deterministically (see its documentation) cannot
+#' occur here.
 #'
 #' @param x A valid `gsd_tbl` object.
 #' @param sizes Numeric vector of grain-size thresholds.
