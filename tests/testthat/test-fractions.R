@@ -88,7 +88,11 @@ test_that("gravel_sand_mud uses the GRADISTAT-compatible 63 um mud boundary", {
   gsm <- gs_fractions_wide(gsd, scheme = "gravel_sand_mud")
   gradistat <- gs_fractions_wide(gsd, scheme = "gradistat")
   wentworth <- gs_fractions_wide(gsd, scheme = "wentworth_major")
-  detailed <- gs_fractions(gsd, scheme = "wentworth_detailed")
+  # extrapolate = "warn_linear": this fixture has nonzero pan mass and
+  # wentworth_detailed's finest rungs (3.90625um, 2um) fall below this
+  # sample's finite range; only boundary metadata (lower_um/upper_um) is
+  # checked below, not resolved percentages, so extrapolation is fine here.
+  detailed <- suppressWarnings(gs_fractions(gsd, scheme = "wentworth_detailed", extrapolate = "warn_linear"))
 
   expect_equal(gsm$mud_percent, gradistat$silt_percent + gradistat$clay_percent, tolerance = 1e-10)
   expect_gt(abs(wentworth$mud_percent - gsm$mud_percent), 0)
@@ -144,7 +148,16 @@ test_that("gs_fractions calculates Wentworth major whole-sample percentages", {
   expect_true(all(result$resolved))
 })
 
-test_that("gs_fractions returns zero for absent GRADISTAT components", {
+test_that("gs_fractions requires explicit extrapolation for GRADISTAT's clay boundary on tail-limited samples", {
+  # WN1/WN2 (helper-ragged.R) have real, nonzero pan mass below their
+  # finest measured boundaries (62.5um and 13.33um respectively), and
+  # GRADISTAT's clay boundary (4um) falls below both, with no nominal-
+  # equivalence match. Under the default extrapolate = "error" this must
+  # not silently resolve to 0 percent (the pre-fix behavior - see
+  # dev-notes/AUDIT_LOG.md's "Root-cause: gs_fractions()
+  # below-finest-boundary behavior" entry) - it must error, and only
+  # resolve, as a genuinely extrapolated non-zero value, when the user
+  # explicitly opts in via extrapolate = "warn_linear".
   gsd <- as_gsd_tbl(
     ragged_input_phase2,
     sample_id,
@@ -152,26 +165,44 @@ test_that("gs_fractions returns zero for absent GRADISTAT components", {
     retained_proportion
   )
 
-  result <- gs_fractions(gsd, scheme = "gradistat", unresolved = "warn_na")
+  expect_error(
+    gs_fractions(gsd, scheme = "gradistat", unresolved = "warn_na"),
+    "open-ended \\(pan\\) class with nonzero retained mass"
+  )
 
+  result <- suppressWarnings(
+    gs_fractions(gsd, scheme = "gradistat", unresolved = "warn_na", extrapolate = "warn_linear")
+  )
   wn1 <- result[result$sample_id == "WN1", ]
   wn2 <- result[result$sample_id == "WN2", ]
 
-  expect_equal(wn1$percent[wn1$component == "clay"], 0)
+  # Not asserting a sign or range on the extrapolated clay value: linear
+  # extrapolation across a large gap (4um requested, 62.5um/13.33um the
+  # nearest real data) is a known, pre-existing hazard of
+  # extrapolate = "warn_linear" generally (unrelated to this fix - the
+  # same hazard exists calling gs_percent_finer()/gs_d_values() directly)
+  # and can legitimately fall outside 0-100 percent. The point here is
+  # only that it now resolves to a real, finite, non-hard-coded number
+  # instead of the old silent exact 0.
+  expect_true(is.finite(wn1$percent[wn1$component == "clay"]))
   expect_false(is.na(wn1$percent[wn1$component == "silt"]))
   expect_false(is.na(wn1$percent[wn1$component == "gravel"]))
   expect_false(is.na(wn1$percent[wn1$component == "sand"]))
 
+  expect_true(is.finite(wn2$percent[wn2$component == "clay"]))
   expect_false(is.na(wn2$percent[wn2$component == "gravel"]))
   expect_false(is.na(wn2$percent[wn2$component == "sand"]))
   expect_false(is.na(wn2$percent[wn2$component == "silt"]))
-  expect_equal(wn2$percent[wn2$component == "clay"], 0)
 
   totals <- rowsum(result$percent, result$sample_id, reorder = FALSE)
   expect_equal(as.numeric(totals), c(100, 100), tolerance = 1e-8)
 })
 
-test_that("unresolved error mode does not fail for absent outer classes", {
+test_that("unresolved error mode succeeds once extrapolation is explicitly allowed", {
+  # `unresolved` and `extrapolate` are orthogonal: WN1/WN2's below-boundary
+  # clay component now requires explicit extrapolation (see above), which
+  # `unresolved = "error"` alone does not grant - both must be set for this
+  # tail-limited fixture to resolve successfully.
   gsd <- as_gsd_tbl(
     ragged_input_phase2,
     sample_id,
@@ -179,7 +210,10 @@ test_that("unresolved error mode does not fail for absent outer classes", {
     retained_proportion
   )
 
-  expect_s3_class(gs_fractions(gsd, scheme = "gradistat", unresolved = "error"), "tbl_df")
+  expect_s3_class(
+    suppressWarnings(gs_fractions(gsd, scheme = "gradistat", unresolved = "error", extrapolate = "warn_linear")),
+    "tbl_df"
+  )
 })
 
 test_that("gs_fractions can normalize fine-earth fractions", {
@@ -274,22 +308,27 @@ test_that("gs_fractions supports new schemes on real example data", {
     value_type = "proportion"
   )
 
-  usda <- suppressWarnings(gs_fractions(gsd, scheme = "usda"))
-  hypres <- suppressWarnings(gs_fractions(gsd, scheme = "hypres"))
+  # extrapolate = "warn_linear": some samples in this real example dataset
+  # have nonzero pan mass below these schemes' fine boundaries (see
+  # test-fractions.R's dedicated pan-mass tests for resolution-correctness
+  # coverage) - this test is about cross-scheme consistency, not tail
+  # resolution.
+  usda <- suppressWarnings(gs_fractions(gsd, scheme = "usda", extrapolate = "warn_linear"))
+  hypres <- suppressWarnings(gs_fractions(gsd, scheme = "hypres", extrapolate = "warn_linear"))
   expect_equal(hypres$component, usda$component)
   expect_equal(hypres$lower_um, usda$lower_um)
   expect_equal(hypres$upper_um, usda$upper_um)
   expect_equal(hypres$percent, usda$percent, tolerance = 1e-8)
 
-  isss <- suppressWarnings(gs_fractions(gsd, scheme = "isss"))
-  australia <- suppressWarnings(gs_fractions(gsd, scheme = "australia_20"))
+  isss <- suppressWarnings(gs_fractions(gsd, scheme = "isss", extrapolate = "warn_linear"))
+  australia <- suppressWarnings(gs_fractions(gsd, scheme = "australia_20", extrapolate = "warn_linear"))
   expect_equal(australia$component, isss$component)
   expect_equal(australia$lower_um, isss$lower_um)
   expect_equal(australia$upper_um, isss$upper_um)
   expect_equal(australia$percent, isss$percent, tolerance = 1e-8)
 
-  germany <- gs_fractions(gsd, scheme = "germany_63")
-  sweden <- gs_fractions(gsd, scheme = "sweden_60")
+  germany <- suppressWarnings(gs_fractions(gsd, scheme = "germany_63", extrapolate = "warn_linear"))
+  sweden <- suppressWarnings(gs_fractions(gsd, scheme = "sweden_60", extrapolate = "warn_linear"))
   expect_s3_class(germany, "tbl_df")
   expect_s3_class(sweden, "tbl_df")
   expect_true(all(c("gravel", "sand", "silt", "clay") %in% germany$component))
@@ -304,8 +343,11 @@ test_that("gs_fractions uses normalized units for G2Sd-style micrometre input", 
   gsd_mm <- as_gsd_tbl(long_mm, sample_id, size, retained_percent, size_unit = "auto", value_type = "percent")
 
   for (scheme in c("gravel_sand_mud", "wentworth_major", "wentworth_detailed", "gradistat", "usda", "isss", "uk_ssew")) {
-    um_fractions <- suppressWarnings(gs_fractions(gsd_um, scheme = scheme))
-    mm_fractions <- suppressWarnings(gs_fractions(gsd_mm, scheme = scheme))
+    # extrapolate = "warn_linear": this fixture's samples have nonzero pan
+    # mass below some schemes' fine boundaries - this test is about
+    # um-vs-mm unit-normalization consistency, not tail resolution.
+    um_fractions <- suppressWarnings(gs_fractions(gsd_um, scheme = scheme, extrapolate = "warn_linear"))
+    mm_fractions <- suppressWarnings(gs_fractions(gsd_mm, scheme = scheme, extrapolate = "warn_linear"))
 
     expect_equal(um_fractions$component, mm_fractions$component)
     expect_equal(um_fractions$lower_mm, mm_fractions$lower_mm)
@@ -321,7 +363,10 @@ test_that("wentworth_detailed fractions close on auto-detected G2Sd-style microm
   long_um <- g2sd_wide_to_long(g2sd_style_wide())
   gsd <- as_gsd_tbl(long_um, sample_id, size, retained_percent, size_unit = "auto", value_type = "percent")
 
-  detailed <- gs_fractions(gsd, scheme = "wentworth_detailed")
+  # extrapolate = "warn_linear": this fixture has nonzero pan mass below
+  # wentworth_detailed's finest rungs - this test is about the schemes'
+  # fractions closing to 100 percent, not tail-resolution correctness.
+  detailed <- suppressWarnings(gs_fractions(gsd, scheme = "wentworth_detailed", extrapolate = "warn_linear"))
 
   expect_s3_class(detailed, "tbl_df")
   expect_true(any(detailed$sample_id == "Q1"))
@@ -368,15 +413,110 @@ test_that("all fraction schemes close to 100 on a spanning synthetic sample", {
   }
 })
 
+test_that("gravel_sand_mud and wentworth_major resolve identically on sieve-only samples via nominal equivalence", {
+  # Finest measured (finite) boundary is exactly 63 um, with nonzero pan
+  # mass below it. gravel_sand_mud's 63 um threshold is an exact boundary
+  # match; wentworth_major's 62.5 um threshold has no measured data of its
+  # own but is a recognized nominal-equivalence match for the same real
+  # 63 um boundary, so both schemes must read off the identical value -
+  # not the old hard-coded 0 percent.
+  x <- data.frame(
+    sample_id = "sieve_only",
+    size_mm = c(2, 1, 0.5, 0.25, 0.125, 0.063, 0.001),
+    retained = c(0, 0, 0.223, 13.0, 76.2, 9.92, 0.657)
+  )
+  gsd <- as_gsd_tbl(x, sample_id, size_mm, retained, value_type = "percent")
+
+  gsm <- gs_fractions_wide(gsd, scheme = "gravel_sand_mud", extrapolate = "error")
+  wentworth <- gs_fractions_wide(gsd, scheme = "wentworth_major", extrapolate = "error")
+
+  expect_equal(gsm$mud_percent, 0.657, tolerance = 1e-8)
+  expect_equal(wentworth$mud_percent, gsm$mud_percent, tolerance = 1e-8)
+})
+
+test_that("nominal equivalence does not override real interpolation for samples with finer-resolution data", {
+  # Both 63 um and finer boundaries (20 um, 2 um) are genuinely measured
+  # here, so wentworth_major's 62.5 um threshold is resolvable by real
+  # interpolation and must differ from gravel_sand_mud's exact 63 um
+  # value, not be silently equivalenced to it.
+  x <- data.frame(
+    sample_id = "augmented",
+    size_mm = c(2, 1, 0.5, 0.25, 0.125, 0.063, 0.02, 0.002, 0.001),
+    retained = c(0, 0, 0.2, 10, 60, 15, 8, 5, 1.8)
+  )
+  gsd <- as_gsd_tbl(x, sample_id, size_mm, retained, value_type = "percent")
+
+  gsm <- gs_fractions_wide(gsd, scheme = "gravel_sand_mud", extrapolate = "error")
+  wentworth <- gs_fractions_wide(gsd, scheme = "wentworth_major", extrapolate = "error")
+
+  expect_gt(abs(wentworth$mud_percent - gsm$mud_percent), 0)
+})
+
+test_that("gs_fractions errors by default on a genuinely unresolved below-boundary threshold with nonzero pan mass", {
+  # USDA's 50 um threshold is not in any equivalence group; on this
+  # sieve-only sample (finest boundary 63 um, pan mass 0.657) it is
+  # genuinely unresolvable, and must error under the default
+  # extrapolate = "error" rather than silently returning 0 percent (the
+  # pre-fix behavior - see dev-notes/AUDIT_LOG.md's root-cause entry).
+  x <- data.frame(
+    sample_id = "sieve_only",
+    size_mm = c(2, 1, 0.5, 0.25, 0.125, 0.063, 0.001),
+    retained = c(0, 0, 0.223, 13.0, 76.2, 9.92, 0.657)
+  )
+  gsd <- as_gsd_tbl(x, sample_id, size_mm, retained, value_type = "percent")
+
+  expect_error(
+    gs_fractions_wide(gsd, scheme = "usda", extrapolate = "error"),
+    "open-ended \\(pan\\) class with nonzero retained mass"
+  )
+})
+
+test_that("gs_fractions extrapolates with a warning (not a silent 0) when the user opts in via warn_linear", {
+  x <- data.frame(
+    sample_id = "sieve_only",
+    size_mm = c(2, 1, 0.5, 0.25, 0.125, 0.063, 0.001),
+    retained = c(0, 0, 0.223, 13.0, 76.2, 9.92, 0.657)
+  )
+  gsd <- as_gsd_tbl(x, sample_id, size_mm, retained, value_type = "percent")
+
+  expect_warning(
+    result <- gs_fractions_wide(gsd, scheme = "usda", extrapolate = "warn_linear"),
+    "linearly extrapolating"
+  )
+  expect_false(result$silt_percent == 0)
+})
+
+test_that("gs_fractions still resolves a genuine zero below the finite boundary when the pan is empty", {
+  # No assumption is required here: the pan's retained mass is exactly
+  # zero, so 0 percent finer than any threshold below the finite range is
+  # exactly correct, not a guess - this must be unaffected by the fix.
+  x <- data.frame(
+    sample_id = "zero_pan",
+    size_mm = c(2, 1, 0.5, 0.25, 0.125, 0.063, 0.001),
+    retained = c(0, 0, 0.223, 13.0, 76.777, 10, 0)
+  )
+  gsd <- as_gsd_tbl(x, sample_id, size_mm, retained, value_type = "percent")
+
+  result <- gs_fractions_wide(gsd, scheme = "usda", extrapolate = "error")
+
+  expect_equal(result$silt_percent, 0)
+  expect_equal(result$clay_percent, 0)
+})
+
 test_that("percent_finer_lookup batches per-sample thresholds identically to one-at-a-time lookups", {
   # Multiple samples with different finite ranges, and thresholds that fall
   # below, above, and inside each sample's observed range, so the batched
   # in-range gs_percent_finer() call and the below/above shortcuts are all
-  # exercised together across more than one sample.
+  # exercised together across more than one sample. The finest listed size
+  # becomes the open-lower (pan) row automatically; its retained mass is
+  # kept at exactly 0 here so the below-range threshold below resolves to
+  # a legitimate, assumption-free 0 percent (this test is about batching
+  # consistency, not pan-mass semantics - see the dedicated pan-mass tests
+  # above for that).
   x <- data.frame(
     sample_id = rep(c("wide_range", "narrow_range"), each = 5),
     size_mm = rep(c(2000, 62.5, 2, 0.063, 0.002), 2),
-    retained = c(5, 20, 30, 30, 15, 10, 40, 30, 15, 5)
+    retained = c(5, 20, 30, 45, 0, 10, 40, 30, 20, 0)
   )
   gsd <- as_gsd_tbl(x, sample_id, size_mm, retained, value_type = "percent")
   normalized <- .gsd_tbl_with_normalized_mm_sizes(gsd)

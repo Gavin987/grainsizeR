@@ -118,8 +118,20 @@ test_that("full workflow runs on wide example data", {
 })
 
 test_that("updated long example data support USDA ternary plotting", {
-  gsd <- read_gsd(example_gsd_path("grain.long.csv"), format = "long")
-  usda <- suppressWarnings(gs_fractions_wide(gsd, scheme = "usda", normalize = "fine_earth"))
+  # The bundled grain.long.csv has no real data below 63um, so USDA's fine
+  # clay/silt boundaries are not resolvable on it by default (see
+  # dev-notes/AUDIT_LOG.md's root-cause entry) - a small synthetic
+  # fine-resolution dataset stands in here instead.
+  fine_path <- tempfile(fileext = ".csv")
+  fine_csv <- data.frame(
+    size = c("2000", "1000", "500", "250", "125", "63", "20", "2", "0.001"),
+    S01 = c(1, 4, 15, 30, 30, 15, 3, 1.5, 0.5),
+    S02 = c(2, 6, 20, 25, 25, 12, 6, 3, 1),
+    check.names = FALSE
+  )
+  write.csv(fine_csv, fine_path, row.names = FALSE)
+  gsd <- read_gsd(fine_path, format = "wide")
+  usda <- gs_fractions_wide(gsd, scheme = "usda", normalize = "fine_earth")
 
   expect_true(all(c("sand_percent", "silt_percent", "clay_percent") %in% names(usda)))
   expect_s3_class(plot_texture_ternary(usda, scheme = "usda"), "ggplot")

@@ -142,7 +142,7 @@ USDA texture workflows.
 ```{r}
 head(gs_fractions(gs, scheme = "wentworth_major"))
 head(gs_fractions_wide(gs, scheme = "wentworth_major"))
-head(gs_fractions_wide(gs_wide, scheme = "gradistat"))
+head(gs_fractions_wide(gs_wide, scheme = "gravel_sand_mud"))
 ```
 
 ## Descriptive Terms

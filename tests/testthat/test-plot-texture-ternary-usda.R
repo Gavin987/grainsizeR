@@ -139,10 +139,21 @@ test_that("USDA ternary plotting accepts usda as the public scheme", {
 })
 
 test_that("USDA ternary plotting accepts official wide fraction output", {
-  path <- system.file("extdata", "grain.wide.csv", package = "grainsizeR")
-  if (!nzchar(path)) {
-    path <- file.path("..", "..", "inst", "extdata", "grain.wide.csv")
-  }
+  # The bundled grain.wide.csv has no real data below 63um, so USDA's fine
+  # clay/silt boundaries (2um, 50um) are not resolvable on it by default
+  # (see dev-notes/AUDIT_LOG.md's root-cause entry on gs_fractions()'s
+  # below-boundary behavior). This test's purpose - checking
+  # plot_texture_ternary()/plot_texture_triangle() accept
+  # gs_fractions_wide()'s real USDA output shape - only needs real fine
+  # resolution, not specifically the bundled file's (coarse-only) content.
+  path <- tempfile(fileext = ".csv")
+  wide_csv <- data.frame(
+    size = c("2000", "1000", "500", "250", "125", "63", "20", "2", "0.001"),
+    S01 = c(1, 4, 15, 30, 30, 15, 3, 1.5, 0.5),
+    S02 = c(2, 6, 20, 25, 25, 12, 6, 3, 1),
+    check.names = FALSE
+  )
+  write.csv(wide_csv, path, row.names = FALSE)
   wide <- read_gsd(path, format = "wide")
   fractions <- gs_fractions_wide(wide, scheme = "usda", normalize = "fine_earth")
 

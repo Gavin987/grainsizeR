@@ -38,7 +38,23 @@ percent_finer_lookup <- function(x, thresholds_mm, interpolation_scale, extrapol
     min_mm <- min(finite_mm)
     max_mm <- max(finite_mm)
 
-    in_range <- thresholds_mm >= min_mm & thresholds_mm <= max_mm
+    # Nominal sieve-mesh equivalence (see R/nominal-sieve-equivalence.R): a
+    # threshold below/above the sample's finite range may still be directly
+    # resolvable if it is a recognized equivalence match for one of the
+    # sample's own finite boundaries (e.g. gravel_sand_mud's 63 μm vs
+    # wentworth_major's 62.5 μm on the same real sieve). Such thresholds are
+    # routed into the batched gs_percent_finer() call below like any other
+    # in-range threshold - gs_percent_finer()'s own equivalence-aware logic
+    # then resolves them from the matched boundary's real value, not as an
+    # extrapolation.
+    equivalent_boundary <- vapply(
+      thresholds_mm,
+      function(t) nominally_equivalent_boundary_mm(t, finite_mm),
+      numeric(1)
+    )
+    has_equivalent <- !is.na(equivalent_boundary)
+
+    in_range <- (thresholds_mm >= min_mm & thresholds_mm <= max_mm) | has_equivalent
     resolved_lookup <- NULL
     if (any(in_range)) {
       # One batched call per sample for every in-range threshold, instead of
@@ -56,16 +72,74 @@ percent_finer_lookup <- function(x, thresholds_mm, interpolation_scale, extrapol
       )
     }
 
-    for (threshold in thresholds_mm) {
-      if (threshold < min_mm) {
-        rows[[row_id]] <- tibble::tibble(
-          sample_id = sample_id,
-          threshold_mm = threshold,
-          threshold_um = mm_to_um(threshold),
-          percent_finer = 0,
-          resolved = TRUE
-        )
-      } else if (threshold > max_mm) {
+    for (i in seq_along(thresholds_mm)) {
+      threshold <- thresholds_mm[i]
+      threshold_has_equivalent <- has_equivalent[i]
+
+      if (threshold < min_mm && !threshold_has_equivalent) {
+        # Genuinely below the finest measured boundary, with no recognized
+        # nominal-equivalence match. Whether this is a confident 0% depends
+        # on whether the excluded open-lower (pan) row actually carries
+        # retained mass - see dev-notes/AUDIT_LOG.md, "Root-cause:
+        # gs_fractions() below-finest-boundary behavior", for the full
+        # investigation this fix implements. If the pan is empty, 0% finer
+        # is exactly correct (no assumption involved); if it is not, the
+        # true value is not derivable from the data, and this now follows
+        # the same extrapolate policy gs_percent_finer() uses for the
+        # identical situation, instead of silently hard-coding zero.
+        pan_retained <- sum(sample_x$retained_percent[sample_x$is_open_lower], na.rm = TRUE)
+        if (!is.finite(pan_retained) || pan_retained <= 0) {
+          rows[[row_id]] <- tibble::tibble(
+            sample_id = sample_id,
+            threshold_mm = threshold,
+            threshold_um = mm_to_um(threshold),
+            percent_finer = 0,
+            resolved = TRUE
+          )
+        } else if (extrapolate == "error") {
+          stop(
+            "Requested fraction threshold falls inside an open-ended (pan) ",
+            "class with nonzero retained mass for sample `", sample_id,
+            "`. Use `extrapolate = \"warn_linear\"` to extrapolate.",
+            call. = FALSE
+          )
+        } else {
+          # extrapolate == "warn_linear": defer to gs_percent_finer()'s own
+          # linear extrapolation (with its own warning) instead of
+          # hard-coding a value.
+          extrapolated_lookup <- tryCatch(
+            gs_percent_finer(
+              sample_x,
+              sizes = threshold,
+              size_unit = "mm",
+              interpolation_scale = interpolation_scale,
+              extrapolate = "warn_linear"
+            ),
+            error = function(err) NULL
+          )
+          if (is.null(extrapolated_lookup)) {
+            unresolved_seen <- TRUE
+            if (unresolved == "error") {
+              stop("Required fraction thresholds could not be resolved.", call. = FALSE)
+            }
+            rows[[row_id]] <- tibble::tibble(
+              sample_id = sample_id,
+              threshold_mm = threshold,
+              threshold_um = mm_to_um(threshold),
+              percent_finer = NA_real_,
+              resolved = FALSE
+            )
+          } else {
+            rows[[row_id]] <- tibble::tibble(
+              sample_id = sample_id,
+              threshold_mm = threshold,
+              threshold_um = mm_to_um(threshold),
+              percent_finer = extrapolated_lookup$percent_finer[1],
+              resolved = TRUE
+            )
+          }
+        }
+      } else if (threshold > max_mm && !threshold_has_equivalent) {
         rows[[row_id]] <- tibble::tibble(
           sample_id = sample_id,
           threshold_mm = threshold,
@@ -205,12 +279,43 @@ fractions_one_sample <- function(sample_id, components, lookup, scheme, normaliz
 #' scale from `gsd_tbl`; users do not need to specify millimetres or
 #' micrometres after import.
 #' Thresholds above the largest observed finite boundary resolve to 100 percent
-#' finer, and thresholds below the smallest observed finite boundary resolve to
-#' 0 percent finer. This returns absent particle-size classes as zero rather
-#' than `NA`, so complete schemes close to 100 percent for samples whose
-#' retained percentages sum to 100. `NA` is reserved for thresholds that are
-#' genuinely unresolved inside the finite observed size range. Fraction schemes
-#' do not extrapolate unless `extrapolate = "warn_linear"` is passed explicitly.
+#' finer. Thresholds below the smallest observed finite boundary resolve to
+#' 0 percent finer **only when the excluded open-lower (pan) class carries no
+#' retained mass** - in that case there is genuinely nothing finer than the
+#' threshold, and 0 percent is exact, not an assumption. When the pan class
+#' does carry retained mass, the true value below the smallest observed
+#' boundary is not derivable from the data, and this now follows the same
+#' `extrapolate` policy `gs_percent_finer()` uses for the identical
+#' situation: `extrapolate = "error"` (the default) throws, and
+#' `extrapolate = "warn_linear"` resolves a linearly-extrapolated value with
+#' a warning. Earlier versions of this function returned a confident 0
+#' percent unconditionally in this case regardless of pan mass - this was a
+#' silent-assumption gap, corrected in this version (see
+#' `dev-notes/AUDIT_LOG.md`'s "Root-cause: gs_fractions() below-finest-
+#' boundary behavior" entry for the full investigation this fix implements).
+#' `NA` is reserved for thresholds that are genuinely unresolved inside the
+#' finite observed size range (governed by `unresolved`, separately from
+#' `extrapolate`). Fraction schemes do not extrapolate unless
+#' `extrapolate = "warn_linear"` is passed explicitly.
+#'
+#' Before applying the above range logic, a requested threshold is first
+#' checked against a small, explicit table of known nominal sieve-mesh
+#' equivalences (see `nominal_sieve_equivalence_groups_mm()`) - currently one
+#' group, `{0.0625, 0.063}` mm, reflecting that no sieve manufacturer cuts a
+#' 0.0625 mm (1/16 mm, the Udden-Wentworth phi-scale theoretical boundary
+#' used by `wentworth_major`/`wentworth_detailed`) mesh: sieves certified
+#' near this size under ISO 3310-1, ASTM E11, or DIN 4188 are labelled
+#' 0.063 mm (the value `gravel_sand_mud`/`gradistat`/`germany_63` use). If a
+#' sample's own finite boundary is a nominal-equivalence match for the
+#' requested threshold, the threshold resolves directly from that
+#' boundary's real value - not as an extrapolation, and not via the pan-mass
+#' logic above. This equivalence match only rescues thresholds that would
+#' otherwise be unresolved/extrapolated; when a threshold is already
+#' resolvable by real interpolation between two distinct measured
+#' boundaries (e.g. a sample with genuine finer-than-63μm data), real
+#' interpolated data governs and the equivalence table has no effect. Only
+#' the one listed group is ever treated as equivalent - unrelated boundaries
+#' (e.g. USDA's 0.05 mm) are never affected.
 #'
 #' Fraction thresholds interpolate using `gs_percent_finer()`'s size-as-`x`
 #' direction, so the tied-cumulative-value scenario that `gs_d_values()`
@@ -276,6 +381,9 @@ gs_fractions <- function(x,
 #'
 #' `gs_fractions_wide()` is a convenience wrapper around `gs_fractions()` that
 #' returns one row per sample with one percentage column per fraction component.
+#' See `gs_fractions()`'s Details for the nominal sieve-mesh equivalence table
+#' and the pan-mass-aware below-boundary resolution logic this wrapper
+#' inherits unchanged.
 #'
 #' @inheritParams gs_fractions
 #'

@@ -123,11 +123,21 @@ normalized internally.
 
 ```{r ternary-examples, eval=FALSE}
 gradistat_components <- gs_fractions_wide(wide, scheme = "gradistat")
-usda_components <- gs_fractions_wide(long, scheme = "usda", normalize = "fine_earth")
+usda_components <- gs_fractions_wide(
+  long,
+  scheme = "usda",
+  normalize = "fine_earth",
+  extrapolate = "warn_linear"
+)
 
 plot_texture_ternary(gradistat_components, scheme = "gradistat")
 plot_texture_ternary(usda_components, scheme = "usda", show_sample_labels = TRUE)
 ```
+
+The USDA panel below plots only the samples whose clay/silt split resolves
+from real or explicitly-extrapolated (`extrapolate = "warn_linear"`, with a
+warning) fine-boundary data; samples where that extrapolation would be
+unreliably large are omitted rather than shown as a silent guess.
 
 ```{r readme-ternary-plots, echo=FALSE, out.width=c("48%", "48%"), fig.show="hold"}
 knitr::include_graphics(c(

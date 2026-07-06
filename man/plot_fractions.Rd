@@ -50,9 +50,9 @@ for plotting after import.
 }
 \examples{
 x <- data.frame(
-  sample_id = c("A", "A", "A", "B", "B", "B"),
-  size_mm = rep(c(2, 0.5, 0.063), 2),
-  retained_proportion = c(0.20, 0.50, 0.30, 0.10, 0.60, 0.30)
+  sample_id = c("A", "A", "A", "A", "B", "B", "B", "B"),
+  size_mm = rep(c(2, 0.5, 0.063, 0.001), 2),
+  retained_proportion = c(0.20, 0.50, 0.30, 0, 0.10, 0.60, 0.30, 0)
 )
 gsd <- as_gsd_tbl(x, sample_id, size_mm, retained_proportion)
 plot_fractions(gsd, scheme = "wentworth_major")

@@ -46,23 +46,35 @@ test_that("plot_texture_triangle forwards to plot_texture_ternary", {
 })
 
 test_that("plot_texture_ternary accepts official GRADISTAT fraction outputs", {
-  path <- system.file("extdata", "grain.wide.csv", package = "grainsizeR")
-  if (!nzchar(path)) {
-    path <- file.path("..", "..", "inst", "extdata", "grain.wide.csv")
-  }
+  # The bundled grain.wide.csv has no real data below 63um, so GRADISTAT's
+  # clay/silt split (4um, 63um) is not resolvable on it by default (see
+  # dev-notes/AUDIT_LOG.md's root-cause entry on gs_fractions()'s
+  # below-boundary behavior). This test's purpose - checking
+  # plot_texture_ternary()/plot_texture_triangle() accept both
+  # gravel_sand_mud's and GRADISTAT's real fraction-table shapes - only
+  # needs real fine resolution, not specifically the bundled file's
+  # (coarse-only) content.
+  path <- tempfile(fileext = ".csv")
+  wide_csv <- data.frame(
+    size = c("2000", "1000", "500", "250", "125", "63", "20", "2", "0.001"),
+    S01 = c(1, 4, 15, 30, 30, 15, 3, 1.5, 0.5),
+    S02 = c(2, 6, 20, 25, 25, 12, 6, 3, 1),
+    check.names = FALSE
+  )
+  write.csv(wide_csv, path, row.names = FALSE)
   wide <- read_gsd(
     path,
     format = "wide",
     value_type = "percent"
   )
 
-  frac <- suppressWarnings(gs_fractions(wide, scheme = "gravel_sand_mud"))
+  frac <- gs_fractions(wide, scheme = "gravel_sand_mud")
   expect_no_error(plot_texture_ternary(frac, scheme = "gradistat"))
 
-  frac_wide <- suppressWarnings(gs_fractions_wide(wide, scheme = "gravel_sand_mud"))
+  frac_wide <- gs_fractions_wide(wide, scheme = "gravel_sand_mud")
   expect_no_error(plot_texture_ternary(frac_wide, scheme = "gradistat"))
 
-  gradistat_wide <- suppressWarnings(gs_fractions_wide(wide, scheme = "gradistat"))
+  gradistat_wide <- gs_fractions_wide(wide, scheme = "gradistat")
   expect_no_error(plot_texture_ternary(gradistat_wide, scheme = "gradistat"))
   expect_no_error(plot_texture_triangle(gradistat_wide, scheme = "gradistat"))
   expect_no_error(plot_texture_triangle(frac_wide, scheme = "gradistat"))

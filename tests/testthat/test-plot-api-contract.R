@@ -11,12 +11,18 @@ plot_contract_root <- function() {
 }
 
 plot_contract_gsd <- function() {
+  # Includes an explicit, zero-mass terminal row below 0.063mm so 0.063mm
+  # itself is a real finite boundary (not the open-lower/pan row) - the
+  # fraction-scheme calls this fixture feeds (gravel_sand_mud's 63um,
+  # wentworth_major's 62.5um) must resolve cleanly for this fixture's
+  # actual purpose (checking plot object/theme structure), not exercise
+  # the pan-mass-aware below-boundary logic tested in test-fractions.R.
   x <- data.frame(
-    sample_id = c(rep("A", 6), rep("B", 6)),
-    size_mm = rep(c(2, 1, 0.5, 0.25, 0.125, 0.063), 2),
+    sample_id = c(rep("A", 7), rep("B", 7)),
+    size_mm = rep(c(2, 1, 0.5, 0.25, 0.125, 0.063, 0.001), 2),
     retained_proportion = c(
-      0.05, 0.10, 0.25, 0.30, 0.20, 0.10,
-      0.10, 0.20, 0.25, 0.20, 0.15, 0.10
+      0.05, 0.10, 0.25, 0.30, 0.20, 0.10, 0,
+      0.10, 0.20, 0.25, 0.20, 0.15, 0.10, 0
     )
   )
   as_gsd_tbl(x, sample_id, size_mm, retained_proportion)

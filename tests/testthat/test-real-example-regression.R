@@ -77,12 +77,28 @@ test_that("coarse long and wide summaries agree for GRADISTAT-compatible gravel 
   }
 })
 
-test_that("fine texture schemes close for long and wide example data", {
+test_that("fine texture schemes require explicit extrapolation to close for long and wide example data", {
+  # grain.long.csv/grain.wide.csv have no real data below 63um for any
+  # sample, with nonzero pan mass, so usda/isss/uk_ssew's fine clay/silt
+  # boundaries are genuinely unresolved by default (see
+  # dev-notes/AUDIT_LOG.md's root-cause entry on gs_fractions()'s
+  # below-boundary behavior) - `unresolved = "warn_na"` alone no longer
+  # papers over this the way it silently did before the fix. The
+  # sum-to-100 identity still holds once extrapolation is explicitly
+  # allowed: it is a structural property of the differences telescoping,
+  # independent of how numerically reliable any individual extrapolated
+  # component is.
   ex <- read_real_examples_for_regression()
 
   for (scheme in c("usda", "isss", "uk_ssew")) {
-    long <- gs_fractions(ex$long, scheme = scheme, unresolved = "warn_na")
-    wide <- gs_fractions(ex$wide, scheme = scheme, unresolved = "warn_na")
+    expect_error(
+      gs_fractions(ex$long, scheme = scheme, unresolved = "warn_na"),
+      "open-ended \\(pan\\) class with nonzero retained mass",
+      info = scheme
+    )
+
+    long <- suppressWarnings(gs_fractions(ex$long, scheme = scheme, unresolved = "warn_na", extrapolate = "warn_linear"))
+    wide <- suppressWarnings(gs_fractions(ex$wide, scheme = scheme, unresolved = "warn_na", extrapolate = "warn_linear"))
     expect_false(any(is.na(long$percent)), info = scheme)
     expect_false(any(is.na(wide$percent)), info = scheme)
     expect_equal(as.numeric(rowsum(long$percent, long$sample_id)), rep(100, length(unique(long$sample_id))), tolerance = 1e-8, info = scheme)
@@ -122,15 +138,27 @@ test_that("selected real sample returns stable regression outputs", {
   expect_s3_class(p, "ggplot")
 })
 
-test_that("dry-sieve example closes texture fractions without extrapolating percent-finer thresholds", {
+test_that("dry-sieve example consistently requires extrapolation for both gs_percent_finer and gs_fractions", {
+  # Before the gs_fractions() pan-mass fix, this same dry-sieve example
+  # showed an inconsistency: gs_percent_finer() correctly refused to
+  # resolve 2um (genuinely inside the open, unmeasured pan tail), while
+  # gs_fractions()'s USDA clay/silt split silently returned 0 percent for
+  # the identical, equally-unresolved boundary (see
+  # dev-notes/AUDIT_LOG.md's root-cause entry). Both now agree: neither
+  # resolves this threshold without the user explicitly opting into
+  # extrapolation via extrapolate = "warn_linear".
   ex <- read_real_examples_for_regression()
 
   expect_error(
     gs_percent_finer(ex$wide, sizes = 2, size_unit = "um", extrapolate = "error"),
     "fall outside"
   )
+  expect_error(
+    gs_fractions(ex$wide, scheme = "usda", unresolved = "warn_na"),
+    "open-ended \\(pan\\) class with nonzero retained mass"
+  )
 
-  wide_usda <- gs_fractions(ex$wide, scheme = "usda", unresolved = "warn_na")
+  wide_usda <- suppressWarnings(gs_fractions(ex$wide, scheme = "usda", unresolved = "warn_na", extrapolate = "warn_linear"))
   expect_false(any(is.na(wide_usda$percent)))
   expect_equal(as.numeric(rowsum(wide_usda$percent, wide_usda$sample_id)), rep(100, length(unique(wide_usda$sample_id))), tolerance = 1e-8)
 })

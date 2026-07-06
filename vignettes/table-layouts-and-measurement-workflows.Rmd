@@ -137,8 +137,8 @@ not every sample necessarily resolves all fine-end D-values. Unresolved D5 or
 D95 values should be reported rather than hidden.
 
 ```{r}
-head(suppressWarnings(gs_fractions_wide(gs_long, scheme = "usda")))
-head(suppressWarnings(gs_fractions_wide(gs_long, scheme = "uk_ssew")))
+head(suppressWarnings(gs_fractions_wide(gs_long, scheme = "usda", extrapolate = "warn_linear")))
+head(suppressWarnings(gs_fractions_wide(gs_long, scheme = "uk_ssew", extrapolate = "warn_linear")))
 ```
 
 ## Why Some Fine-End D-Values Remain Unresolved
@@ -181,8 +181,8 @@ Texture-fraction workflows require sufficient fine-resolution data to resolve
 the relevant boundaries.
 
 ```{r}
-head(suppressWarnings(gs_fractions_wide(gs_long, scheme = "usda")))
-head(suppressWarnings(gs_fractions_wide(gs_long, scheme = "uk_ssew")))
+head(suppressWarnings(gs_fractions_wide(gs_long, scheme = "usda", extrapolate = "warn_linear")))
+head(suppressWarnings(gs_fractions_wide(gs_long, scheme = "uk_ssew", extrapolate = "warn_linear")))
 ```
 
 ## Summary Tables

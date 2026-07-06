@@ -6,7 +6,13 @@ test_that("plot_fractions receives closed fraction results by default", {
     retained_proportion
   )
 
-  plot <- plot_fractions(gsd, scheme = "gradistat")
+  # gravel_sand_mud (not gradistat): this test is about plot_fractions()'s
+  # general "closed fractions" behavior, not GRADISTAT-specific semantics.
+  # WN1/WN2's finest measured boundary (62.5um) is a recognized
+  # nominal-equivalence match for gravel_sand_mud's 63um threshold, so it
+  # resolves cleanly regardless of WN1/WN2's real pan mass - see
+  # test-fractions.R for GRADISTAT/USDA-specific fine-boundary coverage.
+  plot <- plot_fractions(gsd, scheme = "gravel_sand_mud")
 
   expect_false(any(is.na(plot$data$percent)))
   expect_equal(as.numeric(rowsum(plot$data$percent, plot$data$sample_id)), c(100, 100), tolerance = 1e-8)
@@ -37,7 +43,8 @@ test_that("plot_fractions na_to_zero preserves closed fraction results", {
     retained_proportion
   )
 
-  plot <- plot_fractions(gsd, scheme = "gradistat", na_to_zero = TRUE)
+  # gravel_sand_mud (not gradistat): see the equivalence-match note above.
+  plot <- plot_fractions(gsd, scheme = "gravel_sand_mud", na_to_zero = TRUE)
 
   expect_false(any(is.na(plot$data$percent)))
   expect_equal(as.numeric(rowsum(plot$data$percent, plot$data$sample_id)), c(100, 100), tolerance = 1e-8)
@@ -60,10 +67,17 @@ test_that("plot_fractions validates na_to_zero", {
 
 test_that("wentworth_detailed fraction plot closes for G2Sd-style wide input", {
   path <- tempfile(fileext = ".csv")
-  values <- g2sd_style_wide()
-  rownames(values) <- NULL
+  # Extended with real fine classes down to 2um (wentworth_detailed's
+  # finest rungs) plus a true zero-mass terminal pan row, so this closes
+  # via real interpolation rather than requiring extrapolation or hitting
+  # the pan-mass check tested separately in test-fractions.R.
+  values <- data.frame(
+    Q1 = c(5, 10, 15, 20, 20, 15, 5, 4, 2, 2, 1, 1, 0),
+    Q2 = c(4, 9, 16, 21, 19, 14, 6, 4, 3, 2, 1, 1, 0),
+    check.names = FALSE
+  )
   wide <- data.frame(
-    size = c("2000", "1000", "500", "250", "125", "63", "40", "0"),
+    size = c("2000", "1000", "500", "250", "125", "63", "40", "31.25", "15.625", "7.8125", "3.90625", "2", "0.001"),
     values,
     row.names = NULL,
     check.names = FALSE

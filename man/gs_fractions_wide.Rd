@@ -39,4 +39,7 @@ A tibble with one row per sample and component percentage columns.
 \description{
 \code{gs_fractions_wide()} is a convenience wrapper around \code{gs_fractions()} that
 returns one row per sample with one percentage column per fraction component.
+See \code{gs_fractions()}'s Details for the nominal sieve-mesh equivalence table
+and the pan-mass-aware below-boundary resolution logic this wrapper
+inherits unchanged.
 }

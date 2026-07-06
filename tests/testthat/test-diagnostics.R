@@ -109,7 +109,43 @@ test_that("open fine tails and unresolved fine-end calculations are reported", {
   expect_true(any(diag$check == "open_fine_tail" & diag$status == "info"))
   expect_true(any(diag$check == "d_value_resolvable" & diag$parameter == "D5" & diag$status == "warning"))
   expect_true(any(diag$check == "threshold_resolvable" & diag$parameter == "2 um" & diag$status == "warning"))
-  expect_true(any(diag$check == "fraction_scheme_resolvable" & diag$parameter == "usda" & diag$status == "ok"))
+  # USDA's clay/silt boundaries (2um, 50um) fall below this dry-sieve
+  # sample's finest measured boundary (63um), which carries nonzero pan
+  # mass - genuinely unresolved under the default extrapolate = "error",
+  # correctly reported as "warning" here (previously misreported as "ok"
+  # under the pre-fix silent-0%-assumption behavior; see
+  # dev-notes/AUDIT_LOG.md's root-cause entry).
+  expect_true(any(diag$check == "fraction_scheme_resolvable" & diag$parameter == "usda" & diag$status == "warning"))
+})
+
+test_that("threshold_resolvable resolves 62.5um via nominal sieve-mesh equivalence, but still warns for non-equivalent thresholds", {
+  # diagnostics_dry_sieve()'s finest measured boundary is exactly 63um,
+  # with nonzero pan mass (retained = 20 at the terminal row).
+  dry <- diagnostics_dry_sieve()
+
+  diag <- gs_diagnostics(dry, d_values = 50, thresholds_um = c(62.5, 63, 60))
+  tr <- diag[diag$check == "threshold_resolvable", ]
+
+  # 62.5um is a recognized nominal-equivalence match for this sample's
+  # real 63um boundary (see R/nominal-sieve-equivalence.R) - resolves
+  # cleanly to the same value as the exact 63um boundary, "ok", not
+  # "warning"/extrapolated (this is the gs_diagnostics()-level
+  # consequence of the equivalence fix, previously unprotected by any
+  # test - see dev-notes/AUDIT_LOG.md's 2026-07-06 follow-up entry).
+  expect_equal(tr$status[tr$parameter == "62.5 um"], "ok")
+  expect_equal(tr$severity[tr$parameter == "62.5 um"], "none")
+  expect_equal(tr$value[tr$parameter == "62.5 um"], tr$value[tr$parameter == "63 um"])
+
+  # 63um itself: exact boundary match, unaffected baseline for comparison.
+  expect_equal(tr$status[tr$parameter == "63 um"], "ok")
+
+  # Mirror-image check: 60um has no equivalence match, and this sample's
+  # pan mass is genuinely nonzero - still correctly reported as
+  # "warning"/unresolved under the default extrapolate = "error". This
+  # confirms the equivalence fix did not overcorrect into hiding a real
+  # unresolved-boundary hazard for thresholds it doesn't apply to.
+  expect_equal(tr$status[tr$parameter == "60 um"], "warning")
+  expect_equal(tr$value[tr$parameter == "60 um"], "unresolved")
 })
 
 test_that("diagnostics do not silently extrapolate by default", {

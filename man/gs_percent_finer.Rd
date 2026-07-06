@@ -52,6 +52,22 @@ that fall inside an open-ended terminal class are unresolved with
 \code{extrapolate = "error"} and are linearly extrapolated with a warning only
 when \code{extrapolate = "warn_linear"}.
 
+Before that range check, a requested threshold is first checked against a
+small, explicit table of known nominal sieve-mesh equivalences (see
+\code{nominal_sieve_equivalence_groups_mm()}) - currently one group,
+\verb{\{0.0625, 0.063\}} mm, reflecting that no sieve manufacturer cuts a
+0.0625 mm (1/16 mm, the Udden-Wentworth phi-scale theoretical boundary)
+mesh: sieves certified near this size under ISO 3310-1, ASTM E11, or
+DIN 4188 are labelled 0.063 mm. If a sample's own finite boundary is a
+nominal-equivalence match for a requested threshold that would otherwise
+fall outside the observed range, that threshold resolves directly from
+the matched boundary's real value (\code{extrapolated = FALSE}), not as an
+extrapolation. This only rescues thresholds that would otherwise be
+unresolved: when a threshold already falls inside the observed range,
+real interpolation governs and the equivalence table has no effect. Only
+the one listed group is ever treated as equivalent - unrelated boundaries
+(e.g. USDA's 0.05 mm) are never affected.
+
 Unlike \code{gs_d_values()}, \code{gs_percent_finer()} interpolates using requested
 size thresholds as the independent variable, and finite class boundaries
 are always distinct sizes - so the tied-cumulative-value scenario that

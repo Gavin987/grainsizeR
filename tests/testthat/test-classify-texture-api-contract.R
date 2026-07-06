@@ -56,10 +56,24 @@ test_that("USDA public scheme returns canonical texture class columns", {
 })
 
 test_that("USDA classification accepts official wide fraction output", {
-  path <- system.file("extdata", "grain.wide.csv", package = "grainsizeR")
-  if (!nzchar(path)) {
-    path <- file.path("..", "..", "inst", "extdata", "grain.wide.csv")
-  }
+  # The bundled grain.wide.csv has no real data below 63um (all 30
+  # samples), so USDA's fine clay/silt boundaries (2um, 50um) are now
+  # genuinely unresolved on it by default (previously silently 0 percent -
+  # see dev-notes/AUDIT_LOG.md's root-cause entry) and unreliable under
+  # extrapolate = "warn_linear" (linear extrapolation across such a large
+  # gap can produce values well outside 0-100 percent). This test's actual
+  # purpose - checking gs_fractions_wide()'s official wide-format output
+  # integrates with classify_texture() - only needs read_gsd(format =
+  # "wide")'s reader path exercised on data with real fine resolution, not
+  # specifically the bundled file's own (coarse-only) content.
+  path <- tempfile(fileext = ".csv")
+  wide_csv <- data.frame(
+    size = c("2000", "1000", "500", "250", "125", "63", "20", "2", "0.001"),
+    S01 = c(1, 4, 15, 30, 30, 15, 3, 1.5, 0.5),
+    S02 = c(2, 6, 20, 25, 25, 12, 6, 3, 1),
+    check.names = FALSE
+  )
+  write.csv(wide_csv, path, row.names = FALSE)
   wide <- read_gsd(path, format = "wide")
   fractions <- gs_fractions_wide(wide, scheme = "usda", normalize = "fine_earth")
 

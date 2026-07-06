@@ -100,10 +100,23 @@ test_that("README PNG figures use the standard output width", {
 
 test_that("bundled examples support README ternary plot workflows", {
   wide <- read_gsd(readme_example_path("grain.wide.csv"), format = "wide")
-  long <- read_gsd(readme_example_path("grain.long.csv"))
 
   gsm <- suppressWarnings(gs_fractions(wide, scheme = "gravel_sand_mud"))
-  usda <- suppressWarnings(gs_fractions_wide(long, scheme = "usda", normalize = "fine_earth", extrapolate = "warn_linear"))
+  # The bundled grain.long.csv has no real data below 63um, so USDA's fine
+  # clay/silt boundaries are not resolvable on it by default, and
+  # extrapolate = "warn_linear" across such a large gap produces values
+  # outside 0-100 percent (see dev-notes/AUDIT_LOG.md's root-cause entry) -
+  # a small synthetic fine-resolution dataset stands in here instead.
+  fine_path <- tempfile(fileext = ".csv")
+  fine_csv <- data.frame(
+    size = c("2000", "1000", "500", "250", "125", "63", "20", "2", "0.001"),
+    S01 = c(1, 4, 15, 30, 30, 15, 3, 1.5, 0.5),
+    S02 = c(2, 6, 20, 25, 25, 12, 6, 3, 1),
+    check.names = FALSE
+  )
+  write.csv(fine_csv, fine_path, row.names = FALSE)
+  long <- read_gsd(fine_path, format = "wide")
+  usda <- gs_fractions_wide(long, scheme = "usda", normalize = "fine_earth")
 
   expect_s3_class(
     plot_texture_ternary(

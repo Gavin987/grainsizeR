@@ -95,7 +95,10 @@ test_that("documented fraction workflows run", {
   gs_long <- workflow_read_long()
 
   wide_fractions <- gs_fractions_wide(gs_wide, scheme = "wentworth_major")
-  long_fractions <- suppressWarnings(gs_fractions_wide(gs_long, scheme = "usda"))
+  # extrapolate = "warn_linear": this example dataset has no real data
+  # below 63um, so USDA's fine clay/silt boundaries are genuinely
+  # unresolved by default (see dev-notes/AUDIT_LOG.md's root-cause entry).
+  long_fractions <- suppressWarnings(gs_fractions_wide(gs_long, scheme = "usda", extrapolate = "warn_linear"))
 
   expect_s3_class(wide_fractions, "data.frame")
   expect_s3_class(long_fractions, "data.frame")
@@ -132,7 +135,7 @@ test_that("workflow examples do not create files", {
   invisible(gs_diagnostics(gs_wide, output = "summary"))
   invisible(gs_diagnostics(gs_long, output = "summary"))
   invisible(gs_fractions_wide(gs_wide, scheme = "wentworth_major"))
-  invisible(suppressWarnings(gs_fractions_wide(gs_long, scheme = "usda")))
+  invisible(suppressWarnings(gs_fractions_wide(gs_long, scheme = "usda", extrapolate = "warn_linear")))
 
   after <- list.files(tempdir(), all.files = TRUE, no.. = TRUE)
   expect_setequal(before, after)

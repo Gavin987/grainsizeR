@@ -74,7 +74,12 @@ test_that("gs_fractions interpolates scheme boundaries when bracketed", {
   }
 })
 
-test_that("gs_fractions closes open fine tail thresholds without extrapolation", {
+test_that("gs_fractions requires explicit extrapolation for sample B's open fine tail", {
+  # Sample B's finest measured boundary is 3um, with nonzero pan mass
+  # (24%) below it; USDA's clay boundary (2um) falls inside that open
+  # tail with no nominal-equivalence match, so it is genuinely unresolved
+  # by default (see dev-notes/AUDIT_LOG.md's root-cause entry) - this
+  # must not silently resolve to 0 percent (the pre-fix behavior).
   gsd <- as_gsd_tbl(
     threshold_interpolation_fixture(),
     sample_id,
@@ -84,13 +89,21 @@ test_that("gs_fractions closes open fine tail thresholds without extrapolation",
   )
   sample_b <- gsd[gsd$sample_id == "B", ]
 
-  result <- gs_fractions(sample_b, scheme = "usda", unresolved = "warn_na")
-  expect_equal(result$percent[result$component == "clay"], 0)
+  expect_error(
+    gs_fractions(sample_b, scheme = "usda", unresolved = "warn_na"),
+    "open-ended \\(pan\\) class with nonzero retained mass"
+  )
+
+  result <- suppressWarnings(gs_fractions(sample_b, scheme = "usda", unresolved = "warn_na", extrapolate = "warn_linear"))
+  expect_true(is.finite(result$percent[result$component == "clay"]))
   expect_false(is.na(result$percent[result$component == "silt"]))
   expect_false(is.na(result$percent[result$component == "sand"]))
   expect_equal(sum(result$percent), 100, tolerance = 1e-8)
 
-  expect_s3_class(gs_fractions(sample_b, scheme = "usda", unresolved = "error"), "tbl_df")
+  expect_s3_class(
+    suppressWarnings(gs_fractions(sample_b, scheme = "usda", unresolved = "error", extrapolate = "warn_linear")),
+    "tbl_df"
+  )
 })
 
 test_that("real example data resolves available arbitrary thresholds and closes fractions", {
@@ -122,7 +135,12 @@ test_that("real example data resolves available arbitrary thresholds and closes 
       !any(result$extrapolated)
   }, logical(1))))
 
-  fractions <- gs_fractions(gsd, scheme = "usda", unresolved = "warn_na")
+  # grain.long.csv has no real data below 63um, so USDA's fine clay/silt
+  # boundaries are genuinely unresolved by default here (see
+  # dev-notes/AUDIT_LOG.md's root-cause entry) - extrapolate = "warn_linear"
+  # is required, matching the fix's coordinated behavior with
+  # gs_percent_finer() above.
+  fractions <- suppressWarnings(gs_fractions(gsd, scheme = "usda", unresolved = "warn_na", extrapolate = "warn_linear"))
   expect_false(any(is.na(fractions$percent)))
   expect_equal(as.numeric(rowsum(fractions$percent, fractions$sample_id)), rep(100, length(unique(fractions$sample_id))), tolerance = 1e-8)
 

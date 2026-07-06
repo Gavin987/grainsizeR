@@ -45,6 +45,18 @@ wide_plot_sample <- wide_samples[1]
 
 wide_gsm <- suppressWarnings(gs_fractions(wide, scheme = "gravel_sand_mud"))
 
+# grain.long.csv has no real data below 63um for any sample; USDA's 2um
+# clay boundary is therefore resolved via explicit linear extrapolation
+# (extrapolate = "warn_linear", with a warning) rather than the pre-fix
+# silent zero. For the 9 samples with some finer resolution (~8-13um),
+# this is a small, plausible overshoot past the natural 0% clay boundary
+# (at most ~5.4 percentage points) - clipped to 0 and the difference
+# proportionally redistributed across sand/silt so the total still sums
+# to exactly 100 (required by the USDA classifier's own tolerance). For
+# the remaining 21 sieve-only samples (finest boundary 63um), the same
+# extrapolation is a ~63um-to-2um gap and produces wildly unreliable
+# values (e.g. clay to -132%) - these are excluded as unreliable
+# extrapolations, not silently shown.
 long_usda_fractions <- suppressWarnings(gs_fractions_wide(
   long,
   scheme = "usda",
@@ -52,9 +64,17 @@ long_usda_fractions <- suppressWarnings(gs_fractions_wide(
   unresolved = "warn_na",
   extrapolate = "warn_linear"
 ))
-long_usda_valid <- stats::complete.cases(long_usda_fractions[c("sand_percent", "silt_percent", "clay_percent")]) &
-  abs(rowSums(long_usda_fractions[c("sand_percent", "silt_percent", "clay_percent")]) - 100) < 1e-6
-usda_points <- long_usda_fractions[long_usda_valid, ]
+usda_component_cols <- as.matrix(long_usda_fractions[c("sand_percent", "silt_percent", "clay_percent")])
+usda_clipped <- pmax(usda_component_cols, 0)
+usda_clip_correction <- rowSums(usda_component_cols) - rowSums(usda_clipped)
+usda_small_correction <- stats::complete.cases(usda_component_cols) &
+  apply(usda_component_cols, 1, function(row) all(is.finite(row))) &
+  (-usda_clip_correction) <= 10
+usda_renormalized <- usda_clipped / rowSums(usda_clipped) * 100
+
+usda_points <- long_usda_fractions
+usda_points[c("sand_percent", "silt_percent", "clay_percent")] <- usda_renormalized
+usda_points <- usda_points[usda_small_correction, ]
 
 save_readme_plot(
   plot_distribution(wide, sample_id = wide_plot_sample, cumulative = TRUE, particle_unit = "mm"),

@@ -51,12 +51,43 @@ Fraction and texture functions automatically use the normalized particle-size
 scale from \code{gsd_tbl}; users do not need to specify millimetres or
 micrometres after import.
 Thresholds above the largest observed finite boundary resolve to 100 percent
-finer, and thresholds below the smallest observed finite boundary resolve to
-0 percent finer. This returns absent particle-size classes as zero rather
-than \code{NA}, so complete schemes close to 100 percent for samples whose
-retained percentages sum to 100. \code{NA} is reserved for thresholds that are
-genuinely unresolved inside the finite observed size range. Fraction schemes
-do not extrapolate unless \code{extrapolate = "warn_linear"} is passed explicitly.
+finer. Thresholds below the smallest observed finite boundary resolve to
+0 percent finer \strong{only when the excluded open-lower (pan) class carries no
+retained mass} - in that case there is genuinely nothing finer than the
+threshold, and 0 percent is exact, not an assumption. When the pan class
+does carry retained mass, the true value below the smallest observed
+boundary is not derivable from the data, and this now follows the same
+\code{extrapolate} policy \code{gs_percent_finer()} uses for the identical
+situation: \code{extrapolate = "error"} (the default) throws, and
+\code{extrapolate = "warn_linear"} resolves a linearly-extrapolated value with
+a warning. Earlier versions of this function returned a confident 0
+percent unconditionally in this case regardless of pan mass - this was a
+silent-assumption gap, corrected in this version (see
+\code{dev-notes/AUDIT_LOG.md}'s "Root-cause: gs_fractions() below-finest-
+boundary behavior" entry for the full investigation this fix implements).
+\code{NA} is reserved for thresholds that are genuinely unresolved inside the
+finite observed size range (governed by \code{unresolved}, separately from
+\code{extrapolate}). Fraction schemes do not extrapolate unless
+\code{extrapolate = "warn_linear"} is passed explicitly.
+
+Before applying the above range logic, a requested threshold is first
+checked against a small, explicit table of known nominal sieve-mesh
+equivalences (see \code{nominal_sieve_equivalence_groups_mm()}) - currently one
+group, \verb{\{0.0625, 0.063\}} mm, reflecting that no sieve manufacturer cuts a
+0.0625 mm (1/16 mm, the Udden-Wentworth phi-scale theoretical boundary
+used by \code{wentworth_major}/\code{wentworth_detailed}) mesh: sieves certified
+near this size under ISO 3310-1, ASTM E11, or DIN 4188 are labelled
+0.063 mm (the value \code{gravel_sand_mud}/\code{gradistat}/\code{germany_63} use). If a
+sample's own finite boundary is a nominal-equivalence match for the
+requested threshold, the threshold resolves directly from that
+boundary's real value - not as an extrapolation, and not via the pan-mass
+logic above. This equivalence match only rescues thresholds that would
+otherwise be unresolved/extrapolated; when a threshold is already
+resolvable by real interpolation between two distinct measured
+boundaries (e.g. a sample with genuine finer-than-63μm data), real
+interpolated data governs and the equivalence table has no effect. Only
+the one listed group is ever treated as equivalent - unrelated boundaries
+(e.g. USDA's 0.05 mm) are never affected.
 
 Fraction thresholds interpolate using \code{gs_percent_finer()}'s size-as-\code{x}
 direction, so the tied-cumulative-value scenario that \code{gs_d_values()}
