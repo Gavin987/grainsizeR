@@ -106,12 +106,12 @@ head(gs_diagnostics(gs_wide, output = "summary"))
 #> # A tibble: 6 × 8
 #>   sample_id  n_ok n_warning n_error n_info has_error has_warning overall_status
 #>   <chr>     <int>     <int>   <int>  <int> <lgl>     <lgl>       <chr>         
-#> 1 S01          19         9       0      3 FALSE     TRUE        warning       
-#> 2 S02          21         6       0      4 FALSE     TRUE        warning       
-#> 3 S03          21         6       0      4 FALSE     TRUE        warning       
-#> 4 S04          19         9       0      3 FALSE     TRUE        warning       
-#> 5 S05          19         9       0      3 FALSE     TRUE        warning       
-#> 6 S06          21         6       0      4 FALSE     TRUE        warning
+#> 1 S01          16        12       0      3 FALSE     TRUE        warning       
+#> 2 S02          18         9       0      4 FALSE     TRUE        warning       
+#> 3 S03          18         9       0      4 FALSE     TRUE        warning       
+#> 4 S04          16        12       0      3 FALSE     TRUE        warning       
+#> 5 S05          16        12       0      3 FALSE     TRUE        warning       
+#> 6 S06          18         9       0      4 FALSE     TRUE        warning
 head(gs_diagnostics(
   gs,
   d_values = c(5, 10, 50, 90, 95),
@@ -262,12 +262,12 @@ head(gs_fractions_wide(gs, scheme = "wentworth_major"))
 #> # A tibble: 6 × 4
 #>   sample_id gravel_percent sand_percent mud_percent
 #>   <chr>              <dbl>        <dbl>       <dbl>
-#> 1 S01                0.624         85.1        14.3
-#> 2 S02                0.224         99.8         0  
-#> 3 S03                0.312         99.7         0  
-#> 4 S04                0.153         89.7        10.2
-#> 5 S05                0.295         89.4        10.4
-#> 6 S06                0.230         99.8         0
+#> 1 S01                0.624         85.1      14.3  
+#> 2 S02                0.224         97.8       1.93 
+#> 3 S03                0.312         95.1       4.60 
+#> 4 S04                0.153         89.7      10.2  
+#> 5 S05                0.295         89.4      10.4  
+#> 6 S06                0.230         98.8       0.964
 particle_size_systems()
 #> # A tibble: 9 × 15
 #>   system_id     system_name country_or_region domain clay_upper_um silt_upper_um

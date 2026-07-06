@@ -128,10 +128,16 @@
 <p>Fraction schemes convert grain-size data into particle-size components; ternary bases are the three components drawn on a plot; texture systems are the classification or diagram style. GRADISTAT-style ternary plots accept official <code><a href="reference/gs_fractions_wide.html">gs_fractions_wide()</a></code> outputs from the <code>gradistat</code> or <code>gravel_sand_mud</code> schemes. USDA ternary plots accept official USDA fraction output and draw the 12 major USDA texture classes. Canonical component names are lowercase snake_case; simple case variants such as <code>Sand</code> or <code>SAND</code> are normalized internally.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">gradistat_components</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/gs_fractions_wide.html">gs_fractions_wide</a></span><span class="op">(</span><span class="va">wide</span>, scheme <span class="op">=</span> <span class="st">"gradistat"</span><span class="op">)</span></span>
-<span><span class="va">usda_components</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/gs_fractions_wide.html">gs_fractions_wide</a></span><span class="op">(</span><span class="va">long</span>, scheme <span class="op">=</span> <span class="st">"usda"</span>, normalize <span class="op">=</span> <span class="st">"fine_earth"</span><span class="op">)</span></span>
+<span><span class="va">usda_components</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/gs_fractions_wide.html">gs_fractions_wide</a></span><span class="op">(</span></span>
+<span>  <span class="va">long</span>,</span>
+<span>  scheme <span class="op">=</span> <span class="st">"usda"</span>,</span>
+<span>  normalize <span class="op">=</span> <span class="st">"fine_earth"</span>,</span>
+<span>  extrapolate <span class="op">=</span> <span class="st">"warn_linear"</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="reference/plot_texture_ternary.html">plot_texture_ternary</a></span><span class="op">(</span><span class="va">gradistat_components</span>, scheme <span class="op">=</span> <span class="st">"gradistat"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/plot_texture_ternary.html">plot_texture_ternary</a></span><span class="op">(</span><span class="va">usda_components</span>, scheme <span class="op">=</span> <span class="st">"usda"</span>, show_sample_labels <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<p>The USDA panel below plots only the samples whose clay/silt split resolves from real or explicitly-extrapolated (<code>extrapolate = "warn_linear"</code>, with a warning) fine-boundary data; samples where that extrapolation would be unreliably large are omitted rather than shown as a silent guess.</p>
 <p><img src="reference/figures/readme-gradistat-ternary.png" width="48%"><img src="reference/figures/readme-usda-ternary.png" width="48%"></p>
 </div>
 <div class="section level2">

@@ -145,7 +145,7 @@ gs_diagnostics(subset(gs_wide, sample_id == "S01"), output = "summary")
 #> # A tibble: 1 × 8
 #>   sample_id  n_ok n_warning n_error n_info has_error has_warning overall_status
 #>   <chr>     <int>     <int>   <int>  <int> <lgl>     <lgl>       <chr>         
-#> 1 S01          19         9       0      3 FALSE     TRUE        warning
+#> 1 S01          16        12       0      3 FALSE     TRUE        warning
 ```
 
 ## Fraction Schemes
@@ -163,22 +163,22 @@ head(gs_fractions_wide(gs_long, scheme = "wentworth_major"))
 #> # A tibble: 6 × 4
 #>   sample_id gravel_percent sand_percent mud_percent
 #>   <chr>              <dbl>        <dbl>       <dbl>
-#> 1 S01                0.624         85.1        14.3
-#> 2 S02                0.224         99.8         0  
-#> 3 S03                0.312         99.7         0  
-#> 4 S04                0.153         89.7        10.2
-#> 5 S05                0.295         89.4        10.4
-#> 6 S06                0.230         99.8         0
+#> 1 S01                0.624         85.1      14.3  
+#> 2 S02                0.224         97.8       1.93 
+#> 3 S03                0.312         95.1       4.60 
+#> 4 S04                0.153         89.7      10.2  
+#> 5 S05                0.295         89.4      10.4  
+#> 6 S06                0.230         98.8       0.964
 head(gs_fractions_wide(gs_wide, scheme = "wentworth_major"))
 #> # A tibble: 6 × 4
 #>   sample_id gravel_percent sand_percent mud_percent
 #>   <chr>              <dbl>        <dbl>       <dbl>
-#> 1 S01                0.624         99.4           0
-#> 2 S02                0.224         99.8           0
-#> 3 S03                0.312         99.7           0
-#> 4 S04                0.153         99.8           0
-#> 5 S05                0.295         99.7           0
-#> 6 S06                0.230         99.8           0
+#> 1 S01                0.624         85.0      14.4  
+#> 2 S02                0.224         97.8       1.93 
+#> 3 S03                0.312         95.1       4.60 
+#> 4 S04                0.153         89.6      10.2  
+#> 5 S05                0.295         88.8      10.9  
+#> 6 S06                0.230         98.8       0.964
 ```
 
 ## Folk and Ward Statistics

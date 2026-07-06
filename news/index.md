@@ -23,6 +23,38 @@
   [`plot_cumulative()`](https://Gavin987.github.io/grainsizeR/reference/plot_cumulative.md),
   [`plot_gradistat_summary()`](https://Gavin987.github.io/grainsizeR/reference/plot_gradistat_summary.md)).
   Results for samples without tied cumulative values are unchanged.
+- Fixed a silent-assumption gap in
+  [`gs_fractions()`](https://Gavin987.github.io/grainsizeR/reference/gs_fractions.md)/[`gs_fractions_wide()`](https://Gavin987.github.io/grainsizeR/reference/gs_fractions_wide.md):
+  a requested fraction threshold below a sample’s finest measured
+  boundary previously always resolved to a confident 0 percent, even
+  when the excluded open-lower (pan) class carried nonzero retained
+  mass - meaning the true value was not actually derivable from the
+  data. This now follows the same `extrapolate` policy
+  [`gs_percent_finer()`](https://Gavin987.github.io/grainsizeR/reference/gs_percent_finer.md)
+  already uses for the identical situation: the default
+  `extrapolate = "error"` throws instead of silently assuming zero, and
+  `extrapolate = "warn_linear"` resolves a linearly-extrapolated value
+  with a warning. When the pan class is genuinely empty, the result is
+  unchanged (0 percent is exact, not an assumption, in that case).
+- Added an explicit, citation-backed nominal sieve-mesh equivalence
+  table (currently one group: 0.0625 mm / 0.063 mm, reflecting that no
+  sieve manufacturer cuts a 0.0625 mm mesh - sieves near this size are
+  certified at 0.063 mm under ISO 3310-1, ASTM E11, and DIN 4188).
+  [`gs_fractions()`](https://Gavin987.github.io/grainsizeR/reference/gs_fractions.md)/[`gs_fractions_wide()`](https://Gavin987.github.io/grainsizeR/reference/gs_fractions_wide.md)
+  and
+  [`gs_percent_finer()`](https://Gavin987.github.io/grainsizeR/reference/gs_percent_finer.md)
+  now resolve a requested threshold directly from a sample’s own finite
+  boundary when the two are members of the same equivalence group,
+  instead of treating them as unrelated values - e.g. `gravel_sand_mud`
+  (63 μm) and `wentworth_major` (62.5 μm) now agree exactly on
+  sieve-only samples whose finest measured boundary is 63 μm. This only
+  rescues thresholds that would otherwise be unresolved/extrapolated;
+  real interpolated data governs whenever a sample has genuine
+  finer-resolution measurements, and unrelated boundaries (e.g. USDA’s
+  50 μm) are never affected by the table. These two changes were
+  implemented together since they touch the same threshold-resolution
+  logic; see `dev-notes/AUDIT_LOG.md` for the full investigation and
+  design.
 
 ## grainsizeR 0.2.0
 

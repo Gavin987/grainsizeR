@@ -70,7 +70,12 @@ major-class boundaries from the package’s independently expressed rule
 logic and annotate ternary percentage axes directly, without ordinary
 Cartesian x/y tick labels. USDA ternary plots place `percent sand`,
 `percent silt`, and `percent clay` outside the corresponding triangle
-sides.
+sides. Samples whose finest measured boundary is too far from USDA’s 2
+um clay threshold for the extrapolation to be reliable are excluded
+rather than shown as a silent guess; a small extrapolation-driven
+overshoot past the natural 0% clay boundary is clipped to 0 and the
+difference proportionally redistributed across sand/silt so percentages
+still sum to exactly 100.
 
 ``` r
 usda_fractions <- suppressWarnings(gs_fractions_wide(
@@ -81,22 +86,25 @@ usda_fractions <- suppressWarnings(gs_fractions_wide(
 ))
 
 usda_components <- c("sand_percent", "silt_percent", "clay_percent")
-usda_fractions <- usda_fractions[
-  stats::complete.cases(usda_fractions[usda_components]) &
-    rowSums(usda_fractions[usda_components] >= 0 & usda_fractions[usda_components] <= 100) == 3 &
-    abs(rowSums(usda_fractions[usda_components]) - 100) < 1e-6,
-]
+usda_matrix <- as.matrix(usda_fractions[usda_components])
+usda_clipped <- pmax(usda_matrix, 0)
+usda_clip_correction <- rowSums(usda_matrix) - rowSums(usda_clipped)
+usda_keep <- stats::complete.cases(usda_matrix) &
+  apply(usda_matrix, 1, function(row) all(is.finite(row))) &
+  (-usda_clip_correction) <= 10
+usda_fractions[usda_components] <- usda_clipped / rowSums(usda_clipped) * 100
+usda_fractions <- usda_fractions[usda_keep, ]
 
 head(classify_texture(usda_fractions, scheme = "usda", method = "rules"))
 #> # A tibble: 6 × 11
 #>   sample_id  sand  silt  clay texture_class_id texture_class
 #>   <chr>     <dbl> <dbl> <dbl> <chr>            <chr>        
-#> 1 S01        87.5 12.5      0 sand             sand         
-#> 2 S02       100    0        0 sand             sand         
-#> 3 S03       100    0        0 sand             sand         
-#> 4 S04        90.9  9.12     0 sand             sand         
-#> 5 S05        92.2  7.76     0 sand             sand         
-#> 6 S06       100    0        0 sand             sand         
+#> 1 S01        86.4 13.6      0 sand             sand         
+#> 2 S04        86.4 13.6      0 sand             sand         
+#> 3 S05        90.7  9.29     0 sand             sand         
+#> 4 S19        83.5 16.5      0 loamy_sand       loamy sand   
+#> 5 S20        86.2 13.8      0 sand             sand         
+#> 6 S21        82.4 17.6      0 loamy_sand       loamy sand   
 #> # ℹ 5 more variables: classification_method <chr>, rule_status <chr>,
 #> #   all_rule_matches <chr>, rule_conflict <lgl>, rule_gap <lgl>
 

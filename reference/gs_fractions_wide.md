@@ -3,7 +3,11 @@
 `gs_fractions_wide()` is a convenience wrapper around
 [`gs_fractions()`](https://Gavin987.github.io/grainsizeR/reference/gs_fractions.md)
 that returns one row per sample with one percentage column per fraction
-component.
+component. See
+[`gs_fractions()`](https://Gavin987.github.io/grainsizeR/reference/gs_fractions.md)'s
+Details for the nominal sieve-mesh equivalence table and the
+pan-mass-aware below-boundary resolution logic this wrapper inherits
+unchanged.
 
 ## Usage
 

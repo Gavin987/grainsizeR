@@ -89,12 +89,12 @@ head(gs_diagnostics(gs_wide, output = "summary"))
 #> # A tibble: 6 × 8
 #>   sample_id  n_ok n_warning n_error n_info has_error has_warning overall_status
 #>   <chr>     <int>     <int>   <int>  <int> <lgl>     <lgl>       <chr>         
-#> 1 S01          19         9       0      3 FALSE     TRUE        warning       
-#> 2 S02          21         6       0      4 FALSE     TRUE        warning       
-#> 3 S03          21         6       0      4 FALSE     TRUE        warning       
-#> 4 S04          19         9       0      3 FALSE     TRUE        warning       
-#> 5 S05          19         9       0      3 FALSE     TRUE        warning       
-#> 6 S06          21         6       0      4 FALSE     TRUE        warning
+#> 1 S01          16        12       0      3 FALSE     TRUE        warning       
+#> 2 S02          18         9       0      4 FALSE     TRUE        warning       
+#> 3 S03          18         9       0      4 FALSE     TRUE        warning       
+#> 4 S04          16        12       0      3 FALSE     TRUE        warning       
+#> 5 S05          16        12       0      3 FALSE     TRUE        warning       
+#> 6 S06          18         9       0      4 FALSE     TRUE        warning
 ```
 
 This example is appropriate for the GRADISTAT-compatible
@@ -161,12 +161,12 @@ head(gs_diagnostics(gs_long, output = "summary"))
 #> # A tibble: 6 × 8
 #>   sample_id  n_ok n_warning n_error n_info has_error has_warning overall_status
 #>   <chr>     <int>     <int>   <int>  <int> <lgl>     <lgl>       <chr>         
-#> 1 S01          28         1       0      2 FALSE     TRUE        warning       
-#> 2 S02          22         5       0      4 FALSE     TRUE        warning       
-#> 3 S03          22         5       0      4 FALSE     TRUE        warning       
-#> 4 S04          28         1       0      2 FALSE     TRUE        warning       
-#> 5 S05          28         1       0      2 FALSE     TRUE        warning       
-#> 6 S06          22         5       0      4 FALSE     TRUE        warning
+#> 1 S01          24         5       0      2 FALSE     TRUE        warning       
+#> 2 S02          19         8       0      4 FALSE     TRUE        warning       
+#> 3 S03          19         8       0      4 FALSE     TRUE        warning       
+#> 4 S04          24         5       0      2 FALSE     TRUE        warning       
+#> 5 S05          24         5       0      2 FALSE     TRUE        warning       
+#> 6 S06          19         8       0      4 FALSE     TRUE        warning
 ```
 
 Sieve + hydrometer measurements are often preferred for clay/silt/sand
@@ -177,26 +177,26 @@ D-values. Unresolved D5 or D95 values should be reported rather than
 hidden.
 
 ``` r
-head(suppressWarnings(gs_fractions_wide(gs_long, scheme = "usda")))
+head(suppressWarnings(gs_fractions_wide(gs_long, scheme = "usda", extrapolate = "warn_linear")))
 #> # A tibble: 6 × 5
 #>   sample_id gravel_percent sand_percent silt_percent clay_percent
 #>   <chr>              <dbl>        <dbl>        <dbl>        <dbl>
-#> 1 S01                0.624         86.9        12.5             0
-#> 2 S02                0.224         99.8         0               0
-#> 3 S03                0.312         99.7         0               0
-#> 4 S04                0.153         90.7         9.10            0
-#> 5 S05                0.295         92.0         7.74            0
-#> 6 S06                0.230         99.8         0               0
-head(suppressWarnings(gs_fractions_wide(gs_long, scheme = "uk_ssew")))
+#> 1 S01                0.624         86.9        13.7         -1.22
+#> 2 S02                0.224        107.        124.        -131.  
+#> 3 S03                0.312        108.        177.        -185.  
+#> 4 S04                0.153         90.7        14.3         -5.16
+#> 5 S05                0.295         92.0         9.42        -1.68
+#> 6 S06                0.230        110.        154.        -164.
+head(suppressWarnings(gs_fractions_wide(gs_long, scheme = "uk_ssew", extrapolate = "warn_linear")))
 #> # A tibble: 6 × 5
 #>   sample_id gravel_percent sand_percent silt_percent clay_percent
 #>   <chr>              <dbl>        <dbl>        <dbl>        <dbl>
-#> 1 S01                0.624         85.4        14.0             0
-#> 2 S02                0.224         99.8         0               0
-#> 3 S03                0.312         99.7         0               0
-#> 4 S04                0.153         89.9         9.98            0
-#> 5 S05                0.295         90.5         9.19            0
-#> 6 S06                0.230         99.8         0               0
+#> 1 S01                0.624         85.4         15.2        -1.22
+#> 2 S02                0.224         99.7        131.       -131.  
+#> 3 S03                0.312         97.8        187.       -185.  
+#> 4 S04                0.153         89.9         15.1        -5.16
+#> 5 S05                0.295         90.5         10.9        -1.68
+#> 6 S06                0.230        101.         163.       -164.
 ```
 
 ## Why Some Fine-End D-Values Remain Unresolved
@@ -258,26 +258,26 @@ Texture-fraction workflows require sufficient fine-resolution data to
 resolve the relevant boundaries.
 
 ``` r
-head(suppressWarnings(gs_fractions_wide(gs_long, scheme = "usda")))
+head(suppressWarnings(gs_fractions_wide(gs_long, scheme = "usda", extrapolate = "warn_linear")))
 #> # A tibble: 6 × 5
 #>   sample_id gravel_percent sand_percent silt_percent clay_percent
 #>   <chr>              <dbl>        <dbl>        <dbl>        <dbl>
-#> 1 S01                0.624         86.9        12.5             0
-#> 2 S02                0.224         99.8         0               0
-#> 3 S03                0.312         99.7         0               0
-#> 4 S04                0.153         90.7         9.10            0
-#> 5 S05                0.295         92.0         7.74            0
-#> 6 S06                0.230         99.8         0               0
-head(suppressWarnings(gs_fractions_wide(gs_long, scheme = "uk_ssew")))
+#> 1 S01                0.624         86.9        13.7         -1.22
+#> 2 S02                0.224        107.        124.        -131.  
+#> 3 S03                0.312        108.        177.        -185.  
+#> 4 S04                0.153         90.7        14.3         -5.16
+#> 5 S05                0.295         92.0         9.42        -1.68
+#> 6 S06                0.230        110.        154.        -164.
+head(suppressWarnings(gs_fractions_wide(gs_long, scheme = "uk_ssew", extrapolate = "warn_linear")))
 #> # A tibble: 6 × 5
 #>   sample_id gravel_percent sand_percent silt_percent clay_percent
 #>   <chr>              <dbl>        <dbl>        <dbl>        <dbl>
-#> 1 S01                0.624         85.4        14.0             0
-#> 2 S02                0.224         99.8         0               0
-#> 3 S03                0.312         99.7         0               0
-#> 4 S04                0.153         89.9         9.98            0
-#> 5 S05                0.295         90.5         9.19            0
-#> 6 S06                0.230         99.8         0               0
+#> 1 S01                0.624         85.4         15.2        -1.22
+#> 2 S02                0.224         99.7        131.       -131.  
+#> 3 S03                0.312         97.8        187.       -185.  
+#> 4 S04                0.153         89.9         15.1        -5.16
+#> 5 S05                0.295         90.5         10.9        -1.68
+#> 6 S06                0.230        101.         163.       -164.
 ```
 
 ## Summary Tables
