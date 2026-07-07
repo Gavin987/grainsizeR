@@ -22,13 +22,14 @@ values are \code{"um"} and \code{"mm"}.}
 \item{extrapolate}{Extrapolation behavior passed to \code{gs_d_values()}.}
 }
 \value{
-A tibble with one row per sample and D-spread descriptor columns.
+A tibble with one row per sample and D-spread descriptor columns,
+including \code{quartile_deviation_phi} (Krumbein, 1938).
 }
 \description{
 \code{gs_d_spread()} calculates D-value spread descriptors commonly reported in
 GRADISTAT-style grain-size summaries. It reuses \code{gs_d_values()} for D10,
-D25, D50, D75, and D90, then derives D90/D10, D90 - D10, D75/D25, and
-D75 - D25.
+D25, D50, D75, and D90, then derives D90/D10, D90 - D10, D75/D25,
+D75 - D25, and the Krumbein (1938) quartile deviation.
 }
 \details{
 Ratios and differences are metric descriptors. \code{scale = "um"} reports
@@ -36,6 +37,15 @@ D-values and differences in micrometers, while \code{scale = "mm"} reports them
 in millimeters. \code{scale = "phi"} is not supported because phi differences are
 not the same parameter as metric D-value spread differences. Optional log
 ratio columns are calculated from positive metric D-values.
+
+\code{quartile_deviation_phi} is the Krumbein (1938) quartile deviation,
+Qd = (D25_phi - D75_phi) / 2, reported in phi units regardless of \code{scale}
+(Krumbein's original measure is a phi-scale transform of Trask's (1932)
+metric quartile ratio, the same lineage as \code{So_trask} in
+\code{gs_grain_size_indices()}). It is always positive under the package's
+D-value convention, where \code{D_p} is the grain size at which \code{p} percent of
+the sample is finer, because D25 is a larger phi value (finer material)
+than D75.
 
 Open-tail behavior follows \code{gs_d_values()}: by default unresolved requested
 percentiles throw an error, and \code{extrapolate = "warn_linear"} explicitly

@@ -7,6 +7,8 @@ d_spread_values <- function(percentiles, scale) {
     names(values) <- paste0("D", one$percentile)
     um_values <- one$grain_size_um
     names(um_values) <- paste0("D", one$percentile)
+    phi_values <- one$grain_size_phi
+    names(phi_values) <- paste0("D", one$percentile)
 
     ratio_90_10 <- values[["D90"]] / values[["D10"]]
     ratio_75_25 <- values[["D75"]] / values[["D25"]]
@@ -25,6 +27,7 @@ d_spread_values <- function(percentiles, scale) {
       D75_minus_D25 = values[["D75"]] - values[["D25"]],
       D90_D10_log_ratio = log10(um_values[["D90"]] / um_values[["D10"]]),
       D75_D25_log_ratio = log10(um_values[["D75"]] / um_values[["D25"]]),
+      quartile_deviation_phi = (phi_values[["D25"]] - phi_values[["D75"]]) / 2,
       any_extrapolated = any(one$extrapolated)
     )
   })
@@ -38,14 +41,23 @@ d_spread_values <- function(percentiles, scale) {
 #'
 #' `gs_d_spread()` calculates D-value spread descriptors commonly reported in
 #' GRADISTAT-style grain-size summaries. It reuses `gs_d_values()` for D10,
-#' D25, D50, D75, and D90, then derives D90/D10, D90 - D10, D75/D25, and
-#' D75 - D25.
+#' D25, D50, D75, and D90, then derives D90/D10, D90 - D10, D75/D25,
+#' D75 - D25, and the Krumbein (1938) quartile deviation.
 #'
 #' Ratios and differences are metric descriptors. `scale = "um"` reports
 #' D-values and differences in micrometers, while `scale = "mm"` reports them
 #' in millimeters. `scale = "phi"` is not supported because phi differences are
 #' not the same parameter as metric D-value spread differences. Optional log
 #' ratio columns are calculated from positive metric D-values.
+#'
+#' `quartile_deviation_phi` is the Krumbein (1938) quartile deviation,
+#' Qd = (D25_phi - D75_phi) / 2, reported in phi units regardless of `scale`
+#' (Krumbein's original measure is a phi-scale transform of Trask's (1932)
+#' metric quartile ratio, the same lineage as `So_trask` in
+#' `gs_grain_size_indices()`). It is always positive under the package's
+#' D-value convention, where `D_p` is the grain size at which `p` percent of
+#' the sample is finer, because D25 is a larger phi value (finer material)
+#' than D75.
 #'
 #' Open-tail behavior follows `gs_d_values()`: by default unresolved requested
 #' percentiles throw an error, and `extrapolate = "warn_linear"` explicitly
@@ -60,7 +72,8 @@ d_spread_values <- function(percentiles, scale) {
 #' @param interpolation_scale Interpolation scale passed to `gs_d_values()`.
 #' @param extrapolate Extrapolation behavior passed to `gs_d_values()`.
 #'
-#' @return A tibble with one row per sample and D-spread descriptor columns.
+#' @return A tibble with one row per sample and D-spread descriptor columns,
+#'   including `quartile_deviation_phi` (Krumbein, 1938).
 #' @export
 #'
 #' @examples

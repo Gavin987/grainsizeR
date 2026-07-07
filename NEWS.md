@@ -41,6 +41,12 @@
   affected by the table. These two changes were implemented together
   since they touch the same threshold-resolution logic; see
   `dev-notes/AUDIT_LOG.md` for the full investigation and design.
+- Added the Krumbein (1938) quartile deviation as a new
+  `quartile_deviation_phi` column on `gs_d_spread()` (and, via
+  `parameters = "d_spread"`, on `gs_parameters()`). Reported in phi units,
+  `Qd = (D25_phi - D75_phi) / 2`, following the same phi-scale lineage as
+  the package's existing Folk and Ward statistics. This is a new column;
+  no existing `gs_d_spread()`/`gs_parameters()` column changes.
 
 # grainsizeR 0.2.0
 

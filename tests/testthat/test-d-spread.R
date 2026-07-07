@@ -36,7 +36,8 @@ test_that("gs_d_spread returns one row per sample with required columns", {
   required <- c(
     "sample_id", "D10", "D25", "D50", "D75", "D90", "d_value_unit",
     "D90_D10_ratio", "D90_minus_D10", "D75_D25_ratio", "D75_minus_D25",
-    "D90_D10_log_ratio", "D75_D25_log_ratio", "any_extrapolated"
+    "D90_D10_log_ratio", "D75_D25_log_ratio", "quartile_deviation_phi",
+    "any_extrapolated"
   )
 
   expect_equal(nrow(result), 2)
@@ -84,6 +85,26 @@ test_that("gs_d_spread follows existing open-tail extrapolation policy", {
     "linearly extrapolating"
   )
   expect_true(result$any_extrapolated)
+})
+
+test_that("gs_d_spread reports the Krumbein (1938) quartile deviation in phi units", {
+  gsd <- d_spread_test_gsd()
+  result <- gs_d_spread(gsd, scale = "um", extrapolate = "warn_linear")
+  phi <- gs_d_values(
+    gsd,
+    probs = c(25, 75),
+    output_unit = "phi",
+    extrapolate = "warn_linear"
+  )
+  phi_wide <- split(phi, phi$sample_id, drop = TRUE)
+  expected <- vapply(phi_wide, function(one) {
+    values <- stats::setNames(one$grain_size_phi, paste0("D", one$percentile))
+    (values[["D25"]] - values[["D75"]]) / 2
+  }, numeric(1))
+
+  expect_true("quartile_deviation_phi" %in% names(result))
+  expect_equal(result$quartile_deviation_phi, unname(expected[result$sample_id]))
+  expect_true(all(result$quartile_deviation_phi > 0))
 })
 
 test_that("gs_d_spread rejects phi spread output explicitly", {

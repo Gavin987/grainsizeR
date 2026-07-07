@@ -10,7 +10,8 @@ parameter_method <- function(parameter) {
     parameter %in% c(
       "D10", "D25", "D50", "D75", "D90", "d_value_unit",
       "D90_D10_ratio", "D90_minus_D10", "D75_D25_ratio",
-      "D75_minus_D25", "D90_D10_log_ratio", "D75_D25_log_ratio"
+      "D75_minus_D25", "D90_D10_log_ratio", "D75_D25_log_ratio",
+      "quartile_deviation_phi"
     )
   ) {
     "d_spread"
@@ -59,7 +60,8 @@ parameter_unit <- function(parameter) {
       grepl("_fw_phi$", parameter) ||
       parameter %in% c("mode1_phi", "mode2_phi", "mode3_phi") ||
       parameter == "mean_moment_phi" ||
-      parameter == "sd_moment_phi"
+      parameter == "sd_moment_phi" ||
+      parameter == "quartile_deviation_phi"
   ) {
     "phi"
   } else if (parameter == "fine_content_percent" || parameter == "fine_equivalent" || grepl("_percent$", parameter)) {
