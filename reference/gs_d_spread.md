@@ -4,7 +4,7 @@
 in GRADISTAT-style grain-size summaries. It reuses
 [`gs_d_values()`](https://Gavin987.github.io/grainsizeR/reference/gs_d_values.md)
 for D10, D25, D50, D75, and D90, then derives D90/D10, D90 - D10,
-D75/D25, and D75 - D25.
+D75/D25, D75 - D25, and the Krumbein (1938) quartile deviation.
 
 ## Usage
 
@@ -40,7 +40,8 @@ gs_d_spread(
 
 ## Value
 
-A tibble with one row per sample and D-spread descriptor columns.
+A tibble with one row per sample and D-spread descriptor columns,
+including `quartile_deviation_phi` (Krumbein, 1938).
 
 ## Details
 
@@ -50,6 +51,15 @@ them in millimeters. `scale = "phi"` is not supported because phi
 differences are not the same parameter as metric D-value spread
 differences. Optional log ratio columns are calculated from positive
 metric D-values.
+
+`quartile_deviation_phi` is the Krumbein (1938) quartile deviation, Qd =
+(D25_phi - D75_phi) / 2, reported in phi units regardless of `scale`
+(Krumbein's original measure is a phi-scale transform of Trask's (1932)
+metric quartile ratio, the same lineage as `So_trask` in
+[`gs_grain_size_indices()`](https://Gavin987.github.io/grainsizeR/reference/gs_grain_size_indices.md)).
+It is always positive under the package's D-value convention, where
+`D_p` is the grain size at which `p` percent of the sample is finer,
+because D25 is a larger phi value (finer material) than D75.
 
 Open-tail behavior follows
 [`gs_d_values()`](https://Gavin987.github.io/grainsizeR/reference/gs_d_values.md):
@@ -78,11 +88,11 @@ gsd <- as_gsd_tbl(
 
 gs_d_spread(gsd, extrapolate = "warn_linear")
 #> Warning: Requested percentiles for sample `A` fall outside the finite boundary curve range; linearly extrapolating.
-#> # A tibble: 1 × 14
+#> # A tibble: 1 × 15
 #>   sample_id   D10   D25   D50   D75   D90 d_value_unit D90_D10_ratio
 #>   <chr>     <dbl> <dbl> <dbl> <dbl> <dbl> <chr>                <dbl>
 #> 1 A          223.  315.  552.  906. 1587. um                    7.13
-#> # ℹ 6 more variables: D90_minus_D10 <dbl>, D75_D25_ratio <dbl>,
+#> # ℹ 7 more variables: D90_minus_D10 <dbl>, D75_D25_ratio <dbl>,
 #> #   D75_minus_D25 <dbl>, D90_D10_log_ratio <dbl>, D75_D25_log_ratio <dbl>,
-#> #   any_extrapolated <lgl>
+#> #   quartile_deviation_phi <dbl>, any_extrapolated <lgl>
 ```

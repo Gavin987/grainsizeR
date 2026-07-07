@@ -130,7 +130,7 @@ head(suppressWarnings(gs_d_spread(
   gs,
   extrapolate = "warn_linear"
 )))
-#> # A tibble: 6 × 14
+#> # A tibble: 6 × 15
 #>   sample_id   D10   D25   D50   D75   D90 d_value_unit D90_D10_ratio
 #>   <chr>     <dbl> <dbl> <dbl> <dbl> <dbl> <chr>                <dbl>
 #> 1 S01        40.9  76.9  123.  233.  390. um                    9.54
@@ -139,9 +139,9 @@ head(suppressWarnings(gs_d_spread(
 #> 4 S04        60.2  81.2  125.  258.  395. um                    6.56
 #> 5 S05        62.2  80.1  123.  270.  410. um                    6.60
 #> 6 S06        76.1 104.   216.  346.  439. um                    5.77
-#> # ℹ 6 more variables: D90_minus_D10 <dbl>, D75_D25_ratio <dbl>,
+#> # ℹ 7 more variables: D90_minus_D10 <dbl>, D75_D25_ratio <dbl>,
 #> #   D75_minus_D25 <dbl>, D90_D10_log_ratio <dbl>, D75_D25_log_ratio <dbl>,
-#> #   any_extrapolated <lgl>
+#> #   quartile_deviation_phi <dbl>, any_extrapolated <lgl>
 ```
 
 ## Folk and Ward Graphical Statistics
@@ -394,7 +394,7 @@ combined <- suppressWarnings(gs_parameters(
 ))
 
 head(combined)
-#> # A tibble: 6 × 81
+#> # A tibble: 6 × 82
 #>   sample_id D10_um D50_um D90_um   D10   D25   D50   D75   D90 d_value_unit
 #>   <chr>      <dbl>  <dbl>  <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <chr>       
 #> 1 S01         40.9   123.   390.  40.9  76.9  123.  233.  390. um          
@@ -403,13 +403,13 @@ head(combined)
 #> 4 S04         60.2   125.   395.  60.2  81.2  125.  258.  395. um          
 #> 5 S05         62.2   123.   410.  62.2  80.1  123.  270.  410. um          
 #> 6 S06         76.1   216.   439.  76.1 104.   216.  346.  439. um          
-#> # ℹ 71 more variables: D90_D10_ratio <dbl>, D90_minus_D10 <dbl>,
+#> # ℹ 72 more variables: D90_D10_ratio <dbl>, D90_minus_D10 <dbl>,
 #> #   D75_D25_ratio <dbl>, D75_minus_D25 <dbl>, D90_D10_log_ratio <dbl>,
-#> #   D75_D25_log_ratio <dbl>, any_extrapolated <lgl>, D5_um <dbl>, D16_um <dbl>,
-#> #   D25_um <dbl>, D75_um <dbl>, D84_um <dbl>, D95_um <dbl>, D5_phi <dbl>,
-#> #   D16_phi <dbl>, D25_phi <dbl>, D50_phi <dbl>, D75_phi <dbl>, D84_phi <dbl>,
-#> #   D95_phi <dbl>, mean_fw_phi <dbl>, mean_fw_um <dbl>, sorting_fw_phi <dbl>,
-#> #   skewness_fw <dbl>, kurtosis_fw <dbl>, interpolation_scale <chr>, …
+#> #   D75_D25_log_ratio <dbl>, quartile_deviation_phi <dbl>,
+#> #   any_extrapolated <lgl>, D5_um <dbl>, D16_um <dbl>, D25_um <dbl>,
+#> #   D75_um <dbl>, D84_um <dbl>, D95_um <dbl>, D5_phi <dbl>, D16_phi <dbl>,
+#> #   D25_phi <dbl>, D50_phi <dbl>, D75_phi <dbl>, D84_phi <dbl>, D95_phi <dbl>,
+#> #   mean_fw_phi <dbl>, mean_fw_um <dbl>, sorting_fw_phi <dbl>, …
 ```
 
 ## Notes on Open-Ended Tails and Extrapolation

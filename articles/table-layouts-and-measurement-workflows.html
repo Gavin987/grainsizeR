@@ -375,13 +375,13 @@ blockers.</p>
 <span>  <span class="va">gs_long</span><span class="op">[</span><span class="va">gs_long</span><span class="op">$</span><span class="va">sample_id</span> <span class="op">==</span> <span class="va">sample_id</span>, <span class="op">]</span>,</span>
 <span>  extrapolate <span class="op">=</span> <span class="st">"warn_linear"</span></span>
 <span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 14</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 15</span></span></span>
 <span><span class="co">#&gt;   sample_id   D10   D25   D50   D75   D90 d_value_unit D90_D10_ratio</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S01        40.9  76.9  123.  233.  390. um                    9.54</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 6 more variables: D90_minus_D10 &lt;dbl&gt;, D75_D25_ratio &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 7 more variables: D90_minus_D10 &lt;dbl&gt;, D75_D25_ratio &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   D75_minus_D25 &lt;dbl&gt;, D90_D10_log_ratio &lt;dbl&gt;, D75_D25_log_ratio &lt;dbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   any_extrapolated &lt;lgl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   quartile_deviation_phi &lt;dbl&gt;, any_extrapolated &lt;lgl&gt;</span></span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/gs_modes.html">gs_modes</a></span><span class="op">(</span><span class="va">gs_long</span><span class="op">[</span><span class="va">gs_long</span><span class="op">$</span><span class="va">sample_id</span> <span class="op">==</span> <span class="va">sample_id</span>, <span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 12</span></span></span>
@@ -399,17 +399,17 @@ blockers.</p>
 <span>  parameters <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"d_spread"</span>, <span class="st">"modes"</span>, <span class="st">"descriptors"</span>, <span class="st">"quality"</span><span class="op">)</span>,</span>
 <span>  extrapolate <span class="op">=</span> <span class="st">"warn_linear"</span></span>
 <span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 55</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 56</span></span></span>
 <span><span class="co">#&gt;   sample_id   D10   D25   D50   D75   D90 d_value_unit D90_D10_ratio</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S01        40.9  76.9  123.  233.  390. um                    9.54</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 47 more variables: D90_minus_D10 &lt;dbl&gt;, D75_D25_ratio &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 48 more variables: D90_minus_D10 &lt;dbl&gt;, D75_D25_ratio &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   D75_minus_D25 &lt;dbl&gt;, D90_D10_log_ratio &lt;dbl&gt;, D75_D25_log_ratio &lt;dbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   any_extrapolated &lt;lgl&gt;, mean_description &lt;chr&gt;, sorting_description &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   quartile_deviation_phi &lt;dbl&gt;, any_extrapolated &lt;lgl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   mean_description &lt;chr&gt;, sorting_description &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   skewness_description &lt;chr&gt;, kurtosis_description &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   description_method &lt;chr&gt;, description_status &lt;chr&gt;, sample_modality &lt;chr&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   mode1_size_mm &lt;dbl&gt;, mode1_size_um &lt;dbl&gt;, mode1_phi &lt;dbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   mode1_class_lower_mm &lt;dbl&gt;, mode1_class_upper_mm &lt;dbl&gt;, …</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;">#   mode1_size_mm &lt;dbl&gt;, mode1_size_um &lt;dbl&gt;, mode1_phi &lt;dbl&gt;, …</span></span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="gradistat-inspired-summary-plots">GRADISTAT-Inspired Summary Plots<a class="anchor" aria-label="anchor" href="#gradistat-inspired-summary-plots"></a>

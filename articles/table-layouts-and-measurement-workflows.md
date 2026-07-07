@@ -317,13 +317,13 @@ head(suppressWarnings(gs_d_spread(
   gs_long[gs_long$sample_id == sample_id, ],
   extrapolate = "warn_linear"
 )))
-#> # A tibble: 1 × 14
+#> # A tibble: 1 × 15
 #>   sample_id   D10   D25   D50   D75   D90 d_value_unit D90_D10_ratio
 #>   <chr>     <dbl> <dbl> <dbl> <dbl> <dbl> <chr>                <dbl>
 #> 1 S01        40.9  76.9  123.  233.  390. um                    9.54
-#> # ℹ 6 more variables: D90_minus_D10 <dbl>, D75_D25_ratio <dbl>,
+#> # ℹ 7 more variables: D90_minus_D10 <dbl>, D75_D25_ratio <dbl>,
 #> #   D75_minus_D25 <dbl>, D90_D10_log_ratio <dbl>, D75_D25_log_ratio <dbl>,
-#> #   any_extrapolated <lgl>
+#> #   quartile_deviation_phi <dbl>, any_extrapolated <lgl>
 
 head(gs_modes(gs_long[gs_long$sample_id == sample_id, ]))
 #> # A tibble: 3 × 12
@@ -341,17 +341,17 @@ head(suppressWarnings(gs_parameters(
   parameters = c("d_spread", "modes", "descriptors", "quality"),
   extrapolate = "warn_linear"
 )))
-#> # A tibble: 1 × 55
+#> # A tibble: 1 × 56
 #>   sample_id   D10   D25   D50   D75   D90 d_value_unit D90_D10_ratio
 #>   <chr>     <dbl> <dbl> <dbl> <dbl> <dbl> <chr>                <dbl>
 #> 1 S01        40.9  76.9  123.  233.  390. um                    9.54
-#> # ℹ 47 more variables: D90_minus_D10 <dbl>, D75_D25_ratio <dbl>,
+#> # ℹ 48 more variables: D90_minus_D10 <dbl>, D75_D25_ratio <dbl>,
 #> #   D75_minus_D25 <dbl>, D90_D10_log_ratio <dbl>, D75_D25_log_ratio <dbl>,
-#> #   any_extrapolated <lgl>, mean_description <chr>, sorting_description <chr>,
+#> #   quartile_deviation_phi <dbl>, any_extrapolated <lgl>,
+#> #   mean_description <chr>, sorting_description <chr>,
 #> #   skewness_description <chr>, kurtosis_description <chr>,
 #> #   description_method <chr>, description_status <chr>, sample_modality <chr>,
-#> #   mode1_size_mm <dbl>, mode1_size_um <dbl>, mode1_phi <dbl>,
-#> #   mode1_class_lower_mm <dbl>, mode1_class_upper_mm <dbl>, …
+#> #   mode1_size_mm <dbl>, mode1_size_um <dbl>, mode1_phi <dbl>, …
 ```
 
 ## GRADISTAT-Inspired Summary Plots

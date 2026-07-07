@@ -131,7 +131,7 @@ head(suppressWarnings(gs_d_values(gs, probs = c(10, 50, 90), extrapolate = "warn
 #> 6 S02               90         412.         0.412            1.28
 #> # ℹ 2 more variables: interpolation_scale <chr>, extrapolated <lgl>
 head(suppressWarnings(gs_d_spread(gs, extrapolate = "warn_linear")))
-#> # A tibble: 6 × 14
+#> # A tibble: 6 × 15
 #>   sample_id   D10   D25   D50   D75   D90 d_value_unit D90_D10_ratio
 #>   <chr>     <dbl> <dbl> <dbl> <dbl> <dbl> <chr>                <dbl>
 #> 1 S01        40.9  76.9  123.  233.  390. um                    9.54
@@ -140,9 +140,9 @@ head(suppressWarnings(gs_d_spread(gs, extrapolate = "warn_linear")))
 #> 4 S04        60.2  81.2  125.  258.  395. um                    6.56
 #> 5 S05        62.2  80.1  123.  270.  410. um                    6.60
 #> 6 S06        76.1 104.   216.  346.  439. um                    5.77
-#> # ℹ 6 more variables: D90_minus_D10 <dbl>, D75_D25_ratio <dbl>,
+#> # ℹ 7 more variables: D90_minus_D10 <dbl>, D75_D25_ratio <dbl>,
 #> #   D75_minus_D25 <dbl>, D90_D10_log_ratio <dbl>, D75_D25_log_ratio <dbl>,
-#> #   any_extrapolated <lgl>
+#> #   quartile_deviation_phi <dbl>, any_extrapolated <lgl>
 ```
 
 ## Modes and Modality
