@@ -289,3 +289,191 @@ test_that("gs_parameters long output includes numeric fraction rows", {
   expect_true(all(result$method[result$parameter == "sand_percent"] == "fractions"))
   expect_true(all(result$unit[result$parameter == "sand_percent"] == "percent"))
 })
+
+parameters_ref_table <- function(gsd,
+                                 parameters,
+                                 d_values = c(5, 10, 16, 25, 50, 75, 84, 90, 95),
+                                 interpolation_scale = "phi",
+                                 extrapolate = "warn_linear",
+                                 d_spread_scale = "um",
+                                 fine_threshold_um = 62.5,
+                                 fraction_scheme = "gravel_sand_mud",
+                                 fraction_normalize = "none",
+                                 fraction_unresolved = "warn_na") {
+  sample_ids <- unique(as.character(gsd$sample_id))
+  out <- tibble::tibble(sample_id = sample_ids)
+
+  d_tokens <- parse_d_parameters(parameters)
+  probs <- unique(c(d_tokens, if ("d_values" %in% parameters) d_values else numeric()))
+  if (length(probs) > 0) {
+    d <- gs_d_values(
+      gsd,
+      probs = probs,
+      interpolation_scale = interpolation_scale,
+      output_unit = "um",
+      extrapolate = extrapolate
+    )
+    d_wide <- tibble::tibble(sample_id = sample_ids)
+    for (prob in probs) {
+      values <- d$grain_size_um[d$percentile == prob]
+      names(values) <- d$sample_id[d$percentile == prob]
+      d_wide[[paste0("D", prob, "_um")]] <- unname(values[d_wide$sample_id])
+    }
+    out <- .merge_new_parameter_columns(out, d_wide)
+  }
+
+  if ("d_spread" %in% parameters) {
+    out <- .merge_new_parameter_columns(
+      out,
+      gs_d_spread(
+        gsd,
+        scale = d_spread_scale,
+        interpolation_scale = interpolation_scale,
+        extrapolate = extrapolate
+      )
+    )
+  }
+
+  if ("indices" %in% parameters) {
+    out <- .merge_new_parameter_columns(
+      out,
+      gs_grain_size_indices(
+        gsd,
+        fine_threshold_um = fine_threshold_um,
+        interpolation_scale = interpolation_scale,
+        extrapolate = extrapolate
+      )
+    )
+  }
+
+  if ("folk_ward" %in% parameters) {
+    out <- .merge_new_parameter_columns(
+      out,
+      gs_folk_ward(
+        gsd,
+        interpolation_scale = interpolation_scale,
+        extrapolate = extrapolate,
+        include_descriptions = TRUE
+      )
+    )
+  }
+
+  if ("fractions" %in% parameters) {
+    out <- .merge_new_parameter_columns(
+      out,
+      gs_fractions_wide(
+        gsd,
+        scheme = fraction_scheme,
+        normalize = fraction_normalize,
+        interpolation_scale = interpolation_scale,
+        unresolved = fraction_unresolved,
+        extrapolate = extrapolate
+      )
+    )
+  }
+
+  tibble::as_tibble(out)
+}
+
+parameters_to_long_ref <- function(wide) {
+  value_cols <- setdiff(names(wide), "sample_id")
+  value_cols <- value_cols[vapply(wide[value_cols], function(x) is.numeric(x) || is.logical(x), logical(1))]
+  rows <- lapply(value_cols, function(col) {
+    tibble::tibble(
+      sample_id = wide$sample_id,
+      parameter = col,
+      value = as.numeric(wide[[col]]),
+      unit = parameter_unit(col),
+      method = parameter_method(col)
+    )
+  })
+
+  out <- do.call(rbind, rows)
+  rownames(out) <- NULL
+  tibble::as_tibble(out)
+}
+
+parameters_edge_gsd <- function() {
+  as_gsd_tbl(
+    data.frame(
+      sample_id = rep(c("open_tail", "zero_tie", "nominal"), each = 8),
+      size_mm = rep(c(4, 2, 1, 0.5, 0.25, 0.125, 0.063, 0), 3),
+      retained = c(
+        5, 8, 12, 18, 20, 17, 10, 10,
+        4, 0, 0, 26, 30, 20, 20, 0,
+        6, 8, 10, 16, 24, 20, 16, 0
+      )
+    ),
+    sample_id,
+    size_mm,
+    retained,
+    value_type = "percent"
+  )
+}
+
+test_that("gs_parameters shared cumulative path matches standalone public functions", {
+  bundled_wide <- read_gsd_wide(system.file("extdata", "grain.wide.csv", package = "grainsizeR"))
+  bundled_long_raw <- readr::read_csv(system.file("extdata", "grain.long.csv", package = "grainsizeR"), show_col_types = FALSE)
+  bundled_long <- as_gsd_tbl(bundled_long_raw, sample, size, proportion)
+  edge <- parameters_edge_gsd()
+
+  cases <- list(
+    bundled_wide = list(gsd = bundled_wide, scheme = "gravel_sand_mud"),
+    bundled_long = list(gsd = bundled_long, scheme = "gravel_sand_mud"),
+    edge = list(gsd = edge, scheme = "wentworth_major")
+  )
+  parameter_sets <- list(
+    d_values = "d_values",
+    fractions = "fractions",
+    d_spread = "d_spread",
+    indices = "indices",
+    folk_ward = "folk_ward",
+    mixed = c("d_values", "d_spread", "indices", "folk_ward", "fractions")
+  )
+
+  for (case in cases) {
+    for (parameters in parameter_sets) {
+      actual <- suppressWarnings(gs_parameters(
+        case$gsd,
+        parameters = parameters,
+        extrapolate = "warn_linear",
+        fraction_scheme = case$scheme
+      ))
+      expected <- suppressWarnings(parameters_ref_table(
+        case$gsd,
+        parameters = parameters,
+        extrapolate = "warn_linear",
+        fraction_scheme = case$scheme
+      ))
+
+      expect_equal(actual, expected, tolerance = 1e-8)
+    }
+  }
+
+  wide_actual <- suppressWarnings(gs_parameters(
+    edge,
+    parameters = c("d_values", "d_spread", "indices", "folk_ward", "fractions"),
+    output = "wide",
+    extrapolate = "warn_linear",
+    fraction_scheme = "wentworth_major"
+  ))
+  long_actual <- suppressWarnings(gs_parameters(
+    edge,
+    parameters = c("d_values", "d_spread", "indices", "folk_ward", "fractions"),
+    output = "long",
+    extrapolate = "warn_linear",
+    fraction_scheme = "wentworth_major"
+  ))
+
+  expect_equal(long_actual, parameters_to_long_ref(wide_actual), tolerance = 1e-8)
+})
+
+test_that("standalone percentile and fraction-family functions remain independent", {
+  gsd <- parameters_edge_gsd()
+
+  expect_s3_class(suppressWarnings(gs_d_values(gsd, extrapolate = "warn_linear")), "tbl_df")
+  expect_s3_class(suppressWarnings(gs_percent_finer(gsd, sizes = c(62.5, 63), extrapolate = "warn_linear")), "tbl_df")
+  expect_s3_class(suppressWarnings(gs_fractions(gsd, scheme = "wentworth_major", extrapolate = "warn_linear")), "tbl_df")
+  expect_s3_class(suppressWarnings(gs_d_spread(gsd, extrapolate = "warn_linear")), "tbl_df")
+  expect_s3_class(suppressWarnings(gs_folk_ward(gsd, extrapolate = "warn_linear")), "tbl_df")
+})

@@ -47,6 +47,10 @@
   `Qd = (D25_phi - D75_phi) / 2`, following the same phi-scale lineage as
   the package's existing Folk and Ward statistics. This is a new column;
   no existing `gs_d_spread()`/`gs_parameters()` column changes.
+- Optimized `gs_parameters()` so mixed requests spanning D-values,
+  D-spread descriptors, grain-size indices, Folk and Ward statistics, and
+  fractions reuse one cumulative boundary curve internally. Standalone
+  public functions keep their existing behavior and signatures.
 
 # grainsizeR 0.2.0
 

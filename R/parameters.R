@@ -210,6 +210,298 @@ parameters_to_long <- function(wide) {
   )
 }
 
+# Internal gs_parameters() adapters that reuse one cumulative curve per call.
+# Public wrappers keep computing their own curves when called directly.
+.parameters_split_curve <- function(x) {
+  curve <- gs_cumulative(x)
+  split(curve, curve$sample_id, drop = TRUE)
+}
+
+.parameters_d_values_from_curve <- function(split_curve, probs, interpolation_scale, extrapolate) {
+  percentiles <- lapply(
+    split_curve,
+    percentile_one_sample,
+    probs = probs,
+    scale = interpolation_scale,
+    extrapolate = extrapolate
+  )
+
+  out <- do.call(rbind, unname(percentiles))
+  rownames(out) <- NULL
+  tibble::as_tibble(out)
+}
+
+.parameters_percent_finer_from_curve <- function(split_curve, sizes, size_unit, interpolation_scale, extrapolate) {
+  threshold_um <- thresholds_to_um(sizes, size_unit)
+  rows <- lapply(
+    split_curve,
+    percent_finer_one_sample,
+    threshold_um = threshold_um,
+    scale = interpolation_scale,
+    extrapolate = extrapolate
+  )
+
+  out <- do.call(rbind, unname(rows))
+  rownames(out) <- NULL
+  tibble::as_tibble(out)
+}
+
+.parameters_percent_finer_lookup_from_curve <- function(x,
+                                                        split_curve,
+                                                        thresholds_mm,
+                                                        interpolation_scale,
+                                                        extrapolate,
+                                                        unresolved) {
+  sample_ids <- unique(as.character(x$sample_id))
+  normalized_x <- .gsd_tbl_with_normalized_mm_sizes(x)
+
+  if (length(thresholds_mm) == 0) {
+    return(tibble::tibble(
+      sample_id = character(),
+      threshold_mm = numeric(),
+      threshold_um = numeric(),
+      percent_finer = numeric(),
+      resolved = logical()
+    ))
+  }
+
+  split_x <- split(normalized_x, normalized_x$sample_id, drop = TRUE)
+  rows <- list()
+  row_id <- 1
+  unresolved_seen <- FALSE
+
+  for (sample_id in sample_ids) {
+    sample_x <- split_x[[sample_id]]
+    curve <- split_curve[[sample_id]]
+    finite_mm <- curve$boundary_mm
+    min_mm <- min(finite_mm)
+    max_mm <- max(finite_mm)
+
+    equivalent_boundary <- vapply(
+      thresholds_mm,
+      function(t) nominally_equivalent_boundary_mm(t, finite_mm),
+      numeric(1)
+    )
+    has_equivalent <- !is.na(equivalent_boundary)
+
+    in_range <- (thresholds_mm >= min_mm & thresholds_mm <= max_mm) | has_equivalent
+    resolved_lookup <- NULL
+    if (any(in_range)) {
+      resolved_lookup <- tryCatch(
+        percent_finer_one_sample(
+          curve,
+          threshold_um = mm_to_um(thresholds_mm[in_range]),
+          scale = interpolation_scale,
+          extrapolate = extrapolate
+        ),
+        error = function(err) NULL
+      )
+    }
+
+    for (i in seq_along(thresholds_mm)) {
+      threshold <- thresholds_mm[i]
+      threshold_has_equivalent <- has_equivalent[i]
+
+      if (threshold < min_mm && !threshold_has_equivalent) {
+        pan_retained <- sum(sample_x$retained_percent[sample_x$is_open_lower], na.rm = TRUE)
+        if (!is.finite(pan_retained) || pan_retained <= 0) {
+          rows[[row_id]] <- tibble::tibble(
+            sample_id = sample_id,
+            threshold_mm = threshold,
+            threshold_um = mm_to_um(threshold),
+            percent_finer = 0,
+            resolved = TRUE
+          )
+        } else if (extrapolate == "error") {
+          stop(
+            "Requested fraction threshold falls inside an open-ended (pan) ",
+            "class with nonzero retained mass for sample `", sample_id,
+            "`. Use `extrapolate = \"warn_linear\"` to extrapolate.",
+            call. = FALSE
+          )
+        } else {
+          extrapolated_lookup <- tryCatch(
+            percent_finer_one_sample(
+              curve,
+              threshold_um = mm_to_um(threshold),
+              scale = interpolation_scale,
+              extrapolate = "warn_linear"
+            ),
+            error = function(err) NULL
+          )
+          if (is.null(extrapolated_lookup)) {
+            unresolved_seen <- TRUE
+            if (unresolved == "error") {
+              stop("Required fraction thresholds could not be resolved.", call. = FALSE)
+            }
+            rows[[row_id]] <- tibble::tibble(
+              sample_id = sample_id,
+              threshold_mm = threshold,
+              threshold_um = mm_to_um(threshold),
+              percent_finer = NA_real_,
+              resolved = FALSE
+            )
+          } else {
+            rows[[row_id]] <- tibble::tibble(
+              sample_id = sample_id,
+              threshold_mm = threshold,
+              threshold_um = mm_to_um(threshold),
+              percent_finer = extrapolated_lookup$percent_finer[1],
+              resolved = TRUE
+            )
+          }
+        }
+      } else if (threshold > max_mm && !threshold_has_equivalent) {
+        rows[[row_id]] <- tibble::tibble(
+          sample_id = sample_id,
+          threshold_mm = threshold,
+          threshold_um = mm_to_um(threshold),
+          percent_finer = 100,
+          resolved = TRUE
+        )
+      } else if (is.null(resolved_lookup)) {
+        unresolved_seen <- TRUE
+        if (unresolved == "error") {
+          stop("Required fraction thresholds could not be resolved.", call. = FALSE)
+        }
+        rows[[row_id]] <- tibble::tibble(
+          sample_id = sample_id,
+          threshold_mm = threshold,
+          threshold_um = mm_to_um(threshold),
+          percent_finer = NA_real_,
+          resolved = FALSE
+        )
+      } else {
+        match_idx <- which(resolved_lookup$threshold_mm == threshold)[1]
+        rows[[row_id]] <- tibble::tibble(
+          sample_id = sample_id,
+          threshold_mm = resolved_lookup$threshold_mm[match_idx],
+          threshold_um = resolved_lookup$threshold_um[match_idx],
+          percent_finer = resolved_lookup$percent_finer[match_idx],
+          resolved = TRUE
+        )
+      }
+      row_id <- row_id + 1
+    }
+  }
+
+  if (unresolved_seen) {
+    warning(
+      "Some required fraction thresholds could not be resolved; affected components are returned as NA.",
+      call. = FALSE
+    )
+  }
+
+  out <- do.call(rbind, rows)
+  rownames(out) <- NULL
+  tibble::as_tibble(out)
+}
+
+.parameters_grain_size_indices_from_curve <- function(x,
+                                                      split_curve,
+                                                      fine_threshold_um,
+                                                      interpolation_scale,
+                                                      extrapolate) {
+  percentiles <- .parameters_d_values_from_curve(
+    split_curve,
+    probs = c(10, 25, 30, 50, 60, 75),
+    interpolation_scale = interpolation_scale,
+    extrapolate = extrapolate
+  )
+  fine_content <- .parameters_percent_finer_from_curve(
+    split_curve,
+    sizes = fine_threshold_um,
+    size_unit = "um",
+    interpolation_scale = interpolation_scale,
+    extrapolate = extrapolate
+  )
+
+  sample_ids <- unique(percentiles$sample_id)
+  percentile_groups <- split(percentiles, percentiles$sample_id, drop = TRUE)
+  fine_content_groups <- split(fine_content, fine_content$sample_id, drop = TRUE)
+  rows <- lapply(
+    sample_ids,
+    engineering_one_sample,
+    percentiles = percentile_groups,
+    fine_content = fine_content_groups,
+    interpolation_scale = interpolation_scale,
+    fine_threshold_um = fine_threshold_um
+  )
+
+  out <- do.call(rbind, unname(rows))
+  rownames(out) <- NULL
+  tibble::as_tibble(out)
+}
+
+.parameters_folk_ward_from_curve <- function(split_curve,
+                                             interpolation_scale,
+                                             extrapolate,
+                                             include_descriptions) {
+  percentiles <- .parameters_d_values_from_curve(
+    split_curve,
+    probs = c(5, 16, 25, 50, 75, 84, 95),
+    interpolation_scale = interpolation_scale,
+    extrapolate = extrapolate
+  )
+
+  sample_ids <- unique(percentiles$sample_id)
+  percentile_groups <- split(percentiles, percentiles$sample_id, drop = TRUE)
+  rows <- lapply(
+    sample_ids,
+    folkward_one_sample,
+    percentiles = percentile_groups,
+    interpolation_scale = interpolation_scale,
+    include_descriptions = include_descriptions
+  )
+
+  out <- do.call(rbind, unname(rows))
+  rownames(out) <- NULL
+  tibble::as_tibble(out)
+}
+
+.parameters_fractions_wide_from_curve <- function(x,
+                                                  split_curve,
+                                                  scheme,
+                                                  normalize,
+                                                  interpolation_scale,
+                                                  unresolved,
+                                                  extrapolate) {
+  components <- scheme_components(scheme)
+  thresholds <- required_fraction_thresholds(components)
+  lookup <- .parameters_percent_finer_lookup_from_curve(
+    x,
+    split_curve = split_curve,
+    thresholds_mm = thresholds,
+    interpolation_scale = interpolation_scale,
+    extrapolate = extrapolate,
+    unresolved = unresolved
+  )
+
+  sample_ids <- unique(as.character(x$sample_id))
+  lookup_groups <- lookup_by_sample(lookup)
+  fractions <- lapply(
+    sample_ids,
+    fractions_one_sample,
+    components = components,
+    lookup = lookup_groups,
+    scheme = scheme,
+    normalize = normalize,
+    interpolation_scale = interpolation_scale
+  )
+  fractions <- do.call(rbind, fractions)
+  rownames(fractions) <- NULL
+
+  components <- unique(fractions$component)
+  out <- tibble::tibble(sample_id = unique(fractions$sample_id))
+  for (component in components) {
+    values <- fractions$percent[fractions$component == component]
+    names(values) <- fractions$sample_id[fractions$component == component]
+    out[[paste0(component, "_percent")]] <- unname(values[out$sample_id])
+  }
+
+  out
+}
+
 #' Summarize grain-size parameters
 #'
 #' `gs_parameters()` is a minimal user-facing summary interface for selected
@@ -330,17 +622,23 @@ gs_parameters <- function(x,
 
   sample_ids <- unique(as.character(x$sample_id))
   wide <- tibble::tibble(sample_id = sample_ids)
+  split_curve <- NULL
+  shared_curve <- function() {
+    if (is.null(split_curve)) {
+      split_curve <<- .parameters_split_curve(x)
+    }
+    split_curve
+  }
 
   probs <- unique(c(
     parse_d_parameters(parameters),
     if ("d_values" %in% parameters) d_values else numeric()
   ))
   if (length(probs) > 0) {
-    percentile_values <- gs_d_values(
-      x,
+    percentile_values <- .parameters_d_values_from_curve(
+      shared_curve(),
       probs = probs,
       interpolation_scale = interpolation_scale,
-      output_unit = "um",
       extrapolate = extrapolate
     )
     percentile_wide <- tibble::tibble(sample_id = sample_ids)
@@ -353,18 +651,20 @@ gs_parameters <- function(x,
   }
 
   if ("d_spread" %in% parameters) {
-    d_spread <- gs_d_spread(
-      x,
-      scale = d_spread_scale,
+    percentiles <- .parameters_d_values_from_curve(
+      shared_curve(),
+      probs = c(10, 25, 50, 75, 90),
       interpolation_scale = interpolation_scale,
       extrapolate = extrapolate
     )
+    d_spread <- d_spread_values(percentiles, scale = d_spread_scale)
     wide <- .merge_new_parameter_columns(wide, d_spread)
   }
 
   if ("indices" %in% parameters) {
-    indices <- gs_grain_size_indices(
+    indices <- .parameters_grain_size_indices_from_curve(
       x,
+      split_curve = shared_curve(),
       fine_threshold_um = fine_threshold_um,
       interpolation_scale = interpolation_scale,
       extrapolate = extrapolate
@@ -373,8 +673,8 @@ gs_parameters <- function(x,
   }
 
   if ("folk_ward" %in% parameters) {
-    folkward <- gs_folk_ward(
-      x,
+    folkward <- .parameters_folk_ward_from_curve(
+      shared_curve(),
       interpolation_scale = interpolation_scale,
       extrapolate = extrapolate,
       include_descriptions = TRUE
@@ -428,8 +728,9 @@ gs_parameters <- function(x,
   }
 
   if ("fractions" %in% parameters) {
-    fractions <- gs_fractions_wide(
+    fractions <- .parameters_fractions_wide_from_curve(
       x,
+      split_curve = shared_curve(),
       scheme = fraction_scheme,
       normalize = fraction_normalize,
       interpolation_scale = interpolation_scale,
