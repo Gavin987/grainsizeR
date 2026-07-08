@@ -33,11 +33,13 @@ test_that("README Grain-Size Plots code runs without error", {
 
   expect_no_error(plot_distribution(wide, sample = 1, cumulative = TRUE))
   expect_no_error(
-    plot_cumulative(
-      wide,
-      sample = "S01",
-      show_percentiles = TRUE,
-      extrapolate = "warn_linear"
+    with_known_extrapolation_warnings(
+      plot_cumulative(
+        wide,
+        sample = "S01",
+        show_percentiles = TRUE,
+        extrapolate = "warn_linear"
+      )
     )
   )
 
@@ -88,11 +90,13 @@ test_that("README Parameter Summaries code runs without error", {
   long_path <- system.file("extdata", "grain.long.csv", package = "grainsizeR")
   long <- read_gsd(long_path)
 
-  summary <- gs_parameters(
-    long,
-    parameters = c("d_values", "indices", "folk_ward", "fractions"),
-    fraction_scheme = "gradistat",
-    extrapolate = "warn_linear"
+  summary <- with_known_extrapolation_warnings(
+    gs_parameters(
+      long,
+      parameters = c("d_values", "indices", "folk_ward", "fractions"),
+      fraction_scheme = "gradistat",
+      extrapolate = "warn_linear"
+    )
   )
 
   out_path <- tempfile(fileext = ".csv")
@@ -106,11 +110,13 @@ test_that("README End-to-End Workflow code runs without error", {
 
   expect_no_error(gs_diagnostics(long, output = "summary"))
   expect_no_error(
-    gs_parameters(
-      long,
-      parameters = c("d_values", "indices", "folk_ward", "fractions"),
-      fraction_scheme = "gradistat",
-      extrapolate = "warn_linear"
+    with_known_extrapolation_warnings(
+      gs_parameters(
+        long,
+        parameters = c("d_values", "indices", "folk_ward", "fractions"),
+        fraction_scheme = "gradistat",
+        extrapolate = "warn_linear"
+      )
     )
   )
 

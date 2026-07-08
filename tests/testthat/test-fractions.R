@@ -480,7 +480,9 @@ test_that("gs_fractions extrapolates with a warning (not a silent 0) when the us
   gsd <- as_gsd_tbl(x, sample_id, size_mm, retained, value_type = "percent")
 
   expect_warning(
-    result <- gs_fractions_wide(gsd, scheme = "usda", extrapolate = "warn_linear"),
+    result <- with_one_known_extrapolation_warning(
+      gs_fractions_wide(gsd, scheme = "usda", extrapolate = "warn_linear")
+    ),
     "linearly extrapolating"
   )
   expect_false(result$silt_percent == 0)
