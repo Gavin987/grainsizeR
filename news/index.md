@@ -65,6 +65,12 @@
   statistics. This is a new column; no existing
   [`gs_d_spread()`](https://Gavin987.github.io/grainsizeR/reference/gs_d_spread.md)/[`gs_parameters()`](https://Gavin987.github.io/grainsizeR/reference/gs_parameters.md)
   column changes.
+- Optimized
+  [`gs_parameters()`](https://Gavin987.github.io/grainsizeR/reference/gs_parameters.md)
+  so mixed requests spanning D-values, D-spread descriptors, grain-size
+  indices, Folk and Ward statistics, and fractions reuse one cumulative
+  boundary curve internally. Standalone public functions keep their
+  existing behavior and signatures.
 
 ## grainsizeR 0.2.0
 
