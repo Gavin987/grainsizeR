@@ -231,6 +231,17 @@ parameters_to_long <- function(wide) {
   tibble::as_tibble(out)
 }
 
+# Slice the shared gs_parameters() percentile table back to a consumer's
+# requested probability order without recomputing the underlying curve.
+.parameters_select_percentiles <- function(percentiles, probs) {
+  out <- percentiles[percentiles$percentile %in% probs, ]
+  out$percentile <- factor(out$percentile, levels = probs, ordered = TRUE)
+  out <- out[order(match(out$sample_id, unique(percentiles$sample_id)), out$percentile), ]
+  out$percentile <- as.numeric(as.character(out$percentile))
+  rownames(out) <- NULL
+  tibble::as_tibble(out)
+}
+
 .parameters_percent_finer_from_curve <- function(split_curve, sizes, size_unit, interpolation_scale, extrapolate) {
   threshold_um <- thresholds_to_um(sizes, size_unit)
   rows <- lapply(
@@ -401,13 +412,16 @@ parameters_to_long <- function(wide) {
                                                       split_curve,
                                                       fine_threshold_um,
                                                       interpolation_scale,
-                                                      extrapolate) {
-  percentiles <- .parameters_d_values_from_curve(
-    split_curve,
-    probs = c(10, 25, 30, 50, 60, 75),
-    interpolation_scale = interpolation_scale,
-    extrapolate = extrapolate
-  )
+                                                      extrapolate,
+                                                      percentiles = NULL) {
+  if (is.null(percentiles)) {
+    percentiles <- .parameters_d_values_from_curve(
+      split_curve,
+      probs = c(10, 25, 30, 50, 60, 75),
+      interpolation_scale = interpolation_scale,
+      extrapolate = extrapolate
+    )
+  }
   fine_content <- .parameters_percent_finer_from_curve(
     split_curve,
     sizes = fine_threshold_um,
@@ -436,13 +450,16 @@ parameters_to_long <- function(wide) {
 .parameters_folk_ward_from_curve <- function(split_curve,
                                              interpolation_scale,
                                              extrapolate,
-                                             include_descriptions) {
-  percentiles <- .parameters_d_values_from_curve(
-    split_curve,
-    probs = c(5, 16, 25, 50, 75, 84, 95),
-    interpolation_scale = interpolation_scale,
-    extrapolate = extrapolate
-  )
+                                             include_descriptions,
+                                             percentiles = NULL) {
+  if (is.null(percentiles)) {
+    percentiles <- .parameters_d_values_from_curve(
+      split_curve,
+      probs = c(5, 16, 25, 50, 75, 84, 95),
+      interpolation_scale = interpolation_scale,
+      extrapolate = extrapolate
+    )
+  }
 
   sample_ids <- unique(percentiles$sample_id)
   percentile_groups <- split(percentiles, percentiles$sample_id, drop = TRUE)
@@ -630,19 +647,28 @@ gs_parameters <- function(x,
     split_curve
   }
 
-  probs <- unique(c(
+  d_value_probs <- unique(c(
     parse_d_parameters(parameters),
     if ("d_values" %in% parameters) d_values else numeric()
   ))
-  if (length(probs) > 0) {
-    percentile_values <- .parameters_d_values_from_curve(
+  d_spread_probs <- if ("d_spread" %in% parameters) c(10, 25, 50, 75, 90) else numeric()
+  indices_probs <- if ("indices" %in% parameters) c(10, 25, 30, 50, 60, 75) else numeric()
+  folk_ward_probs <- if ("folk_ward" %in% parameters) c(5, 16, 25, 50, 75, 84, 95) else numeric()
+  percentile_probs <- unique(c(d_value_probs, d_spread_probs, indices_probs, folk_ward_probs))
+  shared_percentiles <- NULL
+  if (length(percentile_probs) > 0) {
+    shared_percentiles <- .parameters_d_values_from_curve(
       shared_curve(),
-      probs = probs,
+      probs = percentile_probs,
       interpolation_scale = interpolation_scale,
       extrapolate = extrapolate
     )
+  }
+
+  if (length(d_value_probs) > 0) {
+    percentile_values <- .parameters_select_percentiles(shared_percentiles, d_value_probs)
     percentile_wide <- tibble::tibble(sample_id = sample_ids)
-    for (prob in probs) {
+    for (prob in d_value_probs) {
       values <- percentile_values$grain_size_um[percentile_values$percentile == prob]
       names(values) <- percentile_values$sample_id[percentile_values$percentile == prob]
       percentile_wide[[paste0("D", prob, "_um")]] <- unname(values[percentile_wide$sample_id])
@@ -651,12 +677,7 @@ gs_parameters <- function(x,
   }
 
   if ("d_spread" %in% parameters) {
-    percentiles <- .parameters_d_values_from_curve(
-      shared_curve(),
-      probs = c(10, 25, 50, 75, 90),
-      interpolation_scale = interpolation_scale,
-      extrapolate = extrapolate
-    )
+    percentiles <- .parameters_select_percentiles(shared_percentiles, d_spread_probs)
     d_spread <- d_spread_values(percentiles, scale = d_spread_scale)
     wide <- .merge_new_parameter_columns(wide, d_spread)
   }
@@ -667,7 +688,8 @@ gs_parameters <- function(x,
       split_curve = shared_curve(),
       fine_threshold_um = fine_threshold_um,
       interpolation_scale = interpolation_scale,
-      extrapolate = extrapolate
+      extrapolate = extrapolate,
+      percentiles = .parameters_select_percentiles(shared_percentiles, indices_probs)
     )
     wide <- .merge_new_parameter_columns(wide, indices)
   }
@@ -677,7 +699,8 @@ gs_parameters <- function(x,
       shared_curve(),
       interpolation_scale = interpolation_scale,
       extrapolate = extrapolate,
-      include_descriptions = TRUE
+      include_descriptions = TRUE,
+      percentiles = .parameters_select_percentiles(shared_percentiles, folk_ward_probs)
     )
     wide <- .merge_new_parameter_columns(wide, folkward)
   }

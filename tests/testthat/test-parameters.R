@@ -428,7 +428,9 @@ test_that("gs_parameters shared cumulative path matches standalone public functi
     d_spread = "d_spread",
     indices = "indices",
     folk_ward = "folk_ward",
-    mixed = c("d_values", "d_spread", "indices", "folk_ward", "fractions")
+    mixed_percentiles = c("d_values", "d_spread", "indices", "folk_ward"),
+    mixed_with_custom_d = c("D33", "d_spread", "indices", "folk_ward"),
+    mixed_with_fractions = c("d_values", "d_spread", "indices", "folk_ward", "fractions")
   )
 
   for (case in cases) {
@@ -452,20 +454,33 @@ test_that("gs_parameters shared cumulative path matches standalone public functi
 
   wide_actual <- suppressWarnings(gs_parameters(
     edge,
-    parameters = c("d_values", "d_spread", "indices", "folk_ward", "fractions"),
+    parameters = c("D33", "d_values", "d_spread", "indices", "folk_ward", "fractions"),
     output = "wide",
+    extrapolate = "warn_linear",
+    fraction_scheme = "wentworth_major"
+  ))
+  wide_expected <- suppressWarnings(parameters_ref_table(
+    edge,
+    parameters = c("D33", "d_values", "d_spread", "indices", "folk_ward", "fractions"),
     extrapolate = "warn_linear",
     fraction_scheme = "wentworth_major"
   ))
   long_actual <- suppressWarnings(gs_parameters(
     edge,
-    parameters = c("d_values", "d_spread", "indices", "folk_ward", "fractions"),
+    parameters = c("D33", "d_values", "d_spread", "indices", "folk_ward", "fractions"),
     output = "long",
     extrapolate = "warn_linear",
     fraction_scheme = "wentworth_major"
   ))
 
+  expect_equal(names(wide_actual), names(wide_expected))
   expect_equal(long_actual, parameters_to_long_ref(wide_actual), tolerance = 1e-8)
+  expect_equal(
+    long_actual$parameter,
+    parameters_to_long_ref(wide_expected)$parameter
+  )
+  expect_true(all(long_actual$method[long_actual$parameter == "D33_um"] == "percentile"))
+  expect_true(all(long_actual$unit[long_actual$parameter == "D33_um"] == "um"))
 })
 
 test_that("standalone percentile and fraction-family functions remain independent", {
@@ -475,5 +490,7 @@ test_that("standalone percentile and fraction-family functions remain independen
   expect_s3_class(suppressWarnings(gs_percent_finer(gsd, sizes = c(62.5, 63), extrapolate = "warn_linear")), "tbl_df")
   expect_s3_class(suppressWarnings(gs_fractions(gsd, scheme = "wentworth_major", extrapolate = "warn_linear")), "tbl_df")
   expect_s3_class(suppressWarnings(gs_d_spread(gsd, extrapolate = "warn_linear")), "tbl_df")
+  expect_s3_class(suppressWarnings(gs_grain_size_indices(gsd, extrapolate = "warn_linear")), "tbl_df")
+  expect_s3_class(suppressWarnings(gs_engineering(gsd, extrapolate = "warn_linear")), "tbl_df")
   expect_s3_class(suppressWarnings(gs_folk_ward(gsd, extrapolate = "warn_linear")), "tbl_df")
 })
