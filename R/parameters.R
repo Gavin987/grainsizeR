@@ -83,11 +83,12 @@ parameter_unit <- function(parameter) {
   }
 }
 
-moments_for_parameters <- function(x, moments_method, moments_open_end) {
-  moments <- gs_moments(
+moments_for_parameters <- function(x, moments_method, moments_open_end, split_data = NULL) {
+  moments <- .parameters_moments(
     x,
     method = moments_method,
-    open_end = moments_open_end
+    open_end = moments_open_end,
+    split_data = split_data
   )
 
   if (moments_method == "logarithmic_phi") {
@@ -121,8 +122,31 @@ moments_for_parameters <- function(x, moments_method, moments_open_end) {
   out
 }
 
-modes_for_parameters <- function(x, n_modes) {
-  modes <- gs_modes(x, n_modes = n_modes)
+.parameters_moments <- function(x, method, open_end, split_data = NULL) {
+  if (is.null(split_data)) {
+    split_data <- split(x, x$sample_id, drop = TRUE)
+  }
+
+  if (open_end == "extend_phi") {
+    warning(
+      "Open-ended class midpoints were estimated by extending adjacent phi intervals.",
+      call. = FALSE
+    )
+  } else if (open_end == "omit") {
+    warning(
+      "Open-ended classes were omitted; returned moments describe a truncated distribution.",
+      call. = FALSE
+    )
+  }
+
+  out <- lapply(split_data, moments_one_sample, method = method, open_end = open_end)
+  out <- do.call(rbind, unname(out))
+  rownames(out) <- NULL
+  tibble::as_tibble(out)
+}
+
+modes_for_parameters <- function(x, n_modes, split_data = NULL) {
+  modes <- .parameters_modes(x, n_modes = n_modes, split_data = split_data)
   sample_ids <- unique(modes$sample_id)
   out <- tibble::tibble(sample_id = sample_ids)
   out$sample_modality <- modes$sample_modality[match(sample_ids, modes$sample_id)]
@@ -144,17 +168,30 @@ modes_for_parameters <- function(x, n_modes) {
   out
 }
 
+.parameters_modes <- function(x, n_modes, split_data = NULL) {
+  if (is.null(split_data)) {
+    split_data <- split(x, x$sample_id, drop = TRUE)
+  }
+
+  modes <- lapply(split_data, modes_one_sample, n_modes = n_modes)
+  out <- do.call(rbind, unname(modes))
+  rownames(out) <- NULL
+  tibble::as_tibble(out)
+}
+
 quality_for_parameters <- function(x,
                                    sediment_loss_percent,
                                    sediment_loss_warning_percent,
                                    fine_pan_info_percent,
-                                   fine_pan_warning_percent) {
-  flags <- gs_quality_flags(
+                                   fine_pan_warning_percent,
+                                   split_data = NULL) {
+  flags <- .parameters_quality_flags(
     x,
     sediment_loss_percent = sediment_loss_percent,
     sediment_loss_warning_percent = sediment_loss_warning_percent,
     fine_pan_info_percent = fine_pan_info_percent,
-    fine_pan_warning_percent = fine_pan_warning_percent
+    fine_pan_warning_percent = fine_pan_warning_percent,
+    split_data = split_data
   )
   sample_ids <- unique(flags$sample_id)
   out <- tibble::tibble(sample_id = sample_ids)
@@ -174,6 +211,57 @@ quality_for_parameters <- function(x,
   }, character(1))
 
   out
+}
+
+.parameters_quality_flags <- function(x,
+                                      sediment_loss_percent,
+                                      sediment_loss_warning_percent,
+                                      fine_pan_info_percent,
+                                      fine_pan_warning_percent,
+                                      split_data = NULL) {
+  if (!is.numeric(sediment_loss_warning_percent) || length(sediment_loss_warning_percent) != 1) {
+    stop("`sediment_loss_warning_percent` must be a single numeric value.", call. = FALSE)
+  }
+  if (!is.numeric(fine_pan_info_percent) || length(fine_pan_info_percent) != 1) {
+    stop("`fine_pan_info_percent` must be a single numeric value.", call. = FALSE)
+  }
+  if (!is.numeric(fine_pan_warning_percent) || length(fine_pan_warning_percent) != 1) {
+    stop("`fine_pan_warning_percent` must be a single numeric value.", call. = FALSE)
+  }
+
+  sample_ids <- unique(as.character(x$sample_id))
+  loss <- as.list(stats::setNames(rep(NA_real_, length(sample_ids)), sample_ids))
+  if (!is.null(sediment_loss_percent)) {
+    if (!is.numeric(sediment_loss_percent)) {
+      stop("`sediment_loss_percent` must be numeric when supplied.", call. = FALSE)
+    }
+    if (is.null(names(sediment_loss_percent))) {
+      if (length(sample_ids) != 1 || length(sediment_loss_percent) != 1) {
+        stop("Unnamed `sediment_loss_percent` is only supported for one-sample input.", call. = FALSE)
+      }
+      loss[[sample_ids[1]]] <- sediment_loss_percent[1]
+    } else {
+      for (sample_id in intersect(sample_ids, names(sediment_loss_percent))) {
+        loss[[sample_id]] <- sediment_loss_percent[[sample_id]]
+      }
+    }
+  }
+
+  if (is.null(split_data)) {
+    split_data <- split(x, x$sample_id, drop = TRUE)
+  }
+  rows <- lapply(
+    split_data,
+    quality_flags_one_sample,
+    sediment_loss_percent = loss,
+    sediment_loss_warning_percent = sediment_loss_warning_percent,
+    fine_pan_info_percent = fine_pan_info_percent,
+    fine_pan_warning_percent = fine_pan_warning_percent
+  )
+
+  out <- do.call(rbind, unname(rows))
+  rownames(out) <- NULL
+  tibble::as_tibble(out)
 }
 
 parameters_to_long <- function(wide) {
@@ -215,6 +303,10 @@ parameters_to_long <- function(wide) {
 .parameters_split_curve <- function(x) {
   curve <- gs_cumulative(x)
   split(curve, curve$sample_id, drop = TRUE)
+}
+
+.parameters_split_samples <- function(x) {
+  split(x, x$sample_id, drop = TRUE)
 }
 
 .parameters_d_values_from_curve <- function(split_curve, probs, interpolation_scale, extrapolate) {
@@ -640,11 +732,18 @@ gs_parameters <- function(x,
   sample_ids <- unique(as.character(x$sample_id))
   wide <- tibble::tibble(sample_id = sample_ids)
   split_curve <- NULL
+  split_samples <- NULL
   shared_curve <- function() {
     if (is.null(split_curve)) {
       split_curve <<- .parameters_split_curve(x)
     }
     split_curve
+  }
+  shared_samples <- function() {
+    if (is.null(split_samples)) {
+      split_samples <<- .parameters_split_samples(x)
+    }
+    split_samples
   }
 
   d_value_probs <- unique(c(
@@ -709,7 +808,8 @@ gs_parameters <- function(x,
     moments <- moments_for_parameters(
       x,
       moments_method = moments_method,
-      moments_open_end = moments_open_end
+      moments_open_end = moments_open_end,
+      split_data = shared_samples()
     )
     wide <- .merge_new_parameter_columns(wide, moments)
   }
@@ -735,7 +835,7 @@ gs_parameters <- function(x,
   }
 
   if ("modes" %in% parameters) {
-    modes <- modes_for_parameters(x, n_modes = n_modes)
+    modes <- modes_for_parameters(x, n_modes = n_modes, split_data = shared_samples())
     wide <- .merge_new_parameter_columns(wide, modes)
   }
 
@@ -745,7 +845,8 @@ gs_parameters <- function(x,
       sediment_loss_percent = sediment_loss_percent,
       sediment_loss_warning_percent = sediment_loss_warning_percent,
       fine_pan_info_percent = fine_pan_info_percent,
-      fine_pan_warning_percent = fine_pan_warning_percent
+      fine_pan_warning_percent = fine_pan_warning_percent,
+      split_data = shared_samples()
     )
     wide <- .merge_new_parameter_columns(wide, quality)
   }

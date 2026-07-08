@@ -297,6 +297,13 @@ parameters_ref_table <- function(gsd,
                                  extrapolate = "warn_linear",
                                  d_spread_scale = "um",
                                  fine_threshold_um = 62.5,
+                                 moments_method = "logarithmic_phi",
+                                 moments_open_end = "extend_phi",
+                                 n_modes = 3,
+                                 sediment_loss_percent = NULL,
+                                 sediment_loss_warning_percent = 2,
+                                 fine_pan_info_percent = 1,
+                                 fine_pan_warning_percent = 5,
                                  fraction_scheme = "gravel_sand_mud",
                                  fraction_normalize = "none",
                                  fraction_unresolved = "warn_na") {
@@ -354,6 +361,37 @@ parameters_ref_table <- function(gsd,
         interpolation_scale = interpolation_scale,
         extrapolate = extrapolate,
         include_descriptions = TRUE
+      )
+    )
+  }
+
+  if ("moments" %in% parameters) {
+    out <- .merge_new_parameter_columns(
+      out,
+      moments_for_parameters(
+        gsd,
+        moments_method = moments_method,
+        moments_open_end = moments_open_end
+      )
+    )
+  }
+
+  if ("modes" %in% parameters) {
+    out <- .merge_new_parameter_columns(
+      out,
+      modes_for_parameters(gsd, n_modes = n_modes)
+    )
+  }
+
+  if ("quality" %in% parameters) {
+    out <- .merge_new_parameter_columns(
+      out,
+      quality_for_parameters(
+        gsd,
+        sediment_loss_percent = sediment_loss_percent,
+        sediment_loss_warning_percent = sediment_loss_warning_percent,
+        fine_pan_info_percent = fine_pan_info_percent,
+        fine_pan_warning_percent = fine_pan_warning_percent
       )
     )
   }
@@ -428,9 +466,14 @@ test_that("gs_parameters shared cumulative path matches standalone public functi
     d_spread = "d_spread",
     indices = "indices",
     folk_ward = "folk_ward",
+    moments = "moments",
+    modes = "modes",
+    quality = "quality",
     mixed_percentiles = c("d_values", "d_spread", "indices", "folk_ward"),
+    mixed_raw_split = c("moments", "modes", "quality"),
     mixed_with_custom_d = c("D33", "d_spread", "indices", "folk_ward"),
-    mixed_with_fractions = c("d_values", "d_spread", "indices", "folk_ward", "fractions")
+    mixed_with_fractions = c("d_values", "d_spread", "indices", "folk_ward", "fractions"),
+    mixed_all_common = c("d_values", "d_spread", "indices", "folk_ward", "fractions", "moments", "modes", "quality")
   )
 
   for (case in cases) {
@@ -439,12 +482,14 @@ test_that("gs_parameters shared cumulative path matches standalone public functi
         case$gsd,
         parameters = parameters,
         extrapolate = "warn_linear",
+        moments_open_end = "extend_phi",
         fraction_scheme = case$scheme
       ))
       expected <- suppressWarnings(parameters_ref_table(
         case$gsd,
         parameters = parameters,
         extrapolate = "warn_linear",
+        moments_open_end = "extend_phi",
         fraction_scheme = case$scheme
       ))
 
@@ -493,4 +538,13 @@ test_that("standalone percentile and fraction-family functions remain independen
   expect_s3_class(suppressWarnings(gs_grain_size_indices(gsd, extrapolate = "warn_linear")), "tbl_df")
   expect_s3_class(suppressWarnings(gs_engineering(gsd, extrapolate = "warn_linear")), "tbl_df")
   expect_s3_class(suppressWarnings(gs_folk_ward(gsd, extrapolate = "warn_linear")), "tbl_df")
+})
+
+test_that("standalone raw-split family functions remain independent", {
+  gsd <- parameters_edge_gsd()
+
+  expect_s3_class(suppressWarnings(gs_moments(gsd, open_end = "extend_phi")), "tbl_df")
+  expect_s3_class(gs_modes(gsd), "tbl_df")
+  expect_s3_class(gs_quality_flags(gsd), "tbl_df")
+  expect_s3_class(gs_qc(gsd), "tbl_df")
 })
