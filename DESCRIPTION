@@ -14,7 +14,7 @@ Description: Read, validate, summarize, and plot sediment grain-size
     workflows, major texture classification, texture ternary plots, and
     user-supplied texture polygon classification workflows.
 License: MIT + file LICENSE
-URL: https://Gavin987.github.io/grainsizeR/, https://github.com/Gavin987/grainsizeR
+URL: https://gavin987.github.io/grainsizeR/, https://github.com/Gavin987/grainsizeR
 BugReports: https://github.com/Gavin987/grainsizeR/issues
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

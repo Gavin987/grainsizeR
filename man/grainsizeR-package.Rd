@@ -46,7 +46,7 @@ engineering classification systems.
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://Gavin987.github.io/grainsizeR/}
+  \item \url{https://gavin987.github.io/grainsizeR/}
   \item \url{https://github.com/Gavin987/grainsizeR}
   \item Report bugs at \url{https://github.com/Gavin987/grainsizeR/issues}
 }
