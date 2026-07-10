@@ -1,56 +1,49 @@
-# grainsizeR 0.2.0.9000
+# grainsizeR 0.3.0
 
-## Development version
+## User-visible fixes and behavior changes
 
-- Started post-0.2.0 development.
-- Fixed a correctness issue in percentile interpolation: when a sample has
-  a run of consecutive classes with zero retained mass (e.g. several
-  sieve apertures with nothing caught between them), cumulative percent
-  finer ties exactly across those classes. Requested percentiles (or
-  percent-finer thresholds) falling on such a tied plateau are now
-  resolved by an explicit, deterministic tie-breaking rule instead of
-  depending on incidental input row order. Affects `gs_d_values()`,
-  `gs_percentile()`, and everything built on them (`gs_folk_ward()`,
-  `gs_d_spread()`, `gs_grain_size_indices()`, `gs_parameters()`,
-  `gs_diagnostics()`, `plot_cumulative()`, `plot_gradistat_summary()`).
-  Results for samples without tied cumulative values are unchanged.
-- Fixed a silent-assumption gap in `gs_fractions()`/`gs_fractions_wide()`:
-  a requested fraction threshold below a sample's finest measured boundary
-  previously always resolved to a confident 0 percent, even when the
-  excluded open-lower (pan) class carried nonzero retained mass - meaning
-  the true value was not actually derivable from the data. This now
-  follows the same `extrapolate` policy `gs_percent_finer()` already uses
-  for the identical situation: the default `extrapolate = "error"` throws
-  instead of silently assuming zero, and `extrapolate = "warn_linear"`
-  resolves a linearly-extrapolated value with a warning. When the pan
-  class is genuinely empty, the result is unchanged (0 percent is exact,
-  not an assumption, in that case).
-- Added an explicit, citation-backed nominal sieve-mesh equivalence table
-  (currently one group: 0.0625 mm / 0.063 mm, reflecting that no sieve
-  manufacturer cuts a 0.0625 mm mesh - sieves near this size are
-  certified at 0.063 mm under ISO 3310-1, ASTM E11, and DIN 4188).
-  `gs_fractions()`/`gs_fractions_wide()` and `gs_percent_finer()` now
-  resolve a requested threshold directly from a sample's own finite
-  boundary when the two are members of the same equivalence group,
-  instead of treating them as unrelated values - e.g. `gravel_sand_mud`
-  (63 μm) and `wentworth_major` (62.5 μm) now agree exactly on sieve-only
-  samples whose finest measured boundary is 63 μm. This only rescues
-  thresholds that would otherwise be unresolved/extrapolated; real
-  interpolated data governs whenever a sample has genuine finer-resolution
-  measurements, and unrelated boundaries (e.g. USDA's 50 μm) are never
-  affected by the table. These two changes were implemented together
-  since they touch the same threshold-resolution logic; see
-  `dev-notes/AUDIT_LOG.md` for the full investigation and design.
-- Added the Krumbein (1938) quartile deviation as a new
-  `quartile_deviation_phi` column on `gs_d_spread()` (and, via
-  `parameters = "d_spread"`, on `gs_parameters()`). Reported in phi units,
-  `Qd = (D25_phi - D75_phi) / 2`, following the same phi-scale lineage as
-  the package's existing Folk and Ward statistics. This is a new column;
-  no existing `gs_d_spread()`/`gs_parameters()` column changes.
-- Optimized `gs_parameters()` so mixed requests spanning D-values,
-  D-spread descriptors, grain-size indices, Folk and Ward statistics, and
-  fractions reuse one cumulative boundary curve internally. Standalone
-  public functions keep their existing behavior and signatures.
+- Percentile interpolation now uses an explicit deterministic tie-breaking rule
+  when consecutive zero-retained classes create duplicate cumulative
+  percent-finer values. Requested percentiles or percent-finer thresholds on
+  these tied plateaus no longer depend on incidental input row order. This
+  affects `gs_d_values()`, `gs_percentile()`, and functions built on the same
+  percentile path. Results for samples without tied cumulative values are
+  unchanged.
+- `gs_fractions()` and `gs_fractions_wide()` now handle thresholds below a
+  sample's finest finite boundary consistently with `gs_percent_finer()`. When
+  an open lower tail contains nonzero retained mass, the default
+  `extrapolate = "error"` no longer silently reports 0 percent; callers may opt
+  into `extrapolate = "warn_linear"` for a warned linear extrapolation. When the
+  open lower tail is genuinely empty, exact 0 percent results are unchanged.
+- Added documented nominal sieve-mesh equivalence handling for 0.0625 mm and
+  0.063 mm. This is scoped to real sieve workflows and documented mesh
+  designations, not mathematical equality. It lets fraction and percent-finer
+  calls resolve thresholds through an equivalent measured boundary when no
+  genuine finer-resolution data lie between the requested threshold and the
+  sample boundary.
+
+## New output and methods
+
+- Added the Krumbein (1938) quartile deviation as `quartile_deviation_phi` in
+  `gs_d_spread()` and in `gs_parameters()` when `parameters = "d_spread"`. The
+  value is reported in phi units as `Qd = (D25_phi - D75_phi) / 2`. Existing
+  `gs_d_spread()` and `gs_parameters()` columns are unchanged.
+
+## Performance
+
+- `gs_parameters()` now reuses shared cumulative curves, unioned percentile
+  tables, and raw sample splits internally for selected parameter groups. This
+  reduces repeated work in mixed `gs_parameters()` calls while preserving
+  standalone public function behavior and signatures.
+- The refactor is intentionally internal. It should not be read as a universal
+  speed advantage; measured gains depend on the requested parameter groups and
+  input size.
+
+## Tests and hygiene
+
+- Expected test warnings are now asserted or narrowly muffled so intentional
+  warnings do not leak into the global testthat warning count.
+- The full test suite is expected to report `WARN 0`.
 
 # grainsizeR 0.2.0
 
