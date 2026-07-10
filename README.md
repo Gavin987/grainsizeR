@@ -207,9 +207,7 @@ built-in texture polygon dataset is considered.
 
 ## Citation
 
-If you use grainsizeR, please cite the package. The latest archived
-Zenodo version DOI currently available is for v0.2.0; the v0.3.0 archive
-will be added after the v0.3.0 GitHub Release is created.
+If you use grainsizeR, please cite the archived release:
 
 Chang, C.-S. G. (2026). grainsizeR: Sediment Grain-Size Analysis Tools
-(v0.2.0). Zenodo. <https://doi.org/10.5281/zenodo.21169394>
+(v0.3.0). Zenodo. <https://doi.org/10.5281/zenodo.21292830>

@@ -2,14 +2,14 @@
 
 ## Current status
 
-- Latest GitHub release: v0.2.0
-- Current package version: 0.3.0
-- Pending release: v0.3.0
+- Latest GitHub release: v0.3.0
+- Current development version: 0.3.0.9000
 - Latest published release before this: v0.2.0
-- GitHub Release for v0.3.0: pending
-- Zenodo archive/DOI for v0.3.0: pending GitHub Release
+- GitHub Release for v0.3.0: complete
+- Zenodo archive for v0.3.0: complete
+- Zenodo record URL: https://zenodo.org/records/21292830
 - Zenodo Concept DOI: 10.5281/zenodo.21169393
-- Latest published Zenodo Version DOI: 10.5281/zenodo.21169394 (v0.2.0)
+- Zenodo Version DOI: 10.5281/zenodo.21292830 (v0.3.0)
 - CRAN submission: deferred
 
 ## Post-v0.2.0 hardening and performance work
@@ -19,17 +19,17 @@ the v0.3.0 release-preparation pass. This includes deterministic percentile
 tie-breaking, the below-boundary fraction/percent-finer fix, nominal sieve-mesh
 equivalence handling for 0.0625 mm / 0.063 mm, Krumbein quartile deviation
 output, `gs_parameters()` performance refactors through Stage 3, and expected
-test-warning cleanup. The v0.3.0 GitHub Release and Zenodo archive are still
-pending. CRAN remains deferred unless separately planned.
+test-warning cleanup. The v0.3.0 GitHub Release and Zenodo archive are
+complete. CRAN remains deferred unless separately planned.
 
 ## Guardrails
 
 - Do not retag v0.1.0.
 - Do not retag v0.2.0.
+- Do not retag v0.3.0.
 - Do not force-push release tags.
 - Do not rewrite or replace the v0.2.0 GitHub Release, tag, or Zenodo archive.
-- Do not say a v0.3.0 Zenodo DOI exists until the GitHub Release has been
-  created and archived by Zenodo.
+- Do not rewrite or replace the v0.3.0 GitHub Release, tag, or Zenodo archive.
 - Do not prepare CRAN submission material until CRAN submission is planned.
 
 ## First GitHub Push Checklist
