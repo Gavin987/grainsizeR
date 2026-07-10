@@ -1,5 +1,9 @@
 # Changelog
 
+## grainsizeR 0.3.0.9000
+
+- Development version.
+
 ## grainsizeR 0.3.0
 
 ### User-visible fixes and behavior changes
