@@ -68,7 +68,7 @@ thresholds.
 
 Instrument outputs such as laser cumulative percent-finer curves may
 require preprocessing before import.
-[`read_gsd()`](https://Gavin987.github.io/grainsizeR/reference/read_gsd.md)
+[`read_gsd()`](https://gavin987.github.io/grainsizeR/reference/read_gsd.md)
 expects retained proportions or retained percentages by size class, not
 cumulative percent passing.
 
@@ -77,10 +77,10 @@ cumulative percent passing.
 grainsizeR uses cumulative percent finer. At a finite boundary, percent
 finer is the retained percent below that boundary. This convention is
 used by
-[`gs_cumulative()`](https://Gavin987.github.io/grainsizeR/reference/gs_cumulative.md),
-[`gs_percent_finer()`](https://Gavin987.github.io/grainsizeR/reference/gs_percent_finer.md),
+[`gs_cumulative()`](https://gavin987.github.io/grainsizeR/reference/gs_cumulative.md),
+[`gs_percent_finer()`](https://gavin987.github.io/grainsizeR/reference/gs_percent_finer.md),
 and
-[`gs_d_values()`](https://Gavin987.github.io/grainsizeR/reference/gs_d_values.md).
+[`gs_d_values()`](https://gavin987.github.io/grainsizeR/reference/gs_d_values.md).
 
 ## D-Values
 
@@ -100,7 +100,7 @@ gs_d_values(subset(gs_long, sample_id == "S01"), probs = c(10, 50, 90), extrapol
 
 ## Threshold Interpolation
 
-[`gs_percent_finer()`](https://Gavin987.github.io/grainsizeR/reference/gs_percent_finer.md)
+[`gs_percent_finer()`](https://gavin987.github.io/grainsizeR/reference/gs_percent_finer.md)
 estimates percent finer at arbitrary thresholds by interpolating the
 cumulative percent-finer curve between finite boundaries. Thresholds do
 not need to be measured boundaries. This is how thresholds such as 2,
@@ -135,7 +135,7 @@ D-value or threshold falls inside an open-ended class,
 explicitly set `extrapolate = "warn_linear"` when extrapolation is
 acceptable for their workflow.
 
-[`gs_diagnostics()`](https://Gavin987.github.io/grainsizeR/reference/gs_diagnostics.md)
+[`gs_diagnostics()`](https://gavin987.github.io/grainsizeR/reference/gs_diagnostics.md)
 can be used before summary calculations to identify samples with
 unresolved D-values, unresolved clay/silt thresholds, open-ended
 terminal classes, or fraction schemes that require finer measurements.
@@ -151,7 +151,7 @@ gs_diagnostics(subset(gs_wide, sample_id == "S01"), output = "summary")
 ## Fraction Schemes
 
 Fraction schemes use
-[`gs_percent_finer()`](https://Gavin987.github.io/grainsizeR/reference/gs_percent_finer.md)
+[`gs_percent_finer()`](https://gavin987.github.io/grainsizeR/reference/gs_percent_finer.md)
 internally at scheme boundaries. Coarse schemes such as
 `wentworth_major` can be robust when their thresholds are resolved.
 Texture fraction schemes with fine thresholds should use input data that
@@ -228,14 +228,14 @@ suppressWarnings(gs_moments(
 
 ## Summary-Table Consistency
 
-[`gs_parameters()`](https://Gavin987.github.io/grainsizeR/reference/gs_parameters.md)
+[`gs_parameters()`](https://gavin987.github.io/grainsizeR/reference/gs_parameters.md)
 is a reporting convenience wrapper around lower-level functions. It does
 not introduce new calculations; tests compare its output against
-[`gs_d_values()`](https://Gavin987.github.io/grainsizeR/reference/gs_d_values.md),
-[`gs_grain_size_indices()`](https://Gavin987.github.io/grainsizeR/reference/gs_grain_size_indices.md),
-[`gs_folk_ward()`](https://Gavin987.github.io/grainsizeR/reference/gs_folk_ward.md),
+[`gs_d_values()`](https://gavin987.github.io/grainsizeR/reference/gs_d_values.md),
+[`gs_grain_size_indices()`](https://gavin987.github.io/grainsizeR/reference/gs_grain_size_indices.md),
+[`gs_folk_ward()`](https://gavin987.github.io/grainsizeR/reference/gs_folk_ward.md),
 and
-[`gs_fractions_wide()`](https://Gavin987.github.io/grainsizeR/reference/gs_fractions_wide.md).
+[`gs_fractions_wide()`](https://gavin987.github.io/grainsizeR/reference/gs_fractions_wide.md).
 
 ``` r
 sample_id <- "S01"

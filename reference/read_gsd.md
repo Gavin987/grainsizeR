@@ -53,7 +53,7 @@ read_gsd(
   Scale for `value_col`. Supported values are `"proportion"`,
   `"percent"`, and `"weight"`. For `format = "wide"`, omitted
   `value_type` uses the
-  [`read_gsd_wide()`](https://Gavin987.github.io/grainsizeR/reference/read_gsd_wide.md)
+  [`read_gsd_wide()`](https://gavin987.github.io/grainsizeR/reference/read_gsd_wide.md)
   default.
 
 - measurement_method:

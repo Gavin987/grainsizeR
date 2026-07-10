@@ -2,11 +2,11 @@
 
 `plot_texture_ternary()` is the preferred texture ternary plotting
 function.
-[`plot_texture_triangle()`](https://Gavin987.github.io/grainsizeR/reference/plot_texture_triangle.md)
+[`plot_texture_triangle()`](https://gavin987.github.io/grainsizeR/reference/plot_texture_triangle.md)
 is a compatibility alias with equivalent behavior. Both functions plot
 summarized ternary component percentages and optional user-supplied
 texture polygons. A fraction scheme is the rule used by
-[`gs_fractions()`](https://Gavin987.github.io/grainsizeR/reference/gs_fractions.md)
+[`gs_fractions()`](https://gavin987.github.io/grainsizeR/reference/gs_fractions.md)
 to convert size-bin data into components, a ternary basis is the
 three-component set drawn on the diagram, and a texture system is the
 classification or diagram style selected by `scheme`. The package draws
@@ -56,7 +56,7 @@ plot_texture_ternary(
   ternary diagrams or `"usda"` for USDA major-class ternary diagrams.
   Legacy raw-`gsd_tbl` schemes such as `"isss"` and `"uk_ssew"` remain
   available through
-  [`plot_trigon()`](https://Gavin987.github.io/grainsizeR/reference/plot_trigon.md).
+  [`plot_trigon()`](https://gavin987.github.io/grainsizeR/reference/plot_trigon.md).
 
 - components:
 
@@ -66,7 +66,7 @@ plot_texture_ternary(
 - normalize:
 
   Normalization mode passed to
-  [`gs_fractions_wide()`](https://Gavin987.github.io/grainsizeR/reference/gs_fractions_wide.md).
+  [`gs_fractions_wide()`](https://gavin987.github.io/grainsizeR/reference/gs_fractions_wide.md).
 
 - sample_id:
 
@@ -95,7 +95,7 @@ plot_texture_ternary(
 - classify:
 
   Should sample points be classified with
-  [`classify_texture()`](https://Gavin987.github.io/grainsizeR/reference/classify_texture.md)?
+  [`classify_texture()`](https://gavin987.github.io/grainsizeR/reference/classify_texture.md)?
 
 - basis:
 
@@ -162,16 +162,16 @@ A `ggplot` object.
 
 The intended GRADISTAT workflow is to read grain-size data, compute
 fractions with
-[`gs_fractions()`](https://Gavin987.github.io/grainsizeR/reference/gs_fractions.md)
+[`gs_fractions()`](https://gavin987.github.io/grainsizeR/reference/gs_fractions.md)
 or
-[`gs_fractions_wide()`](https://Gavin987.github.io/grainsizeR/reference/gs_fractions_wide.md),
+[`gs_fractions_wide()`](https://gavin987.github.io/grainsizeR/reference/gs_fractions_wide.md),
 then plot those summarized components. For `scheme = "gradistat"`, use
 `basis = "gravel_sand_mud"` with `gravel`, `sand`, and `mud` components,
 or `basis = "sand_silt_clay_no_gravel"` with `sand`, `silt`, and `clay`
 components. Official
-[`gs_fractions()`](https://Gavin987.github.io/grainsizeR/reference/gs_fractions.md)
+[`gs_fractions()`](https://gavin987.github.io/grainsizeR/reference/gs_fractions.md)
 long output, official
-[`gs_fractions_wide()`](https://Gavin987.github.io/grainsizeR/reference/gs_fractions_wide.md)
+[`gs_fractions_wide()`](https://gavin987.github.io/grainsizeR/reference/gs_fractions_wide.md)
 output with `*_percent` columns, and canonical summarized tables with
 component columns are supported. Component column matching is
 case-insensitive, so `Sand` and `SAND` are treated as `sand`; arbitrary
@@ -182,11 +182,11 @@ For `scheme = "usda"` and data-frame inputs, the function accepts
 summarized `sand`, `silt`, and `clay` percentage columns or official
 `gs_fractions_wide(..., scheme = "usda")` output and draws USDA
 major-class boundaries. For `scheme = "gradistat"`, official
-[`gs_fractions_wide()`](https://Gavin987.github.io/grainsizeR/reference/gs_fractions_wide.md)
+[`gs_fractions_wide()`](https://gavin987.github.io/grainsizeR/reference/gs_fractions_wide.md)
 output from the `gradistat` and `gravel_sand_mud` schemes can be plotted
 directly. Legacy raw-`gsd_tbl` plotting for older trigon schemes remains
 available through
-[`plot_trigon()`](https://Gavin987.github.io/grainsizeR/reference/plot_trigon.md).
+[`plot_trigon()`](https://gavin987.github.io/grainsizeR/reference/plot_trigon.md).
 
 ## Examples
 

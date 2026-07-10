@@ -1,10 +1,10 @@
 # Calculate grain-size fraction percentages in wide form
 
 `gs_fractions_wide()` is a convenience wrapper around
-[`gs_fractions()`](https://Gavin987.github.io/grainsizeR/reference/gs_fractions.md)
+[`gs_fractions()`](https://gavin987.github.io/grainsizeR/reference/gs_fractions.md)
 that returns one row per sample with one percentage column per fraction
 component. See
-[`gs_fractions()`](https://Gavin987.github.io/grainsizeR/reference/gs_fractions.md)'s
+[`gs_fractions()`](https://gavin987.github.io/grainsizeR/reference/gs_fractions.md)'s
 Details for the nominal sieve-mesh equivalence table and the
 pan-mass-aware below-boundary resolution logic this wrapper inherits
 unchanged.
@@ -42,7 +42,7 @@ gs_fractions_wide(
 - interpolation_scale:
 
   Interpolation scale passed to
-  [`gs_percent_finer()`](https://Gavin987.github.io/grainsizeR/reference/gs_percent_finer.md).
+  [`gs_percent_finer()`](https://gavin987.github.io/grainsizeR/reference/gs_percent_finer.md).
 
 - unresolved:
 
@@ -53,7 +53,7 @@ gs_fractions_wide(
 - extrapolate:
 
   Extrapolation behavior passed to
-  [`gs_percent_finer()`](https://Gavin987.github.io/grainsizeR/reference/gs_percent_finer.md).
+  [`gs_percent_finer()`](https://gavin987.github.io/grainsizeR/reference/gs_percent_finer.md).
   The default `"error"` avoids silent extrapolation into open-ended
   terminal classes.
 

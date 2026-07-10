@@ -1,7 +1,7 @@
 # Convenience alias for grain-size fractions
 
 `gs_frac()` is a short convenience alias for
-[`gs_fractions()`](https://Gavin987.github.io/grainsizeR/reference/gs_fractions.md).
+[`gs_fractions()`](https://gavin987.github.io/grainsizeR/reference/gs_fractions.md).
 It does not change calculation behavior.
 
 ## Usage
@@ -15,9 +15,9 @@ gs_frac(...)
 - ...:
 
   Arguments forwarded to
-  [`gs_fractions()`](https://Gavin987.github.io/grainsizeR/reference/gs_fractions.md).
+  [`gs_fractions()`](https://gavin987.github.io/grainsizeR/reference/gs_fractions.md).
 
 ## Value
 
 See
-[`gs_fractions()`](https://Gavin987.github.io/grainsizeR/reference/gs_fractions.md).
+[`gs_fractions()`](https://gavin987.github.io/grainsizeR/reference/gs_fractions.md).

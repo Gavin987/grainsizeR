@@ -35,9 +35,9 @@ All roxygen comments, exported documentation, examples, vignettes,
 README text, NEWS entries, tests, and developer-facing comments must be
 written in English. Use `ternary plot` as the formal plotting term. The
 compatibility function
-[`plot_texture_triangle()`](https://Gavin987.github.io/grainsizeR/reference/plot_texture_triangle.md)
+[`plot_texture_triangle()`](https://gavin987.github.io/grainsizeR/reference/plot_texture_triangle.md)
 remains available, but new examples should prefer
-[`plot_texture_ternary()`](https://Gavin987.github.io/grainsizeR/reference/plot_texture_ternary.md).
+[`plot_texture_ternary()`](https://gavin987.github.io/grainsizeR/reference/plot_texture_ternary.md).
 
 Use `GRADISTAT` and `G2Sd` with this exact capitalization in prose.
 

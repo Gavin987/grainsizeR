@@ -37,7 +37,7 @@ texture_polygon_sources()
 USDA 12-class major texture ternary classification is available without
 a bundled polygon dataset by using the validated internal rule path
 through
-[`classify_texture()`](https://Gavin987.github.io/grainsizeR/reference/classify_texture.md).
+[`classify_texture()`](https://gavin987.github.io/grainsizeR/reference/classify_texture.md).
 
 ``` r
 samples <- data.frame(
@@ -64,7 +64,7 @@ classification remains the generic workflow for other texture systems.
 
 ## Creating a Polygon Data Frame
 
-[`texture_polygon_template()`](https://Gavin987.github.io/grainsizeR/reference/texture_polygon_template.md)
+[`texture_polygon_template()`](https://gavin987.github.io/grainsizeR/reference/texture_polygon_template.md)
 shows the required columns. The synthetic example below defines a single
 class covering the full ternary triangle. It is not an official texture
 classification system.
@@ -140,9 +140,9 @@ classify_texture(
 
 ## Plotting User Polygons
 
-[`plot_texture_ternary()`](https://Gavin987.github.io/grainsizeR/reference/plot_texture_ternary.md)
+[`plot_texture_ternary()`](https://gavin987.github.io/grainsizeR/reference/plot_texture_ternary.md)
 can draw sample points and user-supplied polygons.
-[`plot_texture_triangle()`](https://Gavin987.github.io/grainsizeR/reference/plot_texture_triangle.md)
+[`plot_texture_triangle()`](https://gavin987.github.io/grainsizeR/reference/plot_texture_triangle.md)
 remains available as a compatibility function name.
 
 ``` r

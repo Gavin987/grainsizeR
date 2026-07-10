@@ -2,7 +2,7 @@
 
 `gs_d_spread()` calculates D-value spread descriptors commonly reported
 in GRADISTAT-style grain-size summaries. It reuses
-[`gs_d_values()`](https://Gavin987.github.io/grainsizeR/reference/gs_d_values.md)
+[`gs_d_values()`](https://gavin987.github.io/grainsizeR/reference/gs_d_values.md)
 for D10, D25, D50, D75, and D90, then derives D90/D10, D90 - D10,
 D75/D25, D75 - D25, and the Krumbein (1938) quartile deviation.
 
@@ -31,12 +31,12 @@ gs_d_spread(
 - interpolation_scale:
 
   Interpolation scale passed to
-  [`gs_d_values()`](https://Gavin987.github.io/grainsizeR/reference/gs_d_values.md).
+  [`gs_d_values()`](https://gavin987.github.io/grainsizeR/reference/gs_d_values.md).
 
 - extrapolate:
 
   Extrapolation behavior passed to
-  [`gs_d_values()`](https://Gavin987.github.io/grainsizeR/reference/gs_d_values.md).
+  [`gs_d_values()`](https://gavin987.github.io/grainsizeR/reference/gs_d_values.md).
 
 ## Value
 
@@ -56,19 +56,19 @@ metric D-values.
 (D25_phi - D75_phi) / 2, reported in phi units regardless of `scale`
 (Krumbein's original measure is a phi-scale transform of Trask's (1932)
 metric quartile ratio, the same lineage as `So_trask` in
-[`gs_grain_size_indices()`](https://Gavin987.github.io/grainsizeR/reference/gs_grain_size_indices.md)).
+[`gs_grain_size_indices()`](https://gavin987.github.io/grainsizeR/reference/gs_grain_size_indices.md)).
 It is always positive under the package's D-value convention, where
 `D_p` is the grain size at which `p` percent of the sample is finer,
 because D25 is a larger phi value (finer material) than D75.
 
 Open-tail behavior follows
-[`gs_d_values()`](https://Gavin987.github.io/grainsizeR/reference/gs_d_values.md):
+[`gs_d_values()`](https://gavin987.github.io/grainsizeR/reference/gs_d_values.md):
 by default unresolved requested percentiles throw an error, and
 `extrapolate = "warn_linear"` explicitly allows linear extrapolation and
 marks affected samples with `any_extrapolated = TRUE`. D-values falling
 on a tied cumulative plateau (from consecutive zero-retained classes)
 are also resolved via
-[`gs_d_values()`](https://Gavin987.github.io/grainsizeR/reference/gs_d_values.md)'s
+[`gs_d_values()`](https://gavin987.github.io/grainsizeR/reference/gs_d_values.md)'s
 deterministic tie-breaking rule.
 
 ## Examples

@@ -17,7 +17,7 @@ path re-expresses user-provided GRADISTAT v8 workbook decision tables in
 R and does not copy VBA source code. Full downstream sediment-name
 composition is supported separately and GRADISTAT ternary plotting is
 available through
-[`plot_texture_ternary()`](https://Gavin987.github.io/grainsizeR/reference/plot_texture_ternary.md).
+[`plot_texture_ternary()`](https://gavin987.github.io/grainsizeR/reference/plot_texture_ternary.md).
 
 ## Usage
 
@@ -78,22 +78,22 @@ classify_texture(
 - normalize:
 
   Normalization mode passed to
-  [`gs_fractions_wide()`](https://Gavin987.github.io/grainsizeR/reference/gs_fractions_wide.md).
+  [`gs_fractions_wide()`](https://gavin987.github.io/grainsizeR/reference/gs_fractions_wide.md).
 
 - interpolation_scale:
 
   Interpolation scale passed to
-  [`gs_fractions_wide()`](https://Gavin987.github.io/grainsizeR/reference/gs_fractions_wide.md).
+  [`gs_fractions_wide()`](https://gavin987.github.io/grainsizeR/reference/gs_fractions_wide.md).
 
 - unresolved:
 
   Unresolved-threshold behavior passed to
-  [`gs_fractions_wide()`](https://Gavin987.github.io/grainsizeR/reference/gs_fractions_wide.md).
+  [`gs_fractions_wide()`](https://gavin987.github.io/grainsizeR/reference/gs_fractions_wide.md).
 
 - extrapolate:
 
   Extrapolation behavior passed to
-  [`gs_fractions_wide()`](https://Gavin987.github.io/grainsizeR/reference/gs_fractions_wide.md).
+  [`gs_fractions_wide()`](https://gavin987.github.io/grainsizeR/reference/gs_fractions_wide.md).
 
 - components:
 
@@ -111,7 +111,7 @@ classify_texture(
 
   Logical. For GRADISTAT rule classification, `TRUE` appends
   GRADISTAT-style sediment-name fields using
-  [`gs_gradistat_sediment_name()`](https://Gavin987.github.io/grainsizeR/reference/gs_gradistat_sediment_name.md).
+  [`gs_gradistat_sediment_name()`](https://gavin987.github.io/grainsizeR/reference/gs_gradistat_sediment_name.md).
   Missing subclass columns produce a partial sediment-name status
   instead of invented modifiers. USDA and polygon classification ignore
   this argument.

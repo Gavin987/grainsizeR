@@ -2,11 +2,11 @@
 
 `gs_describe_parameters()` appends descriptive terms for mean grain
 size, sorting, skewness, and kurtosis to tables returned by
-[`gs_folk_ward()`](https://Gavin987.github.io/grainsizeR/reference/gs_folk_ward.md),
-[`gs_folkward()`](https://Gavin987.github.io/grainsizeR/reference/gs_folkward.md),
-[`gs_moments()`](https://Gavin987.github.io/grainsizeR/reference/gs_moments.md),
+[`gs_folk_ward()`](https://gavin987.github.io/grainsizeR/reference/gs_folk_ward.md),
+[`gs_folkward()`](https://gavin987.github.io/grainsizeR/reference/gs_folkward.md),
+[`gs_moments()`](https://gavin987.github.io/grainsizeR/reference/gs_moments.md),
 or
-[`gs_parameters()`](https://Gavin987.github.io/grainsizeR/reference/gs_parameters.md),
+[`gs_parameters()`](https://gavin987.github.io/grainsizeR/reference/gs_parameters.md),
 or to any data frame with recognized statistic columns.
 
 ## Usage

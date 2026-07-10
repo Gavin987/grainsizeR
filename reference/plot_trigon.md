@@ -2,9 +2,9 @@
 
 `plot_trigon()` is retained for legacy compatibility with earlier
 grainsizeR texture plotting workflows. Prefer
-[`plot_texture_ternary()`](https://Gavin987.github.io/grainsizeR/reference/plot_texture_ternary.md)
+[`plot_texture_ternary()`](https://gavin987.github.io/grainsizeR/reference/plot_texture_ternary.md)
 in new code. Unlike
-[`plot_texture_ternary()`](https://Gavin987.github.io/grainsizeR/reference/plot_texture_ternary.md),
+[`plot_texture_ternary()`](https://gavin987.github.io/grainsizeR/reference/plot_texture_ternary.md),
 this function can still calculate ternary fractions from a raw `gsd_tbl`
 for legacy built-in schemes. Optional user-supplied polygons can be
 drawn as overlays. For USDA major texture classes, the function draws
@@ -56,7 +56,7 @@ plot_trigon(
 - normalize:
 
   Normalization mode passed to
-  [`gs_fractions_wide()`](https://Gavin987.github.io/grainsizeR/reference/gs_fractions_wide.md).
+  [`gs_fractions_wide()`](https://gavin987.github.io/grainsizeR/reference/gs_fractions_wide.md).
 
 - sample_id:
 
@@ -85,7 +85,7 @@ plot_trigon(
 - classify:
 
   Should sample points be classified with
-  [`classify_texture()`](https://Gavin987.github.io/grainsizeR/reference/classify_texture.md)?
+  [`classify_texture()`](https://gavin987.github.io/grainsizeR/reference/classify_texture.md)?
 
 - show_boundaries:
 

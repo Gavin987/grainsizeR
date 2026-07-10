@@ -2,7 +2,7 @@
 
 `gs_fraction_schemes()` returns the particle-size component definitions
 used by
-[`gs_fractions()`](https://Gavin987.github.io/grainsizeR/reference/gs_fractions.md).
+[`gs_fractions()`](https://gavin987.github.io/grainsizeR/reference/gs_fractions.md).
 Bounds are returned in millimetres and micrometres. Fraction
 calculations use the millimetre bounds after normalizing `gsd_tbl` sizes
 from their internal micrometre storage. Each scheme is represented as a

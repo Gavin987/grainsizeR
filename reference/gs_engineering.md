@@ -1,7 +1,7 @@
 # Calculate additional grain-size indices
 
 `gs_engineering()` is a compatibility alias for
-[`gs_grain_size_indices()`](https://Gavin987.github.io/grainsizeR/reference/gs_grain_size_indices.md).
+[`gs_grain_size_indices()`](https://gavin987.github.io/grainsizeR/reference/gs_grain_size_indices.md).
 It returns grain-size index values only; it does not implement complete
 civil-engineering classification systems such as AASHTO or USCS.
 
@@ -16,7 +16,7 @@ gs_engineering(...)
 - ...:
 
   Arguments forwarded to
-  [`gs_grain_size_indices()`](https://Gavin987.github.io/grainsizeR/reference/gs_grain_size_indices.md).
+  [`gs_grain_size_indices()`](https://gavin987.github.io/grainsizeR/reference/gs_grain_size_indices.md).
 
 ## Value
 

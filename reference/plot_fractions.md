@@ -1,7 +1,7 @@
 # Plot grain-size fraction composition
 
 `plot_fractions()` plots fraction percentages from
-[`gs_fractions()`](https://Gavin987.github.io/grainsizeR/reference/gs_fractions.md)
+[`gs_fractions()`](https://gavin987.github.io/grainsizeR/reference/gs_fractions.md)
 as stacked bars with one bar per sample. Fraction components use the
 normalized particle-size scale from `gsd_tbl`; users do not need to
 specify size units for plotting after import.
@@ -29,12 +29,12 @@ plot_fractions(
 - scheme:
 
   Built-in fraction scheme name passed to
-  [`gs_fractions()`](https://Gavin987.github.io/grainsizeR/reference/gs_fractions.md).
+  [`gs_fractions()`](https://gavin987.github.io/grainsizeR/reference/gs_fractions.md).
 
 - normalize:
 
   Normalization mode passed to
-  [`gs_fractions()`](https://Gavin987.github.io/grainsizeR/reference/gs_fractions.md).
+  [`gs_fractions()`](https://gavin987.github.io/grainsizeR/reference/gs_fractions.md).
 
 - sample:
 
@@ -58,12 +58,12 @@ plot_fractions(
 
   Should unresolved fraction percentages be plotted as zero? The default
   `FALSE` preserves `NA` values returned by
-  [`gs_fractions()`](https://Gavin987.github.io/grainsizeR/reference/gs_fractions.md).
+  [`gs_fractions()`](https://gavin987.github.io/grainsizeR/reference/gs_fractions.md).
   Use `TRUE` to draw stacked bars without dropping components whose
   thresholds could not be resolved from the available grain-size
   classes. This affects only the plotted data and does not change the
   underlying
-  [`gs_fractions()`](https://Gavin987.github.io/grainsizeR/reference/gs_fractions.md)
+  [`gs_fractions()`](https://gavin987.github.io/grainsizeR/reference/gs_fractions.md)
   calculation.
 
 ## Value

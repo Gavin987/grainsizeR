@@ -97,7 +97,7 @@ Fraction schemes convert grain-size data into particle-size components;
 ternary bases are the three components drawn on a plot; texture systems
 are the classification or diagram style. GRADISTAT-style ternary plots
 accept official
-[`gs_fractions_wide()`](https://Gavin987.github.io/grainsizeR/reference/gs_fractions_wide.md)
+[`gs_fractions_wide()`](https://gavin987.github.io/grainsizeR/reference/gs_fractions_wide.md)
 outputs from the `gradistat` or `gravel_sand_mud` schemes. USDA ternary
 plots accept official USDA fraction output and draw the 12 major USDA
 texture classes. Canonical component names are lowercase snake_case;
@@ -126,7 +126,7 @@ rather than shown as a silent guess.
 
 ## Parameter Summaries
 
-[`gs_parameters()`](https://Gavin987.github.io/grainsizeR/reference/gs_parameters.md)
+[`gs_parameters()`](https://gavin987.github.io/grainsizeR/reference/gs_parameters.md)
 collects common grain-size outputs into ordinary R tables for reporting
 or export with standard R tools.
 
@@ -165,31 +165,31 @@ usda_components <- gs_fractions_wide(long, scheme = "usda", normalize = "fine_ea
 plot_texture_ternary(usda_components, scheme = "usda")
 ```
 
-[`plot_texture_ternary()`](https://Gavin987.github.io/grainsizeR/reference/plot_texture_ternary.md)
+[`plot_texture_ternary()`](https://gavin987.github.io/grainsizeR/reference/plot_texture_ternary.md)
 is preferred in new code;
-[`plot_texture_triangle()`](https://Gavin987.github.io/grainsizeR/reference/plot_texture_triangle.md)
+[`plot_texture_triangle()`](https://gavin987.github.io/grainsizeR/reference/plot_texture_triangle.md)
 remains available as an equivalent compatibility alias. Legacy raw-data
 ternary plotting remains available through
-[`plot_trigon()`](https://Gavin987.github.io/grainsizeR/reference/plot_trigon.md).
+[`plot_trigon()`](https://gavin987.github.io/grainsizeR/reference/plot_trigon.md).
 
 ## Further Reading
 
 Use the vignettes for complete examples and methodological detail:
 
-- [`vignette("basic-workflow")`](https://Gavin987.github.io/grainsizeR/articles/basic-workflow.md):
+- [`vignette("basic-workflow")`](https://gavin987.github.io/grainsizeR/articles/basic-workflow.md):
   a compact first-pass import, summary, and plot walkthrough.
-- [`vignette("grain-size-workflow")`](https://Gavin987.github.io/grainsizeR/articles/grain-size-workflow.md):
+- [`vignette("grain-size-workflow")`](https://gavin987.github.io/grainsizeR/articles/grain-size-workflow.md):
   import, diagnostics, summaries, and plots.
-- [`vignette("table-layouts-and-measurement-workflows")`](https://Gavin987.github.io/grainsizeR/articles/table-layouts-and-measurement-workflows.md):
+- [`vignette("table-layouts-and-measurement-workflows")`](https://gavin987.github.io/grainsizeR/articles/table-layouts-and-measurement-workflows.md):
   long and wide table layouts for common measurement setups.
-- [`vignette("texture-classification")`](https://Gavin987.github.io/grainsizeR/articles/texture-classification.md):
+- [`vignette("texture-classification")`](https://gavin987.github.io/grainsizeR/articles/texture-classification.md):
   USDA and GRADISTAT-style texture classification and ternary plots.
-- [`vignette("texture-polygons")`](https://Gavin987.github.io/grainsizeR/articles/texture-polygons.md):
+- [`vignette("texture-polygons")`](https://gavin987.github.io/grainsizeR/articles/texture-polygons.md):
   user-supplied polygon templates and polygon classification steps.
-- [`vignette("replacing-gradistat-g2sd")`](https://Gavin987.github.io/grainsizeR/articles/replacing-gradistat-g2sd.md):
+- [`vignette("replacing-gradistat-g2sd")`](https://gavin987.github.io/grainsizeR/articles/replacing-gradistat-g2sd.md):
   R-native approaches to tasks commonly handled with GRADISTAT or
   G2Sd-style analysis.
-- [`vignette("method-validation")`](https://Gavin987.github.io/grainsizeR/articles/method-validation.md):
+- [`vignette("method-validation")`](https://gavin987.github.io/grainsizeR/articles/method-validation.md):
   interpolation conventions, open-tail behavior, and numerical
   validation examples.
 
@@ -212,7 +212,9 @@ built-in texture polygon dataset is considered.
 
 ## Citation
 
-If you use grainsizeR, please cite:
+If you use grainsizeR, please cite the package. The latest archived
+Zenodo version DOI currently available is for v0.2.0; the v0.3.0 archive
+will be added after the v0.3.0 GitHub Release is created.
 
 Chang, C.-S. G. (2026). grainsizeR: Sediment Grain-Size Analysis Tools
 (v0.2.0). Zenodo. <https://doi.org/10.5281/zenodo.21169394>

@@ -52,7 +52,7 @@ plot_gradistat_summary(
   Numeric vector of D-value percentiles to mark. Marked D-values falling
   on a plateau caused by consecutive zero-retained classes are placed
   using
-  [`gs_d_values()`](https://Gavin987.github.io/grainsizeR/reference/gs_d_values.md)'s
+  [`gs_d_values()`](https://gavin987.github.io/grainsizeR/reference/gs_d_values.md)'s
   deterministic tie-breaking rule (see its documentation).
 
 - show_distribution:

@@ -4,7 +4,7 @@
 a named built-in particle-size scheme. Schemes are treated as complete,
 non-overlapping particle-size partitions. Fractions are calculated from
 cumulative percent-finer values at scheme thresholds by calling
-[`gs_percent_finer()`](https://Gavin987.github.io/grainsizeR/reference/gs_percent_finer.md)
+[`gs_percent_finer()`](https://gavin987.github.io/grainsizeR/reference/gs_percent_finer.md)
 for thresholds inside the observed finite size range.
 
 ## Usage
@@ -40,7 +40,7 @@ gs_fractions(
 - interpolation_scale:
 
   Interpolation scale passed to
-  [`gs_percent_finer()`](https://Gavin987.github.io/grainsizeR/reference/gs_percent_finer.md).
+  [`gs_percent_finer()`](https://gavin987.github.io/grainsizeR/reference/gs_percent_finer.md).
 
 - unresolved:
 
@@ -51,7 +51,7 @@ gs_fractions(
 - extrapolate:
 
   Extrapolation behavior passed to
-  [`gs_percent_finer()`](https://Gavin987.github.io/grainsizeR/reference/gs_percent_finer.md).
+  [`gs_percent_finer()`](https://gavin987.github.io/grainsizeR/reference/gs_percent_finer.md).
   The default `"error"` avoids silent extrapolation into open-ended
   terminal classes.
 
@@ -75,7 +75,7 @@ nothing finer than the threshold, and 0 percent is exact, not an
 assumption. When the pan class does carry retained mass, the true value
 below the smallest observed boundary is not derivable from the data, and
 this now follows the same `extrapolate` policy
-[`gs_percent_finer()`](https://Gavin987.github.io/grainsizeR/reference/gs_percent_finer.md)
+[`gs_percent_finer()`](https://gavin987.github.io/grainsizeR/reference/gs_percent_finer.md)
 uses for the identical situation: `extrapolate = "error"` (the default)
 throws, and `extrapolate = "warn_linear"` resolves a
 linearly-extrapolated value with a warning. Earlier versions of this
@@ -108,7 +108,7 @@ the one listed group is ever treated as equivalent - unrelated
 boundaries (e.g. USDA's 0.05 mm) are never affected.
 
 Fraction thresholds interpolate using
-[`gs_percent_finer()`](https://Gavin987.github.io/grainsizeR/reference/gs_percent_finer.md)'s
+[`gs_percent_finer()`](https://gavin987.github.io/grainsizeR/reference/gs_percent_finer.md)'s
 size-as-`x` direction, so the tied-cumulative-value scenario that
-[`gs_d_values()`](https://Gavin987.github.io/grainsizeR/reference/gs_d_values.md)
+[`gs_d_values()`](https://gavin987.github.io/grainsizeR/reference/gs_d_values.md)
 resolves deterministically (see its documentation) cannot occur here.

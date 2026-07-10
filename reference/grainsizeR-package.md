@@ -20,35 +20,35 @@ percent-finer curve.
 A typical workflow is:
 
 1.  Read data with
-    [`read_gsd()`](https://Gavin987.github.io/grainsizeR/reference/read_gsd.md)
+    [`read_gsd()`](https://gavin987.github.io/grainsizeR/reference/read_gsd.md)
     or
-    [`read_gsd_wide()`](https://Gavin987.github.io/grainsizeR/reference/read_gsd_wide.md).
+    [`read_gsd_wide()`](https://gavin987.github.io/grainsizeR/reference/read_gsd_wide.md).
 
 2.  Inspect and validate the resulting `gsd_tbl`.
 
 3.  Calculate D-values with
-    [`gs_d_values()`](https://Gavin987.github.io/grainsizeR/reference/gs_d_values.md).
+    [`gs_d_values()`](https://gavin987.github.io/grainsizeR/reference/gs_d_values.md).
 
 4.  Calculate additional grain-size indices with
-    [`gs_grain_size_indices()`](https://Gavin987.github.io/grainsizeR/reference/gs_grain_size_indices.md).
+    [`gs_grain_size_indices()`](https://gavin987.github.io/grainsizeR/reference/gs_grain_size_indices.md).
 
 5.  Calculate Folk and Ward statistics with
-    [`gs_folk_ward()`](https://Gavin987.github.io/grainsizeR/reference/gs_folk_ward.md).
+    [`gs_folk_ward()`](https://gavin987.github.io/grainsizeR/reference/gs_folk_ward.md).
 
 6.  Optionally calculate moments with explicit open-end handling using
-    [`gs_moments()`](https://Gavin987.github.io/grainsizeR/reference/gs_moments.md).
+    [`gs_moments()`](https://gavin987.github.io/grainsizeR/reference/gs_moments.md).
 
 7.  Calculate fractions with
-    [`gs_fractions()`](https://Gavin987.github.io/grainsizeR/reference/gs_fractions.md)
+    [`gs_fractions()`](https://gavin987.github.io/grainsizeR/reference/gs_fractions.md)
     or
-    [`gs_fractions_wide()`](https://Gavin987.github.io/grainsizeR/reference/gs_fractions_wide.md).
+    [`gs_fractions_wide()`](https://gavin987.github.io/grainsizeR/reference/gs_fractions_wide.md).
 
 8.  Plot results with
-    [`plot_distribution()`](https://Gavin987.github.io/grainsizeR/reference/plot_distribution.md),
-    [`plot_cumulative()`](https://Gavin987.github.io/grainsizeR/reference/plot_cumulative.md),
-    [`plot_fractions()`](https://Gavin987.github.io/grainsizeR/reference/plot_fractions.md),
+    [`plot_distribution()`](https://gavin987.github.io/grainsizeR/reference/plot_distribution.md),
+    [`plot_cumulative()`](https://gavin987.github.io/grainsizeR/reference/plot_cumulative.md),
+    [`plot_fractions()`](https://gavin987.github.io/grainsizeR/reference/plot_fractions.md),
     and
-    [`plot_texture_ternary()`](https://Gavin987.github.io/grainsizeR/reference/plot_texture_ternary.md).
+    [`plot_texture_ternary()`](https://gavin987.github.io/grainsizeR/reference/plot_texture_ternary.md).
 
 9.  Optionally classify samples with user-supplied texture polygons.
 
@@ -62,7 +62,7 @@ not implement civil engineering classification systems.
 
 Useful links:
 
-- <https://Gavin987.github.io/grainsizeR/>
+- <https://gavin987.github.io/grainsizeR/>
 
 - <https://github.com/Gavin987/grainsizeR>
 

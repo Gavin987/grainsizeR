@@ -59,9 +59,9 @@ head(gs)
 
 ## Inspecting and Validating `gsd_tbl` Objects
 
-[`read_gsd()`](https://Gavin987.github.io/grainsizeR/reference/read_gsd.md)
+[`read_gsd()`](https://gavin987.github.io/grainsizeR/reference/read_gsd.md)
 and
-[`read_gsd_wide()`](https://Gavin987.github.io/grainsizeR/reference/read_gsd_wide.md)
+[`read_gsd_wide()`](https://gavin987.github.io/grainsizeR/reference/read_gsd_wide.md)
 return `gsd_tbl` objects. Diagnostics help identify open-ended classes
 and threshold-resolution limits before running a large analysis.
 
@@ -82,7 +82,7 @@ head(gs_diagnostics(gs, output = "summary"))
 
 ## Cumulative Percentages
 
-[`gs_cumulative()`](https://Gavin987.github.io/grainsizeR/reference/gs_cumulative.md)
+[`gs_cumulative()`](https://gavin987.github.io/grainsizeR/reference/gs_cumulative.md)
 returns finite-boundary cumulative percentages by sample.
 
 ``` r
@@ -102,9 +102,9 @@ head(gs_cumulative(gs))
 ## D-Values and GRADISTAT-Style D-Spread Descriptors
 
 Use
-[`gs_d_values()`](https://Gavin987.github.io/grainsizeR/reference/gs_d_values.md)
+[`gs_d_values()`](https://gavin987.github.io/grainsizeR/reference/gs_d_values.md)
 for requested percentiles and
-[`gs_d_spread()`](https://Gavin987.github.io/grainsizeR/reference/gs_d_spread.md)
+[`gs_d_spread()`](https://gavin987.github.io/grainsizeR/reference/gs_d_spread.md)
 for GRADISTAT-style D-ratio and D-difference descriptors. Open-ended
 tails require an explicit extrapolation choice when a requested value
 falls outside resolved boundaries.
@@ -146,7 +146,7 @@ head(suppressWarnings(gs_d_spread(
 
 ## Folk and Ward Graphical Statistics
 
-[`gs_folk_ward()`](https://Gavin987.github.io/grainsizeR/reference/gs_folk_ward.md)
+[`gs_folk_ward()`](https://gavin987.github.io/grainsizeR/reference/gs_folk_ward.md)
 calculates graphical statistics from percentile estimates.
 
 ``` r
@@ -197,7 +197,7 @@ head(suppressWarnings(gs_moments(
 
 ## Modes and Sample Modality
 
-[`gs_modes()`](https://Gavin987.github.io/grainsizeR/reference/gs_modes.md)
+[`gs_modes()`](https://gavin987.github.io/grainsizeR/reference/gs_modes.md)
 reports ranked retained-class modes and an operational modality label.
 
 ``` r
@@ -261,7 +261,7 @@ head(gs_fractions_wide(gs_wide, scheme = "gravel_sand_mud"))
 
 ## Descriptive Terms
 
-[`gs_describe_parameters()`](https://Gavin987.github.io/grainsizeR/reference/gs_describe_parameters.md)
+[`gs_describe_parameters()`](https://gavin987.github.io/grainsizeR/reference/gs_describe_parameters.md)
 adds GRADISTAT-style printout descriptors for calculated Folk and Ward
 or moment statistics.
 
@@ -286,7 +286,7 @@ head(suppressWarnings(gs_describe_parameters(gs)))
 
 ## Quality Flags
 
-[`gs_quality_flags()`](https://Gavin987.github.io/grainsizeR/reference/gs_quality_flags.md)
+[`gs_quality_flags()`](https://gavin987.github.io/grainsizeR/reference/gs_quality_flags.md)
 records advisory flags for supplied sediment loss and open-ended fine
 pan fractions.
 
@@ -309,7 +309,7 @@ head(gs_quality_flags(
 
 ## Distribution Plots
 
-[`plot_distribution()`](https://Gavin987.github.io/grainsizeR/reference/plot_distribution.md)
+[`plot_distribution()`](https://gavin987.github.io/grainsizeR/reference/plot_distribution.md)
 returns a ggplot object and supports metric and phi axis scales. The
 same function can overlay cumulative percent finer on the retained
 size-class bars for a GRADISTAT-style combined display. The examples
@@ -343,7 +343,7 @@ plot_distribution(gs_wide, x_scale = "phi", type = "line", sample = "S01")
 
 ## Cumulative Plots
 
-[`plot_cumulative()`](https://Gavin987.github.io/grainsizeR/reference/plot_cumulative.md)
+[`plot_cumulative()`](https://gavin987.github.io/grainsizeR/reference/plot_cumulative.md)
 uses the same particle-size x-axis conventions and can also add D-value
 markers.
 
@@ -360,7 +360,7 @@ suppressWarnings(plot_cumulative(
 
 ## Fraction Plots
 
-[`plot_fractions()`](https://Gavin987.github.io/grainsizeR/reference/plot_fractions.md)
+[`plot_fractions()`](https://gavin987.github.io/grainsizeR/reference/plot_fractions.md)
 draws size-class percentage bars. For dry-sieve GRADISTAT-style
 examples, use non-overlapping `Gravel`, `Sand`, and `Mud` fractions.
 More detailed Wentworth-style classes are available with
@@ -380,7 +380,7 @@ plot_fractions(
 
 ## Building a Combined Analysis Table
 
-[`gs_parameters()`](https://Gavin987.github.io/grainsizeR/reference/gs_parameters.md)
+[`gs_parameters()`](https://gavin987.github.io/grainsizeR/reference/gs_parameters.md)
 collects common outputs into a single table. More specialized helpers
 remain available when you need a narrower result.
 

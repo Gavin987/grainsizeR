@@ -2,7 +2,7 @@
 
 ## Overview
 
-[`classify_texture()`](https://Gavin987.github.io/grainsizeR/reference/classify_texture.md)
+[`classify_texture()`](https://gavin987.github.io/grainsizeR/reference/classify_texture.md)
 provides two texture-classification paths:
 
 - USDA 12-class major texture classification from sand, silt, and clay
@@ -19,7 +19,7 @@ tables from the user-provided GRADISTAT v8 workbook and the
 textural-output context described by Blott and Pye (2001). Sediment-name
 composition is available as a separate step or optional output.
 GRADISTAT ternary plotting is available through
-[`plot_texture_ternary()`](https://Gavin987.github.io/grainsizeR/reference/plot_texture_ternary.md).
+[`plot_texture_ternary()`](https://gavin987.github.io/grainsizeR/reference/plot_texture_ternary.md).
 
 ``` r
 library(grainsizeR)
@@ -58,9 +58,9 @@ classify_texture(samples, scheme = "usda", method = "rules")
 ```
 
 USDA texture ternary plotting is available through
-[`plot_texture_ternary()`](https://Gavin987.github.io/grainsizeR/reference/plot_texture_ternary.md).
+[`plot_texture_ternary()`](https://gavin987.github.io/grainsizeR/reference/plot_texture_ternary.md).
 The stable
-[`plot_texture_triangle()`](https://Gavin987.github.io/grainsizeR/reference/plot_texture_triangle.md)
+[`plot_texture_triangle()`](https://gavin987.github.io/grainsizeR/reference/plot_texture_triangle.md)
 function name remains available for compatibility. The bundled
 long-format example includes finer fractions and can be used for the
 USDA texture workflow. Some open-ended tails require explicit
@@ -115,7 +115,7 @@ plot_texture_ternary(usda_fractions, scheme = "usda", labels = FALSE)
 
 Input percentages must be numeric, finite, between 0 and 100, and sum to
 approximately 100.
-[`classify_texture()`](https://Gavin987.github.io/grainsizeR/reference/classify_texture.md)
+[`classify_texture()`](https://gavin987.github.io/grainsizeR/reference/classify_texture.md)
 does not silently normalize invalid sand, silt, and clay sums.
 
 Data frames with ternary `left`, `right`, and `top` columns are also
@@ -224,7 +224,7 @@ not silently normalize invalid sums.
 outputs. Sediment-name composition can be requested during GRADISTAT
 classification with `include_sediment_name = TRUE`, or added afterward
 with
-[`gs_gradistat_sediment_name()`](https://Gavin987.github.io/grainsizeR/reference/gs_gradistat_sediment_name.md).
+[`gs_gradistat_sediment_name()`](https://gavin987.github.io/grainsizeR/reference/gs_gradistat_sediment_name.md).
 If dominant size-subclass columns are missing, the textural group is
 returned as a partial sediment name.
 
@@ -265,11 +265,11 @@ Distribution, cumulative, fraction, USDA texture ternary, and GRADISTAT
 texture ternary plots are R-native functional replacements, not Excel
 visual clones.
 
-[`plot_texture_ternary()`](https://Gavin987.github.io/grainsizeR/reference/plot_texture_ternary.md)
+[`plot_texture_ternary()`](https://gavin987.github.io/grainsizeR/reference/plot_texture_ternary.md)
 is the preferred plotting name in new examples.
-[`plot_texture_triangle()`](https://Gavin987.github.io/grainsizeR/reference/plot_texture_triangle.md)
+[`plot_texture_triangle()`](https://gavin987.github.io/grainsizeR/reference/plot_texture_triangle.md)
 remains available as an equivalent compatibility alias, while
-[`plot_trigon()`](https://Gavin987.github.io/grainsizeR/reference/plot_trigon.md)
+[`plot_trigon()`](https://gavin987.github.io/grainsizeR/reference/plot_trigon.md)
 is retained for legacy raw-data ternary workflows.
 
 ## Output Columns
@@ -360,7 +360,7 @@ package data.
 
 GRADISTAT gravel-sand-mud and sand-silt-clay no-gravel ternary plotting
 is implemented through
-[`plot_texture_ternary()`](https://Gavin987.github.io/grainsizeR/reference/plot_texture_ternary.md).
+[`plot_texture_ternary()`](https://gavin987.github.io/grainsizeR/reference/plot_texture_ternary.md).
 Full Excel visual parity is not claimed.
 
 CRAN readiness is not claimed in this vignette.

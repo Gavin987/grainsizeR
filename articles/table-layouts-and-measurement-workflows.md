@@ -35,7 +35,7 @@ are converted or exported as retained size-class values. If a laser
 instrument exports cumulative percent finer or cumulative percent
 passing, the cumulative curve must be converted to retained bin
 increments before using
-[`read_gsd()`](https://Gavin987.github.io/grainsizeR/reference/read_gsd.md).
+[`read_gsd()`](https://gavin987.github.io/grainsizeR/reference/read_gsd.md).
 
 ## Single-Sample and Multi-Sample Layouts
 
@@ -282,7 +282,7 @@ head(suppressWarnings(gs_fractions_wide(gs_long, scheme = "uk_ssew", extrapolate
 
 ## Summary Tables
 
-[`gs_parameters()`](https://Gavin987.github.io/grainsizeR/reference/gs_parameters.md)
+[`gs_parameters()`](https://gavin987.github.io/grainsizeR/reference/gs_parameters.md)
 creates compact reporting tables from lower-level functions.
 
 ``` r
@@ -356,7 +356,7 @@ head(suppressWarnings(gs_parameters(
 
 ## GRADISTAT-Inspired Summary Plots
 
-[`plot_gradistat_summary()`](https://Gavin987.github.io/grainsizeR/reference/plot_gradistat_summary.md)
+[`plot_gradistat_summary()`](https://gavin987.github.io/grainsizeR/reference/plot_gradistat_summary.md)
 creates a one-sample diagnostic/report plot. It does not export files;
 users can save ggplot objects with standard R tools.
 
@@ -373,7 +373,7 @@ plot_gradistat_summary(
 1.  Read data.
 2.  Validate the `gsd_tbl`.
 3.  Run
-    [`gs_diagnostics()`](https://Gavin987.github.io/grainsizeR/reference/gs_diagnostics.md).
+    [`gs_diagnostics()`](https://gavin987.github.io/grainsizeR/reference/gs_diagnostics.md).
 4.  Decide whether the available measurements and table layout are
     appropriate for the target analysis.
 5.  Compute D-values, fractions, statistics, and summary tables.

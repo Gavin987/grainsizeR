@@ -23,7 +23,7 @@ gs_gradistat_sediment_name(
 - x:
 
   A data frame. It may be output from
-  [`classify_texture()`](https://Gavin987.github.io/grainsizeR/reference/classify_texture.md)
+  [`classify_texture()`](https://gavin987.github.io/grainsizeR/reference/classify_texture.md)
   for `scheme = "gradistat"`, or it may contain `gravel`, `sand`, and
   `mud` columns, `sand`, `silt`, and `clay` columns, or both.
 

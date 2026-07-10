@@ -3,7 +3,7 @@
 `gs_size_terms()` assigns concise modified Udden-Wentworth-style size
 terms to numeric grain sizes. The helper accepts phi, millimeter, or
 micrometer input and uses the same class labels as
-[`describe_mean_size_phi()`](https://Gavin987.github.io/grainsizeR/reference/describe_mean_size_phi.md).
+[`describe_mean_size_phi()`](https://gavin987.github.io/grainsizeR/reference/describe_mean_size_phi.md).
 
 ## Usage
 

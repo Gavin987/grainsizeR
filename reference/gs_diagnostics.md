@@ -30,10 +30,10 @@ gs_diagnostics(
 - d_values:
 
   Numeric D-value percentiles to check. Resolvability is determined via
-  [`gs_d_values()`](https://Gavin987.github.io/grainsizeR/reference/gs_d_values.md),
+  [`gs_d_values()`](https://gavin987.github.io/grainsizeR/reference/gs_d_values.md),
   including its deterministic tie-breaking rule for percentiles that
   fall on a plateau caused by consecutive zero-retained classes (see
-  [`gs_d_values()`](https://Gavin987.github.io/grainsizeR/reference/gs_d_values.md)
+  [`gs_d_values()`](https://gavin987.github.io/grainsizeR/reference/gs_d_values.md)
   for details).
 
 - thresholds_um:

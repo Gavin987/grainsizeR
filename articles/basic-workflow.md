@@ -93,7 +93,7 @@ validate_gsd_tbl(gs)
 
 ## Data Quality Diagnostics
 
-[`gs_diagnostics()`](https://Gavin987.github.io/grainsizeR/reference/gs_diagnostics.md)
+[`gs_diagnostics()`](https://gavin987.github.io/grainsizeR/reference/gs_diagnostics.md)
 is useful after reading data and before calculating summary tables. It
 reports retained-total checks, open-ended tails, unresolved D-values,
 threshold interpolation limits, and fraction-scheme resolvability. The
@@ -160,7 +160,7 @@ head(gs_d_values(gs, probs = c(10, 50, 90)))
 
 ## Arbitrary Threshold Interpolation
 
-[`gs_percent_finer()`](https://Gavin987.github.io/grainsizeR/reference/gs_percent_finer.md)
+[`gs_percent_finer()`](https://gavin987.github.io/grainsizeR/reference/gs_percent_finer.md)
 estimates percent finer at arbitrary thresholds, including thresholds
 that were not measured exactly, as long as the threshold is bracketed by
 finite class boundaries. Terminal open-ended classes require explicit
@@ -288,7 +288,7 @@ particle_size_systems()
 
 ## Creating a Report Table
 
-[`gs_parameters()`](https://Gavin987.github.io/grainsizeR/reference/gs_parameters.md)
+[`gs_parameters()`](https://gavin987.github.io/grainsizeR/reference/gs_parameters.md)
 is the recommended way to create a compact grain-size summary table for
 reporting. It can combine D-values, grain-size indices, Folk and Ward
 statistics, moment statistics, and fractions in one row per sample.
@@ -320,7 +320,7 @@ head(report_table)
 #> #   mean_size_class <chr>, sorting_class <chr>, skewness_class <chr>, …
 ```
 
-[`plot_gradistat_summary()`](https://Gavin987.github.io/grainsizeR/reference/plot_gradistat_summary.md)
+[`plot_gradistat_summary()`](https://gavin987.github.io/grainsizeR/reference/plot_gradistat_summary.md)
 is for visual diagnostics. Standard R functions can export tables when
 needed:
 
@@ -351,7 +351,7 @@ plot_fractions(gs, scheme = "wentworth_major")
 
 ![](basic-workflow_files/figure-html/unnamed-chunk-16-1.png)
 
-[`plot_gradistat_summary()`](https://Gavin987.github.io/grainsizeR/reference/plot_gradistat_summary.md)
+[`plot_gradistat_summary()`](https://gavin987.github.io/grainsizeR/reference/plot_gradistat_summary.md)
 provides a single-sample diagnostic plot that combines retained
 distribution, cumulative percent finer, D-value markers, and summary
 statistics. It is inspired by common sediment grain-size reporting

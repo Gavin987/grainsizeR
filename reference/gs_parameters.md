@@ -2,19 +2,19 @@
 
 `gs_parameters()` is a minimal user-facing summary interface for
 selected D-values returned by
-[`gs_d_values()`](https://Gavin987.github.io/grainsizeR/reference/gs_d_values.md),
+[`gs_d_values()`](https://gavin987.github.io/grainsizeR/reference/gs_d_values.md),
 additional grain-size indices returned by
-[`gs_grain_size_indices()`](https://Gavin987.github.io/grainsizeR/reference/gs_grain_size_indices.md),
+[`gs_grain_size_indices()`](https://gavin987.github.io/grainsizeR/reference/gs_grain_size_indices.md),
 GRADISTAT-style D-spread descriptors returned by
-[`gs_d_spread()`](https://Gavin987.github.io/grainsizeR/reference/gs_d_spread.md),
+[`gs_d_spread()`](https://gavin987.github.io/grainsizeR/reference/gs_d_spread.md),
 Folk and Ward graphical statistics returned by
-[`gs_folk_ward()`](https://Gavin987.github.io/grainsizeR/reference/gs_folk_ward.md),
+[`gs_folk_ward()`](https://gavin987.github.io/grainsizeR/reference/gs_folk_ward.md),
 midpoint moment statistics returned by
-[`gs_moments()`](https://Gavin987.github.io/grainsizeR/reference/gs_moments.md),
+[`gs_moments()`](https://gavin987.github.io/grainsizeR/reference/gs_moments.md),
 modal class descriptors returned by
-[`gs_modes()`](https://Gavin987.github.io/grainsizeR/reference/gs_modes.md),
+[`gs_modes()`](https://gavin987.github.io/grainsizeR/reference/gs_modes.md),
 and particle-size fractions returned by
-[`gs_fractions_wide()`](https://Gavin987.github.io/grainsizeR/reference/gs_fractions_wide.md).
+[`gs_fractions_wide()`](https://gavin987.github.io/grainsizeR/reference/gs_fractions_wide.md).
 Optional descriptor and quality groups add GRADISTAT-style printout
 terms and advisory quality flags.
 
@@ -78,7 +78,7 @@ gs_parameters(
 - d_spread_scale:
 
   Metric reporting scale passed to
-  [`gs_d_spread()`](https://Gavin987.github.io/grainsizeR/reference/gs_d_spread.md).
+  [`gs_d_spread()`](https://gavin987.github.io/grainsizeR/reference/gs_d_spread.md).
 
 - fine_threshold_um:
 
@@ -87,54 +87,54 @@ gs_parameters(
 - moments_method:
 
   Moment scale passed to
-  [`gs_moments()`](https://Gavin987.github.io/grainsizeR/reference/gs_moments.md).
+  [`gs_moments()`](https://gavin987.github.io/grainsizeR/reference/gs_moments.md).
 
 - moments_open_end:
 
   Open-ended class handling passed to
-  [`gs_moments()`](https://Gavin987.github.io/grainsizeR/reference/gs_moments.md).
+  [`gs_moments()`](https://gavin987.github.io/grainsizeR/reference/gs_moments.md).
 
 - n_modes:
 
   Number of modal classes passed to
-  [`gs_modes()`](https://Gavin987.github.io/grainsizeR/reference/gs_modes.md)
+  [`gs_modes()`](https://gavin987.github.io/grainsizeR/reference/gs_modes.md)
   when `parameters` includes `"modes"`.
 
 - sediment_loss_percent:
 
   Optional sediment-loss percentages passed to
-  [`gs_quality_flags()`](https://Gavin987.github.io/grainsizeR/reference/gs_quality_flags.md)
+  [`gs_quality_flags()`](https://gavin987.github.io/grainsizeR/reference/gs_quality_flags.md)
   when `parameters` includes `"quality"`.
 
 - sediment_loss_warning_percent:
 
   Advisory sediment-loss threshold passed to
-  [`gs_quality_flags()`](https://Gavin987.github.io/grainsizeR/reference/gs_quality_flags.md).
+  [`gs_quality_flags()`](https://gavin987.github.io/grainsizeR/reference/gs_quality_flags.md).
 
 - fine_pan_info_percent:
 
   Advisory fine-pan information threshold passed to
-  [`gs_quality_flags()`](https://Gavin987.github.io/grainsizeR/reference/gs_quality_flags.md).
+  [`gs_quality_flags()`](https://gavin987.github.io/grainsizeR/reference/gs_quality_flags.md).
 
 - fine_pan_warning_percent:
 
   Advisory fine-pan warning threshold passed to
-  [`gs_quality_flags()`](https://Gavin987.github.io/grainsizeR/reference/gs_quality_flags.md).
+  [`gs_quality_flags()`](https://gavin987.github.io/grainsizeR/reference/gs_quality_flags.md).
 
 - fraction_scheme:
 
   Fraction scheme passed to
-  [`gs_fractions_wide()`](https://Gavin987.github.io/grainsizeR/reference/gs_fractions_wide.md).
+  [`gs_fractions_wide()`](https://gavin987.github.io/grainsizeR/reference/gs_fractions_wide.md).
 
 - fraction_normalize:
 
   Normalization mode passed to
-  [`gs_fractions_wide()`](https://Gavin987.github.io/grainsizeR/reference/gs_fractions_wide.md).
+  [`gs_fractions_wide()`](https://gavin987.github.io/grainsizeR/reference/gs_fractions_wide.md).
 
 - fraction_unresolved:
 
   Unresolved-threshold behavior passed to
-  [`gs_fractions_wide()`](https://Gavin987.github.io/grainsizeR/reference/gs_fractions_wide.md).
+  [`gs_fractions_wide()`](https://gavin987.github.io/grainsizeR/reference/gs_fractions_wide.md).
 
 ## Value
 
@@ -149,8 +149,8 @@ intentionally left to standard R workflows such as
 [`saveRDS()`](https://rdrr.io/r/base/readRDS.html).
 
 Any D-value tokens are ultimately computed by
-[`gs_d_values()`](https://Gavin987.github.io/grainsizeR/reference/gs_d_values.md),
+[`gs_d_values()`](https://gavin987.github.io/grainsizeR/reference/gs_d_values.md),
 including its deterministic tie-breaking rule for percentiles that fall
 on a plateau caused by consecutive zero-retained classes (see
-[`gs_d_values()`](https://Gavin987.github.io/grainsizeR/reference/gs_d_values.md)
+[`gs_d_values()`](https://gavin987.github.io/grainsizeR/reference/gs_d_values.md)
 for details).

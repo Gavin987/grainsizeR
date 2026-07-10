@@ -1,10 +1,10 @@
 # Calculate grain-size percentiles
 
 `gs_percentile()` is a compatibility alias for
-[`gs_d_values()`](https://Gavin987.github.io/grainsizeR/reference/gs_d_values.md),
+[`gs_d_values()`](https://gavin987.github.io/grainsizeR/reference/gs_d_values.md),
 including its deterministic handling of ties from zero-retained classes
 (see
-[`gs_d_values()`](https://Gavin987.github.io/grainsizeR/reference/gs_d_values.md)
+[`gs_d_values()`](https://gavin987.github.io/grainsizeR/reference/gs_d_values.md)
 for details).
 
 ## Usage

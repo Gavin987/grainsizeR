@@ -1,7 +1,7 @@
 # Plot cumulative grain-size curves
 
 `plot_cumulative()` plots cumulative grain-size curves from
-[`gs_cumulative()`](https://Gavin987.github.io/grainsizeR/reference/gs_cumulative.md).
+[`gs_cumulative()`](https://gavin987.github.io/grainsizeR/reference/gs_cumulative.md).
 Lower open-ended classes are displayed at 0.0015 mm for plotting only.
 
 ## Usage
@@ -64,14 +64,14 @@ plot_cumulative(
 - extrapolate:
 
   Extrapolation behavior passed to
-  [`gs_d_values()`](https://Gavin987.github.io/grainsizeR/reference/gs_d_values.md)
+  [`gs_d_values()`](https://gavin987.github.io/grainsizeR/reference/gs_d_values.md)
   when `show_percentiles` is supplied. With the default `"error"`,
   `plot_cumulative()` retries marker placement with `"warn_linear"` if a
   requested percentile falls just outside the finite boundary curve;
   this affects only the plotted marker layer. Percentile markers falling
   on a plateau caused by consecutive zero-retained classes are placed
   using
-  [`gs_d_values()`](https://Gavin987.github.io/grainsizeR/reference/gs_d_values.md)'s
+  [`gs_d_values()`](https://gavin987.github.io/grainsizeR/reference/gs_d_values.md)'s
   deterministic tie-breaking rule (see its documentation).
 
 - percentile_color:

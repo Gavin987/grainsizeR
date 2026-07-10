@@ -2,7 +2,7 @@
 
 `reconstruction_to_texture_polygons()` converts a completed texture
 polygon reconstruction table into the compact schema used by
-[`validate_texture_polygons()`](https://Gavin987.github.io/grainsizeR/reference/validate_texture_polygons.md).
+[`validate_texture_polygons()`](https://gavin987.github.io/grainsizeR/reference/validate_texture_polygons.md).
 This helper is intended for future official polygon reconstruction
 workflows and does not provide built-in polygon data.
 
@@ -17,12 +17,12 @@ reconstruction_to_texture_polygons(x, validate = TRUE, require_ready = FALSE)
 - x:
 
   A data frame with columns from
-  [`texture_polygon_reconstruction_template()`](https://Gavin987.github.io/grainsizeR/reference/texture_polygon_reconstruction_template.md).
+  [`texture_polygon_reconstruction_template()`](https://gavin987.github.io/grainsizeR/reference/texture_polygon_reconstruction_template.md).
 
 - validate:
 
   Should the compact polygon table be validated with
-  [`validate_texture_polygons()`](https://Gavin987.github.io/grainsizeR/reference/validate_texture_polygons.md)
+  [`validate_texture_polygons()`](https://gavin987.github.io/grainsizeR/reference/validate_texture_polygons.md)
   before returning?
 
 - require_ready:

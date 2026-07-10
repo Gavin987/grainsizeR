@@ -3,7 +3,7 @@
 `gs_d_values()` estimates `D_p`, the grain size at which `p` percent of
 a sample is finer. Interpolation is based on finite class boundaries
 from
-[`gs_cumulative()`](https://Gavin987.github.io/grainsizeR/reference/gs_cumulative.md),
+[`gs_cumulative()`](https://gavin987.github.io/grainsizeR/reference/gs_cumulative.md),
 not class midpoints.
 
 ## Usage

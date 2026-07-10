@@ -1,7 +1,7 @@
 # Calculate Folk and Ward graphical grain-size statistics
 
 `gs_folkward()` is a compatibility alias for
-[`gs_folk_ward()`](https://Gavin987.github.io/grainsizeR/reference/gs_folk_ward.md).
+[`gs_folk_ward()`](https://gavin987.github.io/grainsizeR/reference/gs_folk_ward.md).
 
 ## Usage
 
@@ -14,7 +14,7 @@ gs_folkward(...)
 - ...:
 
   Arguments forwarded to
-  [`gs_folk_ward()`](https://Gavin987.github.io/grainsizeR/reference/gs_folk_ward.md).
+  [`gs_folk_ward()`](https://gavin987.github.io/grainsizeR/reference/gs_folk_ward.md).
 
 ## Value
 
